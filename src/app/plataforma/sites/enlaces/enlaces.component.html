@@ -1,0 +1,104 @@
+<div class="row">
+	<div class="col-sm-12">
+        <div class="card card-header-sticky">
+			<div class="card-header">
+				<h4>Enlaces</h4>
+                <hr>
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <app-breadcrumb></app-breadcrumb>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex">
+                        <button type="button" (click)="nuevoEnlace()" class="btn-NuevoEnlace">
+                            Nuevo Enlace
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<div class="card">
+			<div class="card-body">
+				<div class="table-responsive">
+					<table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+						<thead>
+                            <tr>
+								<th>Nombre</th>
+								<th>Descripción</th>
+								<th>Ruta Enlace</th>
+								<th>Estado</th>
+								<th>Opciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let enlace of enlaceST">
+								<td>
+									{{ enlace.nombreEnlace }}
+								</td>
+								<td>
+									{{ enlace.descripcionEnlace }}
+								</td>
+								<td>
+									{{ enlace.rutaEnlace }}
+								</td>
+								<td>
+									{{ getEstado(enlace.estadoEnlace)}}
+								</td>
+								<td style="text-align: center; width: 10%;">
+									<div class="d-flex flex-wrap gap-2">
+										<button type="button" class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                            (click)="editarEnlace(enlace.enlaceId)" title="Modificar Enlace">
+											<i class="feather icon-edit"></i>
+										</button>
+										<button type="button" class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                            (click)="eliminarEnlace(enlace.enlaceId, enlace.nombreEnlace)" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Enlace">
+											<i class="feather icon-trash-2"></i>
+										</button>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+                        <tfoot>
+							<tr>
+								<th>
+                                    <input #nombreEnlace
+                                        (keyup)="filtrarColumna(0, nombreEnlace.value)"
+                                        type="text"
+                                        placeholder="Filtro Nombre"
+                                        name="filtro-nombre"
+                                        class="form-control">
+                                </th>
+								<th>
+									<input #descripcionEnlace
+										(keyup)="filtrarColumna(1, descripcionEnlace.value)"
+										type="text"
+										placeholder="Filtro descripción"
+										name="filtro-descripción"
+										class="form-control">
+								</th>
+								<th>
+									<input #rutaEnlace
+										(keyup)="filtrarColumna(2, rutaEnlace.value)"
+										type="text"
+										placeholder="Filtro Ruta"
+										name="filtro-ruta"
+										class="form-control">
+								</th>
+								<th>
+									<input #estadoEnlace
+										(keyup)="filtrarColumna(3, estadoEnlace.value)"
+										type="text"
+										placeholder="Filtro Estado"
+										name="filtro-estado"
+										class="form-control">
+								</th>
+                                <th>
+                                </th>
+							</tr>
+                        </tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

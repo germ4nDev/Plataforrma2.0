@@ -1,0 +1,136 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card card-header-sticky">
+            <div class="card-header">
+                <h5>Administración de Usuarios</h5>
+                <hr>
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <app-breadcrumb></app-breadcrumb>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex gap-3">
+                        <button type="button" class="btn-NuevoUsuario" (click)="btnInsertEditUsuario(validationForm)">
+                            {{ modoEdicion ? 'Modificar' : 'Insertar' }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                        <button type="button" class="btn-NuevoUsuario" (click)="btnRegresarUsuario()">
+                            Regresar
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h4>Nuevo Usuario</h4>
+            </div>
+            <div class="card-body">
+                <form #validationForm="ngForm" class="editForm" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="fotoUsuario">foto</label>
+                                <input type="file" class="form-control input-md" id="fotoUsuario" name="fotoUsuario"
+                                (change)="onFileSelected($event)" accept="image/*"
+                                [ngClass]="{'is-invalid': !selectedFile && (isSubmit || fotoUsuario.touched)}"
+                                #fotoUsuario="ngModel" required [(ngModel)]="FormUsuario.fotoUsuario"/>
+                                <label *ngIf="!selectedFile && (isSubmit || fotoUsuario.touched)"
+                                class="error jquery-validation-error small form-text invalid-feedback">
+                                Por favor, seleccione una imagen. Este campo es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="identificacionUsuario">identificación</label>
+                                <input class="form-control input-md" id="identificacionUsuario" name="identificacionUsuario" type="number"
+                                    placeholder="identificación del usuario"
+                                    [ngClass]="{'is-invalid': !identificacionUsuario.valid && (identificacionUsuario.dirty || identificacionUsuario.touched || isSubmit)}"
+                                    #identificacionUsuario="ngModel" required [(ngModel)]="FormUsuario.identificacionUsuario" />
+                                <label *ngIf="!identificacionUsuario.valid && (identificacionUsuario.dirty || identificacionUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    Por favor, Ingrese una identificación. Este campo es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="nombreUsuario">nombre</label>
+                                <input class="form-control input-md" id="nombreUsuario" name="nombreUsuario" type="text"
+                                    placeholder="nombre del usuario"
+                                    [ngClass]="{'is-invalid': !nombreUsuario.valid && (nombreUsuario.dirty || nombreUsuario.touched || isSubmit)}"
+                                    #nombreUsuario="ngModel" required [(ngModel)]="FormUsuario.nombreUsuario" />
+                                <label *ngIf="!nombreUsuario.valid && (nombreUsuario.dirty || nombreUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    Por favor, Ingrese un nombre. Este campo es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Correo</label>
+                                <input type="text" class="form-control" name="correoUsuario" placeholder="Correo del usuario"
+                                    [ngClass]="{'is-invalid': !correoUsuario.valid && (correoUsuario.dirty || correoUsuario.touched || isSubmit) }"
+                                    #correoUsuario="ngModel" required [(ngModel)]="FormUsuario.correoUsuario" />
+                                <label *ngIf="!correoUsuario.valid && (correoUsuario.dirty || correoUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    Por favor, ingrese una correo. Este campo es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="claveUsuario">Contraseña</label>
+                                <input class="form-control input-md" id="claveUsuario" name="claveUsuario" type="text"
+                                    placeholder="Contraseña del usuario"
+                                    [ngClass]="{'is-invalid': !claveUsuario.valid && (claveUsuario.dirty || claveUsuario.touched || isSubmit)}"
+                                    #claveUsuario="ngModel" required [(ngModel)]="FormUsuario.claveUsuario" />
+                                <label *ngIf="!claveUsuario.valid && (claveUsuario.dirty || claveUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    Por favor, Ingrese la contraseña. Este campo es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Estado</label>
+                                <div class="radio-buttons">
+                                    <label class="radio-button">
+                                        <input name="option" type="radio"
+                                            [value]="true"
+                                            [(ngModel)]="FormUsuario.estadoUsuario">
+                                            <div class="radio-circle"></div>
+                                        <label class="radio-label">Activo</label>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input name="option" type="radio"
+                                            [value]="false"
+                                            [(ngModel)]="FormUsuario.estadoUsuario">
+                                            <div class="radio-circle"></div>
+                                        <label class="radio-label">Inactivo</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Descripción</label>
+                                <textarea class="form-control" placeholder="Descripcion del usuario" name="descripcionUsuario"
+                                    [ngClass]="{'is-invalid': !descripcionUsuario.valid && (descripcionUsuario.dirty || descripcionUsuario.touched || isSubmit)}"
+                                    #descripcionUsuario="ngModel" required [(ngModel)]="FormUsuario.descripcionUsuario" rows="5">
+                                </textarea>
+                                <label
+                                    *ngIf="!descripcionUsuario.valid && (descripcionUsuario.dirty || descripcionUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    Por favor, ingrese una descripción. Este campo es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

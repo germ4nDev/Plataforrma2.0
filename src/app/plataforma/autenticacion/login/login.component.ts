@@ -1,0 +1,116 @@
+// Angular import
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { catchError, first, tap } from 'rxjs/operators';
+
+// project import
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
+import Swal from 'sweetalert2';
+import { of, Subscription } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
+
+@Component({
+    selector: 'app-login',
+    standalone: true,
+    imports: [CommonModule, RouterModule, SharedModule, TranslateModule, LanguageSelectorComponent],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
+})
+export class LoginComponent implements OnInit {
+    // public method
+    usernameValue = '';
+    userPassword = '';
+
+    loginForm!: FormGroup;
+    loading = false;
+    submitted = false;
+    returnUrl!: string;
+    classList!: { toggle: (arg0: string) => void };
+    loginSub?: Subscription;
+    error: string = '';
+    remember = false;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private authenticationService: AuthenticationService
+    ) {
+        // redirect to home if already logged in
+        if (this.authenticationService.currentUserValue) {
+            //    this.router.navigate(['/dashboard/analytics']);
+        }
+    }
+
+    ngOnInit() {
+        this.loginForm = this.formBuilder.group({
+            username: ['', Validators.required],
+            password: ['', Validators.required]
+        });
+
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword?.addEventListener('click', () => {
+            // toggle the type attribute
+            const type = password?.getAttribute('type') === 'password' ? 'text' : 'password';
+            password?.setAttribute('type', type);
+            this.classList.toggle('icon-eye-off');
+        });
+
+        // get return url from route parameters or default to '/'
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
+    }
+
+    // convenience getter for easy access to form fields
+    get formValues() {
+        return this.loginForm.controls;
+    }
+
+    get usernameControl() {
+        return this.loginForm.get('username');
+    }
+
+    get passwordControl() {
+        return this.loginForm.get('password');
+    }
+
+    onLoginUserClick(): void {
+        this.submitted = true;
+        if (this.loginForm.invalid) {
+            return;
+        }
+        this.error = '';
+        this.loading = true;
+        const email = this.formValues?.['username']?.value;
+        const password = this.formValues?.['password']?.value;
+
+        this.loginSub = this.authenticationService.login(email, password).pipe(
+            tap((resp: any) => {
+                this.loading = false;
+                if (!resp.ok) {
+                    Swal.fire({
+                        title: resp.msg,
+                        text: 'La dirección de correo electrónico ingresada no se encuentra registrada en nuestro sistema!',
+                        icon: 'error',
+                        showCloseButton: true
+                    });
+                    return;
+                }
+                console.log('Login exitoso:', resp);
+                this.router.navigate(['/frontal/inicio']);
+            }),
+            catchError((err) => {
+                this.loading = false;
+                this.error = err;
+                Swal.fire('Error', err, 'error');
+                return of(null);
+            })
+        ).subscribe();
+    }
+}

@@ -1,0 +1,85 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card card-header-sticky">
+            <div class="card-header">
+                <h5>Administración de Roles</h5>
+                <hr>
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <app-breadcrumb></app-breadcrumb>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex gap-3">
+                        <button type="button" class="btn-NuevoRol" (click)="btnInsertEditRol(validationForm)">
+                            {{ modoEdicion ? 'Modificar' : 'Insertar' }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                        <button type="button" class="btn-NuevoRol" (click)="btnRegresarRol()">
+                            Regresar
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h4>Nuevo Rol</h4>
+            </div>
+            <div class="card-body">
+                <form #validationForm="ngForm" class="editForm" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="nombreRol">nombre</label>
+                                <input class="form-control input-md" id="nombreRol" name="nombreRol" type="text"
+                                    placeholder="nombre del Rol"
+                                    [ngClass]="{'is-invalid': !nombreRol.valid && (nombreRol.dirty || nombreRol.touched || isSubmit)}"
+                                    #nombreRol="ngModel" required [(ngModel)]="FormRol.nombreRol" />
+                                <label
+                                    *ngIf="!nombreRol.valid && (nombreRol.dirty || nombreRol.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    Por favor, Ingrese un nombre. Este campo es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Estado</label>
+                                <div class="radio-buttons">
+                                    <label class="radio-button">
+                                        <input name="option" type="radio" [value]="true"
+                                            [(ngModel)]="FormRol.estadoRol">
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">Activo</label>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input name="option" type="radio" [value]="false"
+                                            [(ngModel)]="FormRol.estadoRol">
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">Inactivo</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Descripción</label>
+                                <textarea class="form-control" placeholder="Descripcion del Rol"
+                                    name="descripcionRol"
+                                    [ngClass]="{'is-invalid': !descripcionRol.valid && (descripcionRol.dirty || descripcionRol.touched || isSubmit)}"
+                                    #descripcionRol="ngModel" required [(ngModel)]="FormRol.descripcionRol"
+                                    rows="5">
+                                </textarea>
+                                <label
+                                    *ngIf="!descripcionRol.valid && (descripcionRol.dirty || descripcionRol.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    Por favor, ingrese una descripción. Este campo es obligatorio.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

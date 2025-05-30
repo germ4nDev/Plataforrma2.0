@@ -1,2 +1,2 @@
-# Plataforrma2.0
-Plataforma dym 2.0
+# PlataforrmaDYM
+aplicacion de la empresa DYM Software Solutions

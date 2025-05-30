@@ -1,0 +1,103 @@
+<div class="row">
+	<div class="col-sm-12">
+        <div class="card card-header-sticky">
+			<div class="card-header">
+				<h4>Contenidos</h4>
+                <hr>
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <app-breadcrumb></app-breadcrumb>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex">
+                        <button type="button" (click)="nuevoContenido()" class="btn-NuevoContenido">
+                            Nuevo Contenido
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<div class="card">
+			<div class="card-body">
+				<div class="table-responsive">
+					<table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+						<thead>
+                            <tr>
+								<th>Nombre</th>
+								<th>Descripción</th>
+								<th>Contenido</th>
+								<th>Estado</th>
+								<th>Opciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let contenido of contenidoEL">
+								<td>
+									{{ contenido.nombreContenido }}
+								</td>
+								<td>
+									{{ contenido.descripcionContenido }}
+								</td>
+								<td>
+									{{ contenido.contenido }}
+								</td>
+								<td>
+									{{ getEstado(contenido.estadoContenido)}}
+								</td>
+								<td style="text-align: center; width: 10%;">
+									<div class="d-flex flex-wrap gap-2">
+										<button type="button" class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                            (click)="editarContenido(contenido.contenidoId)" title="Modificar Contenido">
+											<i class="feather icon-edit"></i>
+										</button>
+										<button type="button" class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                            (click)="eliminarContenido(contenido.contenidoId, contenido.nombreContenido)" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Contenido">
+											<i class="feather icon-trash-2"></i>
+										</button>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+                        <tfoot>
+							<tr>
+								<th>
+                                    <input #nombreContenido
+                                        (keyup)="filtrarColumna(0, nombreContenido.value)"
+                                        type="text"
+                                        placeholder="Filtro Nombre"
+                                        name="filtro-nombre"
+                                        class="form-control">
+                                </th>
+								<th>
+									<input #descripcionContenido
+										(keyup)="filtrarColumna(1, descripcionContenido.value)"
+										type="text"
+										placeholder="Filtro descripción"
+										name="filtro-nombre"
+										class="form-control">
+								</th>
+								<th>
+									<input #contenido
+										(keyup)="filtrarColumna(2, contenido.value)"
+										type="text"
+										placeholder="Filtro contenido"
+										name="filtro-contenido"
+										class="form-control">
+								</th>
+								<th>
+									<input #estadoContenido
+										(keyup)="filtrarColumna(3, estadoContenido.value)"
+										type="text"
+										placeholder="Filtro Estado"
+										name="filtro-estado"
+										class="form-control">
+								</th>
+                                <th>
+                                </th>
+							</tr>
+                        </tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
