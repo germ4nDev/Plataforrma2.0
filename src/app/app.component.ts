@@ -15,11 +15,11 @@ export class AppComponent implements OnInit {
         private translate: TranslateService
     ) {
         translate.addLangs(['en', 'es']);
-        translate.setDefaultLang('es');
         const lang = localStorage.getItem('lang') || '';
         if (lang == '') {
             localStorage.setItem('lang', 'es');
         }
+        translate.setDefaultLang(lang);
         const browserLang = translate.getBrowserLang();
         translate.use(browserLang?.match(/en|es/) ? browserLang : 'es');
     }

@@ -1,5 +1,5 @@
 // Angular import
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -65,6 +65,10 @@ export class LoginComponent implements OnInit {
 
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
+    }
+
+    OnDestroy() {
+        this.loginSub?.unsubscribe();
     }
 
     // convenience getter for easy access to form fields

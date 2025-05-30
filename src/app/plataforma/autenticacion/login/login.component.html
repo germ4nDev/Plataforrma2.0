@@ -15,7 +15,9 @@
       </div>
       <div class="auth-content">
         <img src="assets/images/auth/auth-logo-dark.png" alt="logo" class="img-fluid mb-4 d-block d-xl-none d-lg-none" />
-        <h3 class="mb-4 f-w-400">{{ 'LOGIN.TITLE' | translate }}</h3>
+        <div class="text-center">
+            <h3 class="mb-4 f-w-400">{{ 'LOGIN.TITLE' | translate }}</h3>
+        </div>
         <form [formGroup]="loginForm" (ngSubmit)="onLoginUserClick()">
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="feather icon-user"></i></span>
