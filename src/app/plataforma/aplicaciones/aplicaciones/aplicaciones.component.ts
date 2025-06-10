@@ -1,19 +1,17 @@
-/* eslint-disable @angular-eslint/use-lifecycle-interface */
-/* eslint-disable @typescript-eslint/no-this-alias */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+//#region IMPORTS
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLAplicacion } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlaplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { Subject } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
-
-// project import
-import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { TranslateModule } from '@ngx-translate/core';
+//#endregion IMPORTS
 
 @Component({
     selector: 'app-aplicaciones',
@@ -22,18 +20,22 @@ import { TranslateModule } from '@ngx-translate/core';
     templateUrl: './aplicaciones.component.html',
     styleUrl: './aplicaciones.component.scss'
 })
+
 export class AplicacionesComponent implements OnInit, AfterViewInit {
+    //#region VARIABLES
     [x: string]: any;
     @ViewChild(DataTableDirective, { static: false })
     datatableElement!: DataTableDirective;
-    estadoApp: string = '';
+    aplicaciones: PTLAplicacion[] = [];
     dtColumnSearchingOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject<any>();
-    aplicaciones: PTLAplicacion[] = [];
+    estadoApp: string = '';
+    //#endregion VARIABLES
 
     constructor(
         private router: Router,
         private aplicacionesService: PtlaplicacionesService,
+        private translate: TranslateService,
         private BreadCrumb: BreadcrumbComponent
     ) { }
 
@@ -56,14 +58,13 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
         this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
-                { title: 'Código', data: 'codigoAplicacion' },
-                { title: 'Nombre', data: 'nombreAplicacion' },
-                { title: 'Descripción', data: 'descripcionAplicacion' },
-                { title: 'Estado', data: 'estadoAplicacion' },
-                { title: 'Opciones', data: 'opciones' },
+                { title: this.translate.instant('APLICACIONES.CODE'), data: 'codigoAplicacion' },
+                { title: this.translate.instant('APLICACIONES.NAME'), data: 'nombreAplicacion' },
+                { title: this.translate.instant('APLICACIONES.DESCRIPTION'), data: 'descripcionAplicacion' },
+                { title: this.translate.instant('APLICACIONES.STATUS'), data: 'estadoAplicacion' },
+                { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' },
             ]
         };
-
         this.consultarAplicaciones();
     }
 
@@ -102,26 +103,25 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
 
     OnEliminarAplicaicionClick(id: number, nombre: string) {
         Swal.fire({
-            title: '¿Estás seguro de eliminar?',
-            text: `¡estas apunto de eliminar la Aplicación "${nombre}".!`,
+            title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
+            text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombre}".!`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
+            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
         }).then((result) => {
             if (result.isConfirmed) {
                 this.aplicacionesService.borrarAplicacion(id).subscribe({
                     next: (resp: any) => {
-                        Swal.fire('Eliminado', resp.mensaje, 'success');
+                        Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
                         this.aplicaciones = this.aplicaciones.filter(s => s.aplicacionId !== id);
                     },
                     error: (err: any) => {
-                        Swal.fire('Error', 'No se pudo eliminar el Aplicaicion.', 'error');
+                        Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
                         console.error('Error eliminando', err);
                     }
                 });
             }
         });
     }
-
 }
