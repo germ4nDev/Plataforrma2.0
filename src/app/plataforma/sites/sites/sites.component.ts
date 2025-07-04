@@ -12,11 +12,12 @@ import Swal from 'sweetalert2';
 // project import
 import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sites',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent,TranslateModule],
   templateUrl: './sites.component.html',
   styleUrl: './sites.component.scss'
 })
@@ -32,6 +33,7 @@ export class SitesComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private sitiosService:PTLSitiosAPService,
+    private translate: TranslateService,
     private BreadCrumb : BreadcrumbComponent
   ) {}
 
@@ -40,12 +42,12 @@ export class SitesComponent implements OnInit, AfterViewInit {
     this.dtColumnSearchingOptions = {
         responsive: true,
         columns: [
-          { title: 'Nombre', data: 'nombreSitio' },
-          { title: 'Descripción', data: 'descripcionSitio' },
-          { title: 'URL', data: 'urlSitio' },
-          { title: 'Puerto Sitio', data: 'puertoSitio' },
-          { title: 'Estado', data: 'estadoSitio' },
-          { title: 'Opciones', data: 'opciones' },
+          { title: this.translate.instant('SITIOS.NAME'), data: 'nombreSitio' },
+          { title: this.translate.instant('SITIOS.DESCRIPTION'), data: 'descripcionSitio' },
+          { title: this.translate.instant('SITIOS.URL'), data: 'urlSitio' },
+          { title: this.translate.instant('SITIOS.SITESPORT'), data: 'puertoSitio' },
+          { title: this.translate.instant('SITIOS.STATUS'), data: 'estadoSitio' },
+          { title: this.translate.instant('SITIOS.OPTIONS'), data: 'opciones' },
         ]
       };
 
@@ -98,21 +100,21 @@ export class SitesComponent implements OnInit, AfterViewInit {
 
   eliminarSitio(id: number, nombre: string) {
     Swal.fire({
-      title: '¿Estás seguro de eliminar?',
-      text: `¡estas apunto de eliminar el sitio "${nombre}".!`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+        title: this.translate.instant('SITIOS.ELIMINARTITULO'),
+        text: this.translate.instant('SITIOS.ELIMINARTEXTO') + `"${nombre}".!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+        cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.sitiosService.eliminarSitio(id).subscribe({
           next: (resp:any) => {
-            Swal.fire('Eliminado', resp.mensaje, 'success');
+            Swal.fire(this.translate.instant('SITIOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.sitiosAP = this.sitiosAP.filter(s => s.sitioId !== id);
           },
           error: (err:any) => {
-            Swal.fire('Error', 'No se pudo eliminar el sitio.', 'error');
+            Swal.fire('Error', this.translate.instant('SITIOS.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });
