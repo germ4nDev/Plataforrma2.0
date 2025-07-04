@@ -42,7 +42,7 @@ export class AuthenticationService {
     }
 
     login(username: string, password: string): Observable<PTLUsuarioAP> {
-        return this.http.post<PTLUsuarioAP>(`${environment.apiUrl}/auth/login`, { username, password }).pipe(
+        return this.http.post<PTLUsuarioAP>(`${environment.apiUrl}/auth`, { username, password }).pipe(
             tap((user) => {
                 if (!user) {
                     throw new Error('Usuario no válido');

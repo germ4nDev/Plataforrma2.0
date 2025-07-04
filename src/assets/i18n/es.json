@@ -1,6 +1,8 @@
 {
     "PLATAFORMA": {
         "OPTIONS": "Opciones",
+        "CANCEL": "Cancelar",
+        "DELETE": "Eliminar",
         "CHARGING": "Cargando ..."
     },
     "APLICACIONES": {
@@ -14,7 +16,11 @@
         "FILTER_CODE": "Filtro Código",
         "FILTER_NAME": "Filtro Nombre",
         "FILTER_DESCRIPTION": "Filtro Descripción",
-        "FILTER_STATUS": "Filtro Estado"
+        "FILTER_STATUS": "Filtro Estado",
+        "ELIMINARTITULO": "¿Está seguro de eliminar?",
+        "ELIMINARTEXTO": "¡Será Eliminada la Aplicación ",
+        "ELIMINAREXITOSA": "¡la Aplicación fué eliminada correctamente ",
+        "ELIMINARERROR": "No se pudo eliminar el Aplicaicion."
     },
     "LOGIN": {
         "TITLE": "Iniciar Sesión",

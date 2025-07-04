@@ -1,4 +1,4 @@
-export class PTLAplicacion {
+export class PTLAplicacionModel {
     constructor(
         public aplicacionId?: number,
         public codigoAplicacion?: string,
