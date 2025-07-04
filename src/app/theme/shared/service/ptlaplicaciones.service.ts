@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { PTLUsuarioAP } from '../_helpers/models/PTLUsuarioAP.model';
-import { PTLAplicacion } from '../_helpers/models/PTLAplicacion.model';
+import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
 
 const base_url = environment.apiUrl;
 
@@ -51,12 +51,12 @@ export class PtlaplicacionesService {
         return this.http.get( url, this.headers )
     }
 
-    crearAplicacion( aplicacion: PTLAplicacion ) {
+    crearAplicacion( aplicacion: PTLAplicacionModel ) {
         const url = `${ base_url }/aplicaciones`;
         return this.http.post( url, aplicacion, this.headers );
     }
 
-    actualizarAplicacion( aplicacion: PTLAplicacion  ) {
+    actualizarAplicacion( aplicacion: PTLAplicacionModel  ) {
         const url = `${ base_url }/aplicaciones/${ aplicacion.aplicacionId }`;
         return this.http.put( url, aplicacion, this.headers );
     }

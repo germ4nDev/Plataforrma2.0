@@ -7,7 +7,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
-import { PTLAplicacion } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlaplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { Subject } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -26,10 +26,10 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     [x: string]: any;
     @ViewChild(DataTableDirective, { static: false })
     datatableElement!: DataTableDirective;
-    aplicaciones: PTLAplicacion[] = [];
+
     dtColumnSearchingOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject<any>();
-    estadoApp: string = '';
+    aplicaciones: PTLAplicacionModel[]=[];
     //#endregion VARIABLES
 
     constructor(
@@ -55,6 +55,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+            console.log('traduccion de aplicaciones', this.translate.instant('APLICACIONES.CODE') );
         this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
@@ -73,14 +74,14 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     }
 
     consultarAplicaciones() {
-        this.aplicacionesService.getAplicaciones().subscribe((apps: any) => {
-            console.log('Todos las aplicaciones', apps);
-            apps.aplicaciones.forEach((app:any) => {
-                app.nomEstado = app.estadoAplicacion == true ? 'Activa' : 'Inactiva';
-            });
-            this.aplicaciones = apps.aplicaciones;
-            this.dtTrigger.next(null);// <--- Dispara la actualización de la tabla
-        });
+        // this.aplicacionesService.getAplicaciones().subscribe((apps: any) => {
+        //     console.log('Todos las aplicaciones', apps);
+        //     apps.aplicaciones.forEach((app:any) => {
+        //         app.nomEstado = app.estadoAplicacion == true ? 'Activa' : 'Inactiva';
+        //     });
+        //     this.aplicaciones = apps.aplicaciones;
+        //     this.dtTrigger.next(null);// <--- Dispara la actualización de la tabla
+        // });
     }
 
     filtrarColumna(columna: number, valor: string) {
@@ -109,7 +110,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
             showCancelButton: true,
             confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
             cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-        }).then((result) => {
+        }).then((result: any) => {
             if (result.isConfirmed) {
                 this.aplicacionesService.borrarAplicacion(id).subscribe({
                     next: (resp: any) => {

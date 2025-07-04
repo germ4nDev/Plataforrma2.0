@@ -34,7 +34,7 @@ export class InicioComponent implements OnInit {
     ingresarPlataforma() {
         const appId = 'asdfas-sdafsd-asdfsdf';
         localStorage.setItem('aplicacionId', appId)
-        this.router.navigate(['/dashboard/analytics']);
+        this.router.navigate(['/aplicaciones/aplicaciones']);
     }
 }
 
