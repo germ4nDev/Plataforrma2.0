@@ -2,14 +2,14 @@
   <div class="col-sm-12">
     <div class="card card-header-sticky">
       <div class="card-header">
-        <h4>Aplicaciones</h4>
+        <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
         <hr />
         <div class="row col-sm-12">
           <div class="col-sm-6">
             <app-breadcrumb></app-breadcrumb>
           </div>
           <div class="col-sm-6 justify-content-end d-flex">
-            <button type="button" (click)="OnNuevaAplicaicionClick()" class="btn-NuevoAplicacion"> {{ 'ASPLICACIONES.NEW' | translate }} </button>
+            <button type="button" (click)="OnNuevaAplicaicionClick()" class="btn-NuevoRegistro"> {{ 'APLICACIONES.NEW' | translate }} </button>
           </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
           <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
             <thead>
               <tr>
-                <th>{{ 'ASPLICACIONES.CODE' | translate }}</th>
+                <th>{{ 'APLICACIONES.CODE' | translate }}</th>
                 <th>{{ 'APLICACIONES.NAME' | translate }}</th>
                 <th>{{ 'APLICACINES.DESCRIPTION' | translate }}</th>
                 <th>{{ 'APLICACIONES.STATUS' | translate }}</th>
@@ -47,7 +47,7 @@
                       type="button"
                       class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
                       (click)="OnEditarAplicaicionClick(app.aplicacionId ?? 0 )"
-                      title="{{ 'ASPLICACIONES.UPDATE' | translate }}"
+                      title="{{ 'APLICACIONES.UPDATE' | translate }}"
                     >
                       <i class="feather icon-edit"></i>
                     </button>
@@ -57,7 +57,7 @@
                       (click)="OnEliminarAplicaicionClick(app.aplicacionId ?? 0 , app.nombreAplicacion ?? '' )"
                       data-bs-toggle="tooltip"
                       data-bs-placement="top"
-                      title="{{ 'ASPLICACIONES.DELETE' | translate }}"
+                      title="{{ 'APLICACIONES.DELETE' | translate }}"
                     >
                       <i class="feather icon-trash-2"></i>
                     </button>
@@ -72,7 +72,7 @@
                     #codigoAplicacion
                     (keyup)="filtrarColumna(0, codigoAplicacion.value)"
                     type="text"
-                    placeholder="{{ 'ASPLICACIONES.FILTER_CODE' | translate }}"
+                    placeholder="{{ 'APLICACIONES.FILTER_CODE' | translate }}"
                     name="filtro-url"
                     class="form-control"
                   />
@@ -82,7 +82,7 @@
                     #nombreAplicacion
                     (keyup)="filtrarColumna(1, nombreAplicacion.value)"
                     type="text"
-                    placeholder="{{ 'ASPLICACIONES.FILTER_NAME' | translate }}"
+                    placeholder="{{ 'APLICACIONES.FILTER_NAME' | translate }}"
                     name="filtro-nombre"
                     class="form-control"
                   />
@@ -92,7 +92,7 @@
                     #descripcionAplicacion
                     (keyup)="filtrarColumna(2, descripcionAplicacion.value)"
                     type="text"
-                    placeholder="{{ 'ASPLICACIONES.FILTER_DESCRIPTION' | translate }}"
+                    placeholder="{{ 'APLICACIONES.FILTER_DESCRIPTION' | translate }}"
                     name="filtro-nombre"
                     class="form-control"
                   />
@@ -102,7 +102,7 @@
                     #estadoAplicacion
                     (keyup)="filtrarColumna(4, estadoAplicacion.value)"
                     type="text"
-                    placeholder="{{ 'ASPLICACIONES.FILTRO_STATUS' | translate }}"
+                    placeholder="{{ 'APLICACIONES.FILTRO_STATUS' | translate }}"
                     name="filtro-estado"
                     class="form-control"
                   />

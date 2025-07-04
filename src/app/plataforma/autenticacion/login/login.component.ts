@@ -1,18 +1,16 @@
 // Angular import
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { catchError, first, tap } from 'rxjs/operators';
-
-// project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
-import Swal from 'sweetalert2';
 import { of, Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-login',
@@ -22,18 +20,19 @@ import { LanguageSelectorComponent } from 'src/app/theme/shared/components/langu
     styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
-    // public method
-    usernameValue = '';
-    userPassword = '';
-
-    loginForm!: FormGroup;
-    loading = false;
-    submitted = false;
-    returnUrl!: string;
+    //#region VARIABLES
     classList!: { toggle: (arg0: string) => void };
+    loginForm!: FormGroup;
     loginSub?: Subscription;
+    usernameValue: string = '';
+    userPassword: string = '';
+    returnUrl!: string;
     error: string = '';
-    remember = false;
+    loading: boolean = false;
+    submitted: boolean = false;
+    remember: boolean = false;
+    lang: string = localStorage.getItem('lang') || '';
+    //#endregion VARIABLES
 
     constructor(
         private formBuilder: FormBuilder,
@@ -67,7 +66,10 @@ export class LoginComponent implements OnInit {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
     }
 
-    // convenience getter for easy access to form fields
+    OnDestroy() {
+        this.loginSub?.unsubscribe();
+    }
+
     get formValues() {
         return this.loginForm.controls;
     }
