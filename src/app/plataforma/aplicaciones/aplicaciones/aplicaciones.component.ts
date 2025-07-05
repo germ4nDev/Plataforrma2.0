@@ -11,6 +11,7 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 import { PtlaplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { Subject } from 'rxjs';
 import Swal from 'sweetalert2';
+import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 //#endregion IMPORTS
 
 @Component({
@@ -20,7 +21,6 @@ import Swal from 'sweetalert2';
     templateUrl: './aplicaciones.component.html',
     styleUrl: './aplicaciones.component.scss'
 })
-
 export class AplicacionesComponent implements OnInit, AfterViewInit {
     //#region VARIABLES
     [x: string]: any;
@@ -29,17 +29,21 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
 
     dtColumnSearchingOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject<any>();
-    aplicaciones: PTLAplicacionModel[]=[];
+    aplicaciones: PTLAplicacionModel[] = [];
+    lang: string = localStorage.getItem('lang') || '';
+    tituloPagina: string = ''
     //#endregion VARIABLES
 
     constructor(
         private router: Router,
         private aplicacionesService: PtlaplicacionesService,
         private translate: TranslateService,
+        private languageService: LanguageService,
         private BreadCrumb: BreadcrumbComponent
     ) { }
 
     ngAfterViewInit(): void {
+        // this.translate.setDefaultLang('es');
         this.BreadCrumb.setBreadcrumb();
         this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
             dtInstance.columns().every(function () {
@@ -55,18 +59,26 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-            console.log('traduccion de aplicaciones', this.translate.instant('APLICACIONES.CODE') );
-        this.dtColumnSearchingOptions = {
-            responsive: true,
-            columns: [
-                { title: this.translate.instant('APLICACIONES.CODE'), data: 'codigoAplicacion' },
-                { title: this.translate.instant('APLICACIONES.NAME'), data: 'nombreAplicacion' },
-                { title: this.translate.instant('APLICACIONES.DESCRIPTION'), data: 'descripcionAplicacion' },
-                { title: this.translate.instant('APLICACIONES.STATUS'), data: 'estadoAplicacion' },
-                { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' },
-            ]
-        };
-        this.consultarAplicaciones();
+        this.languageService.currentLang$.subscribe((lang) => {
+            this.translate.use(lang); // Forzamos que ngx-translate lo aplique
+            console.log('Nuevo idioma:', lang);
+            this.translate
+                .get(['APLICACIONES.CODE', 'APLICACIONES.NAME', 'APLICACIONES.DESCRIPTION', 'APLICACIONES.STATUS', 'PLATAFORMA.OPTIONS'])
+                .subscribe((translations) => {
+                    this.tituloPagina = translations['APLICACIONES.TITLE'];
+                    this.dtColumnSearchingOptions = {
+                        responsive: true,
+                        columns: [
+                            { title: translations['APLICACIONES.CODE'], data: 'codigoAplicacion' },
+                            { title: translations['APLICACIONES.NAME'], data: 'nombreAplicacion' },
+                            { title: translations['APLICACIONES.DESCRIPTION'], data: 'descripcionAplicacion' },
+                            { title: translations['APLICACIONES.STATUS'], data: 'estadoAplicacion' },
+                            { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
+                        ]
+                    };
+                    this.consultarAplicaciones();
+                });
+        });
     }
 
     ngOnDestroy(): void {
@@ -115,7 +127,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
                 this.aplicacionesService.borrarAplicacion(id).subscribe({
                     next: (resp: any) => {
                         Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-                        this.aplicaciones = this.aplicaciones.filter(s => s.aplicacionId !== id);
+                        this.aplicaciones = this.aplicaciones.filter((s) => s.aplicacionId !== id);
                     },
                     error: (err: any) => {
                         Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
