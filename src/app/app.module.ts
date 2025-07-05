@@ -32,6 +32,7 @@ import { BasicAuthInterceptor } from 'src/app/theme/shared/_helpers/basic-auth.i
 import { ToastrModule } from 'ngx-toastr';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LanguageSelectorComponent } from "./theme/shared/components/language-selector/language-selector.component";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,18 +63,19 @@ export function HttpLoaderFactory(http: HttpClient) {
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
+    LanguageSelectorComponent,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     HttpClientModule,
     TranslateModule.forRoot({
-      defaultLanguage: 'es',
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
+        defaultLanguage: 'es',
+        loader: {
+            provide: TranslateLoader,
+            useFactory: HttpLoaderFactory,
+            deps: [HttpClient]
+        }
     })
-  ],
+],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }

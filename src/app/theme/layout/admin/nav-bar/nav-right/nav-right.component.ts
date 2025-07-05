@@ -33,7 +33,7 @@ export class NavRightComponent implements DoCheck {
     chatMessage: boolean;
     friendId!: number;
     gradientConfig = GradientConfig;
-    languages = this.languageService.getLanguages();
+    // languages = this.languageService.getLanguages();
     currentLang = this.languageService.getCurrentLanguage();
 
     // constructor

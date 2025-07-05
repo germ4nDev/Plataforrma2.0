@@ -1,4 +1,4 @@
-<select class="form-select w-auto" [value]="currentLang" (change)="changeLanguage($event)">
+<select class="form-select w-auto" [value]="selectedLang" (change)="changeLanguage($event)">
   <option *ngFor="let lang of availableLanguages" [value]="lang.code">
     {{ lang.label }}
   </option>
