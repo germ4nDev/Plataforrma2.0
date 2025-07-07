@@ -32,10 +32,12 @@
         "TITLE": "Sitios",
         "NEW": "Nuevo Sitio",
         "NAME": "Nombre",
+        "TITLEGEST": "Crear/Actualizar un Sitio",
         "DESCRIPTION": "Descripción",
         "URL": "URL",
         "SITESPORT": "Puerto Sitio",
         "STATUS": "Estado",
+        "CREATE": "Crear Sitio",
         "UPDATE": "Modificar sitio",
         "DELETE": "Eliminar Sitio",
         "FILTER_NAME": "Filtro Nombre",
@@ -47,7 +49,6 @@
         "ELIMINARTEXTO": "estas apunto de eliminar el sitio ",
         "ELIMINAREXITOSA": "Eliminado",
         "ELIMINARERROR": "No se pudo eliminar el sitio.",
-
         "GESTION": {
             "TITLE": "Administración de sitios",
             "PLACEHOLDERNAME": "Nombre del sitio",
@@ -76,7 +77,10 @@
         "ELIMINARTITULO": "¿Estás seguro de eliminar?",
         "ELIMINARTEXTO": "estas apunto de eliminar el enlace ",
         "ELIMINAREXITOSA": "Eliminado",
-        "ELIMINARERROR": "No se pudo eliminar el enlace."
+        "ELIMINARERROR": "No se pudo eliminar el enlace.",
+        "GESTION": {
+
+        }
     },
     "CONTENIDOS": {
         "TITLE": "Contenidos",

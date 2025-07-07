@@ -2,18 +2,22 @@
     <div class="col-sm-12">
         <div class="card card-header-sticky">
             <div class="card-header">
-                <h5>{{ 'SITIOS.GESTION.TITLE' | translate }}</h5>
+                <h5>{{ 'SITIOS.TITLEGEST' | translate }}</h5>
                 <hr>
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
                         <app-breadcrumb></app-breadcrumb>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex gap-3">
-                        <button type="button" class="btn-NuevoSitio" (click)="btnInsertEditSitios(validationForm)">
-                            {{ modoEdicion ? 'Modificar' : 'Insertar' }}
+                        <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro" (click)="btnInsertEditSitios(validationForm)">
+                            {{ 'SITIOS.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoSitio" (click)="btnRegresarSitio()">
+                        <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro" (click)="btnInsertEditSitios(validationForm)">
+                            {{ 'SITIOS.UPDATE' | translate }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarSitio()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
@@ -23,7 +27,8 @@
         </div>
         <div class="card">
             <div class="card-header">
-                <h4>{{ 'SITIOS.NEW' | translate }}</h4>
+                <h4 *ngIf="!modoEdicion">{{ 'SITIOS.NEW' | translate }}</h4>
+                <h4 *ngIf="modoEdicion">{{ 'SITIOS.UPDATE' | translate }}</h4>
             </div>
             <div class="card-body">
                 <form #validationForm="ngForm" class="editForm" novalidate>
@@ -34,7 +39,7 @@
                                 <input class="form-control input-md" id="nombreSitio" name="nombreSitio" type="text"
                                     placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERNAME' | translate }}"
                                     [ngClass]="{'is-invalid': !nombreSitio.valid && (nombreSitio.dirty || nombreSitio.touched || isSubmit)}"
-                                    #nombreSitio="ngModel" required [(ngModel)]="FormSitio.nombreSitio" />
+                                    #nombreSitio="ngModel" required [(ngModel)]="FormRegistro.nombreSitio" />
                                 <label *ngIf="!nombreSitio.valid && (nombreSitio.dirty || nombreSitio.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SITIOS.GESTION.REQUERIDONAME' | translate }}
@@ -46,7 +51,7 @@
                                 <label class="form-label">{{ 'SITIOS.URL' | translate }}</label>
                                 <input type="text" class="form-control" name="urlSitio" placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERURL' | translate }}"
                                     [ngClass]="{'is-invalid': !urlSitio.valid && (urlSitio.dirty || urlSitio.touched || isSubmit) }"
-                                    #urlSitio="ngModel" required [(ngModel)]="FormSitio.urlSitio" />
+                                    #urlSitio="ngModel" required [(ngModel)]="FormRegistro.urlSitio" />
                                 <label *ngIf="!urlSitio.valid && (urlSitio.dirty || urlSitio.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SITIOS.GESTION.REQUERIDOURL' | translate }}
@@ -59,7 +64,7 @@
                                 <input class="form-control input-md" id="puertoSitio" name="puertoSitio" type="text"
                                     placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERPUERTO' | translate }}"
                                     [ngClass]="{'is-invalid': !puertoSitio.valid && (puertoSitio.dirty || puertoSitio.touched || isSubmit)}"
-                                    #puertoSitio="ngModel" required [(ngModel)]="FormSitio.puertoSitio" />
+                                    #puertoSitio="ngModel" required [(ngModel)]="FormRegistro.puertoSitio" />
                                 <label *ngIf="!puertoSitio.valid && (puertoSitio.dirty || puertoSitio.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SITIOS.GESTION.REQUERIDOPUERTO' | translate }}
@@ -73,14 +78,14 @@
                                     <label class="radio-button">
                                         <input name="option" type="radio"
                                             [value]="true"
-                                            [(ngModel)]="FormSitio.estadoSitio">
+                                            [(ngModel)]="FormRegistro.estadoSitio">
                                             <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
                                     </label>
                                     <label class="radio-button">
                                         <input name="option" type="radio"
                                             [value]="false"
-                                            [(ngModel)]="FormSitio.estadoSitio">
+                                            [(ngModel)]="FormRegistro.estadoSitio">
                                             <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
                                     </label>
@@ -92,7 +97,7 @@
                                 <label class="form-label">{{ 'SITIOS.DESCRIPTION' | translate }}</label>
                                 <textarea class="form-control" placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERDESCRIPCION' | translate }}" name="descripcionSitio"
                                     [ngClass]="{'is-invalid': !descripcionSitio.valid && (descripcionSitio.dirty || descripcionSitio.touched || isSubmit)}"
-                                    #descripcionSitio="ngModel" required [(ngModel)]="FormSitio.descripcionSitio" rows="5">
+                                    #descripcionSitio="ngModel" required [(ngModel)]="FormRegistro.descripcionSitio" rows="5">
                                 </textarea>
                                 <label
                                     *ngIf="!descripcionSitio.valid && (descripcionSitio.dirty || descripcionSitio.touched || isSubmit)"

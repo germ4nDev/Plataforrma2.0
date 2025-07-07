@@ -30,11 +30,13 @@
     "SITIOS":{
         "TITLE": "Sites",
         "NEW": "New Site",
+        "TITLEGEST": "Create/Update an Site",
         "NAME": "Name",
         "DESCRIPTION": "Description",
         "URL": "URL",
         "SITESPORT": "Sites Port",
         "STATUS": "Current Status",
+        "CREATE": "Create Site",
         "UPDATE": "Update Site",
         "DELETE": "Delete Site",
         "FILTER_NAME": "Filter Name",
@@ -46,7 +48,6 @@
         "ELIMINARTEXTO": "You are about to permanently delete the site:",
         "ELIMINAREXITOSA": "Successfully Deleted",
         "ELIMINARERROR": "The site could not be deleted. Please try again.",
-
         "GESTION": {
             "TITLE": "Site Management",
             "PLACEHOLDERNAME": "Site name",
@@ -75,7 +76,10 @@
         "ELIMINARTITULO": "Confirm Deletion",
         "ELIMINARTEXTO": "You are about to permanently delete the link:",
         "ELIMINAREXITOSA": "Deleted successfully",
-        "ELIMINARERROR": "The link could not be deleted. Please try again."
+        "ELIMINARERROR": "The link could not be deleted. Please try again.",
+        "GESTION": {
+
+        }
     },
     "CONTENIDOS": {
         "TITLE": "Contents",
