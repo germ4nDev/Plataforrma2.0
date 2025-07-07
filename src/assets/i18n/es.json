@@ -9,7 +9,7 @@
         "REGRESAR": "Regresar"
     },
     "APLICACIONES": {
-        "TITLE": "Administración de Aplicationes",
+        "TITLE": "Administración de Aplicaciones",
         "TITLEGEST": "Crear/Actualizar una Aplicación",
         "CODE": "Código",
         "NAME": "Nombre",
@@ -25,7 +25,7 @@
         "ELIMINARTITULO": "¿Está seguro de eliminar?",
         "ELIMINARTEXTO": "¡Será Eliminada la Aplicación ",
         "ELIMINAREXITOSA": "¡la Aplicación fué eliminada correctamente ",
-        "ELIMINARERROR": "No se pudo eliminar el Aplicaicion.",
+        "ELIMINARERROR": "No se pudo eliminar el Aplicación.",
         "CREATE": "Crear Aplicación"
     },
     "SITIOS":{
@@ -36,7 +36,6 @@
         "URL": "URL",
         "SITESPORT": "Puerto Sitio",
         "STATUS": "Estado",
-        "OPTIONS": "Opciones",
         "UPDATE": "Modificar sitio",
         "DELETE": "Eliminar Sitio",
         "FILTER_NAME": "Filtro Nombre",
@@ -47,7 +46,55 @@
         "ELIMINARTITULO": "¿Estás seguro de eliminar?",
         "ELIMINARTEXTO": "estas apunto de eliminar el sitio ",
         "ELIMINAREXITOSA": "Eliminado",
-        "ELIMINARERROR": "No se pudo eliminar el sitio."
+        "ELIMINARERROR": "No se pudo eliminar el sitio.",
+
+        "GESTION": {
+            "TITLE": "Administración de sitios",
+            "PLACEHOLDERNAME": "Nombre del sitio",
+            "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+            "PLACEHOLDERURL": "URL del sitio",
+            "REQUERIDOURL": "Por favor, ingrese una URL. Este campo es obligatorio.",
+            "PLACEHOLDERPUERTO": "Puerto del sitio",
+            "REQUERIDOPUERTO": "Por favor, Ingrese el puerto del sitio. Este campo es obligatorio.",
+            "PLACEHOLDERDESCRIPCION": "Descripcion del sitio",
+            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
+        }
+    },
+    "ENLACES": {
+        "TITLE": "Enlaces",
+        "NEW": "Nuevo Enlace",
+        "NAME": "Nombre",
+        "DESCRIPTION": "Descripción",
+        "RUTA": "Ruta Enlace",
+        "STATUS": "Estado",
+        "UPDATE": "Modificar Enlace",
+        "DELETE": "Eliminar Enlace",
+        "FILTER_NAME": "Filtro Nombre",
+        "FILTER_DESCRIPTION": "Filtro descripción",
+        "FILTER_RUTA": "Filtro Ruta",
+        "FILTER_STATUS": "Filtro Estado",
+        "ELIMINARTITULO": "¿Estás seguro de eliminar?",
+        "ELIMINARTEXTO": "estas apunto de eliminar el enlace ",
+        "ELIMINAREXITOSA": "Eliminado",
+        "ELIMINARERROR": "No se pudo eliminar el enlace."
+    },
+    "CONTENIDOS": {
+        "TITLE": "Contenidos",
+        "NEW": "Nuevo Contenido",
+        "NAME": "Nombre",
+        "DESCRIPTION": "Descripción",
+        "CONTENIDO": "Contenido",
+        "STATUS": "Estado",
+        "UPDATE": "Modificar Contenido",
+        "DELETE": "Eliminar Contenido",
+        "FILTER_NAME": "Filtro Nombre",
+        "FILTER_DESCRIPTION": "Filtro descripción",
+        "FILTER_CONTENIDO": "Filtro Contenido",
+        "FILTER_STATUS": "Filtro Estado",
+        "ELIMINARTITULO": "¿Estás seguro de eliminar?",
+        "ELIMINARTEXTO": "estas apunto de eliminar el contenido ",
+        "ELIMINAREXITOSA": "Eliminado",
+        "ELIMINARERROR": "No se pudo eliminar el contenido."
     },
     "LOGIN": {
         "TITLE": "Iniciar Sesión",
