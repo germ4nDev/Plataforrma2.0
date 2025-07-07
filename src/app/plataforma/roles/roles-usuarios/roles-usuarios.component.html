@@ -1,27 +1,112 @@
 <div class="row">
     <div class="col-sm-12">
-        <div class="card">
+        <div class="card card-header-sticky">
             <div class="card-header">
-                <h5>Column Searching</h5>
+                <!-- <div class="text-center"> -->
+                <h4>{{ 'USUARIOS.TITLE' | translate }}</h4>
+                <hr />
+                <!-- </div> -->
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <app-breadcrumb></app-breadcrumb>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex">
+                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
+                            {{ 'USUARIOS.NEW' | translate }}
+                        </button>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions"
-                        class="table table-striped row-border table-hover">
+                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+                        <thead>
+                            <tr>
+                                <th>{{ 'USUARIOS.FOTO' | translate }}</th>
+                                <th>{{ 'USUARIOS.IDENTIFICACION' | translate }}</th>
+                                <th>{{ 'USUARIOS.NAME' | translate }}</th>
+                                <th>{{ 'USUARIOS.CORREO' | translate }}</th>
+                                <th>{{ 'USUARIOS.USERNAME' | translate }}</th>
+                                <th>{{ 'USUARIOS.STATUS' | translate }}</th>
+                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let reg of registros">
+                                <td>
+                                    <img src="assets/images/user/{{ reg.fotoUsuario }}" class="img-radius wid-40"
+                                        alt="User-Profile-Image" />
+                                    <!-- {{ reg.fotoUsuario }} -->
+                                </td>
+                                <td>
+                                    {{ reg.identificacionUsuario }}
+                                </td>
+                                <td>
+                                    {{ reg.nombreUsuario }}
+                                </td>
+                                <td>
+                                    {{ reg.correoUsuario }}
+                                </td>
+                                <td>
+                                    {{ reg.userNameUsuario }}
+                                </td>
+                                <td>
+                                    {{ reg.nomEstado }}
+                                </td>
+                                <td style="text-align: center; width: 10%">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                            (click)="OnEditarRegistroClick(reg.usuarioId?? 0)"
+                                            title="{{ 'USUARIOS.UPDATE' | translate }}">
+                                            <i class="feather icon-edit"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                            (click)="OnEliminarRegistroClick(reg.usuarioId?? 0, reg.nombreUsuario?? '')"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{ 'USUARIOS.DELETE' | translate }}">
+                                            <i class="feather icon-trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                         <tfoot>
                             <tr>
-                                <th><input type="text" placeholder="Search Name" name="search-name"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Position" name="search-position"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Office" name="search-office"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Age" name="search-age"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Satrt Date" name="search-date"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Salary" name="search-salary"
-                                        class="form-control" /></th>
+                                <th>
+
+                                </th>
+                                <th>
+                                    <input #codigoAplicacion (keyup)="filtrarColumna(0, codigoAplicacion.value)"
+                                        type="text" placeholder="{{ 'USUARIOS.FILTER_IDENTIFICACION' | translate }}"
+                                        name="filtro-url" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #nombreAplicacion (keyup)="filtrarColumna(1, nombreAplicacion.value)"
+                                        type="text" placeholder="{{ 'USUARIOS.FILTER_NAME' | translate }}"
+                                        name="filtro-nombre" class="form-control" />
+                                </th>
+                                                                <th>
+                                    <input #nombreAplicacion (keyup)="filtrarColumna(1, nombreAplicacion.value)"
+                                        type="text" placeholder="{{ 'USUARIOS.FILTER_CORREO' | translate }}"
+                                        name="filtro-nombre" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #descripcionAplicacion
+                                        (keyup)="filtrarColumna(2, descripcionAplicacion.value)" type="text"
+                                        placeholder="{{ 'USUARIOS.FILTER_USERNAME' | translate }}"
+                                        name="filtro-nombre" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #estadoAplicacion (keyup)="filtrarColumna(4, estadoAplicacion.value)"
+                                        type="text" placeholder="{{ 'USUARIOS.FILTRO_STATUS' | translate }}"
+                                        name="filtro-estado" class="form-control" />
+                                </th>
+                                <th>
+                                </th>
                             </tr>
                         </tfoot>
                     </table>

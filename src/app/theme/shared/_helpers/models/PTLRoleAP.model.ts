@@ -1,0 +1,12 @@
+export class PTLRoleAPModel {
+    constructor (
+        public roleId?: number,
+        public aplicacionId?: number,
+        public codigoAplicacion?: string,
+        public nombreAplicacion?: string,
+        public nombreRole?: string,
+        public descripcionRole?: string,
+        public estadoRole?: number,
+        public nomEstado?: string
+   ) {}
+}

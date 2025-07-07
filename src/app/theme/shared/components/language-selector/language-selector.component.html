@@ -1,5 +1,3 @@
-<select class="form-select w-auto" [value]="selectedLang" (change)="changeLanguage($event)">
-  <option *ngFor="let lang of availableLanguages" [value]="lang.code">
-    {{ lang.label }}
-  </option>
-</select>
+<button (click)="changeLanguage(oppositeLanguage.code)" class="lang-btn" [title]="selectedLang === 'es' ? 'Switch to English' : 'Cambiar a Español'">
+  <img [src]="oppositeLanguage.flag" width="24" height="24" />
+</button>

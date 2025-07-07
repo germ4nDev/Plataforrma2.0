@@ -2,10 +2,14 @@
     "PLATAFORMA": {
         "OPTIONS": "Options",
         "CANCEL": "Cancel",
-        "CHARGING": "Cargando ..."
+        "CHARGING": "Cargando ...",
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive",
+        "REGRESAR": "Go Back"
     },
     "APLICACIONES": {
         "TITLE": "Aplications Administration",
+        "TITLEGEST": "Create/Update an Aplication",
         "CODE": "Code",
         "NAME": "Name",
         "DESCRIPTION": "Description",
@@ -13,10 +17,15 @@
         "NEW": "New Aplication",
         "UPDATE": "Modify Aplication",
         "DELETE": "Delete Aplication",
-        "FILTER_CODE": "Filtro Código",
-        "FILTER_NAME": "Filtro Nombre",
-        "FILTER_DESCRIPTION": "Filtro Descripción",
-        "FILTER_STATUS": "Filtro Estado"
+        "FILTER_CODE": "Code Filter",
+        "FILTER_NAME": "Name Filter",
+        "FILTER_DESCRIPTION": "Description Filter",
+        "FILTER_STATUS": "Status Filter",
+        "ELIMINARTITULO": "¿Are you sure to eliminate?",
+        "ELIMINARTEXTO": "¡Aplication will be eliminated ",
+        "ELIMINAREXITOSA": "¡Aplication was successfully eliminated ",
+        "ELIMINARERROR": "The aplication could't be eliminated.",
+        "CREATE": "Create Aplication"
     },
     "LOGIN": {
         "TITLE": "Start Session",
@@ -31,6 +40,86 @@
         "RESET_PASS_Q": "Reset password",
         "RESET_PASS_T": "Reset",
         "SOCIAL_NETWORKS": "Social Networks"
+    },
+    "USUARIOS": {
+        "TITLE": "Users Administration",
+        "NAME": "Name",
+        "DESCRIPTION": "Description",
+        "CORREO": "Email",
+        "USERNAME": "Username",
+        "FOTO": "Picture",
+        "STATUS": "Status",
+        "NEW": "New User",
+        "UPDATE": "Update User",
+        "DELETE": "Delete User",
+        "FILTER_NAME": "Name filter",
+        "FILTER_STATUS": "Status Filter",
+        "ELIMINARTITULO": "¿Sure to Delete?",
+        "ELIMINARTEXTO": "¡User will be Eliminated ",
+        "ELIMINAREXITOSA": "¡User Eliminated succsessfully ",
+        "ELIMINARERROR": "User could't be eliminated.",
+        "CREATE": "Create User",
+        "IDENTIFICACION": "Identification",
+        "FILTER_IDENTIFICACION": "Identification Filter",
+        "FILTER_CORREO": "Email filter",
+        "FILTER_USERNAME": "UserName Filter",
+        "FILTRO_STATUS": "Status Filter",
+        "GESTION": {
+            "TITLE": "Create/Update User",
+            "CREATE": "Create User",
+            "UPDATE": "Update User",
+            "NEW": "New User",
+            "NAME": "User's Name",
+            "NAMEHOLDER": "Enter the User's Name",
+            "IDENTIFICACION": "User's Identification",
+            "INDENTIFICACIONHOLDER": "Enter the User's Identification",
+            "COREO": "User's Email",
+            "CORREOHOLDER": "Enter the User's email",
+            "USERNAME": "User's Username",
+            "USERNAMEHOLDER": "Enter the User's Username",
+            "FOTO": "User's Picture",
+            "FOTOHOLDER": "Slect the User's Picture",
+            "DESCRIPTION": "User's Description",
+            "DESCRIPTIONHOLDER": "Enter the User's Description",
+            "STATUS": "User's Status"
+        }
+    },
+    "ROLES": {
+        "TITLE": "Roles Administration",
+        "NEW": "New Role",
+        "UPDATE": "Update Role",
+        "DELETE": "Delete Role",
+        "CREATE": "Create Role",
+
+        "NOMBREAPLICACION": "Aplication",
+        "NOMBREROL": "Name",
+        "DESCRIPCIONROL": "Description",
+        "ESTADOROLE": "Status",
+
+        "FILTER_CODIGOAPLICACION": "Aplication Filter",
+        "FILTER_NAMEROLE": "Name Filter",
+        "FILTER_DESCRIPCIONROLE": "Description Filter",
+        "FILTRO_STATUS": "Status Filter",
+
+        "ELIMINARTITULO": "¿Sure to Delete?",
+        "ELIMINARTEXTO": "Role will be Eliminated ",
+        "ELIMINAREXITOSA": "Role eliminated succsessfully ",
+        "ELIMINARERROR": "Role could't be eliminated.",
+
+        "GESTION": {
+            "TITLE": "Create/Update Role",
+            "CREATE": "Create Role",
+            "UPDATE": "Update Role",
+            "NEW": "New Role",
+
+            "APLICACION": "Aplication",
+            "APLICACIONHOLDER": "Select an Aplication",
+            "NAME": "Role's Name",
+            "NAMEHOLDER": "Enter Role's Name",
+            "DESCRIPTION": "Rol's' Descripction",
+            "DESCRIPTIONHOLDER": "Enter Role's Description",
+            "STATUS": "Role's Status"
+        }
     },
     "Navigation": "Navigation",
     "Dashboard": "Dashboard",

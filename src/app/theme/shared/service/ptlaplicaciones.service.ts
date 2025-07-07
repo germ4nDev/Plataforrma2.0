@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { PTLUsuarioAP } from '../_helpers/models/PTLUsuarioAP.model';
+import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
 
 const base_url = environment.apiUrl;
@@ -12,57 +12,81 @@ const base_url = environment.apiUrl;
 @Injectable({
   providedIn: 'root'
 })
-export class PtlaplicacionesService {
-    user : PTLUsuarioAP = new PTLUsuarioAP(0, 0, '', '', '', false, '');
+export class PtlAplicacionesService {
+  user: PTLUsuarioModel = new PTLUsuarioModel();
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    get token(): string {
-        this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-        if (this.user.serviceToken !== '') {
-            return this.user.serviceToken;
-        }
-        return '';
+  get token(): string {
+    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
+    if (this.user.serviceToken !== '') {
+      return this.user.serviceToken || '';
     }
+    return '';
+  }
 
-    get headers() {
+  get headers() {
+    return {
+      headers: {
+        'x-token': this.token
+      }
+    };
+  }
+
+  getAplicaciones() {
+    const url = `${base_url}/aplicaciones`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('servicio de aplicaciones', resp);
         return {
-            headers: {
-                'x-token': this.token
-            }
-        }
-    }
+          ok: true,
+          aplicaciones: resp.aplicaciones
+        };
+      })
+    );
+  }
 
-    getAplicaciones() {
-        const url = `${ base_url }/aplicaciones`;
-        return this.http.get( url, this.headers )
-        .pipe(
-          map((resp: any) => {
-            return {
-              ok: true,
-              aplicaciones: resp.aplicaciones
-            };
-          })
-        );
-    }
+  getAplicacionById(id: PTLAplicacionModel) {
+    const url = `${base_url}/aplicaciones/${id}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('data de aplicaciones', resp);
+        return {
+          ok: true,
+          aplicacion: resp.aplicacion
+        };
+      })
+    );
+  }
 
-    getAplicacionById(id: string) {
-        const url = `${ base_url }/aplicaciones/` + id;
-        return this.http.get( url, this.headers )
-    }
+  crearAplicacion(aplicacion: PTLAplicacionModel) {
+    const url = `${base_url}/aplicaciones`;
+    return this.http.post(url, aplicacion);
+  }
 
-    crearAplicacion( aplicacion: PTLAplicacionModel ) {
-        const url = `${ base_url }/aplicaciones`;
-        return this.http.post( url, aplicacion, this.headers );
-    }
+  actualizarAplicacion(aplicacion: PTLAplicacionModel) {
+    const url = `${base_url}/aplicaciones/${aplicacion.aplicacionId}`;
+    return this.http.put(url, aplicacion).pipe(
+      map((resp: any) => {
+        console.log('data de aplicacion modificacda', resp);
+        return {
+          ok: true,
+          aplicacion: resp.aplicacion
+        };
+      })
+    );
+  }
 
-    actualizarAplicacion( aplicacion: PTLAplicacionModel  ) {
-        const url = `${ base_url }/aplicaciones/${ aplicacion.aplicacionId }`;
-        return this.http.put( url, aplicacion, this.headers );
-    }
-
-    borrarAplicacion( _id: number ) {
-        const url = `${ base_url }/aplicaciones/${ _id }`;
-        return this.http.delete( url, this.headers );
-    }
+  eliminarAplicacion(_id: number) {
+    const url = `${base_url}/aplicaciones/${_id}`;
+    return this.http.delete(url).pipe(
+      map((resp: any) => {
+        console.log('data de aplicacion modificacda', resp);
+        return {
+          ok: true,
+          aplicacion: resp.aplicacion
+        };
+      })
+    );
+  }
 }

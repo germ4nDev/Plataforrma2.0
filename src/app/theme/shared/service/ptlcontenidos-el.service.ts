@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { PTLUsuarioAP } from '../_helpers/models/PTLUsuarioAP.model';
+import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLContenidosEL } from '../_helpers/models/PTLContenidosEL.model';
 
 const base_url = environment.apiUrl;
@@ -12,14 +12,14 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLContenidosELService {
-    user : PTLUsuarioAP = new PTLUsuarioAP(0, 0, '', '', '', false, '');
+    user : PTLUsuarioModel = new PTLUsuarioModel();
 
     constructor(private http: HttpClient) { }
 
     get token(): string {
         this.user = JSON.parse(localStorage.getItem('currentUser') || '');
         if (this.user.serviceToken !== '') {
-            return this.user.serviceToken;
+            return this.user.serviceToken || '';
         }
         return '';
     }
