@@ -1,27 +1,94 @@
 <div class="row">
     <div class="col-sm-12">
-        <div class="card">
+        <div class="card card-header-sticky">
             <div class="card-header">
-                <h5>Column Searching</h5>
+                <!-- <div class="text-center"> -->
+                <h4>{{ 'ROLES.TITLE' | translate }}</h4>
+                <hr />
+                <!-- </div> -->
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <app-breadcrumb></app-breadcrumb>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex">
+                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
+                            {{ 'ROLES.NEW' | translate }}
+                        </button>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions"
-                        class="table table-striped row-border table-hover">
+                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+                        <thead>
+                            <tr>
+                                <th>{{ 'ROLES.NOMBREAPLICACION' | translate }}</th>
+                                <th>{{ 'ROLES.NOMBREROL' | translate }}</th>
+                                <th>{{ 'ROLES.DESCRIPCIONROL' | translate }}</th>
+                                <th>{{ 'ROLES.ESTADOROLE' | translate }}</th>
+                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let reg of registros">
+                                <td>
+                                    {{ reg.nombreAplicacion }}
+                                </td>
+                                <td>
+                                    {{ reg.nombreRole }}
+                                </td>
+                                <td>
+                                    {{ reg.descripcionRole }}
+                                </td>
+                                <td>
+                                    {{ reg.nomEstado }}
+                                </td>
+                                <td style="text-align: center; width: 10%">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                            (click)="OnEditarRegistroClick(reg.roleId?? 0)"
+                                            title="{{ 'ROLES.UPDATE' | translate }}">
+                                            <i class="feather icon-edit"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                            (click)="OnEliminarRegistroClick(reg.roleId?? 0, reg.nombreRole?? '')"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{ 'ROLES.DELETE' | translate }}">
+                                            <i class="feather icon-trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                         <tfoot>
                             <tr>
-                                <th><input type="text" placeholder="Search Name" name="search-name"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Position" name="search-position"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Office" name="search-office"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Age" name="search-age"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Satrt Date" name="search-date"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Salary" name="search-salary"
-                                        class="form-control" /></th>
+                                <th>
+                                    <input #codigoAplicacion (keyup)="filtrarColumna(0, codigoAplicacion.value)"
+                                        type="text" placeholder="{{ 'ROLES.FILTER_CODIGOAPLICACION' | translate }}"
+                                        name="filtro-codigoAplicacion" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #nombreRole (keyup)="filtrarColumna(1, nombreRole.value)"
+                                        type="text" placeholder="{{ 'ROLES.FILTER_NAMEROLE' | translate }}"
+                                        name="filtro-nombreRole" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #descripcionRole
+                                        (keyup)="filtrarColumna(2, descripcionRole.value)" type="text"
+                                        placeholder="{{ 'ROLES.FILTER_DESCRIPCIONROLE' | translate }}"
+                                        name="filtro-descripcionRole" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #estadoRole (keyup)="filtrarColumna(4, estadoRole.value)"
+                                        type="text" placeholder="{{ 'ROLES.FILTRO_STATUS' | translate }}"
+                                        name="filtro-estadoRole" class="form-control" />
+                                </th>
+                                <th>
+                                </th>
                             </tr>
                         </tfoot>
                     </table>
@@ -30,3 +97,4 @@
         </div>
     </div>
 </div>
+

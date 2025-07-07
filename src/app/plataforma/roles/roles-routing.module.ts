@@ -10,6 +10,10 @@ const routes: Routes = [
             path: 'roles',
             loadComponent: () => import('./roles/roles.component').then(m => m.RolesComponent)
         },
+                {
+            path: 'gestion-roles',
+            loadComponent: () => import('./roles/gestion-roles/gestion-roles.component').then(m => m.GestionRolesComponent)
+        },
         {
             path: 'roles-usuarios',
             loadComponent: () => import('./roles-usuarios/roles-usuarios.component').then(m => m.RolesUsuariosComponent)

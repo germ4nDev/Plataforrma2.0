@@ -1,0 +1,15 @@
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  cursor: pointer;
+
+  &:focus,
+  &:hover {
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+  }
+}

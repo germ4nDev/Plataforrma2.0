@@ -13,14 +13,14 @@ import { TodoCardCompleteDirective } from './directive/todo-card-complete.direct
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { CustomTranslateLoader } from './custom-translate-loader';
+import { GalleryModule } from '@ks89/angular-modal-gallery';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
 // third party
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { NgClickOutsideDirective } from 'ng-click-outside2';
 import 'hammerjs';
 import 'mousetrap';
-import { GalleryModule } from '@ks89/angular-modal-gallery';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
 // bootstrap import
 import {
@@ -57,13 +57,13 @@ import {
     NgScrollbarModule,
     AlertComponent,
     bootstrap,
-    NgClickOutsideDirective,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useClass: CustomTranslateLoader
-      }
-    })
+    NgClickOutsideDirective
+    // TranslateModule.forRoot({
+    //   loader: {
+    //     provide: TranslateLoader,
+    //     useClass: CustomTranslateLoader
+    //   }
+    // })
   ],
   exports: [
     CommonModule,

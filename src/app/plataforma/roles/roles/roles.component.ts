@@ -1,63 +1,176 @@
+//#region IMPORTS
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { DataTablesModule, DataTableDirective } from 'angular-datatables';
+import { CommonModule } from '@angular/common';
+import { DataTableDirective, DataTablesModule } from 'angular-datatables';
+import { Router } from '@angular/router';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
+import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
+import { PTLRolesAPService } from 'src/app/theme/shared/service/ptlroles-ap.service';
+import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
+import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { catchError, Subject, tap } from 'rxjs';
+import { of, Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+//#endregion IMPORTS
 
 @Component({
   selector: 'app-roles',
   standalone: true,
-  imports: [DataTablesModule],
+  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
   templateUrl: './roles.component.html',
   styleUrl: './roles.component.scss'
 })
 export class RolesComponent implements OnInit, AfterViewInit {
-dtColumnSearchingOptions: object = {};
-  @ViewChild(DataTableDirective)
+  //#region VARIABLES
+  [x: string]: any;
+  @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
+  registrosSub?: Subscription;
+  aplicaciones: PTLAplicacionModel[] = [];
 
-  // life cycle event
-  ngOnInit() {
-    this.dtColumnSearchingOptions = {
-      ajax: 'fake-data/datatable-data.json',
-      columns: [
-        {
-          title: 'Name',
-          data: 'name'
-        },
-        {
-          title: 'Position',
-          data: 'position'
-        },
-        {
-          title: 'Office',
-          data: 'office'
-        },
-        {
-          title: 'Age',
-          data: 'age'
-        },
-        {
-          title: 'Start Date',
-          data: 'date'
-        },
-        {
-          title: 'Salary',
-          data: 'salary'
-        }
-      ],
-      responsive: true
-    };
-  }
+  dtColumnSearchingOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject<any>();
+  registros: PTLRoleAPModel[] = [];
+  lang: string = localStorage.getItem('lang') || '';
+  tituloPagina: string = '';
+  //#endregion VARIABLES
+
+  constructor(
+    private router: Router,
+    private rolesAPService: PTLRolesAPService,
+    private translate: TranslateService,
+    private aplicacionesService: PtlAplicacionesService,
+    private languageService: LanguageService,
+    private BreadCrumb: BreadcrumbComponent
+  ) {}
 
   ngAfterViewInit(): void {
+    this.BreadCrumb.setBreadcrumb();
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.columns().every(function () {
-        // eslint-disable-next-line
-        const input = $('input', this.footer()) as any;
-        input.on('keyup change', () => {
-          if (this.search() !== input.val()) {
-            this.search(input.val()).draw();
+        const that = this;
+        $('input', this.header()).on('keyup change', function () {
+          const valor = $(this).val() as string;
+          if (that.search() !== valor) {
+            that.search(valor).draw();
           }
         });
       });
+    });
+  }
+
+  ngOnInit() {
+    this.consultarAplicaciones();
+    this.languageService.currentLang$.subscribe((lang) => {
+      this.translate.use(lang);
+      this.translate
+        .get(['ROLES.NOMBREAPLICACION', 'ROLES.NOMBREROL', 'ROLES.DESCRIPCIONROLE', 'ROLES.ESTADOROLE'])
+        .subscribe((translations) => {
+          this.tituloPagina = translations['ROLES.TITLE'];
+          this.dtColumnSearchingOptions = {
+            responsive: true,
+            columns: [
+              { title: translations['ROLES.NOMBREAPLICACION'], data: 'nombreAplicacion' },
+              { title: translations['ROLES.NOMBREROL'], data: 'nombreRole' },
+              { title: translations['ROLES.DESCRIPCIONROL'], data: 'descripcionRole' },
+              { title: translations['ROLES.ESTADOROLE'], data: 'estadoRole' },
+              { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
+            ]
+          };
+          this.consultarRegistros();
+        });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  consultarAplicaciones() {
+    this.registrosSub = this.aplicacionesService
+      .getAplicaciones()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.aplicaciones = resp.aplicaciones;
+            console.log('Todos las aplicaciones', this.aplicaciones);
+            return;
+          }
+        }),
+        catchError((err) => {
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarRegistros() {
+    this.registrosSub = this.rolesAPService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            resp.roles.forEach((role: any) => {
+              const app = this.aplicaciones.filter((x) => x.codigoAplicacion == role.codigoAplicacion)[0];
+              role.nombreAplicacion = app.nombreAplicacion;
+              role.nomEstado = role.estadoRole == true ? 'Activo' : 'Inactivo';
+            });
+            this.registros = resp.roles;
+            console.log('Todos las roles', this.registros);
+            this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
+            return;
+          }
+        }),
+        catchError((err) => {
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  filtrarColumna(columna: number, valor: string) {
+    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.column(columna).search(valor).draw();
+    });
+  }
+
+  getEstado(estado: boolean): string {
+    return estado ? 'Activo' : 'Inactivo';
+  }
+
+  OnNuevoRegistroClick() {
+    this.router.navigate(['roles/gestion-roles']);
+  }
+
+  OnEditarRegistroClick(id: number) {
+    this.router.navigate(['roles/gestion-roles'], { queryParams: { regId: id } });
+  }
+
+  OnEliminarRegistroClick(id: number, nombre: string) {
+    Swal.fire({
+      title: this.translate.instant('ROLES.ELIMINARTITULO'),
+      text: this.translate.instant('ROLES.ELIMINARTEXTO') + `"${nombre}".!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.rolesAPService.deleteEliminarRegistro(id).subscribe({
+          next: (resp: any) => {
+            Swal.fire(this.translate.instant('ROLES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.registros = this.registros.filter((s) => s.roleId !== id);
+          },
+          error: (err: any) => {
+            Swal.fire('Error', this.translate.instant('ROLES.ELIMINARERROR'), 'error');
+            console.error('Error eliminando', err);
+          }
+        });
+      }
     });
   }
 }
