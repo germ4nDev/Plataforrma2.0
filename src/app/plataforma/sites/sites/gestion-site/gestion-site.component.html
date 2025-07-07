@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <div class="card card-header-sticky">
             <div class="card-header">
-                <h5>{{ 'GESTIONSITIOS.TITLE' | translate }}</h5>
+                <h5>{{ 'SITIOS.GESTION.TITLE' | translate }}</h5>
                 <hr>
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
@@ -14,7 +14,7 @@
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button type="button" class="btn-NuevoSitio" (click)="btnRegresarSitio()">
-                            {{ 'PLATAFORMA.RETURN' | translate }}
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
@@ -32,24 +32,24 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreSitio">{{ 'SITIOS.NAME' | translate }}</label>
                                 <input class="form-control input-md" id="nombreSitio" name="nombreSitio" type="text"
-                                    placeholder="{{ 'GESTIONSITIOS.PLACEHOLDERNAME' | translate }}"
+                                    placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERNAME' | translate }}"
                                     [ngClass]="{'is-invalid': !nombreSitio.valid && (nombreSitio.dirty || nombreSitio.touched || isSubmit)}"
                                     #nombreSitio="ngModel" required [(ngModel)]="FormSitio.nombreSitio" />
                                 <label *ngIf="!nombreSitio.valid && (nombreSitio.dirty || nombreSitio.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'GESTIONSITIOS.REQUERIDONAME' | translate }}
+                                    {{ 'SITIOS.GESTION.REQUERIDONAME' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SITIOS.URL' | translate }}</label>
-                                <input type="text" class="form-control" name="urlSitio" placeholder="{{ 'GESTIONSITIOS.PLACEHOLDERURL' | translate }}"
+                                <input type="text" class="form-control" name="urlSitio" placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERURL' | translate }}"
                                     [ngClass]="{'is-invalid': !urlSitio.valid && (urlSitio.dirty || urlSitio.touched || isSubmit) }"
                                     #urlSitio="ngModel" required [(ngModel)]="FormSitio.urlSitio" />
                                 <label *ngIf="!urlSitio.valid && (urlSitio.dirty || urlSitio.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'GESTIONSITIOS.REQUERIDOURL' | translate }}
+                                    {{ 'SITIOS.GESTION.REQUERIDOURL' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -57,12 +57,12 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="puertoSitio">{{ 'SITIOS.SITESPORT' | translate }}</label>
                                 <input class="form-control input-md" id="puertoSitio" name="puertoSitio" type="text"
-                                    placeholder="{{ 'GESTIONSITIOS.PLACEHOLDERPUERTO' | translate }}"
+                                    placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERPUERTO' | translate }}"
                                     [ngClass]="{'is-invalid': !puertoSitio.valid && (puertoSitio.dirty || puertoSitio.touched || isSubmit)}"
                                     #puertoSitio="ngModel" required [(ngModel)]="FormSitio.puertoSitio" />
                                 <label *ngIf="!puertoSitio.valid && (puertoSitio.dirty || puertoSitio.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'GESTIONSITIOS.REQUERIDOPUERTO' | translate }}
+                                    {{ 'SITIOS.GESTION.REQUERIDOPUERTO' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -75,14 +75,14 @@
                                             [value]="true"
                                             [(ngModel)]="FormSitio.estadoSitio">
                                             <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVO' | translate }}</label>
+                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
                                     </label>
                                     <label class="radio-button">
                                         <input name="option" type="radio"
                                             [value]="false"
                                             [(ngModel)]="FormSitio.estadoSitio">
                                             <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVO' | translate }}</label>
+                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
                                     </label>
                                 </div>
                             </div>
@@ -90,14 +90,14 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SITIOS.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control" placeholder="{{ 'GESTIONSITIOS.PLACEHOLDERDESCRIPCION' | translate }}" name="descripcionSitio"
+                                <textarea class="form-control" placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERDESCRIPCION' | translate }}" name="descripcionSitio"
                                     [ngClass]="{'is-invalid': !descripcionSitio.valid && (descripcionSitio.dirty || descripcionSitio.touched || isSubmit)}"
                                     #descripcionSitio="ngModel" required [(ngModel)]="FormSitio.descripcionSitio" rows="5">
                                 </textarea>
                                 <label
                                     *ngIf="!descripcionSitio.valid && (descripcionSitio.dirty || descripcionSitio.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'GESTIONSITIOS.REQUERIDODESCRIPCION' | translate }}
+                                    {{ 'SITIOS.GESTION.REQUERIDODESCRIPCION' | translate }}
                                 </label>
                             </div>
                         </div>
