@@ -12,51 +12,63 @@ import Swal from 'sweetalert2';
 // project import
 import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 
 @Component({
   selector: 'app-sites',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
   templateUrl: './sites.component.html',
   styleUrl: './sites.component.scss'
 })
 export class SitesComponent implements OnInit, AfterViewInit {
-    [x: string]: any;
-    @ViewChild(DataTableDirective, { static: false })
-    datatableElement!: DataTableDirective;
+  [x: string]: any;
+  @ViewChild(DataTableDirective, { static: false })
+  datatableElement!: DataTableDirective;
 
-    dtColumnSearchingOptions: DataTables.Settings = {};
-    dtTrigger: Subject<any> = new Subject<any>();
-    sitiosAP: PTLSitiosAP[]=[];
+  dtColumnSearchingOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject<any>();
+  sitiosAP: PTLSitiosAP[] = [];
+  lang: string = localStorage.getItem('lang') || '';
+  tituloPagina: string = '';
 
   constructor(
     private router: Router,
-    private sitiosService:PTLSitiosAPService,
-    private BreadCrumb : BreadcrumbComponent
+    private sitiosService: PTLSitiosAPService,
+    private translate: TranslateService,
+    private languageService: LanguageService,
+    private BreadCrumb: BreadcrumbComponent
   ) {}
 
   ngOnInit() {
-
-    this.dtColumnSearchingOptions = {
-        responsive: true,
-        columns: [
-          { title: 'Nombre', data: 'nombreSitio' },
-          { title: 'Descripción', data: 'descripcionSitio' },
-          { title: 'URL', data: 'urlSitio' },
-          { title: 'Puerto Sitio', data: 'puertoSitio' },
-          { title: 'Estado', data: 'estadoSitio' },
-          { title: 'Opciones', data: 'opciones' },
-        ]
-      };
-
-      this.consultarSitios();
+    this.languageService.currentLang$.subscribe((lang) => {
+      this.translate.use(lang);
+      this.translate
+        .get(['SITIOS.NAME', 'SITIOS.DESCRIPTION', 'SITIOS.URL', 'SITIOS.SITESPORT', 'SITIOS.STATUS', 'PLATAFORMA.OPTIONS'])
+        .subscribe((translations) => {
+          this.tituloPagina = translations['SITIOS.TITLE'];
+          this.dtColumnSearchingOptions = {
+            responsive: true,
+            columns: [
+              { title: this.translate.instant('SITIOS.NAME'), data: 'nombreSitio' },
+              { title: this.translate.instant('SITIOS.DESCRIPTION'), data: 'descripcionSitio' },
+              { title: this.translate.instant('SITIOS.URL'), data: 'urlSitio' },
+              { title: this.translate.instant('SITIOS.SITESPORT'), data: 'puertoSitio' },
+              { title: this.translate.instant('SITIOS.STATUS'), data: 'estadoSitio' },
+              { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' }
+            ]
+          };
+          this.consultarSitios();
+        });
+    });
   }
 
-  consultarSitios () {
-    this.sitiosService.getSitios().subscribe((sitios:any) => {
-        console.log('Todos los sitios', sitios.resp.data);
-        this.sitiosAP = sitios.resp.data;
-        this.dtTrigger.next(null);// <--- Dispara la actualización de la tabla
+  consultarSitios() {
+    this.sitiosService.getSitios().subscribe((sitios: any) => {
+      console.log('Todos los sitios', sitios.resp.data);
+      this.sitiosAP = sitios.resp.data;
+      this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
     });
   }
 
@@ -89,30 +101,30 @@ export class SitesComponent implements OnInit, AfterViewInit {
     this.dtTrigger.unsubscribe(); // <--- Destruye el trigger para evitar memory leaks
   }
   nuevoSitio() {
-    this.router.navigate(['/sites/new-site']);
+    this.router.navigate(['/sites/gestion-site']);
   }
 
   editarSitio(id: number) {
-    this.router.navigate(['/sites/new-site'], { queryParams: { sitioId: id } });
+    this.router.navigate(['/sites/gestion-site'], { queryParams: { sitioId: id } });
   }
 
   eliminarSitio(id: number, nombre: string) {
     Swal.fire({
-      title: '¿Estás seguro de eliminar?',
-      text: `¡estas apunto de eliminar el sitio "${nombre}".!`,
+      title: this.translate.instant('SITIOS.ELIMINARTITULO'),
+      text: this.translate.instant('SITIOS.ELIMINARTEXTO') + `"${nombre}".!`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.sitiosService.eliminarSitio(id).subscribe({
-          next: (resp:any) => {
-            Swal.fire('Eliminado', resp.mensaje, 'success');
-            this.sitiosAP = this.sitiosAP.filter(s => s.sitioId !== id);
+          next: (resp: any) => {
+            Swal.fire(this.translate.instant('SITIOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.sitiosAP = this.sitiosAP.filter((s) => s.sitioId !== id);
           },
-          error: (err:any) => {
-            Swal.fire('Error', 'No se pudo eliminar el sitio.', 'error');
+          error: (err: any) => {
+            Swal.fire('Error', this.translate.instant('SITIOS.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });

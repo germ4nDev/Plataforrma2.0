@@ -27,6 +27,27 @@
         "ELIMINARERROR": "The aplication could't be eliminated.",
         "CREATE": "Create Aplication"
     },
+    "SITIOS":{
+        "TITLE": "Sites",
+        "NEW": "New Site",
+        "NAME": "Name",
+        "DESCRIPTION": "Description",
+        "URL": "URL",
+        "SITESPORT": "Sites Port",
+        "STATUS": "Status",
+        "OPTIONS": "Options",
+        "UPDATE": "Modify Site",
+        "DELETE": "Delete Site",
+        "FILTER_NAME": "Filter Name",
+        "FILTER_DESCRIPTION": "Filter Description",
+        "FILTER_URL": "Filter URL",
+        "FILTER_SITESPORT": "Filter Sites Port",
+        "FILTER_STATUS": "Filter Status",
+        "ELIMINARTITULO": "",
+        "ELIMINARTEXTO": "",
+        "ELIMINAREXITOSA": "",
+        "ELIMINARERROR": ""
+    },
     "LOGIN": {
         "TITLE": "Start Session",
         "USERNAME": "UserName",

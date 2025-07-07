@@ -2,15 +2,15 @@
 	<div class="col-sm-12">
         <div class="card card-header-sticky">
 			<div class="card-header">
-				<h4>Enlaces</h4>
+                <h4>{{ 'ENLACES.TITLE' | translate }}</h4>
                 <hr>
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
                         <app-breadcrumb></app-breadcrumb>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="nuevoEnlace()" class="btn-NuevoEnlace">
-                            Nuevo Enlace
+                        <button type="button" (click)="nuevoEnlace()" class="btn-NuevoRegistro">
+                            {{ 'ENLACES.NEW' | translate }}
                         </button>
                     </div>
                 </div>
@@ -22,11 +22,11 @@
 					<table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
 						<thead>
                             <tr>
-								<th>Nombre</th>
-								<th>Descripción</th>
-								<th>Ruta Enlace</th>
-								<th>Estado</th>
-								<th>Opciones</th>
+                                <th>{{ 'ENLACES.NAME' | translate }}</th>
+                                <th>{{ 'ENLACES.DESCRIPTION' | translate }}</th>
+                                <th>{{ 'ENLACES.RUTA' | translate }}</th>
+                                <th>{{ 'ENLACES.STATUS' | translate }}</th>
+                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -46,11 +46,11 @@
 								<td style="text-align: center; width: 10%;">
 									<div class="d-flex flex-wrap gap-2">
 										<button type="button" class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="editarEnlace(enlace.enlaceId)" title="Modificar Enlace">
+                                            (click)="editarEnlace(enlace.enlaceId)" title="{{ 'ENLACES.UPDATE' | translate }}">
 											<i class="feather icon-edit"></i>
 										</button>
 										<button type="button" class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="eliminarEnlace(enlace.enlaceId, enlace.nombreEnlace)" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Enlace">
+                                            (click)="eliminarEnlace(enlace.enlaceId, enlace.nombreEnlace)" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'ENLACES.DELETE' | translate }}">
 											<i class="feather icon-trash-2"></i>
 										</button>
 									</div>
@@ -63,7 +63,7 @@
                                     <input #nombreEnlace
                                         (keyup)="filtrarColumna(0, nombreEnlace.value)"
                                         type="text"
-                                        placeholder="Filtro Nombre"
+                                        placeholder="{{ 'ENLACES.FILTER_NAME' | translate }}"
                                         name="filtro-nombre"
                                         class="form-control">
                                 </th>
@@ -71,7 +71,7 @@
 									<input #descripcionEnlace
 										(keyup)="filtrarColumna(1, descripcionEnlace.value)"
 										type="text"
-										placeholder="Filtro descripción"
+										placeholder="{{ 'ENLACES.FILTER_DESCRIPTION' | translate }}"
 										name="filtro-descripción"
 										class="form-control">
 								</th>
@@ -79,7 +79,7 @@
 									<input #rutaEnlace
 										(keyup)="filtrarColumna(2, rutaEnlace.value)"
 										type="text"
-										placeholder="Filtro Ruta"
+										placeholder="{{ 'ENLACES.FILTER_RUTA' | translate }}"
 										name="filtro-ruta"
 										class="form-control">
 								</th>
@@ -87,7 +87,7 @@
 									<input #estadoEnlace
 										(keyup)="filtrarColumna(3, estadoEnlace.value)"
 										type="text"
-										placeholder="Filtro Estado"
+										placeholder="{{ 'ENLACES.FILTER_STATUS' | translate }}"
 										name="filtro-estado"
 										class="form-control">
 								</th>

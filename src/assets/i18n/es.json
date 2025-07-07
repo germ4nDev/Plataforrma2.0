@@ -28,6 +28,27 @@
         "ELIMINARERROR": "No se pudo eliminar el Aplicaicion.",
         "CREATE": "Crear Aplicación"
     },
+    "SITIOS":{
+        "TITLE": "Sitios",
+        "NEW": "Nuevo Sitio",
+        "NAME": "Nombre",
+        "DESCRIPTION": "Descripción",
+        "URL": "URL",
+        "SITESPORT": "Puerto Sitio",
+        "STATUS": "Estado",
+        "OPTIONS": "Opciones",
+        "UPDATE": "Modificar sitio",
+        "DELETE": "Eliminar Sitio",
+        "FILTER_NAME": "Filtro Nombre",
+        "FILTER_DESCRIPTION": "Filtro descripción",
+        "FILTER_URL": "Filtro URL",
+        "FILTER_SITESPORT": "Filtro Puerto Sitio",
+        "FILTER_STATUS": "Filtro Estado",
+        "ELIMINARTITULO": "¿Estás seguro de eliminar?",
+        "ELIMINARTEXTO": "estas apunto de eliminar el sitio ",
+        "ELIMINAREXITOSA": "Eliminado",
+        "ELIMINARERROR": "No se pudo eliminar el sitio."
+    },
     "LOGIN": {
         "TITLE": "Iniciar Sesión",
         "USERNAME": "UserName",

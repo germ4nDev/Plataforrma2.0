@@ -2,7 +2,7 @@
 	<div class="col-sm-12">
         <div class="card card-header-sticky">
 			<div class="card-header">
-				<h4>Contenidos</h4>
+                <h4>{{ 'CONTENIDOS.TITLE' | translate }}</h4>
                 <hr>
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
@@ -10,7 +10,7 @@
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
                         <button type="button" (click)="nuevoContenido()" class="btn-NuevoContenido">
-                            Nuevo Contenido
+                            {{ 'CONTENIDOS.NEW' | translate }}
                         </button>
                     </div>
                 </div>
@@ -22,11 +22,11 @@
 					<table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
 						<thead>
                             <tr>
-								<th>Nombre</th>
-								<th>Descripción</th>
-								<th>Contenido</th>
-								<th>Estado</th>
-								<th>Opciones</th>
+                                <th>{{ 'CONTENIDOS.NAME' | translate }}</th>
+                                <th>{{ 'CONTENIDOS.DESCRIPTION' | translate }}</th>
+                                <th>{{ 'CONTENIDOS.CONTENIDO' | translate }}</th>
+                                <th>{{ 'CONTENIDOS.STATUS' | translate }}</th>
+                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -46,11 +46,11 @@
 								<td style="text-align: center; width: 10%;">
 									<div class="d-flex flex-wrap gap-2">
 										<button type="button" class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="editarContenido(contenido.contenidoId)" title="Modificar Contenido">
+                                            (click)="editarContenido(contenido.contenidoId)" title="{{ 'CONTENIDOS.UPDATE' | translate }}">
 											<i class="feather icon-edit"></i>
 										</button>
 										<button type="button" class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="eliminarContenido(contenido.contenidoId, contenido.nombreContenido)" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Contenido">
+                                            (click)="eliminarContenido(contenido.contenidoId, contenido.nombreContenido)" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'CONTENIDOS.DELETE' | translate }}">
 											<i class="feather icon-trash-2"></i>
 										</button>
 									</div>
@@ -63,7 +63,7 @@
                                     <input #nombreContenido
                                         (keyup)="filtrarColumna(0, nombreContenido.value)"
                                         type="text"
-                                        placeholder="Filtro Nombre"
+                                        placeholder="{{ 'CONTENIDOS.FILTER_NAME' | translate }}"
                                         name="filtro-nombre"
                                         class="form-control">
                                 </th>
@@ -71,7 +71,7 @@
 									<input #descripcionContenido
 										(keyup)="filtrarColumna(1, descripcionContenido.value)"
 										type="text"
-										placeholder="Filtro descripción"
+										placeholder="{{ 'CONTENIDOS.FILTER_DESCRIPTION' | translate }}"
 										name="filtro-nombre"
 										class="form-control">
 								</th>
@@ -79,7 +79,7 @@
 									<input #contenido
 										(keyup)="filtrarColumna(2, contenido.value)"
 										type="text"
-										placeholder="Filtro contenido"
+										placeholder="{{ 'CONTENIDOS.FILTER_CONTENIDO' | translate }}"
 										name="filtro-contenido"
 										class="form-control">
 								</th>
@@ -87,7 +87,7 @@
 									<input #estadoContenido
 										(keyup)="filtrarColumna(3, estadoContenido.value)"
 										type="text"
-										placeholder="Filtro Estado"
+										placeholder="{{ 'CONTENIDOS.FILTER_STATUS' | translate }}"
 										name="filtro-estado"
 										class="form-control">
 								</th>
