@@ -15,15 +15,14 @@ export class FormContenido {
     contenido!: string;
     estadoContenido!: boolean;
 }
-
 @Component({
-  selector: 'app-new-contenido',
+  selector: 'app-geston-contenido',
   standalone: true,
   imports: [CommonModule, SharedModule, NarikCustomValidatorsModule],
-  templateUrl: './new-contenido.component.html',
-  styleUrl: './new-contenido.component.scss'
+  templateUrl: './gestion-contenido.component.html',
+  styleUrl: './gestion-contenido.component.scss'
 })
-export class NewContenidoComponent implements OnInit {
+export class GestonContenidoComponent implements OnInit {
   FormContenido!: FormContenido;
   form: undefined;
   isSubmit: boolean;
