@@ -5,6 +5,7 @@
         "CHARGING": "Cargando ..."
     },
     "APLICACIONES": {
+        "TITLE": "Aplications Administration",
         "CODE": "Code",
         "NAME": "Name",
         "DESCRIPTION": "Description",

@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from './theme/shared/service/lenguage.service';
 
 @Component({
     selector: 'app-root',
@@ -13,30 +14,34 @@ export class AppComponent implements OnInit {
     // constructor
     constructor(
         private router: Router,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private languageService: LanguageService
+
     ) {
-        localStorage.setItem('lang', 'es');
-        translate.addLangs(['en', 'es']);
-        this.lang = localStorage.getItem('lang') || '';
-        const browserLang = translate.getBrowserLang();
-        translate.use(browserLang?.match(/en|es/) ? browserLang : 'es');
+        this.translate.setDefaultLang('es');
+        const lang = localStorage.getItem('lang') || 'es';
+        this.translate.use(lang);
+        // const browserLang = translate.getBrowserLang();
+        // translate.use(browserLang?.match(/es|en/) ? browserLang : 'es');
     }
 
     // life cycle event
     ngOnInit() {
-        this.translate.use('es');
         this.router.events.subscribe((evt) => {
             if (!(evt instanceof NavigationEnd)) {
                 return;
             }
             // this.cambiarIdioma(this.lang);
+            this.lang = this.languageService.getCurrentLanguage();
+            this.translate.use(this.lang);
+            console.log('default lang', this.lang);
+            localStorage.setItem('lang', this.lang);
             window.scrollTo(0, 0);
         });
     }
 
     cambiarIdioma(lang: string) {
-        console.log('default lang', lang);
-        // this.translate.setDefaultLang(this.lang);
         this.translate.use(lang);
+        localStorage.setItem('lang', lang);
     }
 }

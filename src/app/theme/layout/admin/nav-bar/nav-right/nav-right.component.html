@@ -1,8 +1,9 @@
 <ul class="navbar-nav ms-auto">
   <li>
-    <select class="form-select w-auto" [value]="currentLang" (change)="changeLang($event)">
+    <app-language-selector></app-language-selector>
+    <!-- <select class="form-select w-auto" [value]="currentLang" (change)="changeLang($event)">
       <option *ngFor="let lang of languages" [value]="lang">{{ lang.toUpperCase() }}</option>
-    </select>
+    </select> -->
     <!-- <div class="dropdown" ngbDropdown placement="auto">
       <a ngbDropdownToggle href="javascript:"><i class="icon feather icon-globe" title="Notification"></i></a>
       <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end p-3">
