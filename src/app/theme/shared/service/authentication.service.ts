@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { PTLUsuarioAP } from '../_helpers/models/PTLUsuarioAP.model';
+import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 // import { User } from '../_helpers/user';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
@@ -11,8 +11,8 @@ import { jwtDecode } from 'jwt-decode';
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
     // eslint-disable-next-line
-    private currentUserSubject: BehaviorSubject<PTLUsuarioAP | any>;
-    public currentUser: Observable<PTLUsuarioAP>;
+    private currentUserSubject: BehaviorSubject<PTLUsuarioModel | any>;
+    public currentUser: Observable<PTLUsuarioModel>;
 
     constructor(
         private router: Router,
@@ -41,8 +41,8 @@ export class AuthenticationService {
         }
     }
 
-    login(username: string, password: string): Observable<PTLUsuarioAP> {
-        return this.http.post<PTLUsuarioAP>(`${environment.apiUrl}/auth`, { username, password }).pipe(
+    login(username: string, password: string): Observable<PTLUsuarioModel> {
+        return this.http.post<PTLUsuarioModel>(`${environment.apiUrl}/auth`, { username, password }).pipe(
             tap((user) => {
                 if (!user) {
                     throw new Error('Usuario no válido');
@@ -56,7 +56,7 @@ export class AuthenticationService {
         );
     }
 
-    private setSession(user: PTLUsuarioAP): void {
+    private setSession(user: PTLUsuarioModel): void {
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
     }

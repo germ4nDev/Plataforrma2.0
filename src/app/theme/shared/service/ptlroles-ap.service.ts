@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { PTLRoleAPModel } from '../_helpers/models/PTLRoleAP.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLRolesAP } from '../_helpers/models/PTLRolesAP.model';
 
 const base_url = environment.apiUrl;
 
@@ -12,16 +12,13 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLRolesAPService {
-  user: PTLUsuarioModel = new PTLUsuarioModel(0, 0, '', '', '', '', '', '', '', false);
+  user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
 
   get token(): string {
     this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    if (this.user.serviceToken !== '') {
-      return this.user.serviceToken;
-    }
-    return '';
+    return this.user.serviceToken || '';
   }
 
   get headers() {
@@ -32,61 +29,59 @@ export class PTLRolesAPService {
     };
   }
 
-  getRoles() {
-    const url = `${base_url}/api/PTLRolesAP/GetListRoles`;
-    return this.http.get<PTLRolesAP[]>(url, this.headers).pipe(
-      map((resp: PTLRolesAP[]) => {
-        console.log('respuesta servicio', resp);
-        return {
-          ok: true,
-          resp
-        };
-      })
-    );
-  }
-
-  getRolesById(id: number) {
-    const url = `${base_url}/api/PTLRolesAP/GetRolesById/${id}`;
-    return this.http.get(url, this.headers).pipe(
+  getRegistros() {
+    const url = `${base_url}/roles`;
+    return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('respuesta servicio Id', resp);
-        return resp;
-      })
-    );
-  }
-
-  insertarRoles(roles: PTLRolesAP) {
-    const url = `${base_url}/api/PTLRolesAP/PostInsertarRoles`;
-    return this.http.post<{ ok: boolean; mensaje: string }>(url, roles, this.headers).pipe(
-      map((resp) => {
-        console.log('respuesta servicio insertar', resp);
+        console.log('servicio de roles', resp);
         return {
           ok: true,
-          resp
+          roles: resp.roles
         };
       })
     );
   }
 
-  modificarRoles(roles: PTLRolesAP) {
-    const url = `${base_url}/api/PTLRolesAP/PutModificarRoles`;
-    return this.http.put<{ ok: boolean; mensaje: string }>(url, roles, this.headers).pipe(
-      map((resp) => {
-        console.log('respuesta servicio modificar', resp);
+  getRegistroById(id: number) {
+    const url = `${base_url}/roles/${id}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('data de roles', resp);
         return {
           ok: true,
-          resp
+          role: resp.role
         };
       })
     );
   }
 
-  eliminarRoles(id: number) {
-    const url = `${base_url}/api/PTLRolesAP/DeleteRoles/${id}`;
-    return this.http.delete<{ ok: boolean; mensaje: string }>(url, this.headers).pipe(
-      map((resp) => {
-        console.log('respuesta servicio eliminar', resp);
-        return resp;
+  postCrearRegistro(role: PTLRoleAPModel) {
+    const url = `${base_url}/roles`;
+    return this.http.post(url, role);
+  }
+
+  putModificarRegistro(role: PTLRoleAPModel) {
+    const url = `${base_url}/roles/${role.roleId}`;
+    return this.http.put(url, role).pipe(
+      map((resp: any) => {
+        console.log('data de role modificacda', resp);
+        return {
+          ok: true,
+          role: resp.role
+        };
+      })
+    );
+  }
+
+  deleteEliminarRegistro(_id: number) {
+    const url = `${base_url}/roles/${_id}`;
+    return this.http.delete(url).pipe(
+      map((resp: any) => {
+        console.log('data de role eliminado', resp);
+        return {
+          ok: true,
+          role: resp.role
+        };
       })
     );
   }

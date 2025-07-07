@@ -1,118 +1,99 @@
 <div class="row">
-  <div class="col-sm-12">
-    <div class="card card-header-sticky">
-      <div class="card-header">
-        <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
-        <hr />
-        <div class="row col-sm-12">
-          <div class="col-sm-6">
-            <app-breadcrumb></app-breadcrumb>
-          </div>
-          <div class="col-sm-6 justify-content-end d-flex">
-            <button type="button" (click)="OnNuevaAplicaicionClick()" class="btn-NuevoRegistro"> {{ 'APLICACIONES.NEW' | translate }} </button>
-          </div>
+    <div class="col-sm-12">
+        <div class="card card-header-sticky">
+            <div class="card-header">
+                <!-- <div class="text-center"> -->
+                    <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
+                    <hr />
+                <!-- </div> -->
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <app-breadcrumb></app-breadcrumb>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex">
+                        <button type="button" (click)="OnNuevaAplicaicionClick()" class="btn-NuevoRegistro">
+                            {{ 'APLICACIONES.NEW' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <div class="table-responsive">
-          <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
-            <thead>
-              <tr>
-                <th>{{ 'APLICACIONES.CODE' | translate }}</th>
-                <th>{{ 'APLICACIONES.NAME' | translate }}</th>
-                <th>{{ 'APLICACINES.DESCRIPTION' | translate }}</th>
-                <th>{{ 'APLICACIONES.STATUS' | translate }}</th>
-                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let app of aplicaciones">
-                <td>
-                  {{ app.codigoAplicacion }}
-                </td>
-                <td>
-                  {{ app.nombreAplicacion }}
-                </td>
-                <td>
-                  {{ app.descripcionAplicacion }}
-                </td>
-                <td>
-                  {{ app.nomEstado }}
-                </td>
-                <td style="text-align: center; width: 10%">
-                  <div class="d-flex flex-wrap gap-2">
-                    <button
-                      type="button"
-                      class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                      (click)="OnEditarAplicaicionClick(app.aplicacionId ?? 0 )"
-                      title="{{ 'APLICACIONES.UPDATE' | translate }}"
-                    >
-                      <i class="feather icon-edit"></i>
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                      (click)="OnEliminarAplicaicionClick(app.aplicacionId ?? 0 , app.nombreAplicacion ?? '' )"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title="{{ 'APLICACIONES.DELETE' | translate }}"
-                    >
-                      <i class="feather icon-trash-2"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th>
-                  <input
-                    #codigoAplicacion
-                    (keyup)="filtrarColumna(0, codigoAplicacion.value)"
-                    type="text"
-                    placeholder="{{ 'APLICACIONES.FILTER_CODE' | translate }}"
-                    name="filtro-url"
-                    class="form-control"
-                  />
-                </th>
-                <th>
-                  <input
-                    #nombreAplicacion
-                    (keyup)="filtrarColumna(1, nombreAplicacion.value)"
-                    type="text"
-                    placeholder="{{ 'APLICACIONES.FILTER_NAME' | translate }}"
-                    name="filtro-nombre"
-                    class="form-control"
-                  />
-                </th>
-                <th>
-                  <input
-                    #descripcionAplicacion
-                    (keyup)="filtrarColumna(2, descripcionAplicacion.value)"
-                    type="text"
-                    placeholder="{{ 'APLICACIONES.FILTER_DESCRIPTION' | translate }}"
-                    name="filtro-nombre"
-                    class="form-control"
-                  />
-                </th>
-                <th>
-                  <input
-                    #estadoAplicacion
-                    (keyup)="filtrarColumna(4, estadoAplicacion.value)"
-                    type="text"
-                    placeholder="{{ 'APLICACIONES.FILTRO_STATUS' | translate }}"
-                    name="filtro-estado"
-                    class="form-control"
-                  />
-                </th>
-                <th> </th>
-              </tr>
-            </tfoot>
-          </table>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+                        <thead>
+                            <tr>
+                                <th>{{ 'APLICACIONES.CODE' | translate }}</th>
+                                <th>{{ 'APLICACIONES.NAME' | translate }}</th>
+                                <th>{{ 'APLICACINES.DESCRIPTION' | translate }}</th>
+                                <th>{{ 'APLICACIONES.STATUS' | translate }}</th>
+                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let app of aplicaciones">
+                                <td>
+                                    {{ app.codigoAplicacion }}
+                                </td>
+                                <td>
+                                    {{ app.nombreAplicacion }}
+                                </td>
+                                <td>
+                                    {{ app.descripcionAplicacion }}
+                                </td>
+                                <td>
+                                    {{ app.nomEstado }}
+                                </td>
+                                <td style="text-align: center; width: 10%">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                            (click)="OnEditarAplicaicionClick(app.aplicacionId ?? 0)"
+                                            title="{{ 'APLICACIONES.UPDATE' | translate }}">
+                                            <i class="feather icon-edit"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                            (click)="OnEliminarAplicaicionClick(app.aplicacionId ?? 0, app.nombreAplicacion ?? '')"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{ 'APLICACIONES.DELETE' | translate }}">
+                                            <i class="feather icon-trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>
+                                    <input #codigoAplicacion (keyup)="filtrarColumna(0, codigoAplicacion.value)"
+                                        type="text" placeholder="{{ 'APLICACIONES.FILTER_CODE' | translate }}"
+                                        name="filtro-url" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #nombreAplicacion (keyup)="filtrarColumna(1, nombreAplicacion.value)"
+                                        type="text" placeholder="{{ 'APLICACIONES.FILTER_NAME' | translate }}"
+                                        name="filtro-nombre" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #descripcionAplicacion
+                                        (keyup)="filtrarColumna(2, descripcionAplicacion.value)" type="text"
+                                        placeholder="{{ 'APLICACIONES.FILTER_DESCRIPTION' | translate }}"
+                                        name="filtro-nombre" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #estadoAplicacion (keyup)="filtrarColumna(4, estadoAplicacion.value)"
+                                        type="text" placeholder="{{ 'APLICACIONES.FILTRO_STATUS' | translate }}"
+                                        name="filtro-estado" class="form-control" />
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
