@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <div class="card card-header-sticky">
             <div class="card-header">
-                <h5>{{ 'SITIOS.TITLEGEST' | translate }}</h5>
+                <h5>{{ 'SITIOS.GESTION.TITLE' | translate }}</h5>
                 <hr>
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
@@ -10,7 +10,7 @@
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex gap-3">
                         <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro" (click)="btnInsertEditSitios(validationForm)">
-                            {{ 'SITIOS.CREATE' | translate }}
+                            {{ 'SITIOS.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro" (click)="btnInsertEditSitios(validationForm)">

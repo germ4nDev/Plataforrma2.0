@@ -8,15 +8,15 @@ import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.se
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLSitiosAP } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 
-export class FormRegistro {
-  sitioId!: number;
-  aplicacionId!: number;
-  nombreSitio!: string;
-  descripcionSitio!: string;
-  urlSitio!: string;
-  estadoSitio!: boolean;
-  puertoSitio!: number;
-}
+// export class FormRegistro {
+//   sitioId!: number;
+//   aplicacionId!: number;
+//   nombreSitio!: string;
+//   descripcionSitio!: string;
+//   urlSitio!: string;
+//   estadoSitio!: boolean;
+//   puertoSitio!: number;
+// }
 
 @Component({
   selector: 'app-gestion-site',

@@ -11,15 +11,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import Swal from 'sweetalert2';
+import { PTLEnlaceST } from 'src/app/theme/shared/_helpers/models/PTLEnlacesST.model';
 
-export class FormEnlace {
-    enlaceId!: number;
-    sitioId!: number;
-    nombreEnlace!: string;
-    descripcionEnlace!: string;
-    rutaEnlace!: string;
-    estadoEnlace!: boolean;
-}
+// export class FormRegistro {
+//     enlaceId!: number;
+//     sitioId!: number;
+//     nombreEnlace!: string;
+//     descripcionEnlace!: string;
+//     rutaEnlace!: string;
+//     estadoEnlace!: boolean;
+// }
 @Component({
   selector: 'app-gestion-enlace',
   standalone: true,
@@ -30,7 +31,7 @@ export class FormEnlace {
 export class GestionEnlaceComponent {
 
     // private props
-    FormEnlace!: FormEnlace;
+    FormRegistro: PTLEnlaceST = new PTLEnlaceST();
     form: undefined;
     isSubmit: boolean;
     modoEdicion: boolean = false;
@@ -54,7 +55,7 @@ export class GestionEnlaceComponent {
                 this.modoEdicion = true;
                 this.enlacesService.getEnlaceById(+id).subscribe({
                     next: (resp: any) => {
-                        this.FormEnlace = resp.data;
+                        this.FormRegistro = resp.data;
                     },
                     error: () => {
                         Swal.fire('Error', 'No se pudo obtener el enlace', 'error');
@@ -63,7 +64,7 @@ export class GestionEnlaceComponent {
             }
             else {
                 this.modoEdicion = false;
-                this.FormEnlace = {
+                this.FormRegistro = {
                     enlaceId: 0,
                     sitioId: 0,
                     nombreEnlace: '',
@@ -83,7 +84,7 @@ export class GestionEnlaceComponent {
         }
 
         if (this.modoEdicion) {
-            this.enlacesService.modificarEnlaces(this.FormEnlace).subscribe({
+            this.enlacesService.modificarEnlaces(this.FormRegistro).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
                         Swal.fire('', 'El enlace se modificó correctamente', 'success');
@@ -99,7 +100,7 @@ export class GestionEnlaceComponent {
             });
         }
         else {
-            this.enlacesService.insertarEnlace(this.FormEnlace).subscribe({
+            this.enlacesService.insertarEnlace(this.FormRegistro).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
                         Swal.fire('', 'El enlace se insertó correctamente', 'success');

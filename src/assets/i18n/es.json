@@ -32,12 +32,10 @@
         "TITLE": "Sitios",
         "NEW": "Nuevo Sitio",
         "NAME": "Nombre",
-        "TITLEGEST": "Crear/Actualizar un Sitio",
         "DESCRIPTION": "Descripción",
         "URL": "URL",
         "SITESPORT": "Puerto Sitio",
         "STATUS": "Estado",
-        "CREATE": "Crear Sitio",
         "UPDATE": "Modificar sitio",
         "DELETE": "Eliminar Sitio",
         "FILTER_NAME": "Filtro Nombre",
@@ -50,7 +48,8 @@
         "ELIMINAREXITOSA": "Eliminado",
         "ELIMINARERROR": "No se pudo eliminar el sitio.",
         "GESTION": {
-            "TITLE": "Administración de sitios",
+            "TITLE": "Crear/Actualizar un Sitio",
+            "CREATE": "Crear Sitio",
             "PLACEHOLDERNAME": "Nombre del sitio",
             "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
             "PLACEHOLDERURL": "URL del sitio",
@@ -79,7 +78,14 @@
         "ELIMINAREXITOSA": "Eliminado",
         "ELIMINARERROR": "No se pudo eliminar el enlace.",
         "GESTION": {
-
+            "TITLE": "Crear/Actualizar un enlace",
+            "CREATE": "Crear enlace",
+            "PLACEHOLDERNAME": "Nombre del enlace",
+            "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+            "PLACEHOLDERRUTA": "Ruta del enlace",
+            "REQUERIDORUTA": "Por favor, ingrese una Ruta. Este campo es obligatorio.",
+            "PLACEHOLDERDESCRIPCION": "Descripcion del enlace",
+            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
         }
     },
     "CONTENIDOS": {
@@ -98,7 +104,17 @@
         "ELIMINARTITULO": "¿Estás seguro de eliminar?",
         "ELIMINARTEXTO": "estas apunto de eliminar el contenido ",
         "ELIMINAREXITOSA": "Eliminado",
-        "ELIMINARERROR": "No se pudo eliminar el contenido."
+        "ELIMINARERROR": "No se pudo eliminar el contenido.",
+        "GESTION": {
+            "TITLE": "Crear/Actualizar un contenido",
+            "CREATE": "Crear contenido",
+            "PLACEHOLDERNAME": "Nombre del contenido",
+            "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+            "PLACEHOLDERCONTENIDO": "Contenido",
+            "REQUERIDOCONTENIDO": "Por favor, ingrese un Contenido. Este campo es obligatorio.",
+            "PLACEHOLDERDESCRIPCION": "Descripcion del contenido",
+            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
+        }
     },
     "LOGIN": {
         "TITLE": "Iniciar Sesión",

@@ -6,15 +6,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenidos-el.service';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
+import { PTLContenidoEL } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
 
-export class FormContenido {
-    contenidoId!: number;
-    enlaceId!: number;
-    nombreContenido!: string;
-    descripcionContenido!: string;
-    contenido!: string;
-    estadoContenido!: boolean;
-}
+// export class FormRegistro {
+//     contenidoId!: number;
+//     enlaceId!: number;
+//     nombreContenido!: string;
+//     descripcionContenido!: string;
+//     contenido!: string;
+//     estadoContenido!: boolean;
+// }
 @Component({
   selector: 'app-geston-contenido',
   standalone: true,
@@ -23,7 +24,7 @@ export class FormContenido {
   styleUrl: './gestion-contenido.component.scss'
 })
 export class GestonContenidoComponent implements OnInit {
-  FormContenido!: FormContenido;
+  FormRegistro: PTLContenidoEL = new PTLContenidoEL();
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;
@@ -46,7 +47,7 @@ export class GestonContenidoComponent implements OnInit {
           this.modoEdicion = true;
           this.contenidoService.getContenidoById(+id).subscribe({
             next: (resp: any) => {
-              this.FormContenido = resp.data;
+              this.FormRegistro = resp.data;
             },
             error: () => {
               Swal.fire('Error', 'No se pudo obtener el contenido', 'error');
@@ -55,7 +56,7 @@ export class GestonContenidoComponent implements OnInit {
         }
         else {
           this.modoEdicion = false;
-          this.FormContenido = {
+          this.FormRegistro = {
             contenidoId: 0,
             enlaceId: 0,
             nombreContenido: '',
@@ -75,7 +76,7 @@ export class GestonContenidoComponent implements OnInit {
       }
 
       if (this.modoEdicion) {
-          this.contenidoService.modificarContenido(this.FormContenido).subscribe({
+          this.contenidoService.modificarContenido(this.FormRegistro).subscribe({
             next: (resp: any) => {
               if (resp.ok) {
                 Swal.fire('', 'El contenido se modificó correctamente', 'success');
@@ -92,7 +93,7 @@ export class GestonContenidoComponent implements OnInit {
         }
         else
         {
-          this.contenidoService.insertarContenido(this.FormContenido).subscribe({
+          this.contenidoService.insertarContenido(this.FormRegistro).subscribe({
               next: (resp:any) => {
                 if (resp.ok) {
                   Swal.fire('', 'El contenido se insertó correctamente', 'success');

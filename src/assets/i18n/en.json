@@ -30,13 +30,11 @@
     "SITIOS":{
         "TITLE": "Sites",
         "NEW": "New Site",
-        "TITLEGEST": "Create/Update an Site",
         "NAME": "Name",
         "DESCRIPTION": "Description",
         "URL": "URL",
         "SITESPORT": "Sites Port",
         "STATUS": "Current Status",
-        "CREATE": "Create Site",
         "UPDATE": "Update Site",
         "DELETE": "Delete Site",
         "FILTER_NAME": "Filter Name",
@@ -49,7 +47,8 @@
         "ELIMINAREXITOSA": "Successfully Deleted",
         "ELIMINARERROR": "The site could not be deleted. Please try again.",
         "GESTION": {
-            "TITLE": "Site Management",
+            "TITLE": "Create/Update an Site",
+            "CREATE": "Create Site",
             "PLACEHOLDERNAME": "Site name",
             "REQUERIDONAME": "This field is required.",
             "PLACEHOLDERURL": "Site URL",
@@ -78,7 +77,14 @@
         "ELIMINAREXITOSA": "Deleted successfully",
         "ELIMINARERROR": "The link could not be deleted. Please try again.",
         "GESTION": {
-
+            "TITLE": "Create/Update an Link",
+            "CREATE": "Create Link",
+            "PLACEHOLDERNAME": "Link name",
+            "REQUERIDONAME": "This field is required.",
+            "PLACEHOLDERRUTA": "Link URL",
+            "REQUERIDORUTA": "This field is required.",
+            "PLACEHOLDERDESCRIPCION": "Link description",
+            "REQUERIDODESCRIPCION": "This field is required."
         }
     },
     "CONTENIDOS": {
@@ -97,7 +103,17 @@
         "ELIMINARTITULO": "Confirm Deletion",
         "ELIMINARTEXTO": "You are about to permanently delete the content:",
         "ELIMINAREXITOSA": "Deleted successfully",
-        "ELIMINARERROR": "The content could not be deleted. Please try again."
+        "ELIMINARERROR": "The content could not be deleted. Please try again.",
+        "GESTION": {
+            "TITLE": "Create/Update Content",
+            "CREATE": "Create Content",
+            "PLACEHOLDERNAME": "Content Name",
+            "REQUERIDONAME": "This field is required.",
+            "PLACEHOLDERCONTENIDO": "Content",
+            "REQUERIDOCONTENIDO": "This field is required.",
+            "PLACEHOLDERDESCRIPCION": "Content Description",
+            "REQUERIDODESCRIPCION": "This field is required."
+        }
     },
     "LOGIN": {
         "TITLE": "Start Session",

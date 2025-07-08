@@ -1,7 +1,6 @@
-.btn-NuevoContenido {
+.btn-NuevoRegistro {
     background-color: #c9d0d5;
     color: #3b4650;
-    width: 8.5em;
     height: 2.9em;
     border: #034ba6 0.2em solid;
     border-radius: 11px;
@@ -9,24 +8,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-left: 20px;
+    padding-right: 20px;
     gap: 0.5em;
 }
 
-.btn-NuevoContenido:hover {
+.btn-NuevoRegistro:hover {
     background-color: #034ba6;
     color: #c9d0d5;
     cursor: pointer;
 }
 
-.btn-NuevoContenido:active {
+.btn-NuevoRegistro:active {
     transform: scale(0.95);
 }
 
-.btn-NuevoContenido i {
+.btn-NuevoRegistro i {
     transition: all 0.6s ease;
 }
 
-.btn-NuevoContenido:hover i {
+.btn-NuevoRegistro:hover i {
     transform: translateX(-5px);
 }
 .card-header-sticky {
