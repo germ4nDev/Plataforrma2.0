@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { PTLContenidosEL } from 'src/app/theme/shared/_helpers/models/PTLContenidosEL.model';
+import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
+import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenidos-el.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
@@ -12,46 +14,57 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-contenidos',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
   templateUrl: './contenidos.component.html',
-  styleUrls: ['./contenidos.component.css']
+  styleUrls: ['./contenidos.component.scss']
 })
 export class ContenidosComponent implements OnInit, AfterViewInit {
-    [x: string]: any;
-    @ViewChild(DataTableDirective, { static: false })
-    datatableElement!: DataTableDirective;
+  [x: string]: any;
+  @ViewChild(DataTableDirective, { static: false })
+  datatableElement!: DataTableDirective;
 
-dtColumnSearchingOptions: DataTables.Settings = {};
+  dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
-  contenidoEL: PTLContenidosEL[]=[];
+  contenidoEL: PTLContenidoELModel[] = [];
+  lang: string = localStorage.getItem('lang') || '';
+  tituloPagina: string = '';
 
-  constructor(private router: Router,
-      private BreadCrumb : BreadcrumbComponent,
-      private contenidoService : PTLContenidosELService
-    ) {}
+  constructor(
+    private router: Router,
+    private BreadCrumb: BreadcrumbComponent,
+    private translate: TranslateService,
+    private languageService: LanguageService,
+    private contenidoService: PTLContenidosELService
+  ) {}
 
   ngOnInit() {
-
-    this.dtColumnSearchingOptions = {
-        responsive: true,
-        columns: [
-          { title: 'Nombre', data: 'nombreContenido' },
-          { title: 'Descripción', data: 'descripcionContenido' },
-          { title: 'Contenido', data: 'contenido' },
-          { title: 'Estado', data: 'estadoContenido' },
-          { title: 'Opciones', data: 'opciones' },
-        ]
-      };
-
-      this.consultarContenido();
-  }
-  consultarContenido () {
-    this.contenidoService.getContenido().subscribe((contenido:any) => {
-        console.log('Todos los contenido', contenido.resp.data);
-        this.contenidoEL = contenido.resp.data;
-        this.dtTrigger.next(null);// <--- Dispara la actualización de la tabla
+    this.languageService.currentLang$.subscribe((lang) => {
+      this.translate.use(lang);
+      this.translate
+        .get(['CONTENIDOS.NAME', 'CONTENIDOS.DESCRIPTION', 'CONTENIDOS.CONTENIDO', 'CONTENIDOS.STATUS', 'PLATAFORMA.OPTIONS'])
+        .subscribe((translations) => {
+          this.tituloPagina = translations['CONTENIDOS.TITLE'];
+          this.dtColumnSearchingOptions = {
+            responsive: true,
+            columns: [
+              { title: this.translate.instant('CONTENIDOS.NAME'), data: 'nombreContenido' },
+              { title: this.translate.instant('CONTENIDOS.DESCRIPTION'), data: 'descripcionContenido' },
+              { title: this.translate.instant('CONTENIDOS.CONTENIDO'), data: 'contenido' },
+              { title: this.translate.instant('CONTENIDOS.STATUS'), data: 'estadoContenido' },
+              { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' }
+            ]
+          };
+          this.consultarContenido();
+        });
     });
-    }
+  }
+  consultarContenido() {
+    this.contenidoService.getContenido().subscribe((contenido: any) => {
+      console.log('Todos los contenido', contenido.resp.data);
+      this.contenidoEL = contenido.resp.data;
+      this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
+    });
+  }
 
   ngAfterViewInit(): void {
     this.BreadCrumb.setBreadcrumb();
@@ -68,7 +81,6 @@ dtColumnSearchingOptions: DataTables.Settings = {};
     });
   }
 
-
   filtrarColumna(columna: number, valor: string) {
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.column(columna).search(valor).draw();
@@ -83,30 +95,30 @@ dtColumnSearchingOptions: DataTables.Settings = {};
     this.dtTrigger.unsubscribe(); // <--- Destruye el trigger para evitar memory leaks
   }
   nuevoContenido() {
-    this.router.navigate(['/sites/new-contenido']);
+    this.router.navigate(['/sites/gestion-contenido']);
   }
 
   editarContenido(id: number) {
-    this.router.navigate(['/sites/new-contenido'], { queryParams: { contenidoId: id } });
+    this.router.navigate(['/sites/gestion-contenido'], { queryParams: { contenidoId: id } });
   }
 
   eliminarContenido(id: number, nombre: string) {
     Swal.fire({
-      title: '¿Estás seguro de eliminar?',
-      text: `¡estas apunto de eliminar el contenido "${nombre}".!`,
+      title: this.translate.instant('CONTENIDOS.ELIMINARTITULO'),
+      text: this.translate.instant('CONTENIDOS.ELIMINARTEXTO') + `"${nombre}".!`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
         this.contenidoService.eliminarContenido(id).subscribe({
-          next: (resp:any) => {
-            Swal.fire('Eliminado', resp.mensaje, 'success');
-            this.contenidoEL = this.contenidoEL.filter(s => s.contenidoId !== id);
+          next: (resp: any) => {
+            Swal.fire(this.translate.instant('CONTENIDOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.contenidoEL = this.contenidoEL.filter((s) => s.contenidoId !== id);
           },
-          error: (err:any) => {
-            Swal.fire('Error', 'No se pudo eliminar el sitio.', 'error');
+          error: (err: any) => {
+            Swal.fire('Error', this.translate.instant('CONTENIDOS.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });

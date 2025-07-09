@@ -28,21 +28,8 @@ const routes: Routes = [
         },
         {
             path: 'gestion-contenido',
-            loadComponent: () => import('./contenidos/geston-contenido/geston-contenido.component').then(m => m.GestonContenidoComponent)
-        },
-        {
-            path: 'new-site',
-            loadComponent: () => import('./sites/new-site/new-site.component').then(m => m.NewSiteComponent)
-        },
-        {
-            path: 'new-enlace',
-            loadComponent: () => import('./enlaces/new-enlace/new-enlace.component').then(m => m.NewEnlaceComponent)
-        },
-        {
-            path: 'new-contenido',
-            loadComponent: () => import('./contenidos/new-contenido/new-contenido.component').then(m => m.NewContenidoComponent)
+            loadComponent: () => import('./contenidos/gestion-contenido/gestion-contenido.component').then(m => m.GestonContenidoComponent)
         }
-
     ]
   }
 ];

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLEnlaceST } from '../_helpers/models/PTLEnlacesST.model';
+import { PTLEnlaceSTModel } from '../_helpers/models/PTLEnlaceST.model';
 
 const base_url = environment.apiUrl;
 
@@ -34,9 +34,9 @@ export class PTLEnlacesSTService {
 
     getEnlaces() {
         const url = `${ base_url }/api/PTLEnlacesST/ListaEnlaces`;
-        return this.http.get<PTLEnlaceST[]>( url, this.headers )
+        return this.http.get<PTLEnlaceSTModel[]>( url, this.headers )
         .pipe(
-            map((resp: PTLEnlaceST[]) => {
+            map((resp: PTLEnlaceSTModel[]) => {
                 console.log('respuesta servicio', resp);
                 return {
                     ok: true,
@@ -58,7 +58,7 @@ export class PTLEnlacesSTService {
         }
 
 
-    insertarEnlace(enlace: PTLEnlaceST) {
+    insertarEnlace(enlace: PTLEnlaceSTModel) {
         const url = `${base_url}/api/PTLEnlacesST/PostInsertarEnlace`;
         return this.http.post<{ ok: boolean, mensaje: string }>(url, enlace, this.headers)
             .pipe(
@@ -72,7 +72,7 @@ export class PTLEnlacesSTService {
             );
         }
 
-    modificarEnlaces(enlace: PTLEnlaceST) {
+    modificarEnlaces(enlace: PTLEnlaceSTModel) {
         const url = `${base_url}/api/PTLEnlacesST/PutModificarEnlace`;
         return this.http.put<{ ok: boolean, mensaje: string }>(url, enlace, this.headers)
         .pipe(
