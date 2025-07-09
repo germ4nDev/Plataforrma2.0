@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './language-selector.component.scss'
 })
 export class LanguageSelectorComponent {
-  selectedLang = 'es';
+  selectedLang: string = '';
 
   availableLanguages = [
     { code: 'en', label: 'English', flag: 'assets/flags/united-states.png' },
@@ -26,10 +26,9 @@ export class LanguageSelectorComponent {
     private translate: TranslateService,
     private languageService: LanguageService
   ) {
-    // const storedLang = localStorage.getItem('lang') || 'es';
-    this.selectedLang = this.translate.currentLang || 'es';
-    // this.selectedLang = storedLang;
+    this.selectedLang = localStorage.getItem('lang') || 'es';
     this.languageService.setLanguage(this.selectedLang);
+    console.log('current idioma hp', this.selectedLang)
   }
 
   changeLanguage(langCode: string) {
@@ -37,6 +36,7 @@ export class LanguageSelectorComponent {
     this.languageService.setLanguage(langCode);
     this.selectedLang = langCode;
     localStorage.setItem('lang', langCode);
+    console.log('nuevo idioa hp', langCode)
   }
 
   get oppositeLanguage() {

@@ -29,7 +29,7 @@ export class PtlusuariosRolesApService {
   }
 
   getRegistros() {
-    const url = `${base_url}/usuarios-usuarios-roles`;
+    const url = `${base_url}/usuarios-roles`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de usuariosRoles', resp);

@@ -6,5 +6,6 @@ export class PTLAplicacionModel {
         public descripcionAplicacion?: string,
         public estadoAplicacion?: boolean,
         public nomEstado?: string,
+        public roles?: any
     ) {}
 }

@@ -17,6 +17,8 @@ import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { catchError, Subject, tap } from 'rxjs';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+import { PTLUsuariosRolesModel } from 'src/app/theme/shared/_helpers/models/usuariosRoles.model';
+import { useAnimation } from '@angular/animations';
 //#endregion IMPORTS
 
 @Component({
@@ -34,11 +36,12 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
   registrosSub?: Subscription;
   raplicacionesSub?: Subscription;
   usuariosSub?: Subscription;
-
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
+
   usuarios: PTLUsuarioModel[] = [];
-  registros: PTLUsuarioModel[] = [];
+  usuariosRoles: PTLUsuariosRolesModel[] = [];
+  registros: PTLUsuariosRolesModel[] = [];
   aplicaciones: PTLAplicacionModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
@@ -73,18 +76,13 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
-        .get(['USUARIOS.IDENTIFICACION', 'USUARIOS.NAME', 'USUARIOS.APLICACIONES', 'USUARIOS.ROLES', 'USUARIOS.FOTO'])
+        .get(['USUARIOS.IDENTIFICACION'])
         .subscribe((translations) => {
           this.tituloPagina = translations['USUARIOS.TITLE'];
           this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
-              { title: translations['USUARIOS.FOTO'], data: 'fotoUsuario' },
-              { title: translations['USUARIOS.IDENTIFICACION'], data: 'identificacionUsuario' },
-              { title: translations['USUARIOS.NAME'], data: 'nombreUsuario' },
-              { title: translations['USUARIOS.APLICACIONES'], data: 'correoUsuario' },
-              { title: translations['USUARIOS.ROLES'], data: 'userNameUsuario' },
-              { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
+              { title: translations['USUARIOS.FOTO'], data: 'usuarioId' },
             ]
           };
           this.consultarRegistros();
@@ -137,18 +135,53 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
   }
 
   consultarRegistros() {
-    this.registrosSub = this.rolesUsuariosService
-      .getRegistros()
+    this.registrosSub = this.rolesUsuariosService.getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.usuariosRoles.forEach((regs: any) => {
-              regs.nomEstado = regs.estadoUsuario == true ? 'Activo' : 'Inactivo';
-              const usuario = this.usuarios.filter(x => x.usuarioId == resp.usuarioId);
-            });
-            this.registros = resp.usuariosRoles;
-            console.log('Todos las usuarios', this.registros);
-            this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
+            console.log('respuesta', resp)
+            // resp.usuariosRoles.forEach((regs: any) => {
+            //   regs.nomEstado = regs.estadoUsuario == true ? 'Activo' : 'Inactivo';
+            //   resp.usuariosRoles.forEach((usuRole: any) => {
+            //     const exUsuario = this.usuariosRoles.filter((x) => x.usuarioId == usuRole.usuarioId).length;
+            //     const usuario = this.usuarios.filter((x) => x.usuarioId == usuRole.usuarioId)[0];
+            //     const aplicacion = this.aplicaciones.filter((x) => x.aplicacionId == usuRole.aplicacionId)[0];
+            //     const exAplicacion = usuario.aplicaciones.filter(
+            //       (x: { aplicacionId: number | undefined }) => x.aplicacionId == aplicacion.aplicacionId
+            //     ).length;
+            //     if (exUsuario == 0) {
+            //       if (exAplicacion == 0) {
+            //         aplicacion.roles.push(usuRole);
+            //         usuario.aplicaciones.push(aplicacion);
+            //       } else {
+            //         const exApp = usuario.aplicaciones.findIndex((x: { aplicacionId: any }) => x.aplicacionId == usuRole.aplicacionId);
+            //         const exRole = usuario.aplicaciones[exApp].roles.filter(
+            //           (x: { roleId: number | undefined }) => x.roleId == usuRole.roleId
+            //         ).length;
+            //         if (exRole == 0) {
+            //           const exAppUsu = usuario.aplicaciones.filter(
+            //             (x: { aplicacionId: number | undefined }) => x.aplicacionId == aplicacion.aplicacionId
+            //           );
+            //           usuario.aplicaciones[exApp].roles.push(usuRole);
+            //         }
+            //       }
+            //       this.usuariosRoles.push(usuario);
+            //     } else {
+            //       const exUsu = this.usuariosRoles.findIndex((x) => x.usuarioId == usuRole.usuarioId);
+            //       const usuarioRole = this.usuariosRoles[exUsu];
+            //         const exAppUsu = usuarioRole.aplicaciones.findIndex((x: { aplicacionId: any }) => x.aplicacionId == usuRole.aplicacionId);
+            //         const exRole = usuarioRole.aplicaciones[exAppUsu].roles.filter(
+            //           (x: { roleId: number | undefined }) => x.roleId == usuRole.roleId
+            //         ).length;
+            //         if (exRole == 0) {
+            //           usuarioRole.aplicaciones[exAppUsu].roles.push(usuRole);
+            //         }
+            //     }
+            //   });
+            // });
+            // this.registros = this.usuariosRoles;
+            console.log('Todos las usuariosRoles', this.usuariosRoles);
+            this.dtTrigger.next(null);
             return;
           }
         }),
@@ -170,11 +203,11 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
   }
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['usuarios/gestion-usuario']);
+    this.router.navigate(['roles/gestion-roles-usuario']);
   }
 
   OnEditarRegistroClick(id: number) {
-    this.router.navigate(['usuarios/gestion-usuario'], { queryParams: { regId: id } });
+    this.router.navigate(['roles/gestion-roles-usuario'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(id: number, nombre: string) {
@@ -187,7 +220,7 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.usuariosService.eliminarUsuairo(id).subscribe({
+        this.rolesUsuariosService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.usuarioId !== id);

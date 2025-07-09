@@ -24,26 +24,25 @@
                     <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
                         <thead>
                             <tr>
-                                <th>{{ 'USUARIOS.FOTO' | translate }}</th>
-                                <th>{{ 'USUARIOS.IDENTIFICACION' | translate }}</th>
+                                <th>{{ 'USUARIOS.USUARIOS' | translate }}</th>
+                                <!-- <th>{{ 'USUARIOS.IDENTIFICACION' | translate }}</th>
                                 <th>{{ 'USUARIOS.NAME' | translate }}</th>
                                 <th>{{ 'USUARIOS.CORREO' | translate }}</th>
                                 <th>{{ 'USUARIOS.USERNAME' | translate }}</th>
-                                <th>{{ 'USUARIOS.STATUS' | translate }}</th>
+                                <th>{{ 'USUARIOS.STATUS' | translate }}</th> -->
                                 <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let reg of registros">
-                                <td>
+                                <!-- <td>
                                     <img src="assets/images/user/{{ reg.fotoUsuario }}" class="img-radius wid-40"
                                         alt="User-Profile-Image" />
-                                    <!-- {{ reg.fotoUsuario }} -->
-                                </td>
+                                </td> -->
                                 <td>
-                                    {{ reg.identificacionUsuario }}
+                                    {{ reg.usuarioId }}
                                 </td>
-                                <td>
+                                <!-- <td>
                                     {{ reg.nombreUsuario }}
                                 </td>
                                 <td>
@@ -54,7 +53,7 @@
                                 </td>
                                 <td>
                                     {{ reg.nomEstado }}
-                                </td>
+                                </td> -->
                                 <td style="text-align: center; width: 10%">
                                     <div class="d-flex flex-wrap gap-2">
                                         <button type="button"
@@ -76,15 +75,15 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>
+                                <!-- <th>
 
-                                </th>
+                                </th> -->
                                 <th>
-                                    <input #codigoAplicacion (keyup)="filtrarColumna(0, codigoAplicacion.value)"
+                                    <input #usuarioId (keyup)="filtrarColumna(0, usuarioId.value)"
                                         type="text" placeholder="{{ 'USUARIOS.FILTER_IDENTIFICACION' | translate }}"
                                         name="filtro-url" class="form-control" />
                                 </th>
-                                <th>
+                                <!-- <th>
                                     <input #nombreAplicacion (keyup)="filtrarColumna(1, nombreAplicacion.value)"
                                         type="text" placeholder="{{ 'USUARIOS.FILTER_NAME' | translate }}"
                                         name="filtro-nombre" class="form-control" />
@@ -104,7 +103,7 @@
                                     <input #estadoAplicacion (keyup)="filtrarColumna(4, estadoAplicacion.value)"
                                         type="text" placeholder="{{ 'USUARIOS.FILTRO_STATUS' | translate }}"
                                         name="filtro-estado" class="form-control" />
-                                </th>
+                                </th> -->
                                 <th>
                                 </th>
                             </tr>

@@ -68,7 +68,7 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
           'USUARIOS.NAME',
           'USUARIOS.CORREO',
           'USUARIOS.USERNAME',
-          'PLATAFORMA.DESCRIPCION',
+          'USUARIOS.DESCRIPCION',
           'USUARIOS.FOTO',
           'USUARIOS.ESTADO'
         ])

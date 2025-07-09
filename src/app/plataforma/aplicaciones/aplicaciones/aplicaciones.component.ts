@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
-import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
+// import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { catchError, Subject, tap } from 'rxjs';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -28,11 +28,10 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
   registrosSub?: Subscription;
-
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
+
   aplicaciones: PTLAplicacionModel[] = [];
-  lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   //#endregion VARIABLES
 
@@ -40,7 +39,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     private router: Router,
     private aplicacionesService: PtlAplicacionesService,
     private translate: TranslateService,
-    private languageService: LanguageService,
+    // private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
   ) {}
 
@@ -61,26 +60,24 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
-    this.languageService.currentLang$.subscribe((lang) => {
-      this.translate.use(lang); // Forzamos que ngx-translate lo aplique
-      console.log('Nuevo idioma:', lang);
-      this.translate
-        .get(['APLICACIONES.CODE', 'APLICACIONES.NAME', 'APLICACIONES.DESCRIPTION', 'APLICACIONES.STATUS', 'PLATAFORMA.OPTIONS'])
-        .subscribe((translations) => {
-          this.tituloPagina = translations['APLICACIONES.TITLE'];
-          this.dtColumnSearchingOptions = {
-            responsive: true,
-            columns: [
-              { title: translations['APLICACIONES.CODE'], data: 'codigoAplicacion' },
-              { title: translations['APLICACIONES.NAME'], data: 'nombreAplicacion' },
-              { title: translations['APLICACIONES.DESCRIPTION'], data: 'descripcionAplicacion' },
-              { title: translations['APLICACIONES.STATUS'], data: 'estadoAplicacion' },
-              { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-            ]
-          };
-          this.consultarAplicaciones();
-        });
-    });
+    // Forzamos que ngx-translate lo aplique
+    this.translate
+      .get(['APLICACIONES.CODE', 'APLICACIONES.NAME', 'APLICACIONES.DESCRIPTION', 'APLICACIONES.STATUS', 'PLATAFORMA.OPTIONS'])
+      .subscribe((translations) => {
+        this.tituloPagina = translations['APLICACIONES.TITLE'];
+        this.dtColumnSearchingOptions = {
+          responsive: true,
+          columns: [
+            { title: translations['APLICACIONES.CODE'], data: 'codigoAplicacion' },
+            { title: translations['APLICACIONES.NAME'], data: 'nombreAplicacion' },
+            { title: translations['APLICACIONES.DESCRIPTION'], data: 'descripcionAplicacion' },
+            { title: translations['APLICACIONES.STATUS'], data: 'estadoAplicacion' },
+            { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
+          ]
+        };
+        this.consultarAplicaciones();
+        // });
+      });
   }
 
   ngOnDestroy(): void {

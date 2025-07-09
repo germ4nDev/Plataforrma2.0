@@ -1,4 +1,4 @@
-export class PTLUsuarioModel {
+export class PTLUsuariosRolesModel {
     constructor (
         public usuarioId?: number,
         public identificacionUsuario?: number,
@@ -10,7 +10,6 @@ export class PTLUsuarioModel {
         public fotoUsuario?: string,
         public serviceToken?: string,
         public estadoUsuario?: boolean,
-        public nomEstado?: string,
-        public aplicaciones?: any
+        public aplicaciones?: any,
    ) {}
 }

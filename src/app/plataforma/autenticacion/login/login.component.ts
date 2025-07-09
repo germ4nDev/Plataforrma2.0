@@ -31,7 +31,6 @@ export class LoginComponent implements OnInit {
     loading: boolean = false;
     submitted: boolean = false;
     remember: boolean = false;
-    lang: string = localStorage.getItem('lang') || '';
     //#endregion VARIABLES
 
     constructor(
