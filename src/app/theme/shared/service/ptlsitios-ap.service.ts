@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
-import { PTLSitiosAP } from '../_helpers/models/PTLSitioAP.model';
 import { map } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { PTLSitiosAPModel } from '../_helpers/models/PTLSitioAP.model';
 
 const base_url = environment.apiUrl;
 
@@ -13,88 +13,80 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLSitiosAPService {
-    user : PTLUsuarioModel = new PTLUsuarioModel();
+  user: PTLUsuarioModel = new PTLUsuarioModel();
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    get token(): string {
-        this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-        if (this.user.serviceToken !== '') {
-            return this.user.serviceToken || '';
-        }
-        return '';
+  get token(): string {
+    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
+    if (this.user.serviceToken !== '') {
+      return this.user.serviceToken || '';
     }
+    return '';
+  }
 
-    get headers() {
-        return {
-            headers: {
-                'x-token': this.token
-            }
-        }
-    }
-
-    getSitios() {
-        const url = `${ base_url }/api/PTLSitiosAP/ListaSitios`;
-        return this.http.get<PTLSitiosAP[]>( url, this.headers )
-        .pipe(
-            map((resp: PTLSitiosAP[]) => {
-                console.log('respuesta servicio', resp);
-                return {
-                    ok: true,
-                    resp
-                };
-            })
-        );
-    }
-
-    getSitioById(id: number) {
-        const url = `${base_url}/api/PTLSitiosAP/GetSitioById/${id}`;
-        return this.http.get(url, this.headers)
-        .pipe(
-            map((resp: any) => {
-                console.log('respuesta servicio Id', resp);
-                return resp;
-            })
-        );
-        }
-
-
-    insertarSitio(sitio: PTLSitiosAP) {
-        const url = `${base_url}/api/PTLSitiosAP/PostInsertarSitios`;
-        return this.http.post<{ ok: boolean, mensaje: string }>(url, sitio, this.headers)
-            .pipe(
-                map(resp => {
-                    console.log('respuesta servicio insertar', resp);
-                    return {
-                        ok: true,
-                        resp
-                    };
-                })
-            );
-        }
-
-    modificarSitio(sitio: PTLSitiosAP) {
-        const url = `${base_url}/api/PTLSitiosAP/PutModificarSitio`;
-        return this.http.put<{ ok: boolean, mensaje: string }>(url, sitio, this.headers)
-        .pipe(
-            map(resp => {
-            console.log('respuesta servicio modificar', resp);
-            return {
-                ok: true,
-                resp
-            };
-            })
-        );
-    }
-
-    eliminarSitio(id: number) {
-        const url = `${base_url}/api/PTLSitiosAP/DeleteSitio/${id}`;
-        return this.http.delete<{ ok: boolean, mensaje: string }>(url, this.headers)
-          .pipe(
-            map(resp => {
-              console.log('respuesta servicio eliminar', resp);
-              return resp;
-            })
-          );
+  get headers() {
+    return {
+      headers: {
+        'x-token': this.token
       }
+    };
+  }
+
+  getSitios() {
+    const url = `${base_url}/sitios-ap`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('respuesta servicio', resp);
+        return {
+          ok: true,
+          sitios: resp.sitios
+        };
+      })
+    );
+  }
+
+  getSitioById(id: number) {
+    const url = `${base_url}/sitios-ap/${id}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('data de sitios', resp);
+        return {
+          ok: true,
+          sitio: resp.sitio
+        };
+      })
+    );
+  }
+
+  insertarSitio(sitio: PTLSitiosAPModel) {
+    const url = `${base_url}/sitios-ap`;
+    return this.http.post(url, sitio);
+  }
+
+  modificarSitio(sitio: PTLSitiosAPModel) {
+    const url = `${base_url}/sitios-ap/${sitio.sitioId}`;
+    return this.http.put(url, sitio).pipe(
+      map((resp: any) => {
+        console.log('data de sitio modificada', resp);
+        return {
+          ok: true,
+          sitio: resp.sitio
+        };
+      })
+    );
+  }
+
+  eliminarSitio(_id: number) {
+    const url = `${base_url}/sitios-ap/${_id}`;
+    return this.http.delete(url).pipe(
+      map((resp: any) => {
+        console.log('data de aplicacion modificacda', resp);
+        return {
+          ok: true,
+          aplicacion: resp.aplicacion
+        };
+      })
+    );
+  }
 }

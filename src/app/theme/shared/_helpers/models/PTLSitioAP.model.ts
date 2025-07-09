@@ -1,4 +1,4 @@
-export class PTLSitiosAP {
+export class PTLSitiosAPModel {
     constructor (
         public sitioId? : number,
         public aplicacionId? : number,

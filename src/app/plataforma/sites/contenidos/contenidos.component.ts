@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
 import { Subject } from 'rxjs';
-import { PTLContenidosEL } from 'src/app/theme/shared/_helpers/models/PTLContenidosEL.model';
+import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenidos-el.service';
@@ -25,7 +25,7 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
-  contenidoEL: PTLContenidosEL[] = [];
+  contenidoEL: PTLContenidoELModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
 

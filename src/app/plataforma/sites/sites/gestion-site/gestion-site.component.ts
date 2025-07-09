@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { PTLSitiosAP } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
+import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 
 // export class FormRegistro {
 //   sitioId!: number;
@@ -27,7 +27,7 @@ import { PTLSitiosAP } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.mod
 })
 export class GestionSiteComponent {
  // private props
-  FormRegistro: PTLSitiosAP = new PTLSitiosAP();
+  FormRegistro: PTLSitiosAPModel = new PTLSitiosAPModel();
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;

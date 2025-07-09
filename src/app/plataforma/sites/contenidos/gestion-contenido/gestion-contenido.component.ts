@@ -6,16 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenidos-el.service';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { PTLContenidoEL } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
+import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
 
-// export class FormRegistro {
-//     contenidoId!: number;
-//     enlaceId!: number;
-//     nombreContenido!: string;
-//     descripcionContenido!: string;
-//     contenido!: string;
-//     estadoContenido!: boolean;
-// }
 @Component({
   selector: 'app-geston-contenido',
   standalone: true,
@@ -24,7 +16,7 @@ import { PTLContenidoEL } from 'src/app/theme/shared/_helpers/models/PTLContenid
   styleUrl: './gestion-contenido.component.scss'
 })
 export class GestonContenidoComponent implements OnInit {
-  FormRegistro: PTLContenidoEL = new PTLContenidoEL();
+  FormRegistro: PTLContenidoELModel = new PTLContenidoELModel();
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;

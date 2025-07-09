@@ -10,17 +10,9 @@ import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
+import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import Swal from 'sweetalert2';
-import { PTLEnlaceST } from 'src/app/theme/shared/_helpers/models/PTLEnlacesST.model';
 
-// export class FormRegistro {
-//     enlaceId!: number;
-//     sitioId!: number;
-//     nombreEnlace!: string;
-//     descripcionEnlace!: string;
-//     rutaEnlace!: string;
-//     estadoEnlace!: boolean;
-// }
 @Component({
   selector: 'app-gestion-enlace',
   standalone: true,
@@ -31,7 +23,7 @@ import { PTLEnlaceST } from 'src/app/theme/shared/_helpers/models/PTLEnlacesST.m
 export class GestionEnlaceComponent {
 
     // private props
-    FormRegistro: PTLEnlaceST = new PTLEnlaceST();
+    FormRegistro: PTLEnlaceSTModel = new PTLEnlaceSTModel();
     form: undefined;
     isSubmit: boolean;
     modoEdicion: boolean = false;

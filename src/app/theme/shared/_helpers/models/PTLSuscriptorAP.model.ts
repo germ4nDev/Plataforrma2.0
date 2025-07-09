@@ -1,10 +1,9 @@
-export class PTLsuarioST {
+export class PTLSuscriptorAPModel {
     constructor (
-        public usuarioId : number,
-        public suscriptorId : number,
-        public nombreUsuario : string,
-        public claveUsuario : string,
-        public correoUsuario : string,
-        public estadoUsuario : number
+        public suscriptorId? : number,
+        public codigoSuscriptor? : string,
+        public nombreSuscriptor? : string,
+        public descripcionSuscriptor? : string,
+        public estadoSuscriptor? : boolean
    ) {}
 }
