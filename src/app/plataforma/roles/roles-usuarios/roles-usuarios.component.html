@@ -3,7 +3,7 @@
         <div class="card card-header-sticky">
             <div class="card-header">
                 <!-- <div class="text-center"> -->
-                <h4>{{ 'USUARIOS.TITLE' | translate }}</h4>
+                <h4>{{ 'ROLES.TITLE' | translate }}</h4>
                 <hr />
                 <!-- </div> -->
                 <div class="row col-sm-12">
@@ -12,7 +12,7 @@
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
                         <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'USUARIOS.NEW' | translate }}
+                            {{ 'ROLES.NEW' | translate }}
                         </button>
                     </div>
                 </div>
@@ -24,12 +24,12 @@
                     <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
                         <thead>
                             <tr>
-                                <th>{{ 'USUARIOS.USUARIOS' | translate }}</th>
-                                <!-- <th>{{ 'USUARIOS.IDENTIFICACION' | translate }}</th>
-                                <th>{{ 'USUARIOS.NAME' | translate }}</th>
-                                <th>{{ 'USUARIOS.CORREO' | translate }}</th>
-                                <th>{{ 'USUARIOS.USERNAME' | translate }}</th>
-                                <th>{{ 'USUARIOS.STATUS' | translate }}</th> -->
+                                <th>{{ 'ROLES.ROLES' | translate }}</th>
+                                <!-- <th>{{ 'ROLES.IDENTIFICACION' | translate }}</th>
+                                <th>{{ 'ROLES.NAME' | translate }}</th>
+                                <th>{{ 'ROLES.CORREO' | translate }}</th>
+                                <th>{{ 'ROLES.USERNAME' | translate }}</th>
+                                <th>{{ 'ROLES.STATUS' | translate }}</th> -->
                                 <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
                             </tr>
                         </thead>
@@ -59,14 +59,14 @@
                                         <button type="button"
                                             class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
                                             (click)="OnEditarRegistroClick(reg.usuarioId?? 0)"
-                                            title="{{ 'USUARIOS.UPDATE' | translate }}">
+                                            title="{{ 'ROLES.UPDATE' | translate }}">
                                             <i class="feather icon-edit"></i>
                                         </button>
                                         <button type="button"
                                             class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
                                             (click)="OnEliminarRegistroClick(reg.usuarioId?? 0, reg.nombreUsuario?? '')"
                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'USUARIOS.DELETE' | translate }}">
+                                            title="{{ 'ROLES.DELETE' | translate }}">
                                             <i class="feather icon-trash-2"></i>
                                         </button>
                                     </div>
@@ -80,28 +80,28 @@
                                 </th> -->
                                 <th>
                                     <input #usuarioId (keyup)="filtrarColumna(0, usuarioId.value)"
-                                        type="text" placeholder="{{ 'USUARIOS.FILTER_IDENTIFICACION' | translate }}"
+                                        type="text" placeholder="{{ 'ROLES.FILTER_IDENTIFICACION' | translate }}"
                                         name="filtro-url" class="form-control" />
                                 </th>
                                 <!-- <th>
                                     <input #nombreAplicacion (keyup)="filtrarColumna(1, nombreAplicacion.value)"
-                                        type="text" placeholder="{{ 'USUARIOS.FILTER_NAME' | translate }}"
+                                        type="text" placeholder="{{ 'ROLES.FILTER_NAME' | translate }}"
                                         name="filtro-nombre" class="form-control" />
                                 </th>
                                                                 <th>
                                     <input #nombreAplicacion (keyup)="filtrarColumna(1, nombreAplicacion.value)"
-                                        type="text" placeholder="{{ 'USUARIOS.FILTER_CORREO' | translate }}"
+                                        type="text" placeholder="{{ 'ROLES.FILTER_CORREO' | translate }}"
                                         name="filtro-nombre" class="form-control" />
                                 </th>
                                 <th>
                                     <input #descripcionAplicacion
                                         (keyup)="filtrarColumna(2, descripcionAplicacion.value)" type="text"
-                                        placeholder="{{ 'USUARIOS.FILTER_USERNAME' | translate }}"
+                                        placeholder="{{ 'ROLES.FILTER_USERNAME' | translate }}"
                                         name="filtro-nombre" class="form-control" />
                                 </th>
                                 <th>
                                     <input #estadoAplicacion (keyup)="filtrarColumna(4, estadoAplicacion.value)"
-                                        type="text" placeholder="{{ 'USUARIOS.FILTRO_STATUS' | translate }}"
+                                        type="text" placeholder="{{ 'ROLES.FILTRO_STATUS' | translate }}"
                                         name="filtro-estado" class="form-control" />
                                 </th> -->
                                 <th>
