@@ -3,7 +3,7 @@ export class PTLUsuarioRoleAP {
         public usuarioRolId? : number,
         public usuarioId? : number,
         public aplicacionId? : number,
-        public rolId? : number,
+        public roleId? : number,
         public estadoUsuarioRole?: boolean
    ) {}
 }

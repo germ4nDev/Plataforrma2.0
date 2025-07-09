@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -68,7 +69,7 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
           'USUARIOS.NAME',
           'USUARIOS.CORREO',
           'USUARIOS.USERNAME',
-          'PLATAFORMA.DESCRIPCION',
+          'USUARIOS.DESCRIPCION',
           'USUARIOS.FOTO',
           'USUARIOS.ESTADO'
         ])
@@ -111,6 +112,7 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
           }
         }),
         catchError((err) => {
+          console.log('Ha ocurrido un error', err);
           return of(null);
         })
       )

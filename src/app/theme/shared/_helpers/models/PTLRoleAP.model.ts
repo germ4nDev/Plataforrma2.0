@@ -7,6 +7,7 @@ export class PTLRoleAPModel {
         public nombreRole?: string,
         public descripcionRole?: string,
         public estadoRole?: number,
-        public nomEstado?: string
+        public nomEstado?: string,
+        public checked?: boolean
    ) {}
 }

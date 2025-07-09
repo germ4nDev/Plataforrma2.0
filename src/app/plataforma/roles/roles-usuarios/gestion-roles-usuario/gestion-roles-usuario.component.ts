@@ -2,40 +2,55 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
+import { catchError, of, Subscription, tap } from 'rxjs';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLRoleAPModel } from '../../../../theme/shared/_helpers/models/PTLRoleAP.model';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { PTLUsuarioRoleAP } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
+import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { TranslateService } from '@ngx-translate/core';
-import { PTLRolesAPService } from 'src/app/theme/shared/service/ptlroles-ap.service';
-import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
-import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { catchError, of, Subscription, tap } from 'rxjs';
+import {
+  PTLRolesAPService,
+  LanguageService,
+  PtlAplicacionesService,
+  PtlusuariosRolesApService,
+  PTLUsuariosService
+} from 'src/app/theme/shared/service';
 //#endregion IMPORTS
 
 @Component({
-  selector: 'app-gestion-roles',
+  selector: 'app-gestion-roles-usurio',
   standalone: true,
   imports: [CommonModule, SharedModule],
-  templateUrl: './gestion-roles.component.html',
-  styleUrl: './gestion-roles.component.scss'
+  templateUrl: './gestion-roles-usuario.component.html',
+  styleUrl: './gestion-roles-usuario.component.scss'
 })
-export class GestionRolesComponent {
-  FormRegistro: PTLRoleAPModel = new PTLRoleAPModel();
+export class GestionRolesUsuarioComponent {
+  FormRegistro: PTLUsuarioRoleAP = new PTLUsuarioRoleAP();
+  aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
   aplicaciones: PTLAplicacionModel[] = [];
+  usuarios: PTLUsuarioModel[] = [];
+  rolesAplicacion: PTLRoleAPModel[] = [];
   registrosSub?: Subscription;
+  usuariosSub?: Subscription;
+  aplicacionesSub?: Subscription;
+  rolesSub?: Subscription;
   form: undefined;
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
+  rolesSeleccionados: PTLUsuarioRoleAP[] = [];
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private registrosService: PTLRolesAPService,
+    private registrosService: PtlusuariosRolesApService,
     private aplicacionesService: PtlAplicacionesService,
+    private usuariosService: PTLUsuariosService,
+    private rolesAPService: PTLRolesAPService,
     private translate: TranslateService,
     private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
@@ -45,6 +60,7 @@ export class GestionRolesComponent {
 
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
+    this.consultarUsuarios();
     this.consultarAplicaciones();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
@@ -68,6 +84,24 @@ export class GestionRolesComponent {
     });
   }
 
+  consultarUsuarios() {
+    this.usuariosSub = this.usuariosService
+      .getUsuarios()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.usuarios = resp.usuarios;
+            console.log('Todos las usuarios', this.usuarios);
+            return;
+          }
+        }),
+        catchError((err) => {
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
   consultarAplicaciones() {
     this.registrosSub = this.aplicacionesService
       .getAplicaciones()
@@ -86,13 +120,45 @@ export class GestionRolesComponent {
       .subscribe();
   }
 
+  consultarRolesByAplicacionId(aplicacionId: number) {
+    this.rolesAplicacion = [];
+    this.registrosSub = this.rolesAPService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            const rolesApp = resp.roles.filter((x: { aplicacionId: number }) => x.aplicacionId == aplicacionId);
+            this.rolesAplicacion = rolesApp;
+            console.log('Todos las roles', this.rolesAplicacion);
+          }
+        }),
+        catchError((err) => {
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
   onAplicacionchangeClick(event: any) {
     const value = event.target.value;
-    const app = this.aplicaciones.filter((x) => x.codigoAplicacion == value)[0];
-    console.log('Código de aplicación seleccionado:', value);
-    console.log('data aplicación seleccionado:', app);
-    this.FormRegistro.aplicacionId = app.aplicacionId;
-    this.FormRegistro.codigoAplicacion = value;
+    const app = this.aplicaciones.filter((x) => x.aplicacionId == value)[0];
+    this.consultarRolesByAplicacionId(app.aplicacionId || 0);
+    this.aplicacion = app;
+  }
+
+  onSeleccionarRegistroChange(evento: any, role: any) {
+    const roleId = evento.target.value;
+    const checked = evento.target.checked;
+    role.checked = checked;
+    if (checked) {
+      this.rolesSeleccionados.push(role);
+    } else {
+      const roleIx = this.rolesSeleccionados.findIndex((x) => x.roleId == role.roleId);
+      if (roleIx != -1) {
+        this.rolesSeleccionados.splice(roleIx, 1);
+      }
+    }
+    console.log('Roles seleccionados:', this.rolesSeleccionados);
   }
 
   btnGestionarRegistroClick(form: any) {
@@ -136,6 +202,6 @@ export class GestionRolesComponent {
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/roles/roles']);
+    this.router.navigate(['/roles-usuaris/roles-usurios']);
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
@@ -71,16 +72,17 @@ export class SitesComponent implements OnInit, AfterViewInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.sitiosAP.forEach((app: any) => {
+            resp.sitios.forEach((app: any) => {
               app.nomEstado = app.estadoSitio == true ? 'Activa' : 'Inactiva';
             });
-            this.sitiosAP = resp.sitiosAP;
+            this.sitiosAP = resp.sitios;
             console.log('Todos las sitiosAP', this.sitiosAP);
             this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
             return;
           }
         }),
         catchError((err) => {
+          console.log('Ha ocurrido un error', err);
           return of(null);
         })
       )
@@ -120,7 +122,7 @@ export class SitesComponent implements OnInit, AfterViewInit {
   }
 
   editarSitio(id: number) {
-    this.router.navigate(['/sites/gestion-site'], { queryParams: { sitioId: id } });
+    this.router.navigate(['/sites/gestion-site'], { queryParams: { regId: id } });
   }
 
   eliminarSitio(id: number, nombre: string) {

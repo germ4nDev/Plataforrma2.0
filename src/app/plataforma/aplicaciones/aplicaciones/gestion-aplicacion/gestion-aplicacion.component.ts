@@ -7,9 +7,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLAplicacionModel } from '../../../../theme/shared/_helpers/models/PTLAplicacion.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { TranslateService } from '@ngx-translate/core';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service';
-import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 
@@ -31,8 +29,6 @@ export class GestionAplicacionComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private aplicacionesService: PtlAplicacionesService,
-    private translate: TranslateService,
-    private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
   ) {
     this.isSubmit = false;
