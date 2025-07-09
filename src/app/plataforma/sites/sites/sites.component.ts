@@ -2,10 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
-import { Router} from '@angular/router';
-import { PTLSitiosAP } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
+import { Router } from '@angular/router';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
-import { Subject } from 'rxjs';
+import { catchError, of, Subject, Subscription, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
@@ -14,6 +13,7 @@ import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
+import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 
 @Component({
   selector: 'app-sites',
@@ -26,10 +26,11 @@ export class SitesComponent implements OnInit, AfterViewInit {
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
+  registrosSub?: Subscription;
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
-  sitiosAP: PTLSitiosAP[] = [];
+  sitiosAP: PTLSitiosAPModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
 
@@ -65,11 +66,25 @@ export class SitesComponent implements OnInit, AfterViewInit {
   }
 
   consultarSitios() {
-    this.sitiosService.getSitios().subscribe((sitios: any) => {
-      console.log('Todos los sitios', sitios.resp.data);
-      this.sitiosAP = sitios.resp.data;
-      this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
-    });
+    this.registrosSub = this.sitiosService
+      .getSitios()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            resp.sitiosAP.forEach((app: any) => {
+              app.nomEstado = app.estadoSitio == true ? 'Activa' : 'Inactiva';
+            });
+            this.sitiosAP = resp.sitiosAP;
+            console.log('Todos las sitiosAP', this.sitiosAP);
+            this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
+            return;
+          }
+        }),
+        catchError((err) => {
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   ngAfterViewInit(): void {

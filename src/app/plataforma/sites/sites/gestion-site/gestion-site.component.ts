@@ -6,16 +6,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
+import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 
-export class FormSitio {
-  sitioId!: number;
-  aplicacionId!: number;
-  nombreSitio!: string;
-  descripcionSitio!: string;
-  urlSitio!: string;
-  estadoSitio!: boolean;
-  puertoSitio!: number;
-}
+// export class FormRegistro {
+//   sitioId!: number;
+//   aplicacionId!: number;
+//   nombreSitio!: string;
+//   descripcionSitio!: string;
+//   urlSitio!: string;
+//   estadoSitio!: boolean;
+//   puertoSitio!: number;
+// }
 
 @Component({
   selector: 'app-gestion-site',
@@ -26,7 +27,7 @@ export class FormSitio {
 })
 export class GestionSiteComponent {
  // private props
-  FormSitio!: FormSitio;
+  FormRegistro: PTLSitiosAPModel = new PTLSitiosAPModel();
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;
@@ -50,7 +51,7 @@ export class GestionSiteComponent {
         this.modoEdicion = true;
         this.sitiosService.getSitioById(+id).subscribe({
           next: (resp: any) => {
-            this.FormSitio = resp.data;
+            this.FormRegistro = resp.data;
           },
           error: () => {
             Swal.fire('Error', 'No se pudo obtener el sitio', 'error');
@@ -59,7 +60,7 @@ export class GestionSiteComponent {
       }
       else {
         this.modoEdicion = false;
-        this.FormSitio = {
+        this.FormRegistro = {
           sitioId: 0,
           aplicacionId: 0,
           nombreSitio: '',
@@ -74,13 +75,11 @@ export class GestionSiteComponent {
 
   btnInsertEditSitios(form: any) {
     this.isSubmit = true;
-
     if (!form.valid) {
       return;
     }
-
     if (this.modoEdicion) {
-        this.sitiosService.modificarSitio(this.FormSitio).subscribe({
+        this.sitiosService.modificarSitio(this.FormRegistro).subscribe({
           next: (resp: any) => {
             if (resp.ok) {
               Swal.fire('', 'El sitio se modificó correctamente', 'success');
@@ -97,7 +96,7 @@ export class GestionSiteComponent {
       }
       else
       {
-        this.sitiosService.insertarSitio(this.FormSitio).subscribe({
+        this.sitiosService.insertarSitio(this.FormRegistro).subscribe({
             next: (resp:any) => {
               if (resp.ok) {
                 Swal.fire('', 'El sitio se insertó correctamente', 'success');

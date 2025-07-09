@@ -1,10 +1,10 @@
-export class PTLEnlaceST {
+export class PTLEnlaceSTModel {
     constructor (
-        public enlaceId : number,
-        public sitioId : number,
-        public nombreEnlace : string,
-        public descripcionEnlace : string,
-        public rutaEnlace : string,
-        public estadoEnlace : boolean
+        public enlaceId? : number,
+        public sitioId?: number,
+        public nombreEnlace? : string,
+        public descripcionEnlace?: string,
+        public rutaEnlace? : string,
+        public estadoEnlace? : boolean
     ) {}
 }

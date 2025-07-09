@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLContenidosEL } from '../_helpers/models/PTLContenidosEL.model';
+import { PTLContenidoELModel } from '../_helpers/models/PTLContenidoEL.model';
 
 const base_url = environment.apiUrl;
 
@@ -34,9 +34,9 @@ export class PTLContenidosELService {
 
     getContenido() {
         const url = `${ base_url }/api/PTLContenidosEL/ListaContenidos`;
-        return this.http.get<PTLContenidosEL[]>( url, this.headers )
+        return this.http.get<PTLContenidoELModel[]>( url, this.headers )
         .pipe(
-            map((resp: PTLContenidosEL[]) => {
+            map((resp: PTLContenidoELModel[]) => {
                 console.log('respuesta servicio', resp);
                 return {
                     ok: true,
@@ -58,7 +58,7 @@ export class PTLContenidosELService {
         }
 
 
-    insertarContenido(contenido: PTLContenidosEL) {
+    insertarContenido(contenido: PTLContenidoELModel) {
         const url = `${base_url}/api/PTLContenidosEL/PostInsertarContenido`;
         return this.http.post<{ ok: boolean, mensaje: string }>(url, contenido, this.headers)
             .pipe(
@@ -72,7 +72,7 @@ export class PTLContenidosELService {
             );
         }
 
-    modificarContenido(contenido: PTLContenidosEL) {
+    modificarContenido(contenido: PTLContenidoELModel) {
         const url = `${base_url}/api/PTLContenidosEL/PutModificarContenido`;
         return this.http.put<{ ok: boolean, mensaje: string }>(url, contenido, this.headers)
         .pipe(

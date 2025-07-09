@@ -2,10 +2,8 @@
     <div class="col-sm-12">
         <div class="card card-header-sticky">
             <div class="card-header">
-                <!-- <div class="text-center"> -->
                 <h4>{{ 'USUARIOS.TITLE' | translate }}</h4>
                 <hr />
-                <!-- </div> -->
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
                         <app-breadcrumb></app-breadcrumb>
@@ -80,28 +78,28 @@
 
                                 </th>
                                 <th>
-                                    <input #codigoAplicacion (keyup)="filtrarColumna(0, codigoAplicacion.value)"
+                                    <input #identificacionUsuario (keyup)="filtrarColumna(0, identificacionUsuario.value)"
                                         type="text" placeholder="{{ 'USUARIOS.FILTER_IDENTIFICACION' | translate }}"
                                         name="filtro-url" class="form-control" />
                                 </th>
                                 <th>
-                                    <input #nombreAplicacion (keyup)="filtrarColumna(1, nombreAplicacion.value)"
+                                    <input #nombreUsuario (keyup)="filtrarColumna(1, nombreUsuario.value)"
                                         type="text" placeholder="{{ 'USUARIOS.FILTER_NAME' | translate }}"
                                         name="filtro-nombre" class="form-control" />
                                 </th>
                                                                 <th>
-                                    <input #nombreAplicacion (keyup)="filtrarColumna(1, nombreAplicacion.value)"
+                                    <input #correoUsuario (keyup)="filtrarColumna(1, correoUsuario.value)"
                                         type="text" placeholder="{{ 'USUARIOS.FILTER_CORREO' | translate }}"
                                         name="filtro-nombre" class="form-control" />
                                 </th>
                                 <th>
-                                    <input #descripcionAplicacion
-                                        (keyup)="filtrarColumna(2, descripcionAplicacion.value)" type="text"
+                                    <input #userNameUsuario
+                                        (keyup)="filtrarColumna(2, userNameUsuario.value)" type="text"
                                         placeholder="{{ 'USUARIOS.FILTER_USERNAME' | translate }}"
                                         name="filtro-nombre" class="form-control" />
                                 </th>
                                 <th>
-                                    <input #estadoAplicacion (keyup)="filtrarColumna(4, estadoAplicacion.value)"
+                                    <input #estadoUsuario (keyup)="filtrarColumna(4, estadoUsuario.value)"
                                         type="text" placeholder="{{ 'USUARIOS.FILTRO_STATUS' | translate }}"
                                         name="filtro-estado" class="form-control" />
                                 </th>

@@ -7,10 +7,10 @@ import Swal from 'sweetalert2';
 
 import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { PTLEnlaceST } from 'src/app/theme/shared/_helpers/models/PTLEnlacesST.model';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
+import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 
 @Component({
   selector: 'app-enlaces',
@@ -26,7 +26,7 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
-  enlaceST: PTLEnlaceST[] = [];
+  enlaceST: PTLEnlaceSTModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
 
