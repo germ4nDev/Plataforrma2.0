@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
-import { Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
@@ -11,6 +10,7 @@ import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
+import { catchError, of, Subject, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-enlaces',
@@ -23,6 +23,7 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
+  registrosSub?: Subscription;
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
@@ -48,23 +49,39 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
           this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
-                { title: this.translate.instant('ENLACES.NAME'), data: 'nombreEnlace' },
-                { title: this.translate.instant('ENLACES.DESCRIPTION'), data: 'descripcionEnlace' },
-                { title: this.translate.instant('ENLACES.RUTA'), data: 'rutaEnlace' },
-                { title: this.translate.instant('ENLACES.STATUS'), data: 'estadoEnlace' },
-                { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' }
+              { title: this.translate.instant('ENLACES.NAME'), data: 'nombreEnlace' },
+              { title: this.translate.instant('ENLACES.DESCRIPTION'), data: 'descripcionEnlace' },
+              { title: this.translate.instant('ENLACES.RUTA'), data: 'rutaEnlace' },
+              { title: this.translate.instant('ENLACES.STATUS'), data: 'estadoEnlace' },
+              { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' }
             ]
           };
           this.consultarEnlaces();
         });
     });
   }
+
   consultarEnlaces() {
-    this.enlacesService.getEnlaces().subscribe((enlace: any) => {
-      console.log('Todos los enlaces', enlace.resp.data);
-      this.enlaceST = enlace.resp.data;
-      this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
-    });
+    this.registrosSub = this.enlacesService
+      .getEnlaces()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            resp.enlace.forEach((app: any) => {
+              app.nomEstado = app.estadoEnlace== true ? 'Activa' : 'Inactiva';
+            });
+            this.enlaceST = resp.enlace;
+            console.log('Todos los enlaces', this.enlaceST);
+            this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   ngAfterViewInit(): void {

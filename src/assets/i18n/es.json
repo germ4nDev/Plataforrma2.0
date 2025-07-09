@@ -57,7 +57,10 @@
             "PLACEHOLDERPUERTO": "Puerto del sitio",
             "REQUERIDOPUERTO": "Por favor, Ingrese el puerto del sitio. Este campo es obligatorio.",
             "PLACEHOLDERDESCRIPCION": "Descripcion del sitio",
-            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
+            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+            "APLICACION": "Aplicación",
+            "PLACEHOLDERAPLICACION": "Seleccione",
+            "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
         }
     },
     "ENLACES": {

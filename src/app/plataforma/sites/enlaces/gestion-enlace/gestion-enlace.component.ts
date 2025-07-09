@@ -12,6 +12,8 @@ import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import Swal from 'sweetalert2';
+import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-enlace',
@@ -27,6 +29,8 @@ export class GestionEnlaceComponent {
     form: undefined;
     isSubmit: boolean;
     modoEdicion: boolean = false;
+    sitiosSub?: Subscription;
+    sitios: PTLSitiosAPModel[] = [];
 
     // constructor
     constructor(
@@ -37,36 +41,57 @@ export class GestionEnlaceComponent {
         this.isSubmit = false;
     }
 
-    ngOnInit() {
-        this.BreadCrumb.setBreadcrumb();
-        this.route.queryParams.subscribe(params => {
-            const id = params['enlaceId'];
-            console.log('me llena el Id', id);
+    // ngOnInit() {
+    //     this.BreadCrumb.setBreadcrumb();
+    //     this.route.queryParams.subscribe(params => {
+    //         const id = params['enlaceId'];
+    //         console.log('me llena el Id', id);
 
-            if (id) {
-                this.modoEdicion = true;
-                this.enlacesService.getEnlaceById(+id).subscribe({
-                    next: (resp: any) => {
-                        this.FormRegistro = resp.data;
-                    },
-                    error: () => {
-                        Swal.fire('Error', 'No se pudo obtener el enlace', 'error');
-                    }
-                });
-            }
-            else {
-                this.modoEdicion = false;
-                this.FormRegistro = {
-                    enlaceId: 0,
-                    sitioId: 0,
-                    nombreEnlace: '',
-                    descripcionEnlace: '',
-                    rutaEnlace: '',
-                    estadoEnlace: true
-                };
-            }
+    //         if (id) {
+    //             this.modoEdicion = true;
+    //             this.enlacesService.getEnlaceById(id).subscribe({
+    //                 next: (resp: any) => {
+    //                     this.FormRegistro = resp.data;
+    //                 },
+    //                 error: () => {
+    //                     Swal.fire('Error', 'No se pudo obtener el enlace', 'error');
+    //                 }
+    //             });
+    //         }
+    //         else {
+    //             this.modoEdicion = false;
+    //             this.FormRegistro = {
+    //                 enlaceId: 0,
+    //                 sitioId: 0,
+    //                 nombreEnlace: '',
+    //                 descripcionEnlace: '',
+    //                 rutaEnlace: '',
+    //                 estadoEnlace: true
+    //             };
+    //         }
+    //     });
+    // }
+      ngOnInit() {
+        this.BreadCrumb.setBreadcrumb();
+        this.route.queryParams.subscribe((params) => {
+          const id = params['regId'];
+          console.log('me llena el Id', id);
+          if (id) {
+            this.modoEdicion = true;
+            this.enlacesService.getEnlaceById(id).subscribe({
+              next: (resp: any) => {
+                this.FormRegistro = resp.enlace;
+                console.log('respuesta componente', this.FormRegistro);
+              },
+              error: () => {
+                Swal.fire('Error', 'No se pudo obtener el enlace', 'error');
+              }
+            });
+          } else {
+            this.modoEdicion = false;
+          }
         });
-    }
+      }
 
     btnInsertEditEnlace(form: any) {
         this.isSubmit = true;

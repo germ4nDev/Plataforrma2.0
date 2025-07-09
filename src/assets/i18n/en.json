@@ -56,7 +56,10 @@
             "PLACEHOLDERPUERTO": "Site port",
             "REQUERIDOPUERTO": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Site description",
-            "REQUERIDODESCRIPCION": "This field is required."
+            "REQUERIDODESCRIPCION": "This field is required.",
+            "APLICACION": "Application",
+            "PLACEHOLDERAPLICACION": "Please select",
+            "REQUERIDOAPLICACION": "This field is required."
         }
     },
     "ENLACES": {
