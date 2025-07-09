@@ -1,3 +1,5 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -102,6 +104,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
           }
         }),
         catchError((err) => {
+          console.log('Ha ocurrido un error', err);
           return of(null);
         })
       )
@@ -126,6 +129,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
           }
         }),
         catchError((err) => {
+                      console.log('Ha ocurrido un error', err);
           return of(null);
         })
       )

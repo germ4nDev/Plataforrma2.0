@@ -34,8 +34,7 @@ export class PTLSitiosAPService {
   }
 
   getSitios() {
-    const url = `${base_url}/sitios-ap`;
-    return this.http.get(url).pipe(
+    return this.http.get<PTLSitiosAPModel>(`${environment.apiUrl}/sitios-ap`).pipe(
       map((resp: any) => {
         console.log('respuesta servicio', resp);
         return {
@@ -81,10 +80,10 @@ export class PTLSitiosAPService {
     const url = `${base_url}/sitios-ap/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        console.log('data de aplicacion modificacda', resp);
+        console.log('data de sitio modificacda', resp);
         return {
           ok: true,
-          aplicacion: resp.aplicacion
+          sitio: resp.sitio
         };
       })
     );
