@@ -82,7 +82,7 @@ export class GestionUsuarioComponent {
     if (file) {
       this.uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path) => {
-          this.userPhotoUrl = `http://localhost:3000/${path}`;
+          this.userPhotoUrl = path;
         },
         error: () => {
           alert('Error al subir la imagen');
@@ -115,6 +115,7 @@ export class GestionUsuarioComponent {
       });
     } else {
       this.FormRegistro.claveUsuario = this.FormRegistro.identificacionUsuario?.toString().trimEnd();
+      this.FormRegistro.fotoUsuario = this.userPhotoUrl != '' ? this.userPhotoUrl : 'no-photo.png';
       this.registrosService.crearUsuario(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {

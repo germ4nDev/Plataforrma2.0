@@ -25,7 +25,6 @@ export class AdminComponent implements OnInit {
   ) {
     this.gradientConfig = GradientConfig;
     let current_url = this.location.path();
-    this.languageService.setLanguage('es');
     const baseHref = this.locationStrategy.getBaseHref();
     if (baseHref) {
       current_url = baseHref + this.location.path();

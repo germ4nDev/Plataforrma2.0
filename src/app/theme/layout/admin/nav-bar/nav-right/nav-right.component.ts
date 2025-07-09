@@ -9,7 +9,6 @@ import { AuthenticationService } from 'src/app/theme/shared/service';
 
 // third party
 import { TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../../../shared/service/lenguage.service';
 
 @Component({
     selector: 'app-nav-right',
@@ -33,14 +32,11 @@ export class NavRightComponent implements DoCheck {
     chatMessage: boolean;
     friendId!: number;
     gradientConfig = GradientConfig;
-    // languages = this.languageService.getLanguages();
-    currentLang = this.languageService.getCurrentLanguage();
 
     // constructor
     constructor(
         private authenticationService: AuthenticationService,
-        private translate: TranslateService,
-        private languageService: LanguageService
+        private translate: TranslateService
     ) {
         this.visibleUserList = false;
         this.chatMessage = false;
@@ -63,15 +59,4 @@ export class NavRightComponent implements DoCheck {
     logout() {
         this.authenticationService.logout();
     }
-
-    // user according language change of sidebar menu item
-    changeLang(event: Event) {
-        const lang = (event.target as HTMLSelectElement).value;
-        this.languageService.setLanguage(lang);
-        this.currentLang = lang;
-    }
-
-    // useLanguage(language: string) {
-    //     this.translate.use(language);
-    // }
 }
