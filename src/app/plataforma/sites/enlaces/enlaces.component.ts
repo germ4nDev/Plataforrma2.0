@@ -105,10 +105,6 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getEstado(estado: boolean): string {
-    return estado ? 'Activo' : 'Inactivo';
-  }
-
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe(); // <--- Destruye el trigger para evitar memory leaks
   }
@@ -117,7 +113,7 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
   }
 
   editarEnlace(id: number) {
-    this.router.navigate(['/sites/gestion-enlace'], { queryParams: { enlaceId: id } });
+    this.router.navigate(['/sites/gestion-enlace'], { queryParams: { regId: id } });
   }
 
   eliminarEnlace(id: number, nombre: string) {

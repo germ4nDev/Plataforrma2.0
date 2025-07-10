@@ -63,7 +63,8 @@ export class PTLEnlacesSTService {
   }
 
   modificarEnlaces(enlace: PTLEnlaceSTModel) {
-    const url = `${base_url}/enlaces-st/${enlace.enlaceId}`;
+      const url = `${base_url}/enlaces-st/${enlace.enlaceId}`;
+      console.log('URL a enviar:', url);
     return this.http.put(url, enlace).pipe(
       map((resp: any) => {
         console.log('data del enlace modificada', resp);

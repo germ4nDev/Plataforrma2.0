@@ -88,7 +88,10 @@
             "PLACEHOLDERRUTA": "Ruta del enlace",
             "REQUERIDORUTA": "Por favor, ingrese una Ruta. Este campo es obligatorio.",
             "PLACEHOLDERDESCRIPCION": "Descripcion del enlace",
-            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
+            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+            "SITIOS": "Sitios",
+            "PLACEHOLDERSITIOS": "Seleccione",
+            "REQUERIDOSITIOS": "Por favor, seleccione el Sitio. Este campo es obligatorio."
         }
     },
     "CONTENIDOS": {

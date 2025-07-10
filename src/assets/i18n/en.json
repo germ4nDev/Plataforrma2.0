@@ -87,7 +87,10 @@
             "PLACEHOLDERRUTA": "Link URL",
             "REQUERIDORUTA": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Link description",
-            "REQUERIDODESCRIPCION": "This field is required."
+            "REQUERIDODESCRIPCION": "This field is required.",
+            "SITIOS": "Sites",
+            "PLACEHOLDERSITIOS": "Please select",
+            "REQUERIDOSITIOS": "This field is required."
         }
     },
     "CONTENIDOS": {

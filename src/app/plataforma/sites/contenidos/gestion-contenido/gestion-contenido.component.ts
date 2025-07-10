@@ -7,6 +7,8 @@ import Swal from 'sweetalert2';
 import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenidos-el.service';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
+import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
+import { catchError, of, Subscription, tap } from 'rxjs';
 
 @Component({
   selector: 'app-geston-contenido',
@@ -20,6 +22,8 @@ export class GestonContenidoComponent implements OnInit {
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;
+  enlaceSub?: Subscription;
+  enlaces: PTLEnlaceSTModel[] = [];
 
   constructor(private router: Router,
     private route : ActivatedRoute,
@@ -31,15 +35,17 @@ export class GestonContenidoComponent implements OnInit {
 
   ngOnInit() {
       this.BreadCrumb.setBreadcrumb();
+      this.consultarEnlaces();
       this.route.queryParams.subscribe(params => {
-        const id = params['contenidoId'];
+        const id = params['regId'];
         console.log('me llena el Id', id);
 
         if (id) {
           this.modoEdicion = true;
-          this.contenidoService.getContenidoById(+id).subscribe({
+          this.contenidoService.getContenidoById(id).subscribe({
             next: (resp: any) => {
-              this.FormRegistro = resp.data;
+              this.FormRegistro = resp.contenido;
+              console.log('respuesta componente', this.FormRegistro);
             },
             error: () => {
               Swal.fire('Error', 'No se pudo obtener el contenido', 'error');
@@ -48,17 +54,36 @@ export class GestonContenidoComponent implements OnInit {
         }
         else {
           this.modoEdicion = false;
-          this.FormRegistro = {
-            contenidoId: 0,
-            enlaceId: 0,
-            nombreContenido: '',
-            descripcionContenido: '',
-            contenido: '',
-            estadoContenido: true
-          };
         }
       });
     }
+
+    consultarEnlaces() {
+          this.enlaceSub = this.contenidoService
+            .getContenido()
+            .pipe(
+              tap((resp: any) => {
+                if (resp.ok) {
+                  this.enlaces = resp.enlaces;
+                  console.log('Todos las contenido', this.enlaces);
+                  return;
+                }
+              }),
+              catchError((err) => {
+                console.log('Ha ocurrido un error', err);
+                return of(null);
+              })
+            )
+            .subscribe();
+        }
+
+        onContenidochangeClick(event: any) {
+        const value = event.target.value;
+        const enlace = this.enlaces.filter((x) => x.enlaceId == value)[0];
+        console.log('Id del enlace seleccionado:', value);
+        console.log('datal enlace seleccionado:', enlace);
+        this.FormRegistro.enlaceId = enlace.enlaceId;
+      }
 
     btnInsertEditContenido(form: any) {
       this.isSubmit = true;

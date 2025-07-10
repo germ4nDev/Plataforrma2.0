@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
-import { Subject } from 'rxjs';
+import { catchError, of, Subject, Subscription, tap } from 'rxjs';
 import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
@@ -22,6 +22,7 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
+  registrosSub?: Subscription;
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
@@ -58,13 +59,29 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
         });
     });
   }
+
   consultarContenido() {
-    this.contenidoService.getContenido().subscribe((contenido: any) => {
-      console.log('Todos los contenido', contenido.resp.data);
-      this.contenidoEL = contenido.resp.data;
-      this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
-    });
-  }
+      this.registrosSub = this.contenidoService
+        .getContenido()
+        .pipe(
+          tap((resp: any) => {
+            if (resp.ok) {
+              resp.contenido.forEach((app: any) => {
+                app.nomEstado = app.estadoContenido== true ? 'Activa' : 'Inactiva';
+              });
+              this.contenidoEL = resp.contenido;
+              console.log('Todos los contenidos', this.contenidoEL);
+              this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
+              return;
+            }
+          }),
+          catchError((err) => {
+            console.log('Ha ocurrido un error', err);
+            return of(null);
+          })
+        )
+        .subscribe();
+    }
 
   ngAfterViewInit(): void {
     this.BreadCrumb.setBreadcrumb();
@@ -87,10 +104,6 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getEstado(estado: boolean): string {
-    return estado ? 'Activo' : 'Inactivo';
-  }
-
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe(); // <--- Destruye el trigger para evitar memory leaks
   }
@@ -99,7 +112,7 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
   }
 
   editarContenido(id: number) {
-    this.router.navigate(['/sites/gestion-contenido'], { queryParams: { contenidoId: id } });
+    this.router.navigate(['/sites/gestion-contenido'], { queryParams: { regId: id } });
   }
 
   eliminarContenido(id: number, nombre: string) {
