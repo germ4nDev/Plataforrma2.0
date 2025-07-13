@@ -41,16 +41,16 @@
 									{{ contenido.contenido }}
 								</td>
 								<td>
-									{{ getEstado(contenido.estadoContenido)}}
+									{{ getEstado(contenido.estadoContenido || false)}}
 								</td>
 								<td style="text-align: center; width: 10%;">
 									<div class="d-flex flex-wrap gap-2">
 										<button type="button" class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="editarContenido(contenido.contenidoId)" title="{{ 'CONTENIDOS.UPDATE' | translate }}">
+                                            (click)="editarContenido(contenido.contenidoId?? 0)" title="{{ 'CONTENIDOS.UPDATE' | translate }}">
 											<i class="feather icon-edit"></i>
 										</button>
 										<button type="button" class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="eliminarContenido(contenido.contenidoId, contenido.nombreContenido)" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'CONTENIDOS.DELETE' | translate }}">
+                                            (click)="eliminarContenido(contenido.contenidoId?? 0, contenido.nombreContenido?? '')" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'CONTENIDOS.DELETE' | translate }}">
 											<i class="feather icon-trash-2"></i>
 										</button>
 									</div>

@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { catchError, of, Subscription, tap } from 'rxjs';
+import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 //#endregion IMPORTS
 
 @Component({
@@ -22,10 +23,13 @@ import { catchError, of, Subscription, tap } from 'rxjs';
   templateUrl: './gestion-roles.component.html',
   styleUrl: './gestion-roles.component.scss'
 })
-export class GestionRolesComponent {
+export class GestionRolesComponent implements OnInit {
   FormRegistro: PTLRoleAPModel = new PTLRoleAPModel();
   aplicaciones: PTLAplicacionModel[] = [];
   registrosSub?: Subscription;
+  suitesSub?: Subscription;
+  suites: any[] = [];
+  suitesApp: any[] = [];
   form: undefined;
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
@@ -36,6 +40,7 @@ export class GestionRolesComponent {
     private route: ActivatedRoute,
     private registrosService: PTLRolesAPService,
     private aplicacionesService: PtlAplicacionesService,
+    private suitesService: PtlSuitesAPService,
     private translate: TranslateService,
     private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
@@ -46,22 +51,25 @@ export class GestionRolesComponent {
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
     this.consultarAplicaciones();
+    this.consultarSuites();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
-        console.log('me llena el Id', registroId);
+        // console.log('me llena el Id', registroId);
         this.modoEdicion = true;
         this.registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
+            this.suitesApp = this.suites.filter(x => x.aplicacionId == resp.role.aplicacionId);
             this.FormRegistro = resp.role;
+            console.log('datos del FormRegistro', this.FormRegistro);
           },
           error: () => {
             Swal.fire('Error', 'No se pudo obtener el rol', 'error');
           }
         });
       } else {
-        console.log('no llena el Id', registroId);
+        // console.log('no llena el Id', registroId);
         this.modoEdicion = false;
         // this.FormRegistro.codigoAplicacion = uuidv4();
       }
@@ -75,11 +83,31 @@ export class GestionRolesComponent {
         tap((resp: any) => {
           if (resp.ok) {
             this.aplicaciones = resp.aplicaciones;
-            console.log('Todos las aplicaciones', this.aplicaciones);
+            // console.log('Todos las aplicaciones', this.aplicaciones);
             return;
           }
         }),
         catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarSuites() {
+    this.suitesSub = this.suitesService
+      .geSuitesAP()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.suites = resp.suites;
+            // console.log('Todos las aplicaciones', this.suitesApp);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
           return of(null);
         })
       )
@@ -89,10 +117,20 @@ export class GestionRolesComponent {
   onAplicacionchangeClick(event: any) {
     const value = event.target.value;
     const app = this.aplicaciones.filter((x) => x.codigoAplicacion == value)[0];
-    console.log('Código de aplicación seleccionado:', value);
-    console.log('data aplicación seleccionado:', app);
+    // console.log('Código de aplicación seleccionado:', value);
+    // console.log('data aplicación seleccionado:', app);
     this.FormRegistro.aplicacionId = app.aplicacionId;
     this.FormRegistro.codigoAplicacion = value;
+    this.suitesApp = this.suites.filter(x => x.aplicacionId == app.aplicacionId);
+  }
+
+  onSuiteChangeClick(event: any) {
+    const value = event.target.value;
+    const suite = this.suites.filter((x) => x.suiteId == value)[0];
+    // console.log('Código de suite seleccionado:', value);
+    // console.log('data suite seleccionado:', suite);
+    this.FormRegistro.suiteId = suite.suiteId;
+    this.FormRegistro.codigoSuite = value;
   }
 
   btnGestionarRegistroClick(form: any) {
@@ -101,7 +139,7 @@ export class GestionRolesComponent {
       return;
     }
     if (this.modoEdicion) {
-      console.log('1.0 modificar usuario', this.FormRegistro);
+      // console.log('1.0 modificar usuario', this.FormRegistro);
       this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
@@ -117,7 +155,7 @@ export class GestionRolesComponent {
         }
       });
     } else {
-      console.log('formregistro', this.FormRegistro);
+      // console.log('formregistro', this.FormRegistro);
       this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {

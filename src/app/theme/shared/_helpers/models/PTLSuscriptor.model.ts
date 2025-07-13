@@ -5,5 +5,6 @@ export class PTLSuscriptorModel {
         public descripcionSuscriptor? : string,
         public estadoSuscriptor? : boolean,
         public conexionId? : number,
+        public nomEstado?: string
    ) {}
 }

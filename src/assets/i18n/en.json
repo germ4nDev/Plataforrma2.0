@@ -27,7 +27,7 @@
         "ELIMINARERROR": "The aplication could't be eliminated.",
         "CREATE": "Create Aplication"
     },
-    "SITIOS":{
+    "SITIOS": {
         "TITLE": "Sites",
         "NEW": "New Site",
         "NAME": "Name",
@@ -57,62 +57,62 @@
             "REQUERIDOPUERTO": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Site description",
             "REQUERIDODESCRIPCION": "This field is required."
-        }
-    },
-    "ENLACES": {
-        "TITLE": "Links",
-        "NEW": "New Link",
-        "NAME": "Name",
-        "DESCRIPTION": "Description",
-        "RUTA": "URL Path",
-        "STATUS": "Current Status",
-        "UPDATE": "Update Link",
-        "DELETE": "Delete Link",
-        "FILTER_NAME": "Filter Name",
-        "FILTER_DESCRIPTION": "Filter Description",
-        "FILTER_RUTA": "Filter URL Path",
-        "FILTER_STATUS": "Filter Status",
-        "ELIMINARTITULO": "Confirm Deletion",
-        "ELIMINARTEXTO": "You are about to permanently delete the link:",
-        "ELIMINAREXITOSA": "Deleted successfully",
-        "ELIMINARERROR": "The link could not be deleted. Please try again.",
-        "GESTION": {
-            "TITLE": "Create/Update an Link",
-            "CREATE": "Create Link",
-            "PLACEHOLDERNAME": "Link name",
-            "REQUERIDONAME": "This field is required.",
-            "PLACEHOLDERRUTA": "Link URL",
-            "REQUERIDORUTA": "This field is required.",
-            "PLACEHOLDERDESCRIPCION": "Link description",
-            "REQUERIDODESCRIPCION": "This field is required."
-        }
-    },
-    "CONTENIDOS": {
-        "TITLE": "Contents",
-        "NEW": "New Content",
-        "NAME": "Name",
-        "DESCRIPTION": "Description",
-        "CONTENIDO": "Content",
-        "STATUS": "Current Status",
-        "UPDATE": "Update Content",
-        "DELETE": "Delete Content",
-        "FILTER_NAME": "Filter Name",
-        "FILTER_DESCRIPTION": "Filter Description",
-        "FILTER_CONTENIDO": "Filter Content",
-        "FILTER_STATUS": "Filter Status",
-        "ELIMINARTITULO": "Confirm Deletion",
-        "ELIMINARTEXTO": "You are about to permanently delete the content:",
-        "ELIMINAREXITOSA": "Deleted successfully",
-        "ELIMINARERROR": "The content could not be deleted. Please try again.",
-        "GESTION": {
-            "TITLE": "Create/Update Content",
-            "CREATE": "Create Content",
-            "PLACEHOLDERNAME": "Content Name",
-            "REQUERIDONAME": "This field is required.",
-            "PLACEHOLDERCONTENIDO": "Content",
-            "REQUERIDOCONTENIDO": "This field is required.",
-            "PLACEHOLDERDESCRIPCION": "Content Description",
-            "REQUERIDODESCRIPCION": "This field is required."
+        },
+        "ENLACES": {
+            "TITLE": "Links",
+            "NEW": "New Link",
+            "NAME": "Name",
+            "DESCRIPTION": "Description",
+            "RUTA": "URL Path",
+            "STATUS": "Current Status",
+            "UPDATE": "Update Link",
+            "DELETE": "Delete Link",
+            "FILTER_NAME": "Filter Name",
+            "FILTER_DESCRIPTION": "Filter Description",
+            "FILTER_RUTA": "Filter URL Path",
+            "FILTER_STATUS": "Filter Status",
+            "ELIMINARTITULO": "Confirm Deletion",
+            "ELIMINARTEXTO": "You are about to permanently delete the link:",
+            "ELIMINAREXITOSA": "Deleted successfully",
+            "ELIMINARERROR": "The link could not be deleted. Please try again.",
+            "GESTION": {
+                "TITLE": "Create/Update an Link",
+                "CREATE": "Create Link",
+                "PLACEHOLDERNAME": "Link name",
+                "REQUERIDONAME": "This field is required.",
+                "PLACEHOLDERRUTA": "Link URL",
+                "REQUERIDORUTA": "This field is required.",
+                "PLACEHOLDERDESCRIPCION": "Link description",
+                "REQUERIDODESCRIPCION": "This field is required."
+            }
+        },
+        "CONTENIDOS": {
+            "TITLE": "Contents",
+            "NEW": "New Content",
+            "NAME": "Name",
+            "DESCRIPTION": "Description",
+            "CONTENIDO": "Content",
+            "STATUS": "Current Status",
+            "UPDATE": "Update Content",
+            "DELETE": "Delete Content",
+            "FILTER_NAME": "Filter Name",
+            "FILTER_DESCRIPTION": "Filter Description",
+            "FILTER_CONTENIDO": "Filter Content",
+            "FILTER_STATUS": "Filter Status",
+            "ELIMINARTITULO": "Confirm Deletion",
+            "ELIMINARTEXTO": "You are about to permanently delete the content:",
+            "ELIMINAREXITOSA": "Deleted successfully",
+            "ELIMINARERROR": "The content could not be deleted. Please try again.",
+            "GESTION": {
+                "TITLE": "Create/Update Content",
+                "CREATE": "Create Content",
+                "PLACEHOLDERNAME": "Content Name",
+                "REQUERIDONAME": "This field is required.",
+                "PLACEHOLDERCONTENIDO": "Content",
+                "REQUERIDOCONTENIDO": "This field is required.",
+                "PLACEHOLDERDESCRIPCION": "Content Description",
+                "REQUERIDODESCRIPCION": "This field is required."
+            }
         }
     },
     "LOGIN": {
@@ -178,28 +178,23 @@
         "UPDATE": "Update Role",
         "DELETE": "Delete Role",
         "CREATE": "Create Role",
-
         "NOMBREAPLICACION": "Aplication",
         "NOMBREROL": "Name",
         "DESCRIPCIONROL": "Description",
         "ESTADOROLE": "Status",
-
         "FILTER_CODIGOAPLICACION": "Aplication Filter",
         "FILTER_NAMEROLE": "Name Filter",
         "FILTER_DESCRIPCIONROLE": "Description Filter",
         "FILTRO_STATUS": "Status Filter",
-
         "ELIMINARTITULO": "¿Sure to Delete?",
         "ELIMINARTEXTO": "Role will be Eliminated ",
         "ELIMINAREXITOSA": "Role eliminated succsessfully ",
         "ELIMINARERROR": "Role could't be eliminated.",
-
         "GESTION": {
             "TITLE": "Create/Update Role",
             "CREATE": "Create Role",
             "UPDATE": "Update Role",
             "NEW": "New Role",
-
             "APLICACION": "Aplication",
             "APLICACIONHOLDER": "Select an Aplication",
             "NAME": "Role's Name",
@@ -207,6 +202,28 @@
             "DESCRIPTION": "Rol's' Descripction",
             "DESCRIPTIONHOLDER": "Enter Role's Description",
             "STATUS": "Role's Status"
+        },
+        "ROLESUSUARIOS": {
+            "TITLE": "Users/Roles Administration",
+            "FOTO": "Picture",
+            "USUARIO": "User",
+            "APLICACIONES": "Aplication",
+            "SUITES": "Suite",
+            "ROLES": "Role",
+            "ESTADOROLE": "Status",
+            "GESTION": {
+                "TITLE": "Create/Update User's ole",
+                "CREATE": "Create User's Role",
+                "UPDATE": "Update User's Role",
+                "NEW": "New User's Role",
+                "USUARIO": "User",
+                "USUARIOHOLDER": "User full name",
+                "APLICACION": "Aplication",
+                "APLICACIONHOLDER": "Select an Aplication",
+                "SUITE": "Suite",
+                "SUITEHOLDER": "Select a Suite",
+                "ROLES": "Role"
+            }
         }
     },
     "Navigation": "Navigation",

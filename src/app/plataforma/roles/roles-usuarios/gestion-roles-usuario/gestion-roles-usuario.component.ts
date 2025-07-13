@@ -19,6 +19,7 @@ import {
   PtlusuariosRolesApService,
   PTLUsuariosService
 } from 'src/app/theme/shared/service';
+import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 //#endregion IMPORTS
 
 @Component({
@@ -28,16 +29,23 @@ import {
   templateUrl: './gestion-roles-usuario.component.html',
   styleUrl: './gestion-roles-usuario.component.scss'
 })
-export class GestionRolesUsuarioComponent {
+export class GestionRolesUsuarioComponent implements OnInit {
   FormRegistro: PTLUsuarioRoleAP = new PTLUsuarioRoleAP();
   aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
+  usuario: PTLUsuarioModel = new PTLUsuarioModel();
   aplicaciones: PTLAplicacionModel[] = [];
   usuarios: PTLUsuarioModel[] = [];
   rolesAplicacion: PTLRoleAPModel[] = [];
+  rolesUsuarios: PTLUsuarioRoleAP[] = [];
   registrosSub?: Subscription;
   usuariosSub?: Subscription;
   aplicacionesSub?: Subscription;
   rolesSub?: Subscription;
+  rolesUauariosSub?: Subscription;
+  suitesSub?: Subscription;
+  suites: any[] = [];
+  suitesApp: any[] = [];
+
   form: undefined;
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
@@ -50,6 +58,7 @@ export class GestionRolesUsuarioComponent {
     private registrosService: PtlusuariosRolesApService,
     private aplicacionesService: PtlAplicacionesService,
     private usuariosService: PTLUsuariosService,
+    private suitesService: PtlSuitesAPService,
     private rolesAPService: PTLRolesAPService,
     private translate: TranslateService,
     private languageService: LanguageService,
@@ -62,8 +71,14 @@ export class GestionRolesUsuarioComponent {
     this.BreadCrumb.setBreadcrumb();
     this.consultarUsuarios();
     this.consultarAplicaciones();
+    this.consultarUsuariosRoles();
+    this.consultarSuites();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
+      const usuarioId = params['usuId'];
+      if (usuarioId) {
+        this.FormRegistro.usuarioId = usuarioId;
+      }
       if (registroId) {
         console.log('me llena el Id', registroId);
         this.modoEdicion = true;
@@ -84,6 +99,25 @@ export class GestionRolesUsuarioComponent {
     });
   }
 
+  consultarUsuariosRoles() {
+    this.rolesUauariosSub = this.registrosService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.rolesUsuarios = resp.usuariosRoles.filter((x: { usuarioId: number | undefined }) => x.usuarioId == this.usuario.usuarioId);
+            console.log('Todos las rolesUsuarios', this.rolesUsuarios);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log(err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
   consultarUsuarios() {
     this.usuariosSub = this.usuariosService
       .getUsuarios()
@@ -96,6 +130,7 @@ export class GestionRolesUsuarioComponent {
           }
         }),
         catchError((err) => {
+          console.log(err);
           return of(null);
         })
       )
@@ -114,49 +149,99 @@ export class GestionRolesUsuarioComponent {
           }
         }),
         catchError((err) => {
+          console.log(err);
           return of(null);
         })
       )
       .subscribe();
   }
 
-  consultarRolesByAplicacionId(aplicacionId: number) {
+  consultarSuites() {
+    this.suitesSub = this.suitesService
+      .geSuitesAP()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.suites = resp.suites;
+            // console.log('Todos las aplicaciones', this.suitesApp);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarRolesBySuiteId(suiteId: number) {
     this.rolesAplicacion = [];
     this.registrosSub = this.rolesAPService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            const rolesApp = resp.roles.filter((x: { aplicacionId: number }) => x.aplicacionId == aplicacionId);
+            const rolesApp = resp.roles.filter((x: { suiteId: number }) => x.suiteId == suiteId);
+            rolesApp.forEach((role: any) => {
+              const extRole = this.rolesUsuarios.filter((x) => x.roleId == role.roleId);
+              role.checked = extRole.length > 0 ? false : true;
+            });
             this.rolesAplicacion = rolesApp;
-            console.log('Todos las roles', this.rolesAplicacion);
+            console.log('Todos las roles final', this.rolesAplicacion);
           }
         }),
         catchError((err) => {
+          console.log(err);
           return of(null);
         })
       )
       .subscribe();
   }
 
-  onAplicacionchangeClick(event: any) {
+  onAplicacionChangeClick(event: any) {
     const value = event.target.value;
     const app = this.aplicaciones.filter((x) => x.aplicacionId == value)[0];
-    this.consultarRolesByAplicacionId(app.aplicacionId || 0);
+    this.suitesApp = this.suites.filter((x) => x.aplicacionId == app.aplicacionId);
     this.aplicacion = app;
   }
 
+  onUsuarioChangeClick(event: any) {
+    const value = event.target.value;
+    const usu = this.usuarios.filter((x) => x.usuarioId == value)[0];
+    this.usuario = usu;
+  }
+
+  onSuiteChangeClick(event: any) {
+    const value = event.target.value;
+    const suite = this.suitesApp.filter((x) => x.suiteId == value)[0];
+    console.log('Código de suite seleccionado:', suite);
+    // console.log('data suite seleccionado:', suite);
+    this.consultarRolesBySuiteId(value || 0);
+    this.FormRegistro.suiteId = value;
+    this.FormRegistro.codigoSuite = value;
+  }
+
   onSeleccionarRegistroChange(evento: any, role: any) {
-    const roleId = evento.target.value;
+    // const roleId = evento.target.value;
     const checked = evento.target.checked;
     role.checked = checked;
+    console.log('data del role', role);
     if (checked) {
       this.rolesSeleccionados.push(role);
     } else {
-      const roleIx = this.rolesSeleccionados.findIndex((x) => x.roleId == role.roleId);
+      const roleIx = this.rolesSeleccionados.findIndex((x) => x.roleId == roleId);
       if (roleIx != -1) {
         this.rolesSeleccionados.splice(roleIx, 1);
       }
+      const roleId = this.rolesUsuarios[roleIx].usuarioRoleId || 0;
+      this.registrosService.deleteEliminarRegistro(roleId).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            console.log('role eliminado del usuario', roleId);
+          }
+        }
+      });
     }
     console.log('Roles seleccionados:', this.rolesSeleccionados);
   }
@@ -172,7 +257,7 @@ export class GestionRolesUsuarioComponent {
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', 'El registro se modificó correctamente', 'success');
-            this.router.navigate(['/roles/roles']);
+            this.router.navigate(['roles/roles-usuarios']);
           } else {
             Swal.fire('Error', resp.message || 'No se pudo actualizar el registro', 'error');
           }
@@ -184,24 +269,43 @@ export class GestionRolesUsuarioComponent {
       });
     } else {
       console.log('formregistro', this.FormRegistro);
-      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
-        next: (resp: any) => {
-          if (resp.ok) {
-            Swal.fire('', 'El registro se insertó correctamente', 'success');
-            form.resetForm();
-            this.isSubmit = false;
-            this.router.navigate(['/roles/roles']);
-          }
-        },
-        error: (err: any) => {
-          console.error(err);
-          Swal.fire('Error', 'No se pudo insertar el registro', 'error');
+      this.rolesSeleccionados.forEach((role: any) => {
+        const newRole: PTLUsuarioRoleAP = {
+          usuarioId: Number(this.FormRegistro.usuarioId),
+          aplicacionId: this.FormRegistro.aplicacionId,
+          suiteId: this.FormRegistro.suiteId,
+          roleId: role.roleId,
+          estadoUsuarioRole: true
+        };
+        if (
+          !this.rolesUsuarios.some(
+            (role) => role.usuarioId === newRole.usuarioId && role.aplicacionId === newRole.aplicacionId && role.roleId === newRole.roleId
+          )
+        ) {
+          console.log('insertar ususario role', newRole);
+          this.registrosService.postCrearRegistro(newRole).subscribe({
+            next: (resp: any) => {
+              if (resp.ok) {
+                // this.isSubmit = false;
+                // form.resetForm();
+                console.log('El role fue creado para el usuario');
+              }
+            },
+            error: (err: any) => {
+              console.error(err);
+              console.log('El role no se pudo crear para el usuario');
+            }
+          });
+        } else {
+          role.checked = false;
+          console.log('El rol ya existe para este usuario');
         }
       });
+      this.router.navigate(['roles/roles-usuarios']);
     }
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/roles-usuaris/roles-usurios']);
+    this.router.navigate(['roles/roles-usuarios']);
   }
 }

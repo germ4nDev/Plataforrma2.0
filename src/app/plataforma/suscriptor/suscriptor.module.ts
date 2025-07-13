@@ -6,9 +6,7 @@ import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule, SuscriptorRoutingModule
-  ],
-    providers: [BreadcrumbComponent]
+  imports: [CommonModule, SuscriptorRoutingModule],
+  providers: [BreadcrumbComponent]
 })
-export class SuscriptorModule { }
+export class SuscriptorModule {}

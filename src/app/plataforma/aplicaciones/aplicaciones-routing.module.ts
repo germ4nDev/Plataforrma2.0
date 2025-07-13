@@ -8,47 +8,56 @@ const routes: Routes = [
     children: [
       {
         path: 'aplicaciones',
-        loadComponent: () => import('./aplicaciones/aplicaciones.component').then(m => m.AplicacionesComponent)
+        loadComponent: () => import('./aplicaciones/aplicaciones.component').then((m) => m.AplicacionesComponent)
       },
       {
         path: 'log-actividades',
-        loadComponent: () => import('./log-actividades/log-actividades.component').then(m => m.LogActividadesComponent)
+        loadComponent: () => import('./log-actividades/log-actividades.component').then((m) => m.LogActividadesComponent)
       },
       {
         path: 'log-excepciones',
-        loadComponent: () => import('./log-excepciones/log-excepciones.component').then(m => m.LogExcepcionesComponent)
+        loadComponent: () => import('./log-excepciones/log-excepciones.component').then((m) => m.LogExcepcionesComponent)
       },
       {
         path: 'gestion-aplicacion',
-        loadComponent: () => import('./aplicaciones/gestion-aplicacion/gestion-aplicacion.component').then(m => m.GestionAplicacionComponent)
+        loadComponent: () =>
+          import('./aplicaciones/gestion-aplicacion/gestion-aplicacion.component').then((m) => m.GestionAplicacionComponent)
+      },
+      {
+        path: 'suites',
+        loadComponent: () => import('./suites/suites.component').then((m) => m.SuitesComponent)
+      },
+      {
+        path: 'gestion-suite',
+        loadComponent: () => import('./suites/gestion-suite/gestion-suite.component').then((m) => m.GestionSuiteComponent)
       },
       {
         path: 'modulos',
-        loadComponent: () => import('./modulos/modulos.component').then(m => m.ModulosComponent)
+        loadComponent: () => import('./modulos/modulos.component').then((m) => m.ModulosComponent)
       },
       {
         path: 'modulos',
-        loadComponent: () => import('./modulos/gestion-modulo/gestion-modulo.component').then(m => m.GestionModuloComponent)
+        loadComponent: () => import('./modulos/gestion-modulo/gestion-modulo.component').then((m) => m.GestionModuloComponent)
       },
       {
         path: 'versiones',
-        loadComponent: () => import('./versiones/versiones.component').then(m => m.VersionesComponent)
+        loadComponent: () => import('./versiones/versiones.component').then((m) => m.VersionesComponent)
       },
       {
         path: 'gestion-version',
-        loadComponent: () => import('./versiones/gestion-version/gestion-version.component').then(m => m.GestionVersionComponent)
+        loadComponent: () => import('./versiones/gestion-version/gestion-version.component').then((m) => m.GestionVersionComponent)
       },
       {
         path: 'paquetes',
-        loadComponent: () => import('./paquetes/paquetes.component').then(m => m.PaquetesComponent)
+        loadComponent: () => import('./paquetes/paquetes.component').then((m) => m.PaquetesComponent)
       },
       {
         path: 'paquetes',
-        loadComponent: () => import('./paquetes/gestion-paquete/gestion-paquete.component').then(m => m.GestionPaqueteComponent)
+        loadComponent: () => import('./paquetes/gestion-paquete/gestion-paquete.component').then((m) => m.GestionPaqueteComponent)
       },
       {
         path: 'estadisticas',
-        loadComponent: () => import('./estadisticas/estadisticas.component').then(m => m.EstadisticasComponent)
+        loadComponent: () => import('./estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent)
       }
     ]
   }

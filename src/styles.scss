@@ -88,3 +88,29 @@ File: style.css
   @import 'scss/layout-rtl-utility.scss';
   @import 'node_modules/bootstrap/scss/utilities/api';
 }
+
+.table {
+  border-collapse: collapse;
+
+  thead tr th {
+    border-bottom: 1px solid #333;
+    border-top: none;
+  }
+
+  tbody td {
+    border-bottom: none !important;
+  }
+
+  tbody tr td {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
+table,
+table td,
+table tr {
+  border: none !important;
+  border-collapse: collapse;
+  box-shadow: none !important;
+}

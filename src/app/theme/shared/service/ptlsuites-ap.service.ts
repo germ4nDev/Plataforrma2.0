@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
+import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
+import { environment } from 'src/environments/environment';
 
 const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
-export class PtlAplicacionesService {
+export class PtlSuitesAPService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
@@ -33,58 +32,57 @@ export class PtlAplicacionesService {
     };
   }
 
-  getAplicaciones() {
-    const url = `${base_url}/aplicaciones`;
+  geSuitesAP() {
+    return this.http.get<PTLSuiteAPModel>(`${environment.apiUrl}/suites`).pipe(
+      map((resp: any) => {
+        console.log('respuesta servicio', resp);
+        return {
+          ok: true,
+          suites: resp.suites
+        };
+      })
+    );
+  }
+
+  getSuiteAPById(id: number) {
+    const url = `${base_url}/suites/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('servicio de aplicaciones', resp);
+        console.log('data del suite', resp);
         return {
           ok: true,
-          aplicaciones: resp.aplicaciones
+          suite: resp.suite
         };
       })
     );
   }
 
-  getAplicacionById(id: number) {
-    const url = `${base_url}/aplicaciones/${id}`;
-    return this.http.get(url).pipe(
+  crearSuiteAP(suite: PTLSuiteAPModel) {
+    const url = `${base_url}/suites`;
+    return this.http.post(url, suite);
+  }
+
+  actualizarSuiteAP(suite: PTLSuiteAPModel) {
+    const url = `${base_url}/suites/${suite.suiteId}`;
+    return this.http.put(url, suite).pipe(
       map((resp: any) => {
-        console.log('data de aplicaciones', resp);
+        console.log('data de SuiteAP modificacda', resp);
         return {
           ok: true,
-          aplicacion: resp.aplicacion
+          suite: resp.suite
         };
       })
     );
   }
 
-  crearAplicacion(aplicacion: PTLAplicacionModel) {
-    const url = `${base_url}/aplicaciones`;
-    return this.http.post(url, aplicacion);
-  }
-
-  actualizarAplicacion(aplicacion: PTLAplicacionModel) {
-    const url = `${base_url}/aplicaciones/${aplicacion.aplicacionId}`;
-    return this.http.put(url, aplicacion).pipe(
-      map((resp: any) => {
-        console.log('data de aplicacion modificacda', resp);
-        return {
-          ok: true,
-          aplicacion: resp.aplicacion
-        };
-      })
-    );
-  }
-
-  eliminarAplicacion(_id: number) {
-    const url = `${base_url}/aplicaciones/${_id}`;
+  eliminarSuiteAP(_id: number) {
+    const url = `${base_url}/suites/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        console.log('data de aplicacion modificacda', resp);
+        console.log('data de SuiteAP eliminado', resp);
         return {
           ok: true,
-          aplicacion: resp.aplicacion
+          suite: resp.suite
         };
       })
     );
