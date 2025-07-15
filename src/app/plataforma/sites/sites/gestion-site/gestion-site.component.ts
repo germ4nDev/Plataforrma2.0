@@ -43,6 +43,7 @@ export class GestionSiteComponent implements OnInit {
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
     this.consultarAplicaciones();
+    // this.FormRegistro.aplicacionId = -1;
     this.route.queryParams.subscribe((params) => {
       const id = params['regId'];
       console.log('me llena el Id', id);

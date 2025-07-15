@@ -12,90 +12,80 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLContenidosELService {
-    user : PTLUsuarioModel = new PTLUsuarioModel();
+  user: PTLUsuarioModel = new PTLUsuarioModel();
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-    get token(): string {
-        this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-        if (this.user.serviceToken !== '') {
-            return this.user.serviceToken || '';
-        }
-        return '';
+  get token(): string {
+    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
+    if (this.user.serviceToken !== '') {
+      return this.user.serviceToken || '';
     }
+    return '';
+  }
 
-    get headers() {
-        return {
-            headers: {
-                'x-token': this.token
-            }
-        }
-    }
-
-    getContenido() {
-        const url = `${ base_url }/api/PTLContenidosEL/ListaContenidos`;
-        return this.http.get<PTLContenidoELModel[]>( url, this.headers )
-        .pipe(
-            map((resp: PTLContenidoELModel[]) => {
-                console.log('respuesta servicio', resp);
-                return {
-                    ok: true,
-                    resp
-                };
-            })
-        );
-    }
-
-    getContenidoById(id: number) {
-        const url = `${base_url}/api/PTLContenidosEL/GetContenidoById/${id}`;
-        return this.http.get(url, this.headers)
-        .pipe(
-            map((resp: any) => {
-                console.log('respuesta servicio Id', resp);
-                return resp;
-            })
-        );
-        }
-
-
-    insertarContenido(contenido: PTLContenidoELModel) {
-        const url = `${base_url}/api/PTLContenidosEL/PostInsertarContenido`;
-        return this.http.post<{ ok: boolean, mensaje: string }>(url, contenido, this.headers)
-            .pipe(
-                map(resp => {
-                    console.log('respuesta servicio insertar', resp);
-                    return {
-                        ok: true,
-                        resp
-                    };
-                })
-            );
-        }
-
-    modificarContenido(contenido: PTLContenidoELModel) {
-        const url = `${base_url}/api/PTLContenidosEL/PutModificarContenido`;
-        return this.http.put<{ ok: boolean, mensaje: string }>(url, contenido, this.headers)
-        .pipe(
-            map(resp => {
-            console.log('respuesta servicio modificar', resp);
-            return {
-                ok: true,
-                resp
-            };
-            })
-        );
-    }
-
-    eliminarContenido(id: number) {
-        const url = `${base_url}/api/PTLContenidosEL/DeleteContenido/${id}`;
-        return this.http.delete<{ ok: boolean, mensaje: string }>(url, this.headers)
-          .pipe(
-            map(resp => {
-              console.log('respuesta servicio eliminar', resp);
-              return resp;
-            })
-          );
+  get headers() {
+    return {
+      headers: {
+        'x-token': this.token
       }
+    };
+  }
 
+  getContenido() {
+    return this.http.get<PTLContenidoELModel>(`${environment.apiUrl}/contenidos-el`).pipe(
+      map((resp: any) => {
+        console.log('respuesta servicio', resp);
+        return {
+          ok: true,
+          contenido: resp.contenido
+        };
+      })
+    );
+  }
 
+  getContenidoById(id: number) {
+    const url = `${base_url}/contenidos-el/${id}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('data de contenidos', resp);
+        return {
+          ok: true,
+          contenido: resp.contenido
+        };
+      })
+    );
+  }
+
+  insertarContenido(contenido: PTLContenidoELModel) {
+    const url = `${base_url}/contenidos-el`;
+    return this.http.post(url, contenido);
+  }
+
+  modificarContenido(contenido: PTLContenidoELModel) {
+    const url = `${base_url}/contenidos-el/${contenido.contenidoId}`;
+    console.log('URL a enviar:', url);
+    return this.http.put(url, contenido).pipe(
+      map((resp: any) => {
+        console.log('data del contenido modificada', resp);
+        return {
+          ok: true,
+          contenido: resp.contenido
+        };
+      })
+    );
+  }
+
+  eliminarContenido(id: number) {
+    const url = `${base_url}/contenidos-el/${id}`;
+    return this.http.delete(url).pipe(
+      map((resp: any) => {
+        console.log('data del contenido modificada', resp);
+        return {
+          ok: true,
+          contenido: resp.contenido
+        };
+      })
+    );
+  }
 }

@@ -56,7 +56,10 @@
             "PLACEHOLDERPUERTO": "Site port",
             "REQUERIDOPUERTO": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Site description",
-            "REQUERIDODESCRIPCION": "This field is required."
+            "REQUERIDODESCRIPCION": "This field is required.",
+            "APLICACION": "Application",
+            "PLACEHOLDERAPLICACION": "Please select",
+            "REQUERIDOAPLICACION": "This field is required."
         }
     },
     "ENLACES": {
@@ -84,7 +87,10 @@
             "PLACEHOLDERRUTA": "Link URL",
             "REQUERIDORUTA": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Link description",
-            "REQUERIDODESCRIPCION": "This field is required."
+            "REQUERIDODESCRIPCION": "This field is required.",
+            "SITIOS": "Sites",
+            "PLACEHOLDERSITIOS": "Please select",
+            "REQUERIDOSITIOS": "This field is required."
         }
     },
     "CONTENIDOS": {
@@ -112,6 +118,33 @@
             "PLACEHOLDERCONTENIDO": "Content",
             "REQUERIDOCONTENIDO": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Content Description",
+            "REQUERIDODESCRIPCION": "This field is required.",
+            "ENLACES": "Links",
+            "PLACEHOLDERENLACES": "Please select",
+            "REQUERIDOENLACES": "This field is required."
+        }
+    },
+    "SUSCRIPTORES": {
+        "TITLE": "Subscribers",
+        "NEW": "New Subscriber",
+        "NAME": "Name",
+        "DESCRIPTION": "Description",
+        "STATUS": "Current Status",
+        "UPDATE": "Update Subscriber",
+        "DELETE": "Delete Subscriber",
+        "FILTER_NAME": "Filter Name",
+        "FILTER_DESCRIPTION": "Filter Description",
+        "FILTRO_STATUS": "Filter Status",
+        "ELIMINARTITULO": "Confirm Deletion",
+        "ELIMINARTEXTO": "You are about to permanently delete the subscriber:",
+        "ELIMINAREXITOSA": "Deleted successfully",
+        "ELIMINARERROR": "Unable to delete the subscriber.",
+        "GESTION": {
+            "TITLE": "Create/Update Subscriber",
+            "CREATE": "Create Subscriber",
+            "PLACEHOLDERNAME": "Subscriber name",
+            "REQUERIDONAME": "This field is required.",
+            "PLACEHOLDERDESCRIPCION": "Subscriber Description",
             "REQUERIDODESCRIPCION": "This field is required."
         }
     },

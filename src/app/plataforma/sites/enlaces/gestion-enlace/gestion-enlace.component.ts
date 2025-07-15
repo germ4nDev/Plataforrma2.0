@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -12,6 +11,9 @@ import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import Swal from 'sweetalert2';
+import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
+import { catchError, of, Subscription, tap } from 'rxjs';
+import { PTLSitiosAPService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-enlace',
@@ -21,95 +23,116 @@ import Swal from 'sweetalert2';
   styleUrl: './gestion-enlace.component.scss'
 })
 export class GestionEnlaceComponent {
+  // private props
+  FormRegistro: PTLEnlaceSTModel = new PTLEnlaceSTModel();
+  form: undefined;
+  isSubmit: boolean;
+  modoEdicion: boolean = false;
+  sitiosSub?: Subscription;
+  sitios: PTLSitiosAPModel[] = [];
 
-    // private props
-    FormRegistro: PTLEnlaceSTModel = new PTLEnlaceSTModel();
-    form: undefined;
-    isSubmit: boolean;
-    modoEdicion: boolean = false;
+  // constructor
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private BreadCrumb: BreadcrumbComponent,
+    private enlacesService: PTLEnlacesSTService,
+    private sitiosService: PTLSitiosAPService,
+  ) {
+    this.isSubmit = false;
+  }
 
-    // constructor
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private BreadCrumb: BreadcrumbComponent,
-        private enlacesService: PTLEnlacesSTService) {
-        this.isSubmit = false;
-    }
-
-    ngOnInit() {
-        this.BreadCrumb.setBreadcrumb();
-        this.route.queryParams.subscribe(params => {
-            const id = params['enlaceId'];
-            console.log('me llena el Id', id);
-
-            if (id) {
-                this.modoEdicion = true;
-                this.enlacesService.getEnlaceById(+id).subscribe({
-                    next: (resp: any) => {
-                        this.FormRegistro = resp.data;
-                    },
-                    error: () => {
-                        Swal.fire('Error', 'No se pudo obtener el enlace', 'error');
-                    }
-                });
-            }
-            else {
-                this.modoEdicion = false;
-                this.FormRegistro = {
-                    enlaceId: 0,
-                    sitioId: 0,
-                    nombreEnlace: '',
-                    descripcionEnlace: '',
-                    rutaEnlace: '',
-                    estadoEnlace: true
-                };
-            }
+  ngOnInit() {
+    this.BreadCrumb.setBreadcrumb();
+    this.consultarSitios();
+    this.route.queryParams.subscribe((params) => {
+      const id = params['regId'];
+      console.log('me llena el Id', id);
+      if (id) {
+        this.modoEdicion = true;
+        this.enlacesService.getEnlaceById(id).subscribe({
+          next: (resp: any) => {
+            this.FormRegistro = resp.enlace;
+            console.log('respuesta componente', this.FormRegistro);
+          },
+          error: () => {
+            Swal.fire('Error', 'No se pudo obtener el enlace', 'error');
+          }
         });
+      } else {
+        this.modoEdicion = false;
+      }
+    });
+  }
+
+  consultarSitios() {
+      this.sitiosSub = this.sitiosService
+        .getSitios()
+        .pipe(
+          tap((resp: any) => {
+            if (resp.ok) {
+              this.sitios = resp.sitios;
+              console.log('Todos las sitios', this.sitios);
+              return;
+            }
+          }),
+          catchError((err) => {
+            console.log('Ha ocurrido un error', err);
+            return of(null);
+          })
+        )
+        .subscribe();
     }
 
-    btnInsertEditEnlace(form: any) {
-        this.isSubmit = true;
+    onSitiochangeClick(event: any) {
+    const value = event.target.value;
+    const sitio = this.sitios.filter((x) => x.sitioId == value)[0];
+    console.log('Id del sitio seleccionado:', value);
+    console.log('datal sitio seleccionado:', sitio);
+    this.FormRegistro.sitioId = sitio.sitioId;
+  }
 
-        if (!form.valid) {
-            return;
-        }
-
-        if (this.modoEdicion) {
-            this.enlacesService.modificarEnlaces(this.FormRegistro).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        Swal.fire('', 'El enlace se modificó correctamente', 'success');
-                        this.router.navigate(['/sites/enlaces']);
-                    } else {
-                        Swal.fire('Error', resp.message || 'No se pudo actualizar el sitio', 'error');
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err);
-                    Swal.fire('Error', 'No se pudo actualizar el enlace', 'error');
-                }
-            });
-        }
-        else {
-            this.enlacesService.insertarEnlace(this.FormRegistro).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        Swal.fire('', 'El enlace se insertó correctamente', 'success');
-                        form.resetForm();
-                        this.isSubmit = false;
-                        this.router.navigate(['/sites/enlaces']);
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err);
-                    Swal.fire('Error', 'No se pudo insertar el enlace', 'error');
-                }
-            });
-        }
+  btnInsertEditEnlace(form: any) {
+    this.isSubmit = true;
+    if (!form.valid) {
+      return;
     }
+    if (this.modoEdicion) {
+        console.log('Datos a enviar (FormRegistro):', this.FormRegistro);
 
-    btnRegresarEnlace() {
-        this.router.navigate(['/sites/enlaces']);
+      this.enlacesService.modificarEnlaces(this.FormRegistro).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            Swal.fire('', 'El enlace se modificó correctamente', 'success');
+            this.router.navigate(['/sites/enlaces']);
+          } else {
+            Swal.fire('Error', resp.message || 'No se pudo actualizar el sitio', 'error');
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          Swal.fire('Error', 'No se pudo actualizar el enlace', 'error');
+        }
+      });
+    } else {
+      this.enlacesService.insertarEnlace(this.FormRegistro).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            Swal.fire('', 'El enlace se insertó correctamente', 'success');
+            form.resetForm();
+            this.isSubmit = false;
+            this.router.navigate(['/sites/enlaces']);
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          Swal.fire('Error', 'No se pudo insertar el enlace', 'error');
+        }
+      });
     }
+  }
+
+  btnRegresarEnlace() {
+    this.router.navigate(['/sites/enlaces']);
+  }
 }
