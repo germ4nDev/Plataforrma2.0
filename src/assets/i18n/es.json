@@ -119,7 +119,34 @@
             "PLACEHOLDERCONTENIDO": "Contenido",
             "REQUERIDOCONTENIDO": "Por favor, ingrese un Contenido. Este campo es obligatorio.",
             "PLACEHOLDERDESCRIPCION": "Descripcion del contenido",
-            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
+            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+            "ENLACES": "Enlaces",
+            "PLACEHOLDERENLACES": "Seleccione",
+            "REQUERIDOENLACES": "Por favor, seleccione el enlace. Este campo es obligatorio."
+        }
+    },
+    "SUSCRIPTORES": {
+        "TITLE": "Suscriptores",
+        "NEW": "Nuevo Suscriptor",
+        "NAME": "Nombre",
+        "DESCRIPTION": "Descripción",
+        "STATUS": "Estado",
+        "UPDATE": "Modificar Suscriptor",
+        "DELETE": "Eliminar Suscriptor",
+        "FILTER_NAME": "Filtro Nombre",
+        "FILTER_DESCRIPTION": "Filtro descripción",
+        "FILTRO_STATUS": "Filtro Estado",
+        "ELIMINARTITULO": "¿Estás seguro de eliminar?",
+        "ELIMINARTEXTO": "estas apunto de eliminar el Suscriptor ",
+        "ELIMINAREXITOSA": "Eliminado",
+        "ELIMINARERROR": "No se pudo eliminar el Suscriptor.",
+        "GESTION": {
+            "TITLE": "Crear/Actualizar un Suscriptor",
+            "CREATE": "Crear Suscriptor",
+            "PLACEHOLDERNAME": "Nombre del Suscriptor",
+            "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+            "PLACEHOLDERDESCRIPCION": "Descripcion del Suscriptor",
+            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripcion. Este campo es obligatorio."
         }
     },
     "LOGIN": {

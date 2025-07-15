@@ -34,7 +34,8 @@ export class PTLSitiosAPService {
   }
 
   getSitios() {
-    return this.http.get<PTLSitiosAPModel>(`${environment.apiUrl}/sitios-ap`).pipe(
+    return this.http.get<PTLSitiosAPModel>(`${environment.apiUrl}/sitios-ap`)
+    .pipe(
       map((resp: any) => {
         console.log('respuesta servicio', resp);
         return {

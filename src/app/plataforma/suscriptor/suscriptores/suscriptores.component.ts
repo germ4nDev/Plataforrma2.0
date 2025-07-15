@@ -28,7 +28,7 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit{
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
-  registros: PTLSuscriptorModel[] = [];
+  suscriptor: PTLSuscriptorModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   //#endregion VARIABLES
@@ -87,11 +87,11 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit{
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.SUSCRIPTORES.forEach((regs: any) => {
+            resp.suscriptores.forEach((regs: any) => {
               regs.nomEstado = regs.estadoSuscriptor == true ? 'Activo' : 'Inactivo';
             });
-            this.registros = resp.registros;
-            console.log('Todos los Suscriptores', this.registros);
+            this.suscriptor = resp.suscriptores;
+            console.log('Todos los Suscriptores', this.suscriptor);
             this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
             return;
           }
@@ -109,16 +109,12 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit{
     });
   }
 
-  getEstado(estado: boolean): string {
-    return estado ? 'Activo' : 'Inactivo';
-  }
-
   OnNuevoRegistroClick() {
-    this.router.navigate(['suscriptores/gestion-suscriptor']);
+    this.router.navigate(['/suscriptor/gestion-suscriptor']);
   }
 
   OnEditarRegistroClick(id: number) {
-    this.router.navigate(['suscriptores/gestion-suscriptor'], { queryParams: { regId: id } });
+    this.router.navigate(['/suscriptor/gestion-suscriptor'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(id: number, nombre: string) {
@@ -134,7 +130,7 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit{
         this.suscriptoresService.eliminarSuscripctor(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.suscriptorId !== id);
+            this.suscriptor = this.suscriptor.filter((s) => s.suscriptorId !== id);
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('SUSCRIPTORES.ELIMINARERROR'), 'error');

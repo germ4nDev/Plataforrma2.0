@@ -9,6 +9,7 @@ import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/
 import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import { catchError, of, Subscription, tap } from 'rxjs';
+import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 
 @Component({
   selector: 'app-geston-contenido',
@@ -28,6 +29,7 @@ export class GestonContenidoComponent implements OnInit {
   constructor(private router: Router,
     private route : ActivatedRoute,
     private contenidoService : PTLContenidosELService,
+    private enlacesService: PTLEnlacesSTService,
     private BreadCrumb : BreadcrumbComponent
   ) {
     this.isSubmit = false;
@@ -59,13 +61,13 @@ export class GestonContenidoComponent implements OnInit {
     }
 
     consultarEnlaces() {
-          this.enlaceSub = this.contenidoService
-            .getContenido()
+          this.enlaceSub = this.enlacesService
+            .getEnlaces()
             .pipe(
               tap((resp: any) => {
                 if (resp.ok) {
-                  this.enlaces = resp.enlaces;
-                  console.log('Todos las contenido', this.enlaces);
+                  this.enlaces = resp.enlace;
+                  console.log('Todos los enlaces', this.enlaces);
                   return;
                 }
               }),
