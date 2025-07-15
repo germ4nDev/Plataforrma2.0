@@ -41,16 +41,18 @@
 									{{ enlace.rutaEnlace }}
 								</td>
 								<td>
-									{{ enlace.nomEstado }}
+
+									{{ getEstado(enlace.estadoEnlace?? false)}}
+
 								</td>
 								<td style="text-align: center; width: 10%;">
 									<div class="d-flex flex-wrap gap-2">
 										<button type="button" class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="editarEnlace(enlace.enlaceId)" title="{{ 'ENLACES.UPDATE' | translate }}">
+                                            (click)="editarEnlace(enlace.enlaceId?? 0)" title="{{ 'ENLACES.UPDATE' | translate }}">
 											<i class="feather icon-edit"></i>
 										</button>
 										<button type="button" class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="eliminarEnlace(enlace.enlaceId, enlace.nombreEnlace)" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'ENLACES.DELETE' | translate }}">
+                                            (click)="eliminarEnlace(enlace.enlaceId?? 0, enlace.nombreEnlace?? '')" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'ENLACES.DELETE' | translate }}">
 											<i class="feather icon-trash-2"></i>
 										</button>
 									</div>

@@ -45,16 +45,16 @@
 									{{ sitio.puertoSitio }}
 								</td>
 								<td>
-									{{ sitio.nomEstado}}
+									{{ sitio.nomEstado?? ''}}
 								</td>
 								<td style="text-align: center; width: 10%;">
 									<div class="d-flex flex-wrap gap-2">
 										<button type="button" class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="editarSitio(sitio.sitioId)" title="{{ 'SITIOS.UPDATE' | translate }}">
+                                            (click)="editarSitio(sitio.sitioId?? 0)" title="{{ 'SITIOS.UPDATE' | translate }}">
 											<i class="feather icon-edit"></i>
 										</button>
 										<button type="button" class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="eliminarSitio(sitio.sitioId, sitio.nombreSitio)" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'SITIOS.DELETE' | translate }}">
+                                            (click)="eliminarSitio(sitio.sitioId?? 0, sitio.nombreSitio?? '')" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'SITIOS.DELETE' | translate }}">
 											<i class="feather icon-trash-2"></i>
 										</button>
 									</div>
