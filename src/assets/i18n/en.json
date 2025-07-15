@@ -112,12 +112,11 @@
                 "PLACEHOLDERCONTENIDO": "Content",
                 "REQUERIDOCONTENIDO": "This field is required.",
                 "PLACEHOLDERDESCRIPCION": "Content Description",
-                "REQUERIDODESCRIPCION": "This field is required."
+                "REQUERIDODESCRIPCION": "This field is required.",
+                "APLICACION": "Application",
+                "PLACEHOLDERAPLICACION": "Please select",
+                "REQUERIDOAPLICACION": "This field is required."
             }
-            "REQUERIDODESCRIPCION": "This field is required.",
-            "APLICACION": "Application",
-            "PLACEHOLDERAPLICACION": "Please select",
-            "REQUERIDOAPLICACION": "This field is required."
         }
     },
     "SUSCRIPTORES": {

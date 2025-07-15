@@ -112,15 +112,14 @@
                 "PLACEHOLDERCONTENIDO": "Contenido",
                 "REQUERIDOCONTENIDO": "Por favor, ingrese un Contenido. Este campo es obligatorio.",
                 "PLACEHOLDERDESCRIPCION": "Descripcion del contenido",
-                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
+                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+                "APLICACION": "Aplicación",
+                "PLACEHOLDERAPLICACION": "Seleccione",
+                "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
             }
-            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
-            "APLICACION": "Aplicación",
-            "PLACEHOLDERAPLICACION": "Seleccione",
-            "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
         }
     },
-    
+
     "SUSCRIPTORES": {
         "TITLE": "Suscriptores",
         "NEW": "Nuevo Suscriptor",
