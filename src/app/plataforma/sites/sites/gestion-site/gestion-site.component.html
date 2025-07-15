@@ -37,21 +37,20 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="aplicacionId">{{
-                                    'SITIOS.GESTION.APLICACION' |
-                                    translate }}</label>
+                                <label class="form-control-label" for="aplicacionId">
+                                    {{ 'SITIOS.GESTION.APLICACION' | translate }}</label>
                                 <select class="form-control input-md" name="aplicacionId" id="aplicacionId"
                                     [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
                                     #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
                                     (change)="onAplicacionchangeClick($event)">
-                                    <option value="">{{ 'SITIOS.GESTION.APLICACIONHOLDER' | translate }}</option>
-                                    <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">{{
-                                        app.nombreAplicacion }}</option>
+                                    <option value="" disabled >{{ 'SITIOS.GESTION.PLACEHOLDERAPLICACION' | translate }}</option>
+                                    <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">
+                                        {{ app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'SITIOS.GESTION.REQUERIDOAPLICACION' | translate }}
                                 </label>
                             </div>
                         </div>

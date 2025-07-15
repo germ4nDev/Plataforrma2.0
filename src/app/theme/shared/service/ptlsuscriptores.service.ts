@@ -10,7 +10,7 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLSuscriptoresService {
-user: PTLUsuarioModel = new PTLUsuarioModel();
+  user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
 
@@ -31,10 +31,10 @@ user: PTLUsuarioModel = new PTLUsuarioModel();
   }
 
   getSuscriptores() {
-    const url = `${base_url}/suscriptores`;
-    return this.http.get(url).pipe(
+    return this.http.get<PTLSuscriptorModel>(`${environment.apiUrl}/suscriptores`)
+    .pipe(
       map((resp: any) => {
-        console.log('servicio de suscriptores', resp);
+        console.log('respuesta servicio', resp);
         return {
           ok: true,
           suscriptores: resp.suscriptores
@@ -45,7 +45,8 @@ user: PTLUsuarioModel = new PTLUsuarioModel();
 
   getSuscriptorById(id: PTLSuscriptorModel) {
     const url = `${base_url}/suscriptores/${id}`;
-    return this.http.get(url).pipe(
+    return this.http.get(url)
+    .pipe(
       map((resp: any) => {
         console.log('data de suscriptores', resp);
         return {
@@ -63,9 +64,10 @@ user: PTLUsuarioModel = new PTLUsuarioModel();
 
   actualizarSuscriptor(suscriptor: PTLSuscriptorModel) {
     const url = `${base_url}/suscriptores/${suscriptor.suscriptorId}`;
-    return this.http.put(url, suscriptor).pipe(
+    return this.http.put(url, suscriptor)
+    .pipe(
       map((resp: any) => {
-        console.log('data de suscriptor modificacda', resp);
+        console.log('data de suscriptor modificada', resp);
         return {
           ok: true,
           suscriptor: resp.suscriptor
@@ -76,7 +78,8 @@ user: PTLUsuarioModel = new PTLUsuarioModel();
 
   eliminarSuscripctor(_id: number) {
     const url = `${base_url}/suscriptores/${_id}`;
-    return this.http.delete(url).pipe(
+    return this.http.delete(url)
+    .pipe(
       map((resp: any) => {
         console.log('data de suscriptor modificacda', resp);
         return {
