@@ -278,7 +278,7 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
   }
 
   OnEditarRegistroClick(iRole: number, iApp: number, iSuite: number, iUser: number) {
-    const usuRole = this.registros[iUser].aplicaciones[iApp].roles[iRole];
+    const usuRole = this.registros[iUser].aplicaciones[iApp].suites[iSuite].roles[iRole];
     if (usuRole.estadoUsuarioRole == true) {
       usuRole.estadoUsuarioRole = false;
     } else if (usuRole.estadoUsuarioRole == false) {

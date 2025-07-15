@@ -69,6 +69,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
 
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
+    this.consultarUsuariosRoles();
     this.consultarUsuarios();
     this.consultarAplicaciones();
     this.consultarUsuariosRoles();
@@ -105,7 +106,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.rolesUsuarios = resp.usuariosRoles.filter((x: { usuarioId: number | undefined }) => x.usuarioId == this.usuario.usuarioId);
+            this.rolesUsuarios = resp.usuariosRoles;
             console.log('Todos las rolesUsuarios', this.rolesUsuarios);
             return;
           }
@@ -183,12 +184,23 @@ export class GestionRolesUsuarioComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             const rolesApp = resp.roles.filter((x: { suiteId: number }) => x.suiteId == suiteId);
+            console.log('rolesUsuaris', this.rolesUsuarios);
             rolesApp.forEach((role: any) => {
-              const extRole = this.rolesUsuarios.filter((x) => x.roleId == role.roleId);
-              role.checked = extRole.length > 0 ? false : true;
+              this.rolesUsuarios.forEach((usuRole: any) => {
+                console.log('usuRole', usuRole);
+                role.usuarioRoleId = usuRole.usuarioRoleId;
+                // TODO verificar todos los roles del usuario para poner el checked
+                if (usuRole.roleId == role.roleId) {
+                  role.checked = true;
+                } else {
+                  role.checked = false;
+                }
+              });
             });
             this.rolesAplicacion = rolesApp;
+            this.rolesSeleccionados = rolesApp;
             console.log('Todos las roles final', this.rolesAplicacion);
+            console.log('Todos las roles rolesSeleccionados', this.rolesSeleccionados);
           }
         }),
         catchError((err) => {
@@ -223,25 +235,28 @@ export class GestionRolesUsuarioComponent implements OnInit {
   }
 
   onSeleccionarRegistroChange(evento: any, role: any) {
-    // const roleId = evento.target.value;
     const checked = evento.target.checked;
     role.checked = checked;
     console.log('data del role', role);
+    console.log('role checked', checked);
+    const roleIx = this.rolesSeleccionados.findIndex((x) => x.roleId == role.roleId);
     if (checked) {
       this.rolesSeleccionados.push(role);
     } else {
-      const roleIx = this.rolesSeleccionados.findIndex((x) => x.roleId == roleId);
+      const roleSelIx = this.rolesSeleccionados.findIndex((x) => x.roleId == role.roleId);
+      console.log('indice del role', roleIx);
+      console.log('roles rolesAplicacion', this.rolesAplicacion);
       if (roleIx != -1) {
-        this.rolesSeleccionados.splice(roleIx, 1);
-      }
-      const roleId = this.rolesUsuarios[roleIx].usuarioRoleId || 0;
-      this.registrosService.deleteEliminarRegistro(roleId).subscribe({
-        next: (resp: any) => {
-          if (resp.ok) {
-            console.log('role eliminado del usuario', roleId);
+        this.rolesSeleccionados.splice(roleSelIx, 1);
+        console.log('roles seleccionados', this.rolesSeleccionados);
+        this.registrosService.deleteEliminarRegistro(role.usuarioRoleId).subscribe({
+          next: (resp: any) => {
+            if (resp.ok) {
+              console.log('role eliminado del usuario', role);
+            }
           }
-        }
-      });
+        });
+      }
     }
     console.log('Roles seleccionados:', this.rolesSeleccionados);
   }
@@ -286,8 +301,6 @@ export class GestionRolesUsuarioComponent implements OnInit {
           this.registrosService.postCrearRegistro(newRole).subscribe({
             next: (resp: any) => {
               if (resp.ok) {
-                // this.isSubmit = false;
-                // form.resetForm();
                 console.log('El role fue creado para el usuario');
               }
             },

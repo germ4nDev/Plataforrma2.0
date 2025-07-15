@@ -73,9 +73,9 @@
                                                     <div class="d-flex gap-1">
                                                         <button type="button" class="btn btn-icon btn-outline-primary"
                                                             (click)="OnEditarRegistroClick(iRole, iSuite, iApp, iUsu)"
+                                                            [ngClass]="role.estadoUsuarioRole ? 'btn-outline-success' : 'btn-outline-primary'"
                                                             [title]="getTooltipRoles(iRole, iSuite, iApp, iUsu)">
-                                                            <i class="feather"
-                                                                [ngClass]="role.estadoUsuarioRole ? 'icon-lock' : 'icon-unlock'"></i>
+                                                            <i class="feather" [ngClass]="role.estadoUsuarioRole ? 'icon-unlock' : 'icon-lock'"></i>
                                                         </button>
                                                         <button type="button" class="btn btn-icon btn-outline-danger"
                                                             (click)="OnEliminarRegistroClick(iRole, iSuite, iApp, iUsu, usuario.nombreUsuario)"
