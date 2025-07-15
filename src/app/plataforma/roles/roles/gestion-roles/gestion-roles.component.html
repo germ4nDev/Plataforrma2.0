@@ -55,6 +55,23 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label class="form-control-label" for="codigoSuite">{{
+                                    'ROLES.GESTION.SUITE' | translate }}</label>
+                                <select class="form-control input-md" name="codigoSuite" id="codigoSuite"
+                                    [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
+                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite" (change)="onSuiteChangeClick($event)">
+                                    <option value="">{{ 'ROLES.GESTION.SUITEHOLDER' | translate }}</option>
+                                    <option [value]="suite.codigoSuite" *ngFor="let suite of suitesApp">{{ suite.nombreSuite }}</option>
+                                </select>
+                                <label
+                                    *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
                                 <label class="form-control-label" for="nombreRole">{{ 'ROLES.GESTION.NAME' |
                                     translate }}</label>
                                 <input class="form-control input-md" id="nombreRole" name="nombreRole" type="text"

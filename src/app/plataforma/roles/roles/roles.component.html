@@ -25,6 +25,7 @@
                         <thead>
                             <tr>
                                 <th>{{ 'ROLES.NOMBREAPLICACION' | translate }}</th>
+                                <th>{{ 'ROLES.NOMBRESUITE' | translate }}</th>
                                 <th>{{ 'ROLES.NOMBREROL' | translate }}</th>
                                 <th>{{ 'ROLES.DESCRIPCIONROL' | translate }}</th>
                                 <th>{{ 'ROLES.ESTADOROLE' | translate }}</th>
@@ -35,6 +36,9 @@
                             <tr *ngFor="let reg of registros">
                                 <td>
                                     {{ reg.nombreAplicacion }}
+                                </td>
+                                <td>
+                                    {{ reg.nombreSuite}}
                                 </td>
                                 <td>
                                     {{ reg.nombreRole }}

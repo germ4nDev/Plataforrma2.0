@@ -13,10 +13,11 @@ import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.m
 import { PTLRolesAPService } from 'src/app/theme/shared/service/ptlroles-ap.service';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { catchError, Subject, tap } from 'rxjs';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 //#endregion IMPORTS
 
 @Component({
@@ -32,6 +33,8 @@ export class RolesComponent implements OnInit, AfterViewInit {
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
   registrosSub?: Subscription;
+  suitesSub?: Subscription;
+  suites: any[] = [];
   aplicaciones: PTLAplicacionModel[] = [];
 
   dtColumnSearchingOptions: DataTables.Settings = {};
@@ -46,6 +49,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
     private rolesAPService: PTLRolesAPService,
     private translate: TranslateService,
     private aplicacionesService: PtlAplicacionesService,
+    private suitesService: PtlSuitesAPService,
     private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
   ) {}
@@ -66,18 +70,18 @@ export class RolesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.consultarAplicaciones();
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
-        .get(['ROLES.NOMBREAPLICACION', 'ROLES.NOMBREROL', 'ROLES.DESCRIPCIONROLE', 'ROLES.ESTADOROLE'])
+        .get(['ROLES.NOMBREAPLICACION', 'ROLES.NOMBRESUITE', 'ROLES.NOMBREROLE', 'ROLES.DESCRIPCIONROLE', 'ROLES.ESTADOROLE'])
         .subscribe((translations) => {
           this.tituloPagina = translations['ROLES.TITLE'];
           this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
-              { title: translations['ROLES.NOMBREAPLICACION'], data: 'nombreAplicacion' },
-              { title: translations['ROLES.NOMBREROL'], data: 'nombreRole' },
+              { title: translations['ROLES.NOMBREAPLICACION'], data: 'nombreSuite' },
+              { title: translations['ROLES.NOMBRESUITE'], data: 'nombreAplicacion' },
+              { title: translations['ROLES.NOMBREROLE'], data: 'nombreRole' },
               { title: translations['ROLES.DESCRIPCIONROL'], data: 'descripcionRole' },
               { title: translations['ROLES.ESTADOROLE'], data: 'estadoRole' },
               { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
@@ -111,7 +115,28 @@ export class RolesComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
+  consultarSuites() {
+    this.suitesSub = this.suitesService
+      .geSuitesAP()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.suites = resp.suites;
+            console.log('Todos las suites', this.suites);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
   consultarRegistros() {
+    this.consultarAplicaciones();
+    this.consultarSuites();
     this.registrosSub = this.rolesAPService
       .getRegistros()
       .pipe(
@@ -119,17 +144,22 @@ export class RolesComponent implements OnInit, AfterViewInit {
           if (resp.ok) {
             resp.roles.forEach((role: any) => {
               const app = this.aplicaciones.filter((x) => x.codigoAplicacion == role.codigoAplicacion)[0];
+              console.log('el role', role);
+              console.log('las suites', this.suites);
+              const sui = this.suites.filter((x) => x.suiteId == role.suiteId)[0];
+              console.log('sui', sui);
               role.nombreAplicacion = app.nombreAplicacion;
+              role.nombreSuite = sui.nombreSuite;
               role.nomEstado = role.estadoRole == true ? 'Activo' : 'Inactivo';
             });
             this.registros = resp.roles;
             console.log('Todos las roles', this.registros);
-            this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
+            this.dtTrigger.next(null);
             return;
           }
         }),
         catchError((err) => {
-                      console.log('Ha ocurrido un error', err);
+          console.log('Ha ocurrido un error', err);
           return of(null);
         })
       )

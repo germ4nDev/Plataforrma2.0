@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { PTLRoleAPModel } from '../_helpers/models/PTLRoleAP.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
 
@@ -60,7 +59,8 @@ export class PtlusuariosRolesApService {
   }
 
   putModificarRegistro(role: PTLUsuarioRoleAP) {
-    const url = `${base_url}/usuarios-roles/${role.usuarioRolId}`;
+    console.log('data usuRole', role)
+    const url = `${base_url}/usuarios-roles/${role.usuarioRoleId}`;
     return this.http.put(url, role).pipe(
       map((resp: any) => {
         console.log('data de role modificacda', resp);
@@ -73,6 +73,8 @@ export class PtlusuariosRolesApService {
   }
 
   deleteEliminarRegistro(_id: number) {
+
+        console.log('eliminar el registro id', _id);
     const url = `${base_url}/usuarios-roles/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {

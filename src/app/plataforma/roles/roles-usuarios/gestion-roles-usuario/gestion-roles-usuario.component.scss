@@ -100,7 +100,6 @@
     background-color: #555;
 }
 
-/* Crea un checkbox visual */
 .checkbox-custom {
     width: 20px;
     height: 20px;
@@ -109,9 +108,9 @@
     margin-right: 10px;
     position: relative;
     transition: background 0.3s;
+    padding-right: 30px !important;
 }
 
-/* Marca de check cuando está seleccionado */
 .checkbox-container input[type='checkbox']:checked+.checkbox-custom::after {
     content: '';
     position: absolute;
@@ -124,7 +123,6 @@
     transform: rotate(45deg);
 }
 
-/* Fondo azul cuando está seleccionado */
 .checkbox-container input[type='checkbox']:checked+.checkbox-custom {
     background-color: #007bff;
     border-color: #007bff;
