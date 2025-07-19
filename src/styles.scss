@@ -85,54 +85,56 @@ File: style.css
 @import '../node_modules/angular-calendar/css/angular-calendar.css';
 
 .gradient-rtl {
-  @import 'scss/layout-rtl-utility.scss';
-  @import 'node_modules/bootstrap/scss/utilities/api';
+    @import 'scss/layout-rtl-utility.scss';
+    @import 'node_modules/bootstrap/scss/utilities/api';
 }
 
 .app-wrapper {
-  display: flex;
-  margin-top: 30px !important;
-  height: calc(100vh - 80px) !important;
-  width: 100%;
+    display: flex;
+    margin-top: 18px !important;
+    height: 90vh !important;
+    width: 100%;
 }
 
 .scrollbar-wrapper {
-  height: calc(100vh - 80px) !important;
-  width: 100%;
+    overflow-y: hidden !important;
+    height: 95vh !important;
+    width: 250px;
 }
 
 .sidebar-wrapper {
-    width: 260px;
-    overflow-y: auto;
+    width: 250px;
+    height: 95vh !important;
 }
 
 .content-wrapper {
-  flex-grow: 1;
-  padding: 1rem;
+    flex-grow: 1;
+    padding-top: 0px !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .table {
-  border-collapse: collapse;
+    border-collapse: collapse;
 
-  thead tr th {
-    border-bottom: 1px solid #333;
-    border-top: none;
-  }
+    thead tr th {
+        border-bottom: 1px solid #333;
+        border-top: none;
+    }
 
-  tbody td {
-    border-bottom: none !important;
-  }
+    tbody td {
+        border-bottom: none !important;
+    }
 
-  tbody tr td {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
+    tbody tr td {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
 }
 
 table,
 table td,
 table tr {
-  border: none !important;
-  border-collapse: collapse;
-  box-shadow: none !important;
+    border: none !important;
+    border-collapse: collapse;
 }

@@ -1,7 +1,7 @@
 // Angular Import
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { GradientConfig } from 'src/app/app-config';
-import { Location, LocationStrategy } from '@angular/common';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { CustomsThemeService } from 'src/app/theme/shared/service/customs-theme.service';
 
 @Component({

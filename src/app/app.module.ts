@@ -44,8 +44,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     AdminComponent,
     GuestComponent,
-    ConfigurationComponent,
     NavigationComponent,
+    ConfigurationComponent,
     // NavItemComponent,
     // NavCollapseComponent,
     // NavGroupComponent
@@ -57,7 +57,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     FormsModule,
     NavBarComponent,
     NavLeftComponent,
-    // NavRightComponent,
+    NavRightComponent,
     ChatMsgComponent,
     ChatUserListComponent,
     FriendComponent,

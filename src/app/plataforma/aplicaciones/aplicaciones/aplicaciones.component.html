@@ -1,9 +1,10 @@
-<app-nav-bar (NavCollapse)="onNavCollapse()" (NavCollapsedMob)="onNavCollapsedMob()"></app-nav-bar>
+<app-nav-bar r class="navbar pcoded-header navbar-expand-lg navbar-light"
+    (NavCollapse)="this.navCollapsed = !this.navCollapsed" (NavCollapsedMob)="navMobClick()"></app-nav-bar>
 
 <div class="app-wrapper">
     <aside class="sidebar-wrapper" style="overflow: hidden;">
         <div class="card" style="padding-left: 18px !important;">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-pills nav-justified">
                 <li class="nav-item">
                     <a class="nav-link" [ngClass]="{ active: activeTab === 'menu' }"
                         (click)="activeTab = 'menu'">Menú</a>
@@ -31,7 +32,7 @@
     </aside>
 
     <div class="content-wrapper">
-        <div class="card card-header-sticky">
+        <div class="card -header-sticky">
             <div class="card-header">
                 <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
                 <hr />

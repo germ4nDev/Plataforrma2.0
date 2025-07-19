@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 import { NavLeftComponent } from './nav-left/nav-left.component';
 import { NavRightComponent } from './nav-right/nav-right.component';
+import { ConfigurationComponent } from '../configuration/configuration.component';
 
 
 @Component({

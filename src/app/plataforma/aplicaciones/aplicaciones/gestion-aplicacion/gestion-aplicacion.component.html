@@ -1,10 +1,21 @@
-<div class="row">
-    <div class="col-sm-12">
+<app-nav-bar r class="navbar pcoded-header navbar-expand-lg navbar-light"
+    (NavCollapse)="this.navCollapsed = !this.navCollapsed" (NavCollapsedMob)="navMobClick()"
+    (NavCollapse)="onNavCollapse()" (NavCollapsedMob)="onNavCollapsedMob()"></app-nav-bar>
+
+<div class="app-wrapper">
+    <aside class="sidebar-wrapper" style="overflow: hidden;">
+        <div class="card" style="padding-left: 18px !important;">
+            <ng-scrollbar class="scrollbar-wrapper">
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-scrollbar>
+        </div>
+    </aside>
+    <div class="content-wrapper">
         <div class="card card-header-sticky">
             <div class="card-header">
                 <!-- <div class="text-center"> -->
-                    <h4>{{ 'APLICACIONES.TITLEGEST' | translate }}</h4>
-                    <hr>
+                <h4>{{ 'APLICACIONES.TITLEGEST' | translate }}</h4>
+                <hr>
                 <!-- </div> -->
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
