@@ -82,6 +82,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NavLeftComponent,
     ChatMsgComponent,
     ChatUserListComponent,
+    // ConfigurationComponent,
     FriendComponent
 ],
   providers: [

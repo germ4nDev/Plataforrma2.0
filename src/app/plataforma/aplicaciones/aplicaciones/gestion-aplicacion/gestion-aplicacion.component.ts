@@ -17,6 +17,7 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 
 @Component({
   selector: 'app-gestion-aplicacion',
@@ -28,7 +29,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 export class GestionAplicacionComponent implements OnInit {
   FormRegistro: PTLAplicacionModel = new PTLAplicacionModel();
   menuItems: NavigationItem[] = [];
- gradientConfig: any;
+  gradientConfig: any;
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
   windowWidth: number = 0;
@@ -38,38 +39,40 @@ export class GestionAplicacionComponent implements OnInit {
   modoEdicion: boolean = false;
   codeAplicacion = uuidv4();
 
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
+        private layoutInitializer: LayoutInitializerService,
     private navigationService: NavigationService,
     private locationStrategy: LocationStrategy,
     private aplicacionesService: PtlAplicacionesService,
     private BreadCrumb: BreadcrumbComponent
   ) {
     this.isSubmit = false;
-        this.gradientConfig = GradientConfig;
-        let current_url = this.location.path();
-        const baseHref = this.locationStrategy.getBaseHref();
-        if (baseHref) {
-          current_url = baseHref + this.location.path();
-        }
-        this.windowWidth = window.innerWidth;
-        if (
-          current_url === baseHref + '/layout/collapse-menu' ||
-          current_url === baseHref + '/layout/box' ||
-          (this.windowWidth >= 992 && this.windowWidth <= 1024)
-        ) {
-          GradientConfig.isCollapse_menu = true;
-        }
-        this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
-        this.navCollapsedMob = false;
+    GradientConfig.header_fixed_layout = true
+    this.gradientConfig = GradientConfig;
+    let current_url = this.location.path();
+    const baseHref = this.locationStrategy.getBaseHref();
+    // if (baseHref) {
+    //   current_url = baseHref + this.location.path();
+    // }
+    // this.windowWidth = window.innerWidth;
+    // if (
+    //   current_url === baseHref + '/layout/collapse-menu' ||
+    //   current_url === baseHref + '/layout/box' ||
+    //   (this.windowWidth >= 992 && this.windowWidth <= 1024)
+    // ) {
+    //   GradientConfig.isCollapse_menu = true;
+    // }
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.navCollapsedMob = false;
   }
 
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
-        const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.layoutInitializer.applyLayout();
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.route.queryParams.subscribe((params) => {
       const aplicacionId = params['aplicacionId'];
@@ -99,7 +102,7 @@ export class GestionAplicacionComponent implements OnInit {
       return;
     }
     if (this.modoEdicion) {
-        console.log('1.0 modificar app', this.FormRegistro)
+      console.log('1.0 modificar app', this.FormRegistro);
       this.aplicacionesService.actualizarAplicacion(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
@@ -136,7 +139,7 @@ export class GestionAplicacionComponent implements OnInit {
     this.router.navigate(['/aplicaciones/aplicaciones']);
   }
 
-    navMobClick() {
+  navMobClick() {
     if (this.windowWidth < 992) {
       if (this.navCollapsedMob && !document.querySelector('app-navigation.pcoded-navbar')?.classList.contains('mob-open')) {
         this.navCollapsedMob = !this.navCollapsedMob;

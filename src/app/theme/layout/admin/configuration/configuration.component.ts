@@ -111,7 +111,7 @@ export class ConfigurationComponent implements OnInit {
         break;
       case baseHref + '/layout/horizontal-l2':
         GradientConfig.layout = 'horizontal';
-        GradientConfig.subLayout = 'horizontal-2';
+        // GradientConfig.subLayout = 'horizontal-2';
         GradientConfig.nav_fixed_layout = false;
         GradientConfig.header_fixed_layout = false;
         break;

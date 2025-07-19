@@ -19,17 +19,28 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
+import { ConfigurationComponent } from 'src/app/theme/layout/admin/configuration/configuration.component';
+import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-aplicaciones',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule, NavContentComponent, NavBarComponent],
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    BreadcrumbComponent,
+    TranslateModule,
+    NavContentComponent,
+    NavBarComponent
+    //ConfigurationComponent
+  ],
   templateUrl: './aplicaciones.component.html',
   styleUrl: './aplicaciones.component.scss'
 })
 export class AplicacionesComponent implements OnInit, AfterViewInit {
-activeTab: 'menu' | 'filters' = 'menu';
+  activeTab: 'menu' | 'filters' = 'menu';
   menuItems: NavigationItem[] = [];
   //#region VARIABLES
   gradientConfig: any;
@@ -53,6 +64,7 @@ activeTab: 'menu' | 'filters' = 'menu';
     private router: Router,
     private zone: NgZone,
     private location: Location,
+    private layoutInitializer: LayoutInitializerService,
     private navigationService: NavigationService,
     private locationStrategy: LocationStrategy,
     private aplicacionesService: PtlAplicacionesService,
@@ -62,17 +74,17 @@ activeTab: 'menu' | 'filters' = 'menu';
     this.gradientConfig = GradientConfig;
     let current_url = this.location.path();
     const baseHref = this.locationStrategy.getBaseHref();
-    if (baseHref) {
-      current_url = baseHref + this.location.path();
-    }
-    this.windowWidth = window.innerWidth;
-    if (
-      current_url === baseHref + '/layout/collapse-menu' ||
-      current_url === baseHref + '/layout/box' ||
-      (this.windowWidth >= 992 && this.windowWidth <= 1024)
-    ) {
-      GradientConfig.isCollapse_menu = true;
-    }
+    // if (baseHref) {
+    //   current_url = baseHref + this.location.path();
+    // }
+    // this.windowWidth = window.innerWidth;
+    // if (
+    //   current_url === baseHref + '/layout/collapse-menu' ||
+    //   current_url === baseHref + '/layout/box' ||
+    //   (this.windowWidth >= 992 && this.windowWidth <= 1024)
+    // ) {
+    //   GradientConfig.isCollapse_menu = true;
+    // }
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
   }
@@ -93,6 +105,7 @@ activeTab: 'menu' | 'filters' = 'menu';
   }
 
   ngOnInit() {
+    this.layoutInitializer.applyLayout();
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     if (this.windowWidth < 992) {
@@ -207,4 +220,3 @@ activeTab: 'menu' | 'filters' = 'menu';
   onNavCollapse() {}
   onNavCollapsedMob() {}
 }
-

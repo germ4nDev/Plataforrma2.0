@@ -27,6 +27,9 @@ export class NavBarComponent {
     this.menuClass = !this.menuClass;
     this.collapseStyle = this.menuClass ? 'block' : 'none';
   }
+    //  standalone: true,
+    // imports: [CommonModule],
+
 
   navCollapse(): void {
     if (this.windowWidth >= 992) {
