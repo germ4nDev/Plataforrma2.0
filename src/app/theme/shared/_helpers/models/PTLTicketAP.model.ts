@@ -1,9 +1,10 @@
-export class PTLTicketAP {
+export class PTLTicketAPModel {
     constructor (
-        public ticketId : number,
-        public aplicacionId : number,
-        public nombreTicket : string,
-        public descripcionTicket : string,
-        public estadoTicket : boolean
+        public ticketId? : number,
+        public aplicacionId? : number,
+        public nombreTicket? : string,
+        public descripcionTicket? : string,
+        public estadoTicket? : boolean,
+        public usuarioSenderId? : number
     ) {}
 }
