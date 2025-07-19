@@ -1,4 +1,5 @@
-<div class="navbar-wrapper"
-    [ngClass]="{ container: this.gradientConfig.layout === 'horizontal' && this.gradientConfig.subLayout === 'horizontal-2' }">
-    <app-nav-content (NavMobCollapse)="navMobCollapse()"></app-nav-content>
-</div>
+<app-nav-content
+  *ngIf="navigationItems.length > 0"
+  [navigationItems]="navigationItems"
+  (NavMobCollapse)="navMobCollapse()"
+></app-nav-content>

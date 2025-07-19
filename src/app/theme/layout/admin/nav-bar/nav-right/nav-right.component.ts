@@ -1,62 +1,62 @@
-// Angular Import
 import { Component, DoCheck } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { GradientConfig } from 'src/app/app-config';
-
-// bootstrap
-import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import { AuthenticationService } from 'src/app/theme/shared/service';
-
-// third party
-import { TranslateService } from '@ngx-translate/core';
+import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
+import { ChatMsgComponent } from './chat-msg/chat-msg.component';
 
 @Component({
-    selector: 'app-nav-right',
-    templateUrl: './nav-right.component.html',
-    styleUrls: ['./nav-right.component.scss'],
-    providers: [NgbDropdownConfig],
-    animations: [
-        trigger('slideInOutLeft', [
-            transition(':enter', [style({ transform: 'translateX(100%)' }), animate('300ms ease-in', style({ transform: 'translateX(0%)' }))]),
-            transition(':leave', [animate('300ms ease-in', style({ transform: 'translateX(100%)' }))])
-        ]),
-        trigger('slideInOutRight', [
-            transition(':enter', [style({ transform: 'translateX(-100%)' }), animate('300ms ease-in', style({ transform: 'translateX(0%)' }))]),
-            transition(':leave', [animate('300ms ease-in', style({ transform: 'translateX(-100%)' }))])
-        ])
-    ]
+  selector: 'app-nav-right',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    NgbDropdownModule,
+    TranslateModule,
+    LanguageSelectorComponent,
+    ChatUserListComponent,
+    ChatMsgComponent
+  ],
+  templateUrl: './nav-right.component.html',
+  styleUrls: ['./nav-right.component.scss'],
+  animations: [
+    trigger('slideInOutLeft', [
+      transition(':enter', [style({ transform: 'translateX(100%)' }), animate('300ms ease-in', style({ transform: 'translateX(0%)' }))]),
+      transition(':leave', [animate('300ms ease-in', style({ transform: 'translateX(100%)' }))])
+    ]),
+    trigger('slideInOutRight', [
+      transition(':enter', [style({ transform: 'translateX(-100%)' }), animate('300ms ease-in', style({ transform: 'translateX(0%)' }))]),
+      transition(':leave', [animate('300ms ease-in', style({ transform: 'translateX(-100%)' }))])
+    ])
+  ]
 })
 export class NavRightComponent implements DoCheck {
-    // public props
-    visibleUserList: boolean;
-    chatMessage: boolean;
-    friendId!: number;
-    gradientConfig = GradientConfig;
+  visibleUserList: boolean = false;
+  chatMessage: boolean = false;
+  friendId!: number;
+  gradientConfig = GradientConfig;
 
-    // constructor
-    constructor(
-        private authenticationService: AuthenticationService,
-        private translate: TranslateService
-    ) {
-        this.visibleUserList = false;
-        this.chatMessage = false;
-    }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private translate: TranslateService
+  ) {}
 
-    // public method
-    onChatToggle(friendID: number) {
-        this.friendId = friendID;
-        this.chatMessage = !this.chatMessage;
-    }
+  onChatToggle(friendID: any) {
+    this.friendId = friendID;
+    this.chatMessage = !this.chatMessage;
+  }
 
-    ngDoCheck() {
-        if (document.querySelector('body')?.classList.contains('elite-rtl')) {
-            this.gradientConfig.isRtlLayout = true;
-        } else {
-            this.gradientConfig.isRtlLayout = false;
-        }
-    }
+  ngDoCheck() {
+    const isRtl = document.querySelector('body')?.classList.contains('elite-rtl') || false;
+    this.gradientConfig.isRtlLayout = isRtl;
+  }
 
-    logout() {
-        this.authenticationService.logout();
-    }
+  logout() {
+    this.authenticationService.logout();
+  }
 }

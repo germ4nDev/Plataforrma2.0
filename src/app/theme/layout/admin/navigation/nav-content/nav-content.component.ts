@@ -1,51 +1,51 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
-import { NavigationItem, NavigationItems } from '../navigation';
-import { Location, LocationStrategy } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { NavigationItem } from '../navigation';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { GradientConfig } from 'src/app/app-config';
-import { environment } from 'src/environments/environment';
+import { NavigationService } from '../../../../shared/service/navigation.service';
+import { NavCollapseComponent } from './nav-collapse/nav-collapse.component';
+import { NavGroupComponent } from './nav-group/nav-group.component';
+import { NavItemComponent } from './nav-item/nav-item.component';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 @Component({
   selector: 'app-nav-content',
+  standalone: true,
   templateUrl: './nav-content.component.html',
-  styleUrls: ['./nav-content.component.scss']
+  styleUrls: ['./nav-content.component.scss'],
+  imports: [
+    CommonModule,
+    NavGroupComponent,
+    NavCollapseComponent,
+    NavItemComponent,
+    NgScrollbarModule
+  ]
 })
 export class NavContentComponent implements OnInit, AfterViewInit {
-  // version
-  title = 'Demo application for version numbering';
-  currentApplicationVersion = environment.appVersion;
-
-  // public pops
-  gradientConfig;
-  navigations: NavigationItem[];
-  prevDisabled: string;
-  nextDisabled: string;
-  contentWidth: number;
-  wrapperWidth!: number;
-  scrollWidth: number;
-  windowWidth: number;
-
+  @Input() navigationItems: NavigationItem[] = []; // <- Input recibido del padre
   @Output() NavMobCollapse = new EventEmitter();
+  gradientConfig = GradientConfig;
+  windowWidth = window.innerWidth;
+  prevDisabled = 'disabled';
+  nextDisabled = '';
+  scrollWidth = 0;
+  contentWidth = 0;
+  currentApplicationVersion = 0;
+  wrapperWidth!: number;
 
   @ViewChild('navbarContent', { static: false }) navbarContent!: ElementRef;
   @ViewChild('navbarWrapper', { static: false }) navbarWrapper!: ElementRef;
 
-  // constructor
   constructor(
-    private zone: NgZone,
+    private navigationService: NavigationService,
     private location: Location,
-    private locationStrategy: LocationStrategy
+    private locationStrategy: LocationStrategy,
+    private zone: NgZone
   ) {
-    this.gradientConfig = GradientConfig;
-    this.navigations = NavigationItems;
-    this.windowWidth = window.innerWidth;
-    this.prevDisabled = 'disabled';
-    this.nextDisabled = '';
-    this.scrollWidth = 0;
-    this.contentWidth = 0;
   }
 
-  // life cycle event
-  ngOnInit() {
+  ngOnInit(): void {
+    console.log('NavContent recibe:', this.navigationItems);
     if (this.windowWidth < 992) {
       GradientConfig.layout = 'vertical';
       setTimeout(() => {
@@ -55,65 +55,61 @@ export class NavContentComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (GradientConfig.layout === 'horizontal') {
       this.contentWidth = this.navbarContent.nativeElement.clientWidth;
       this.wrapperWidth = this.navbarWrapper.nativeElement.clientWidth;
     }
   }
 
-  // public method
-  scrollPlus() {
-    this.scrollWidth = this.scrollWidth + (this.wrapperWidth - 80);
+  scrollPlus(): void {
+    this.scrollWidth += this.wrapperWidth - 80;
     if (this.scrollWidth > this.contentWidth - this.wrapperWidth) {
       this.scrollWidth = this.contentWidth - this.wrapperWidth + 80;
       this.nextDisabled = 'disabled';
     }
     this.prevDisabled = '';
-    if (GradientConfig.isRtlLayout) {
-      (document.querySelector('#side-nav-horizontal') as HTMLElement).style.marginRight = '-' + this.scrollWidth + 'px';
-    } else {
-      (document.querySelector('#side-nav-horizontal') as HTMLElement).style.marginLeft = '-' + this.scrollWidth + 'px';
-    }
 
-    console.log('window width - ', this.windowWidth);
-    console.log('content width - ', this.contentWidth);
-    console.log('wrapper width - ', this.wrapperWidth);
-    console.log('scroll width - ', this.scrollWidth);
+    const sideNav = document.querySelector('#side-nav-horizontal') as HTMLElement;
+    if (GradientConfig.isRtlLayout) {
+      sideNav.style.marginRight = '-' + this.scrollWidth + 'px';
+    } else {
+      sideNav.style.marginLeft = '-' + this.scrollWidth + 'px';
+    }
   }
 
-  scrollMinus() {
-    this.scrollWidth = this.scrollWidth - this.wrapperWidth;
+  scrollMinus(): void {
+    this.scrollWidth -= this.wrapperWidth;
     if (this.scrollWidth < 0) {
       this.scrollWidth = 0;
       this.prevDisabled = 'disabled';
     }
     this.nextDisabled = '';
+
+    const sideNav = document.querySelector('#side-nav-horizontal') as HTMLElement;
     if (GradientConfig.isRtlLayout) {
-      (document.querySelector('#side-nav-horizontal') as HTMLElement).style.marginRight = '-' + this.scrollWidth + 'px';
+      sideNav.style.marginRight = '-' + this.scrollWidth + 'px';
     } else {
-      (document.querySelector('#side-nav-horizontal') as HTMLElement).style.marginLeft = '-' + this.scrollWidth + 'px';
+      sideNav.style.marginLeft = '-' + this.scrollWidth + 'px';
     }
   }
 
-  fireLeave() {
+  fireLeave(): void {
     const sections = document.querySelectorAll('.pcoded-hasmenu');
-    for (let i = 0; i < sections.length; i++) {
-      sections[i].classList.remove('active');
-      sections[i].classList.remove('pcoded-trigger');
-    }
+    sections.forEach((el) => el.classList.remove('active', 'pcoded-trigger'));
 
     let current_url = this.location.path();
     const baseHref = this.locationStrategy.getBaseHref();
     if (baseHref) {
-      current_url = baseHref + this.location.path();
+      current_url = baseHref + current_url;
     }
-    const link = "a.nav-link[ href='" + current_url + "' ]";
+    const link = "a.nav-link[href='" + current_url + "']";
     const ele = document.querySelector(link);
-    if (ele !== null && ele !== undefined) {
+    if (ele) {
       const parent = ele.parentElement;
       const up_parent = parent?.parentElement?.parentElement;
       const last_parent = up_parent?.parentElement;
+
       if (parent?.classList.contains('pcoded-hasmenu')) {
         parent.classList.add('active');
       } else if (up_parent?.classList.contains('pcoded-hasmenu')) {
@@ -124,40 +120,13 @@ export class NavContentComponent implements OnInit, AfterViewInit {
     }
   }
 
-  navMob() {
+  navMob(): void {
     if (this.windowWidth < 992 && document.querySelector('app-navigation.pcoded-navbar')?.classList.contains('mob-open')) {
       this.NavMobCollapse.emit();
     }
   }
 
-  fireOutClick() {
-    let current_url = this.location.path();
-    const baseHref = this.locationStrategy.getBaseHref();
-    if (baseHref) {
-      current_url = baseHref + this.location.path();
-    }
-    const link = "a.nav-link[ href='" + current_url + "' ]";
-    const ele = document.querySelector(link);
-    if (ele !== null && ele !== undefined) {
-      const parent = ele.parentElement;
-      const up_parent = parent?.parentElement?.parentElement;
-      const last_parent = up_parent?.parentElement;
-      if (parent?.classList.contains('pcoded-hasmenu')) {
-        if (GradientConfig.layout === 'vertical') {
-          parent.classList.add('pcoded-trigger');
-        }
-        parent.classList.add('active');
-      } else if (up_parent?.classList.contains('pcoded-hasmenu')) {
-        if (GradientConfig.layout === 'vertical') {
-          up_parent.classList.add('pcoded-trigger');
-        }
-        up_parent.classList.add('active');
-      } else if (last_parent?.classList.contains('pcoded-hasmenu')) {
-        if (GradientConfig.layout === 'vertical') {
-          last_parent.classList.add('pcoded-trigger');
-        }
-        last_parent.classList.add('active');
-      }
-    }
+  fireOutClick(): void {
+    this.fireLeave();
   }
 }

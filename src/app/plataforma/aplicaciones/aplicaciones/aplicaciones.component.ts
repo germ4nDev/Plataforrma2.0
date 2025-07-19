@@ -1,5 +1,5 @@
 //#region IMPORTS
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
@@ -9,21 +9,34 @@ import { TranslateService } from '@ngx-translate/core';
 import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
-// import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
+import { Location, LocationStrategy } from '@angular/common';
+
+import { GradientConfig } from 'src/app/app-config';
 import { catchError, Subject, tap } from 'rxjs';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-aplicaciones',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
+  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule, NavContentComponent, NavBarComponent],
   templateUrl: './aplicaciones.component.html',
   styleUrl: './aplicaciones.component.scss'
 })
 export class AplicacionesComponent implements OnInit, AfterViewInit {
+activeTab: 'menu' | 'filters' = 'menu';
+  menuItems: NavigationItem[] = [];
   //#region VARIABLES
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
+
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
@@ -33,15 +46,36 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
 
   aplicaciones: PTLAplicacionModel[] = [];
   tituloPagina: string = '';
+  filtroPersonalizado: string = 'Usuareio';
   //#endregion VARIABLES
 
   constructor(
     private router: Router,
+    private zone: NgZone,
+    private location: Location,
+    private navigationService: NavigationService,
+    private locationStrategy: LocationStrategy,
     private aplicacionesService: PtlAplicacionesService,
     private translate: TranslateService,
-    // private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
-  ) {}
+  ) {
+    this.gradientConfig = GradientConfig;
+    let current_url = this.location.path();
+    const baseHref = this.locationStrategy.getBaseHref();
+    if (baseHref) {
+      current_url = baseHref + this.location.path();
+    }
+    this.windowWidth = window.innerWidth;
+    if (
+      current_url === baseHref + '/layout/collapse-menu' ||
+      current_url === baseHref + '/layout/box' ||
+      (this.windowWidth >= 992 && this.windowWidth <= 1024)
+    ) {
+      GradientConfig.isCollapse_menu = true;
+    }
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.navCollapsedMob = false;
+  }
 
   ngAfterViewInit(): void {
     this.BreadCrumb.setBreadcrumb();
@@ -59,6 +93,15 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    if (this.windowWidth < 992) {
+      GradientConfig.layout = 'vertical';
+      setTimeout(() => {
+        document.querySelector('.pcoded-navbar')?.classList.add('menupos-static');
+        (document.querySelector('#nav-ps-gradient-able') as HTMLElement).style.maxHeight = '100%'; // 100%
+      }, 500);
+    }
     this.BreadCrumb.setBreadcrumb();
     // Forzamos que ngx-translate lo aplique
     this.translate
@@ -147,4 +190,21 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  navMobClick() {
+    if (this.windowWidth < 992) {
+      if (this.navCollapsedMob && !document.querySelector('app-navigation.pcoded-navbar')?.classList.contains('mob-open')) {
+        this.navCollapsedMob = !this.navCollapsedMob;
+        setTimeout(() => {
+          this.navCollapsedMob = !this.navCollapsedMob;
+        }, 100);
+      } else {
+        this.navCollapsedMob = !this.navCollapsedMob;
+      }
+    }
+  }
+
+  onNavCollapse() {}
+  onNavCollapsedMob() {}
 }
+

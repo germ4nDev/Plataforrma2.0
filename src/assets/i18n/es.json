@@ -1,4 +1,19 @@
 {
+    "MANUAPPS": {
+        "PLATAFORMA": {
+            "MENU": "Plataforma",
+            "HOME": "Inicio",
+            "DASHBOARD": "Tablero"
+        },
+        "APP1": {
+            "MENU": "Aplicación 1",
+            "DASHBOARD": "Tablero App 1"
+        },
+        "APP2": {
+            "MENU": "Aplicación 2",
+            "DASHBOARD": "Tablero App 2"
+        }
+    },
     "PLATAFORMA": {
         "OPTIONS": "Opciones",
         "CANCEL": "Cancelar",
@@ -112,15 +127,13 @@
                 "PLACEHOLDERCONTENIDO": "Contenido",
                 "REQUERIDOCONTENIDO": "Por favor, ingrese un Contenido. Este campo es obligatorio.",
                 "PLACEHOLDERDESCRIPCION": "Descripcion del contenido",
-                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
+                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+                "APLICACION": "Aplicación",
+                "PLACEHOLDERAPLICACION": "Seleccione",
+                "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
             }
-            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
-            "APLICACION": "Aplicación",
-            "PLACEHOLDERAPLICACION": "Seleccione",
-            "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
         }
     },
-    
     "SUSCRIPTORES": {
         "TITLE": "Suscriptores",
         "NEW": "Nuevo Suscriptor",

@@ -1,3 +1,10 @@
+export interface NavigationBadge {
+  title?: string;
+  type?: string;
+}
+
+export type NavigationType = 'item' | 'collapse' | 'group';
+
 export interface NavigationItem {
   id: string;
   title: string;

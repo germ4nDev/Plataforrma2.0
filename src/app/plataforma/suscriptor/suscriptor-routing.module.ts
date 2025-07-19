@@ -39,10 +39,6 @@ const routes: Routes = [
       },
       {
         path: 'gestion-usuario-suscriptor',
-        loadComponent: () => import('./usuarios-suscriptor/gestion-perfil/gestion-perfil.component').then(m => m.GestionPerfilComponent)
-      },
-      {
-        path: 'gestion-usuario-suscriptor',
         loadComponent: () => import('./usuarios-suscriptor/gestiop-claves/gestiop-claves.component').then(m => m.GestiopClavesComponent)
       }
     ]

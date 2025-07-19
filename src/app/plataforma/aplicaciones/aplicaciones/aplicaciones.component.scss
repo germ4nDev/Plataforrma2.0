@@ -37,3 +37,17 @@
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.layout-container {
+  height: 100vh;
+}
+
+.navbar-wrapper {
+  z-index: 1000;
+}
+
+.sidebar-wrapper {
+  width: 250px;
+}
+
+

@@ -89,6 +89,28 @@ File: style.css
   @import 'node_modules/bootstrap/scss/utilities/api';
 }
 
+.app-wrapper {
+  display: flex;
+  margin-top: 30px !important;
+  height: calc(100vh - 80px) !important;
+  width: 100%;
+}
+
+.scrollbar-wrapper {
+  height: calc(100vh - 80px) !important;
+  width: 100%;
+}
+
+.sidebar-wrapper {
+    width: 260px;
+    overflow-y: auto;
+}
+
+.content-wrapper {
+  flex-grow: 1;
+  padding: 1rem;
+}
+
 .table {
   border-collapse: collapse;
 

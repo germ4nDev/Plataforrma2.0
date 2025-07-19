@@ -1,4 +1,19 @@
 {
+    "MANUAPPS": {
+        "PLATAFORMA": {
+            "MENU": "Plataforma",
+            "HOME": "Inicio",
+            "DASHBOARD": "Tablero"
+        },
+        "APP1": {
+            "MENU": "Aplicación 1",
+            "DASHBOARD": "Tablero App 1"
+        },
+        "APP2": {
+            "MENU": "Aplicación 2",
+            "DASHBOARD": "Tablero App 2"
+        }
+    },
     "PLATAFORMA": {
         "OPTIONS": "Options",
         "CANCEL": "Cancel",
@@ -56,7 +71,6 @@
             "PLACEHOLDERPUERTO": "Site port",
             "REQUERIDOPUERTO": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Site description",
-
             "REQUERIDODESCRIPCION": "This field is required."
         },
         "ENLACES": {
@@ -112,12 +126,11 @@
                 "PLACEHOLDERCONTENIDO": "Content",
                 "REQUERIDOCONTENIDO": "This field is required.",
                 "PLACEHOLDERDESCRIPCION": "Content Description",
-                "REQUERIDODESCRIPCION": "This field is required."
+                "REQUERIDODESCRIPCION": "This field is required.",
+                "APLICACION": "Application",
+                "PLACEHOLDERAPLICACION": "Please select",
+                "REQUERIDOAPLICACION": "This field is required."
             }
-            "REQUERIDODESCRIPCION": "This field is required.",
-            "APLICACION": "Application",
-            "PLACEHOLDERAPLICACION": "Please select",
-            "REQUERIDOAPLICACION": "This field is required."
         }
     },
     "SUSCRIPTORES": {
