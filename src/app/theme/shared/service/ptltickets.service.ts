@@ -2,15 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PTLTicketAPModel } from '../_helpers/models/PTLTicketAP.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { PTLTicketAPModel } from '../_helpers/models/PTLTicketAP.model';
 
 const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
-export class PtlticketsService {
+export class PTLTicketsService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
@@ -30,9 +30,10 @@ export class PtlticketsService {
 
   getRegistros() {
     const url = `${base_url}/tickets`;
-    return this.http.get(url).pipe(
+    return this.http.get(url)
+    .pipe(
       map((resp: any) => {
-        console.log('servicio de tickets', resp);
+        console.log('servicio de ticket', resp);
         return {
           ok: true,
           tickets: resp.tickets
@@ -45,7 +46,7 @@ export class PtlticketsService {
     const url = `${base_url}/tickets/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('data de tickets', resp);
+        console.log('data de ticket', resp);
         return {
           ok: true,
           ticket: resp.ticket
