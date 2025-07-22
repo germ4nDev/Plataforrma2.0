@@ -81,23 +81,21 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'REQUERIMIENTOS.GESTION.STATUS' | translate }}</label>
-                                <div class="radio-buttons">
-                                    <label class="radio-button">
-                                        <input name="option" type="radio" [value]="true"
-                                            [(ngModel)]="FormRegistro.estadoRequerimiento" />
-                                        <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
-                                    </label><br />
-                                    <label class="radio-button">
-                                        <input name="option" type="radio" [value]="false"
-                                            [(ngModel)]="FormRegistro.estadoRequerimiento" />
-                                        <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
-                                    </label>
-                                </div>
+                                <label class="form-control-label" for="estadoId">
+                                    {{ 'REQUERIMIENTOS.GESTION.STATUS' | translate }}</label>
+                                <select class="form-control input-md" style="cursor: pointer;" name="estadoId" id="estadoId" disabled [ngStyle]="{'cursor': 'not-allowed'}"
+                                    [ngClass]="{ 'is-invalid': !estadoId.valid && (estadoId.dirty || estadoId.touched || isSubmit) }"
+                                    #estadoId="ngModel" required [(ngModel)]="FormRegistro.estadoRequerimiento" (change)="onEstadoChangeClick($event)">
+                                    <option value="" disabled >{{ 'REQUERIMIENTOS.GESTION.PLACEHOLDERTICKET' | translate }}</option>
+                                    <option [value]="estado.siglaEstado" *ngFor="let estado of estadosFiltrados">{{ estado.nombreEstado }}</option>
+                                </select>
+                                <label
+                                    *ngIf="!estadoId.valid && (estadoId.dirty || estadoId.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'REQUERIMIENTOS.GESTION.REQUERIDOTICKET' | translate }}
+                                </label>
                             </div>
                         </div>
                     </div>

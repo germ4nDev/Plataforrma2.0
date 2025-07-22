@@ -2,15 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PTLSeguimientoRQModel } from '../_helpers/models/PTLSeguimientoRQ.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { PTLTiposEstadosModel } from '../_helpers/models/PTLTiposEstados.model';
 
 const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
-export class PTLSeguimientosRqService {
+export class PTLTiposEstadosService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
@@ -29,61 +29,61 @@ export class PTLSeguimientosRqService {
   }
 
   getRegistros() {
-    const url = `${base_url}/seguimientos-tk`;
+    const url = `${base_url}/tipos-estados`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de seguimiento', resp);
+        console.log('servicio de tipoEstado', resp);
         return {
           ok: true,
-          seguimientos: resp.seguimientos
+          tiposEstados: resp.tiposEstados
         };
       })
     );
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/seguimientos-tk/${id}`;
+    const url = `${base_url}/tipos-estados/${id}`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('data de seguimiento', resp);
+        console.log('data de tipoEstado', resp);
         return {
           ok: true,
-          seguimiento: resp.seguimiento
+          tipoEstado: resp.tipoEstado
         };
       })
     );
   }
 
-  postCrearRegistro(seguimiento: PTLSeguimientoRQModel) {
-    const url = `${base_url}/seguimientos-tk`;
-    return this.http.post(url, seguimiento);
+  postCrearRegistro(tipoEstado: PTLTiposEstadosModel) {
+    const url = `${base_url}/tipos-estados`;
+    return this.http.post(url, tipoEstado);
   }
 
-  putModificarRegistro(seguimiento: PTLSeguimientoRQModel) {
-    const url = `${base_url}/seguimientos-tk/${seguimiento.seguimientoId}`;
-    return this.http.put(url, seguimiento)
+  putModificarRegistro(tipoEstado: PTLTiposEstadosModel) {
+    const url = `${base_url}/tipos-estados/${tipoEstado.tipoEstadoId}`;
+    return this.http.put(url, tipoEstado)
     .pipe(
       map((resp: any) => {
-        console.log('data de seguimiento modificacda', resp);
+        console.log('data de tipoEstado modificacda', resp);
         return {
           ok: true,
-          seguimiento: resp.seguimiento
+          tipoEstado: resp.tipoEstado
         };
       })
     );
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/seguimientos-tk/${_id}`;
+    const url = `${base_url}/tipos-estados/${_id}`;
     return this.http.delete(url)
     .pipe(
       map((resp: any) => {
-        console.log('data de seguimiento eliminado', resp);
+        console.log('data de tipoEstado eliminado', resp);
         return {
           ok: true,
-          seguimiento: resp.seguimiento
+          tipoEstado: resp.tipoEstado
         };
       })
     );

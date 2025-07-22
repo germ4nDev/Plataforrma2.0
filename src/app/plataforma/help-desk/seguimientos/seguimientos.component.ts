@@ -7,7 +7,7 @@ import { Subscription, Subject, tap, catchError, of } from 'rxjs';
 import { PTLSeguimientoRQModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoRQ.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LanguageService } from 'src/app/theme/shared/service';
-import { PtlseguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
+import { PTLSeguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
 
@@ -34,7 +34,7 @@ export class SeguimientosComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private seguimientosService: PtlseguimientosRqService,
+    private seguimientosService: PTLSeguimientosRqService,
     private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
   ) {}
@@ -85,7 +85,7 @@ export class SeguimientosComponent implements OnInit, AfterViewInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.seguimientos.forEach((seguimiento: any) => {
-              seguimiento.nomEstado = seguimiento.estadoSeguimiento == true ? 'Activo' : 'Inactivo';
+              seguimiento.nomEstado = seguimiento.estadoSeguimiento;
             });
             this.registros = resp.seguimientos;
             console.log('Todos las seguimientos', this.registros);

@@ -90,7 +90,7 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
 
           if (resp.ok) {
             resp.requerimientos.forEach((Requerimiento: any) => {
-              Requerimiento.nomEstado = Requerimiento.estadoRequerimiento == true ? 'Activo' : 'Inactivo';
+              Requerimiento.nomEstado = Requerimiento.estadoRequerimiento;
             });
             this.registros = resp.requerimientos;
             console.log('Todos las Requerimientos', this.registros);

@@ -7,7 +7,9 @@ import { Subscription, Subject, tap, catchError, of } from 'rxjs';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LanguageService } from 'src/app/theme/shared/service';
+import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
+import { PTLTiposEstadosService } from 'src/app/theme/shared/service/ptltipos-estados.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
 
@@ -29,12 +31,17 @@ export class TicketsComponent implements OnInit, AfterViewInit {
   registros: PTLTicketAPModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
+  tipoEstado: number = 1;
+  estadosFiltrados: any[] = [];
+
   //#endregion VARIABLES
 
   constructor(
     private router: Router,
     private translate: TranslateService,
     private ticketsService: PTLTicketsService,
+    private tiposEstados: PTLTiposEstadosService,
+    private estados: PTLEstadosService,
     private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
   ) {}
@@ -71,6 +78,7 @@ export class TicketsComponent implements OnInit, AfterViewInit {
             ]
           };
           this.consultarRegistros();
+          this.consultarEstado();
         });
     });
   }
@@ -78,6 +86,31 @@ export class TicketsComponent implements OnInit, AfterViewInit {
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }
+
+consultarEstado() {
+  this.estados
+    .getRegistros()
+    .pipe(
+      tap((resp: any) => {
+        if (resp.ok) {
+          // Filtra los estados con tipoEstado igual a 1
+          const estadosFiltrados = resp.estados.filter(
+            (estado: any) => estado.tipoEstado = this.tipoEstado
+          );
+          console.log('Estados con tipoEstado = 1:', estadosFiltrados);
+          this.estadosFiltrados = estadosFiltrados;
+
+          this.dtTrigger.next(null);
+        }
+      }),
+      catchError((err) => {
+        console.error('Error al consultar estados:', err);
+        return of(null);
+      })
+    )
+    .subscribe();
+}
+
   consultarRegistros() {
     this.registrosSub = this.ticketsService
       .getRegistros()

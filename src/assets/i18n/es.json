@@ -6,7 +6,9 @@
         "CHARGING": "Cargando ...",
         "ACTIVE": "Activo",
         "INACTIVE": "Inactivo",
-        "REGRESAR": "Regresar"
+        "REGRESAR": "Regresar",
+        "INSERTAR": "El registro se insertó correctamente",
+        "MODIFICAR": "El registro se modificó correctamente"
     },
     "APLICACIONES": {
         "TITLE": "Administración de Aplicaciones",
@@ -215,7 +217,44 @@
             "STATUS": "Estado Seguimiento",
             "REQUERIMIENTO": "Requerimiento",
             "PLACEHOLDERREQUERIMIENTO": "Seleccione un Requerimiento",
-            "REQUERIDOREQUERIMIENTO": "Por favor, seleccione un Requerimiento. Este campo es obligatorio."
+            "REQUERIDOREQUERIMIENTO": "Por favor, seleccione un Requerimiento. Este campo es obligatorio.",
+            "PLACEHOLDERESTADO": "Seleccione un Estado",
+            "REQUERIDOESTADO": "Por favor, seleccione un Estado. Este campo es obligatorio."
+        }
+    },
+    "SERVIDORES": {
+        "TITLE": "Administración de Servidores",
+        "NEW": "Nuevo Servidor",
+        "UPDATE": "Modificar Servidor",
+        "DELETE": "Eliminar Servidor",
+        "CREATE": "Crear Servidor",
+        "NOMBRESERVIDOR": "Nombre",
+        "DESCRIPCIONSERVIDOR": "Descripción",
+        "RUTASERVIDOR": "Ruta Servidor",
+        "ESTADOSERVIDOR": "Estado",
+        "FILTER_NAMESERVIDOR": "Filtro Nombre",
+        "FILTER_DESCRIPCIONSERVIDOR": "Filtro Descripción",
+        "FILTER_RUTASERVIDOR": "Filtro Ruta Servidor",
+        "FILTRO_STATUSSERVIDOR": "Filtro Estado",
+        "ELIMINARTITULO": "¿Está seguro de eliminar?",
+        "ELIMINARTEXTO": "¡Será Eliminada el Servidor ",
+        "ELIMINAREXITOSA": "¡El Servidor fué eliminado correctamente ",
+        "ELIMINARERROR": "No se pudo eliminar el Servidor.",
+        "GESTION": {
+            "TITLE": "Crear/Actualizar un Servidor",
+            "CREATE": "Crear Servidor",
+            "UPDATE": "Actualizar Servidor",
+            "NEW": "Nuevo Servidor",
+            "NAME": "Nombre Servidor",
+            "NAMEHOLDER": "Ingrese el Nombre del Servidor",
+            "RUTAHOLDER": "Ingrese la Ruta del Servidor",
+            "RUTA": "Ruta Servidor",
+            "DESCRIPTION": "Descripción Servidor",
+            "DESCRIPTIONHOLDER": "Ingrese la Descripción del Servidor",
+            "REQUERIDORUTA": "Por favor, Ingrese la ruta del servidor. Este campo es obligatorio.",
+            "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+            "STATUS": "Estado Servidor"
         }
     },
     "SUSCRIPTORES": {

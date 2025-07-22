@@ -4,7 +4,7 @@ export class PTLRequerimientoTKModel {
         public ticketId? : number,
         public nombreRequerimiento? : string,
         public descripcionRequerimiento? : string,
-        public estadoRequerimiento? : boolean,
-        public codigoError? : string
+        public estadoRequerimiento? : string,
+        // public codigoError? : string
    ) {}
 }
