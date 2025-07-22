@@ -23,13 +23,15 @@ export class NavBarComponent {
   @Output() NavCollapse = new EventEmitter<void>();
   @Output() NavCollapsedMob = new EventEmitter<void>();
 
+  constructor() {
+console.log('abriendo navbar');
+
+  }
+
   toggleMobOption(): void {
     this.menuClass = !this.menuClass;
     this.collapseStyle = this.menuClass ? 'block' : 'none';
   }
-    //  standalone: true,
-    // imports: [CommonModule],
-
 
   navCollapse(): void {
     if (this.windowWidth >= 992) {
