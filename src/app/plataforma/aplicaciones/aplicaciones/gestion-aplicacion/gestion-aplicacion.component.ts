@@ -13,16 +13,15 @@ import { PtlAplicacionesService } from 'src/app/theme/shared/service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { TranslateModule } from '@ngx-translate/core';
-import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
+import { LayoutComponent } from 'src/app/theme/shared/components/layout/layout.component';
 
 @Component({
   selector: 'app-gestion-aplicacion',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule, NavContentComponent, NavBarComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule, LayoutComponent],
   templateUrl: './gestion-aplicacion.component.html',
   styleUrl: './gestion-aplicacion.component.scss'
 })

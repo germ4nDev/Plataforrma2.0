@@ -16,74 +16,6 @@ const routes: Routes = [
                 redirectTo: '/autenticacion/login',
                 pathMatch: 'full'
             },
-            // {
-            //     path: 'dashboard',
-            //     loadChildren: () => import('./demo/dashboard/dashboard.module').then((module) => module.DashboardModule)
-            // },
-            // {
-            //     path: 'widget',
-            //     loadChildren: () => import('./demo/widget/widget.module').then((module) => module.WidgetModule)
-            // },
-            // {
-            //     path: 'users',
-            //     loadChildren: () => import('./demo/users/users.module').then((module) => module.UsersModule)
-            // },
-            // {
-            //     path: 'basic',
-            //     loadChildren: () => import('./demo/ui-elements/ui-basic/ui-basic.module').then((module) => module.UiBasicModule)
-            // },
-            // {
-            //     path: 'advance',
-            //     loadChildren: () => import('./demo/ui-elements/ui-advance/ui-advance.module').then((module) => module.UiAdvanceModule)
-            // },
-            // {
-            //     path: 'forms',
-            //     loadChildren: () => import('./demo/forms/forms.module').then((module) => module.FormsModule)
-            // },
-            // {
-            //     path: 'charts',
-            //     loadChildren: () => import('./demo/chart-maps/core-chart/core-chart.module').then((module) => module.CoreChartModule)
-            // },
-            // {
-            //     path: 'maps',
-            //     loadChildren: () => import('./demo/chart-maps/core-maps/core-maps.module').then((module) => module.CoreMapsModule)
-            // },
-            // {
-            //     path: 'email',
-            //     loadChildren: () => import('./demo/application/email/email.module').then((module) => module.EmailModule)
-            // },
-            // {
-            //     path: 'task',
-            //     loadChildren: () => import('./demo/application/task/task.module').then((module) => module.TaskModule)
-            // },
-            // {
-            //     path: 'todo',
-            //     loadChildren: () => import('./demo/application/todo/todo.module').then((module) => module.TodoModule)
-            // },
-            // {
-            //     path: 'gallery',
-            //     loadChildren: () => import('./demo/application/gallery/gallery.module').then((module) => module.GalleryModule)
-            // },
-            // {
-            //     path: 'helpdesk',
-            //     loadChildren: () => import('./demo/application/helpdesk/helpdesk.module').then((module) => module.HelpdeskModule)
-            // },
-            // {
-            //     path: 'editor',
-            //     loadChildren: () => import('./demo/extension/editor/editor.module').then((module) => module.EditorModule)
-            // },
-            // {
-            //     path: 'invoice',
-            //     loadChildren: () => import('./demo/extension/invoice/invoice.module').then((module) => module.InvoiceModule)
-            // },
-            // {
-            //     path: 'full-calendar',
-            //     loadChildren: () =>
-            //         import('./demo/extension/full-event-calendar/full-event-calendar.module').then((module) => module.FullEventCalendarModule)
-            // },
-
-            //   PLATAFORMA DYM
-
             {
                 path: 'tbl-bootstrap',
                 loadChildren: () => import('./plataforma/table/tbl-bootstrap/tbl-bootstrap.module').then((module) => module.TblBootstrapModule)
@@ -141,18 +73,6 @@ const routes: Routes = [
                 loadChildren: () =>
                     import('./plataforma/home/home.module').then((module) => module.HomeModule)
             },
-
-            // END PLATAFORMA DYM
-
-            // {
-            //     path: 'file-upload',
-            //     loadComponent: () => import('./demo/extension/file-upload/file-upload.component')
-            // },
-            // {
-            //     path: 'sample-page',
-            //     loadComponent: () => import('./demo/other/sample-page/sample-page.component')
-            // }
-
         ]
     },
     {

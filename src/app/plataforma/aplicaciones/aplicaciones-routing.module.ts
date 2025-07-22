@@ -1,10 +1,12 @@
 // Angular Import
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LayoutComponent } from 'src/app/theme/shared/components/layout/layout.component';
 
 const routes: Routes = [
   {
     path: '',
+    // component: LayoutComponent,
     children: [
       {
         path: 'aplicaciones',
@@ -36,7 +38,7 @@ const routes: Routes = [
         loadComponent: () => import('./modulos/modulos.component').then((m) => m.ModulosComponent)
       },
       {
-        path: 'modulos',
+        path: 'gestion-modulo',
         loadComponent: () => import('./modulos/gestion-modulo/gestion-modulo.component').then((m) => m.GestionModuloComponent)
       },
       {
@@ -52,7 +54,7 @@ const routes: Routes = [
         loadComponent: () => import('./paquetes/paquetes.component').then((m) => m.PaquetesComponent)
       },
       {
-        path: 'paquetes',
+        path: 'gestion-paquete',
         loadComponent: () => import('./paquetes/gestion-paquete/gestion-paquete.component').then((m) => m.GestionPaqueteComponent)
       },
       {

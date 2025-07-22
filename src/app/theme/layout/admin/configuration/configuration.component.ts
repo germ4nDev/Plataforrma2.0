@@ -1,11 +1,16 @@
 // Angular Import
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { GradientConfig } from 'src/app/app-config';
+
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { CustomsThemeService } from 'src/app/theme/shared/service/customs-theme.service';
+import { ThemeStorageService } from 'src/app/theme/shared/service/theme-storage.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-configuration',
+standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './configuration.component.html',
   styleUrls: ['./configuration.component.scss'],
   encapsulation: ViewEncapsulation.None
@@ -47,8 +52,10 @@ export class ConfigurationComponent implements OnInit {
   constructor(
     private location: Location,
     private locationStrategy: LocationStrategy,
+    private themeStorage: ThemeStorageService,
     public theme: CustomsThemeService
   ) {
+    // const savedConfig = this.themeStorage.load();
     this.gradientConfig = GradientConfig;
     this.setThemeLayout();
   }
@@ -144,6 +151,7 @@ export class ConfigurationComponent implements OnInit {
   }
 
   setHeaderBackColor(color: string) {
+    this.themeStorage.save(GradientConfig);
     this.headerBackColor = color;
     (document.querySelector('body') as HTMLElement).style.background = color;
   }
@@ -174,6 +182,7 @@ export class ConfigurationComponent implements OnInit {
       this.reset();
     }
     this.theme.customsTheme.next(layout);
+    this.themeStorage.save(GradientConfig);
   }
 
   reset() {
@@ -192,11 +201,14 @@ export class ConfigurationComponent implements OnInit {
     } else {
       document.querySelector('body')?.classList.remove('gradient-rtl');
     }
+    this.themeStorage.save(GradientConfig);
   }
 
   setMenuFixedLayout(e: Event) {
     const flag = (e.target as HTMLInputElement).checked;
     this.changeMenuFixedLayout(flag);
+    this.themeStorage.save(GradientConfig);
+    this.themeStorage.save(GradientConfig);
   }
 
   changeMenuFixedLayout(flag: boolean) {
@@ -219,12 +231,14 @@ export class ConfigurationComponent implements OnInit {
           window.removeEventListener('scroll', this.scroll, true);
         }
       }
+      this.themeStorage.save(GradientConfig);
     }, 100);
   }
 
   setHeaderFixedLayout(e: Event) {
     const flag = (e.target as HTMLInputElement).checked;
     this.changeHeaderFixedLayout(flag);
+    this.themeStorage.save(GradientConfig);
   }
 
   changeHeaderFixedLayout(flag: boolean) {
@@ -240,11 +254,13 @@ export class ConfigurationComponent implements OnInit {
         window.removeEventListener('scroll', this.scroll, true);
       }
     }
+    this.themeStorage.save(GradientConfig);
   }
 
   setBoxLayout(e: Event) {
     const flag = (e.target as HTMLInputElement).checked;
     this.changeBoxLayout(flag);
+    this.themeStorage.save(GradientConfig);
   }
 
   changeBoxLayout(flag: boolean) {
@@ -255,6 +271,7 @@ export class ConfigurationComponent implements OnInit {
       document.querySelector('body')?.classList.remove('box-layout');
       document.querySelector('body')?.classList.remove('container');
     }
+    this.themeStorage.save(GradientConfig);
   }
 
   setHeaderBackground(background: string) {
@@ -276,5 +293,11 @@ export class ConfigurationComponent implements OnInit {
     if (background !== 'header-default') {
       document.querySelector('.pcoded-header')?.classList.add(background);
     }
+    this.themeStorage.save(GradientConfig);
+  }
+
+  resetAll() {
+    this.themeStorage.clear();
+    window.location.reload();
   }
 }

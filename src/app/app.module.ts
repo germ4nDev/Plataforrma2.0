@@ -19,10 +19,6 @@ import { NavSearchComponent } from './theme/layout/admin/nav-bar/nav-left/nav-se
 import { ChatMsgComponent } from './theme/layout/admin/nav-bar/nav-right/chat-msg/chat-msg.component';
 import { ChatUserListComponent } from './theme/layout/admin/nav-bar/nav-right/chat-user-list/chat-user-list.component';
 import { FriendComponent } from './theme/layout/admin/nav-bar/nav-right/chat-user-list/friend/friend.component';
-// import { NavContentComponent } from './theme/layout/admin/navigation/nav-content/nav-content.component';
-// import { NavCollapseComponent } from './theme/layout/admin/navigation/nav-content/nav-collapse/nav-collapse.component';
-// import { NavGroupComponent } from './theme/layout/admin/navigation/nav-content/nav-group/nav-group.component';
-// import { NavItemComponent } from './theme/layout/admin/navigation/nav-content/nav-item/nav-item.component';
 import { SharedModule } from './theme/shared/shared.module';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { ErrorInterceptor } from 'src/app/theme/shared/_helpers/error.interceptor';
@@ -42,19 +38,16 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    AdminComponent,
     GuestComponent,
-    NavigationComponent,
-    ConfigurationComponent,
-    // NavItemComponent,
-    // NavCollapseComponent,
-    // NavGroupComponent
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SharedModule,
     FormsModule,
+    AdminComponent,
+    ConfigurationComponent,
     NavBarComponent,
     NavLeftComponent,
     NavRightComponent,
@@ -78,11 +71,12 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   exports: [
     NavContentComponent,
+    AdminComponent,
     NavBarComponent,
     NavLeftComponent,
     ChatMsgComponent,
     ChatUserListComponent,
-    // ConfigurationComponent,
+    ConfigurationComponent,
     FriendComponent
 ],
   providers: [

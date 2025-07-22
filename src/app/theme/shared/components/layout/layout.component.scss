@@ -1,163 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
-
-/**======================================================================
-=========================================================================
-Template Name: Gradient Able Admin Template
-Author: Codedscss/themes
-supports: https://codedscss/themes.com/submit-ticket/
-File: style.css
-=========================================================================
-=========================================================================
-  == Table of Contents==
-	- Generic classes
-		-	Margin, Padding, Font class, text align, position, floating, overflow, background class, text color, display class, boarder class
-	- Theme Elements
-		-	Accordion, Button, tabs, typography, buttons, box shadow, Lable & Badges, Alert, Pagination, Breadcumb, Cards, Collapse,
-        -   Carousel, Grid, Progress, Model, tooltip, popover, Datepicker, Gridstack, lightbox, notification, Nestable, pnotify, rating,
-        -   Rangeslider, Slider, Syntax Highlighter, Tour, Treeview, Toolbar, Session Timeout, Session idle Timeout, offline, Animation
-    - Forms
-        -   Forms Elements, Advance Form Control, Validation, Masking, Wizard, Picker, Select
-	- Pages
-		-   authentication, Maintenance, Maps, Landing page messages, task, Todo, Notes, Charts, Icons, Gallery, Editors,
-        -   Invoice, Full Calender, File Upload,
-=================================================================================
-=================================================================================== */
-
-// Theme Font
-@import 'scss/themes/font/theme-font';
-
-// main framework
-@import 'node_modules/bootstrap/scss/functions';
-@import 'node_modules/bootstrap/scss/variables';
-@import 'scss/settings/custom-variables';
-@import 'scss/settings/theme-variables';
-
-// bootstrap
-@import 'node_modules/bootstrap/scss/mixins';
-@import 'node_modules/bootstrap/scss/utilities';
-@import 'node_modules/bootstrap/scss/utilities/api';
-@import '../node_modules/bootstrap/dist/css/bootstrap.css';
-@import 'scss/themes/general';
-@import 'scss/themes/generic';
-@import 'scss/themes/minixs/function';
-
-// ng module
-@import 'scss/ng-module/ng-module';
-
-// icon
-@import 'scss/themes/font/datta-icon';
-@import 'scss/themes/font/feather';
-@import 'scss/themes/font/fontawesome';
-@import 'scss/themes/font/flaticon';
-
-// component
-
-@import 'scss/themes/component/component';
-
-@import 'scss/themes/plugin/animate';
-
-// theme layouts
-@import 'scss/themes/layouts/menu-lite';
-@import 'scss/themes/layouts/menu-ng';
-@import 'scss/layout-dark';
-
-// Dashboard Widgets
-@import 'scss/themes/dashboard/widget';
-
-// custom plugin
-@import 'scss/themes/plugin/plugin';
-
-// pages
-
-@import 'scss/themes/pages/page';
-
-@import 'scss/themes/chat/chat';
-
-// custom
-@import 'scss/themes/custom';
-@import 'scss/layout-rtl';
-@import 'scss/layout';
-@import 'scss/navbar';
-@import 'scss/tabs-aside';
-
-// third party Module
-
-@import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
-
-// // calender css
-@import '../node_modules/angular-calendar/css/angular-calendar.css';
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* Previene scroll general si no lo necesitas */
-}
-
-app-root {
-  display: block;
-  height: 100%;
-}
-
-.gradient-rtl {
-    @import 'scss/layout-rtl-utility.scss';
-    @import 'node_modules/bootstrap/scss/utilities/api';
-}
-
-.pcoded-header {
-  background-color: #1f1f2e !important;
-}
-
-body.gradient-dark {
-  background-color: #121212 !important;
-}
-
-.tab-pane {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.tab-pane[hidden] {
-  display: none !important;
-}
-
-// .app-wrapper {
-//     display: flex;
-//     margin-top: 18px !important;
-//     height: 90vh !important;
-//     width: 100%;
-//     overflow: hidden !important;
-// }
-
-// .scrollbar-wrapper {
-//     overflow-y: auto !important;
-//     height: 84vh !important;
-//     width: 250px;
-// }
-
-// .scrollbar-form-wrapper {
-//     overflow: auto !important;
-//     height: 88vh !important;
-//     width: 250px;
-// }
-
-// .sidebar-wrapper {
-//     width: 250px;
-//     padding-top: 0px !important;
-//     overflow: hidden !important;
-//     // padding-left: 1rem;
-//     // padding-right: 1rem;
-//     // height: 85vh !important;
-// }
-
-// .content-wrapper {
-//     flex-grow: 1;
-//     padding-top: 0px !important;
-//     padding-left: 1rem;
-//     padding-right: 1rem;
-// }
-
 // /* Layout general */
 // .layout-wrapper {
 //   display: flex;
@@ -504,138 +344,11 @@ body.dark-theme {
   --text-color: #f8f9fa;
 }
 
-// .layout-wrapper {
-//   display: flex;
-//   flex-direction: column;
-//   min-height: 100vh;
-//   color: var(--text-color);
-// }
-
-// .navbar-container {
-//   position: sticky;
-//   top: 0;
-//   z-index: 1030;
-//   width: 100%;
-//   background-color: var(--header-bg);
-//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-// }
-
-// .main-content-wrapper {
-//   display: flex;
-//   flex: 1;
-//   overflow: hidden;
-//   height: calc(100vh - 56px);
-// }
-
-// .aside-left {
-//   width: 260px;
-//   background-color: var(--aside-bg);
-//   border-right: 1px solid var(--aside-border);
-//   display: flex;
-//   flex-direction: column;
-// }
-
-// .nav-tabs-custom {
-//   display: flex;
-//   border-bottom: 1px solid var(--aside-border);
-// }
-
-// .nav-tabs-custom button {
-//   flex: 1;
-//   padding: 10px;
-//   border: none;
-//   background: transparent;
-//   cursor: pointer;
-//   font-weight: 600;
-//   color: var(--text-color);
-// }
-
-// .nav-tabs-custom button.active {
-//   background-color: var(--aside-tab-bg);
-//   border-bottom: 2px solid var(--aside-tab-active);
-//   color: var(--aside-tab-active);
-// }
-
-// .tab-pane {
-//   flex: 1;
-//   overflow-y: auto;
-//   padding: 10px;
-//   display: none;
-// }
-
-// .tab-pane.ng-star-inserted {
-//   display: block;
-// }
-
-// .content-area {
-//   flex: 1;
-//   overflow-y: auto;
-//   padding: 20px;
-//   background-color: var(--content-bg);
-// }
-
-// .content-area > * {
-//   display: block;
-//   min-height: 100%;
-// }
-
-// .config-toggle-btn {
-//   position: fixed;
-//   bottom: 20px;
-//   right: 20px;
-//   z-index: 1050;
-//   background-color: #007bff;
-//   color: white;
-//   border: none;
-//   padding: 10px 15px;
-//   border-radius: 50%;
-//   font-size: 18px;
-//   cursor: pointer;
-//   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-// }
-
-// .configuration-panel {
-//   position: fixed;
-//   top: 0;
-//   right: 0;
-//   z-index: 1040;
-//   width: 300px;
-//   height: 100vh;
-//   background: white;
-//   border-left: 1px solid #ddd;
-//   box-shadow: -2px 0 6px rgba(0, 0, 0, 0.1);
-//   overflow-y: auto;
-// }
-
-/// /* Tema claro por defecto */
-:root {
-  --header-bg: #004085;
-  --aside-bg: #ffffff;
-  --aside-border: #ddd;
-  --aside-tab-bg: #f1f1f1;
-  --aside-tab-active: #007bff;
-  --content-bg: #f9f9f9;
-  --text-color: #212529;
-}
-
-/* Tema oscuro */
-body.dark-theme {
-  --header-bg: #1f2d3d;
-  --aside-bg: #2c3e50;
-  --aside-border: #3e4e5e;
-  --aside-tab-bg: #34495e;
-  --aside-tab-active: #1abc9c;
-  --content-bg: #1c1c1c;
-  --text-color: #f8f9fa;
-}
-
 .layout-wrapper {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  //   display: flex;
-  //   flex-direction: column;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  //   color: var(--text-color);
+  color: var(--text-color);
 }
 
 .navbar-container {
@@ -643,16 +356,23 @@ body.dark-theme {
   top: 0;
   z-index: 1030;
   width: 100%;
-  //   background-color: var(--header-bg);
+  background-color: var(--header-bg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.main-content-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: calc(100vh - 56px);
+}
+
 .aside-left {
-  width: 250px;
-  //   background-color: var(--aside-bg);
-//   border-right: 1px solid var(--aside-border);
-  //   display: flex;
-  //   flex-direction: column;
+  width: 260px;
+  background-color: var(--aside-bg);
+  border-right: 1px solid var(--aside-border);
+  display: flex;
+  flex-direction: column;
 }
 
 .nav-tabs-custom {
@@ -687,19 +407,16 @@ body.dark-theme {
   display: block;
 }
 
-// .card {
-//   margin-left: 1rem;
-//   margin-right: 1rem;
-// }
-
 .content-area {
-  top: 0;
-  min-height: 0;
+  flex: 1;
   overflow-y: auto;
-  background-color: #f9f9f9;
-  height: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 20px;
+  background-color: var(--content-bg);
+}
+
+.content-area > * {
+  display: block;
+  min-height: 100%;
 }
 
 .config-toggle-btn {
@@ -730,43 +447,3 @@ body.dark-theme {
   overflow-y: auto;
 }
 
-.table {
-    border-collapse: collapse;
-
-    thead tr th {
-        border-bottom: 1px solid #333;
-        border-top: none;
-    }
-
-    tbody td {
-        border-bottom: none !important;
-    }
-
-    tbody tr td {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-    }
-}
-
-table,
-table td,
-table tr {
-    border: none !important;
-    border-collapse: collapse;
-}
-
-@media screen and (max-width: 991px) {
-  .app-wrapper {
-    flex-direction: column;
-  }
-
-  .sidebar-wrapper {
-    width: 100%;
-    height: auto;
-    order: 1;
-  }
-
-  .content-wrapper {
-    order: 2;
-  }
-}

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { ThemeStorageService } from './theme/shared/service/theme-storage.service';
+import { GradientConfig } from 'src/app/app-config';
 
 @Component({
   selector: 'app-root',
@@ -7,10 +9,14 @@ import { NavigationEnd, Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-
   constructor(
-    private router: Router
+    private router: Router,
+    private themeStorage: ThemeStorageService
   ) {
+    // const saved = this.themeStorage.load();
+    // if (saved) {
+    //   Object.assign(GradientConfig, saved);
+    // }
     // this.translate.setDefaultLang('es');
     // const localLang = localStorage.getItem('lang') || 'es';
     // this.translate.use(localLang);

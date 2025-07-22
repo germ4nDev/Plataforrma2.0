@@ -1,57 +1,367 @@
-
 .btn-NuevoRegistro {
-    background-color: #c9d0d5;
-    color: #3b4650;
-    // width: 8.5em;
-    height: 2.9em;
-    border: #034ba6 0.2em solid;
-    border-radius: 11px;
-    transition: all 0.6s ease;
-    padding-left: 20px;
-    padding-right: 20px;
-    white-space: nowrap;
+  background-color: #c9d0d5;
+  color: #3b4650;
+  // width: 8.5em;
+  height: 2.9em;
+  border: #034ba6 0.2em solid;
+  border-radius: 11px;
+  transition: all 0.6s ease;
+  padding-left: 20px;
+  padding-right: 20px;
+  white-space: nowrap;
 }
 
 .btn-NuevoRegistro:hover {
-    background-color: #034ba6;
-    color: #c9d0d5;
-    cursor: pointer;
+  background-color: #034ba6;
+  color: #c9d0d5;
+  cursor: pointer;
 }
 
 .btn-NuevoRegistro:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }
 
 .btnEdit {
-    color: #c9d0d5;
+  color: #c9d0d5;
 }
 
 .btnDelet {
-    color: #c9d0d5;
+  color: #c9d0d5;
 }
 
 .card-header-sticky {
-    position: sticky;
-    top: 57px;
-    z-index: 100;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 57px;
+  z-index: 100;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .card-titulo {
-
+  font-size: medium;
 }
 
-.layout-container {
-  height: 100vh;
-}
+// /* Layout general */
+// .layout-wrapper {
+//   display: flex;
+//   flex-direction: column;
+//   min-height: 100vh;
+// }
 
-.navbar-wrapper {
-  z-index: 1000;
-}
+// /* Estilo del navbar */
+// .navbar-container {
+//   position: sticky;
+//   top: 0;
+//   z-index: 1030;
+//   width: 100%;
+//   background-color: var(--header-bg, #004085);
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+// }
 
-.sidebar-wrapper {
-  width: 250px;
-}
+// /* Contenedor principal */
+// .main-content-wrapper {
+//   display: flex;
+//   flex: 1;
+//   overflow: hidden;
+//   height: calc(100vh - 56px);
+// }
 
+// /* Tabs laterales */
+// .aside-left {
+//   width: 260px;
+//   background-color: #fff;
+//   border-right: 1px solid #ddd;
+//   display: flex;
+//   flex-direction: column;
+// }
+
+// .nav-tabs-custom {
+//   display: flex;
+//   border-bottom: 1px solid #ddd;
+// }
+
+// .nav-tabs-custom button {
+//   flex: 1;
+//   padding: 10px;
+//   border: none;
+//   background: transparent;
+//   cursor: pointer;
+//   font-weight: 600;
+// }
+
+// .nav-tabs-custom button.active {
+//   background-color: #f1f1f1;
+//   border-bottom: 2px solid #007bff;
+//   color: #007bff;
+// }
+
+// /* Ocultar los tabs si no están activos */
+// .tab-pane {
+//   flex: 1;
+//   overflow-y: auto;
+//   padding: 10px;
+//   display: none;
+// }
+
+// .tab-pane.ng-star-inserted {
+//   display: block;
+// }
+
+// /* Área principal */
+// .content-area {
+//   flex: 1;
+//   overflow-y: auto;
+//   padding: 20px;
+//   background-color: #f9f9f9;
+// }
+
+// /* Ajustes para router outlet dentro del área principal */
+// .content-area > * {
+//   display: block;
+//   min-height: 100%;
+// }
+
+// /* Botón de configuración flotante */
+// .config-toggle-btn {
+//   position: fixed;
+//   bottom: 20px;
+//   right: 20px;
+//   z-index: 1050;
+//   background-color: #007bff;
+//   color: white;
+//   border: none;
+//   padding: 10px 15px;
+//   border-radius: 50%;
+//   font-size: 18px;
+//   cursor: pointer;
+//   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+// }
+
+// .configuration-panel {
+//   position: fixed;
+//   top: 0;
+//   right: 0;
+//   z-index: 1040;
+//   width: 300px;
+//   height: 100vh;
+//   background: white;
+//   border-left: 1px solid #ddd;
+//   box-shadow: -2px 0 6px rgba(0, 0, 0, 0.1);
+//   overflow-y: auto;
+// }
+
+// .content-area {
+//   flex: 1;
+//   min-height: 0;
+//   overflow-y: auto;
+//   padding: 20px;
+//   background-color: #f9f9f9;
+//   height: 100%;
+// }
+
+// table.dataTable {
+//   width: 100% !important;
+// }
+
+/* Layout general */
+// .layout-wrapper {
+//   display: flex;
+//   flex-direction: column;
+//   min-height: 100vh;
+// }
+
+// /* Estilo del navbar */
+// .navbar-container {
+//   position: sticky;
+//   top: 0;
+//   z-index: 1030;
+//   width: 100%;
+//   background-color: var(--header-bg, #004085);
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+// }
+
+// /* Contenedor principal */
+// .main-content-wrapper {
+//   display: flex;
+//   flex: 1;
+//   overflow: hidden;
+//   height: calc(100vh - 56px);
+// }
+
+// /* Tabs laterales */
+// .aside-left {
+//   width: 260px;
+//   background-color: #fff;
+//   border-right: 1px solid #ddd;
+//   display: flex;
+//   flex-direction: column;
+// }
+
+// .nav-tabs-custom {
+//   display: flex;
+//   border-bottom: 1px solid #ddd;
+// }
+
+// .nav-tabs-custom button {
+//   flex: 1;
+//   padding: 10px;
+//   border: none;
+//   background: transparent;
+//   cursor: pointer;
+//   font-weight: 600;
+// }
+
+// .nav-tabs-custom button.active {
+//   background-color: #f1f1f1;
+//   border-bottom: 2px solid #007bff;
+//   color: #007bff;
+// }
+
+// /* Ocultar los tabs si no están activos */
+// .tab-pane {
+//   flex: 1;
+//   overflow-y: auto;
+//   padding: 10px;
+//   display: none;
+// }
+
+// .tab-pane.ng-star-inserted {
+//   display: block;
+// }
+
+// /* Área principal */
+// .content-area {
+//   flex: 1;
+//   overflow-y: auto;
+//   padding: 20px;
+//   background-color: #f9f9f9;
+// }
+
+// /* Ajustes para router outlet dentro del área principal */
+// .content-area > * {
+//   flex: 1;
+//   min-height: 0;
+//   overflow-y: auto;
+//   padding: 20px;
+//   background-color: #f9f9f9;
+//   height: 100%;
+
+////////////////////////////////////////////////////
+
+// /* Layout general */
+// .layout-wrapper {
+//   display: flex;
+//   flex-direction: column;
+//   min-height: 100vh;
+// }
+
+// /* Estilo del navbar */
+// .navbar-container {
+//   position: sticky;
+//   top: 0;
+//   z-index: 1030;
+//   width: 100%;
+//   background-color: var(--header-bg, #004085);
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+// }
+
+// /* Contenedor principal */
+// .main-content-wrapper {
+//   display: flex;
+//   flex: 1;
+//   overflow: hidden;
+//   height: calc(100vh - 56px);
+// }
+
+// /* Tabs laterales */
+// .aside-left {
+//   width: 260px;
+//   background-color: #fff;
+//   border-right: 1px solid #ddd;
+//   display: flex;
+//   flex-direction: column;
+// }
+
+// .nav-tabs-custom {
+//   display: flex;
+//   border-bottom: 1px solid #ddd;
+// }
+
+// .nav-tabs-custom button {
+//   flex: 1;
+//   padding: 10px;
+//   border: none;
+//   background: transparent;
+//   cursor: pointer;
+//   font-weight: 600;
+// }
+
+// .nav-tabs-custom button.active {
+//   background-color: #f1f1f1;
+//   border-bottom: 2px solid #007bff;
+//   color: #007bff;
+// }
+
+// /* Ocultar los tabs si no están activos */
+// .tab-pane {
+//   flex: 1;
+//   overflow-y: auto;
+//   padding: 10px;
+//   display: none;
+// }
+
+// .tab-pane.ng-star-inserted {
+//   display: block;
+// }
+
+// /* Área principal */
+// .content-area {
+//   flex: 1;
+//   overflow-y: auto;
+//   padding: 20px;
+//   background-color: #f9f9f9;
+// }
+
+// /* Ajustes para router outlet dentro del área principal */
+// .content-area > * {
+//   flex: 1;
+//   min-height: 0;
+//   overflow-y: auto;
+//   padding: 18px;
+//   background-color: #f9f9f9;
+//   height: 100%;
+// }
+
+// /* Botón de configuración flotante */
+// .config-toggle-btn {
+//   position: fixed;
+//   bottom: 20px;
+//   right: 20px;
+//   z-index: 1050;
+//   background-color: #007bff;
+//   color: white;
+//   border: none;
+//   padding: 10px 15px;
+//   border-radius: 50%;
+//   font-size: 18px;
+//   cursor: pointer;
+//   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+// }
+
+// .configuration-panel {
+//   position: fixed;
+//   top: 0;
+//   right: 0;
+//   z-index: 1040;
+//   width: 300px;
+//   height: 100vh;
+//   background: white;
+//   border-left: 1px solid #ddd;
+//   box-shadow: -2px 0 6px rgba(0, 0, 0, 0.1);
+//   overflow-y: auto;
+// }
+
+///////////////////////////////////////
+///
+///
 
