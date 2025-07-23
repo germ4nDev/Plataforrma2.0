@@ -24,7 +24,6 @@ export class ConfigurationComponent implements OnInit {
   headerFixedLayout!: boolean; // header fixed flag
   boxLayout!: boolean; // box layout flag
   headerBackgroundColor!: string; // header background color
-
   headerBackColor!: string;
 
   gradientConfig;

@@ -1,19 +1,4 @@
 {
-    "MANUAPPS": {
-        "PLATAFORMA": {
-            "MENU": "Plataforma",
-            "HOME": "Inicio",
-            "DASHBOARD": "Tablero"
-        },
-        "APP1": {
-            "MENU": "Aplicación 1",
-            "DASHBOARD": "Tablero App 1"
-        },
-        "APP2": {
-            "MENU": "Aplicación 2",
-            "DASHBOARD": "Tablero App 2"
-        }
-    },
     "PLATAFORMA": {
         "OPTIONS": "Opciones",
         "CANCEL": "Cancelar",

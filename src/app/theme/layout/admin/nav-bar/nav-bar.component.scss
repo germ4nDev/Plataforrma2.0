@@ -3,6 +3,9 @@
   height: 60px;
   padding: 0 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   .logo {
     height: 40px;
@@ -12,6 +15,9 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
 
     li {
       display: flex;
@@ -38,12 +44,27 @@
     }
   }
 
+  .navbar-toggler {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    padding: 0;
+    margin-right: 10px;
+
+    &:hover {
+      color: #ddd;
+    }
+  }
+
   .dropdown-menu {
     background-color: #1e1e2d;
     color: #fff;
     border: none;
     border-radius: 0.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1050;
+    position: absolute;
 
     .dropdown-item {
       color: #fff;

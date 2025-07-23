@@ -1,5 +1,4 @@
-@if (this.gradientConfig['layout'] === 'vertical') {
-<ng-scrollbar id="nav-ps-gradient-able" style="height: calc(100vh - 56px)">
+<!-- <ng-scrollbar id="nav-ps-gradient-able" style="height: calc(100vh - 56px)">
     <div class="navbar-content">
         <ul class="nav pcoded-inner-navbar" (clickOutside)="fireOutClick()">
             <ng-container *ngFor="let item of navigationItems">
@@ -12,24 +11,20 @@
                 }
             </ng-container>
         </ul>
-    </div>
-</ng-scrollbar>
-}
-<!-- @if (this.gradientConfig['layout'] === 'horizontal') {(clickOutside)="navMob()"
-<div #navbarWrapper class="navbar-content sidenav-horizontal" id="layout-sidenav">
-    <a href="javascript:" class="sidenav-horizontal-prev" [ngClass]="prevDisabled" (click)="scrollMinus()"></a>
-    <div class="sidenav-horizontal-wrapper">
-        <ul #navbarContent id="side-nav-horizontal" class="nav pcoded-inner-navbar sidenav-inner"
-            (clickOutside)="fireLeave()" (mouseleave)="fireLeave()">
-            <ng-container *ngFor="let item of navigationItems; track item">
-                <app-nav-group *ngIf="item.type === 'group'" [item]="item"></app-nav-group>
-                <ng-container *ngFor="let child of item.children">
-                    <app-nav-collapse *ngIf="child.type === 'collapse'" [item]="child"></app-nav-collapse>
-                    <app-nav-item *ngIf="child.type === 'item'" [item]="child"></app-nav-item>
+    </div> -->
+
+    <div class="nav-scroll-wrapper">
+        <div class="navbar-content">
+            <ul class="nav pcoded-inner-navbar" (clickOutside)="fireOutClick()">
+                <ng-container *ngFor="let item of navigationItems">
+                    @if (item.type === 'group') {
+                    <app-nav-group [item]="item"></app-nav-group>
+                    <ng-container *ngFor="let child of item.children">
+                        <app-nav-collapse *ngIf="child.type === 'collapse'" [item]="child"></app-nav-collapse>
+                        <app-nav-item *ngIf="child.type === 'item'" [item]="child"></app-nav-item>
+                    </ng-container>
+                    }
                 </ng-container>
-            </ng-container>
-        </ul>
+            </ul>
+        </div>
     </div>
-    <a href="javascript:" class="sidenav-horizontal-next" [ngClass]="nextDisabled" (click)="scrollPlus()"></a>
-</div>
-} -->

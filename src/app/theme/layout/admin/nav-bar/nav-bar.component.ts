@@ -2,15 +2,13 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
-import { NavLeftComponent } from './nav-left/nav-left.component';
 import { NavRightComponent } from './nav-right/nav-right.component';
-import { ConfigurationComponent } from '../configuration/configuration.component';
 import { NavSearchComponent } from './nav-left/nav-search/nav-search.component';
 
 @Component({
   selector: 'app-nav-bar',
   standalone: true,
-  imports: [CommonModule, RouterModule, NavLeftComponent, NavRightComponent, NavSearchComponent],
+  imports: [CommonModule, RouterModule, NavRightComponent, NavSearchComponent],
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss']
 })
@@ -36,5 +34,9 @@ export class NavBarComponent {
     if (this.windowWidth >= 992) {
       this.NavCollapse.emit();
     }
+  }
+
+  toggleSidebar() {
+    this.gradientConfig.collapseMenu = !this.gradientConfig.collapseMenu;
   }
 }

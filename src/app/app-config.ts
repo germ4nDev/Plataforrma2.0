@@ -8,14 +8,7 @@ export class GradientConfig {
   static nav_fixed_layout = true; // false
   static header_fixed_layout = true; // false
   static isBoxLayout = false; // true
-//   static layout: 'vertical',
-//   static layoutType: 'menu-light', // o 'menu-light'
-//   static header_back_color: 'header-red',
-//   static nav_fixed_layout: true,
-//   static header_fixed_layout: true,
-//   static isBoxLayout: false,
-//   static isCollapse_menu: false,
-//   static isRtlLayout: false
+  static collapseMenu:boolean = false;
 }
 
 

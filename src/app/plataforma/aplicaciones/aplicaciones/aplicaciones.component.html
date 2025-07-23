@@ -1,41 +1,38 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
-<br><br>
+<!-- <br><br> -->
 <div class="layout-wrapper">
     <aside class="aside-left">
         <!-- Tabs -->
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'LAYOUT.MENU' | translate }}
+                    {{ 'PLATAFORMA.MENU' | translate }}
                 </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'LAYOUT.FILTERS' | translate }}
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
                 </button>
             </div>
 
-            <!-- Contenido de los tabs -->
             <ng-container *ngIf="activeTab === 'menu'">
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3">
+                <div class="p-3"style="height: calc(100vh - 56px)">
                     <h3>{{ 'APLICACIONES.FILTROS_TITULO' | translate }}</h3>
                     <input type="text" [(ngModel)]="filtroPersonalizado"
                         placeholder="{{ 'APLICACIONES.BUSCAR_NOMBRE' | translate }}" class="form-control mb-3" />
                 </div>
             </ng-container>
         </div>
-
     </aside>
 
     <div class="content-area">
         <div class="card">
             <div class="card-header card-header-sticky">
-                <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
-                <hr />
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
+                        <!-- <app-breadcrumb></app-breadcrumb> -->
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
                         <button type="button" (click)="OnNuevaAplicaicionClick()" class="btn-NuevoRegistro">
