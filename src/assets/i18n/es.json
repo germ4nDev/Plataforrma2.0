@@ -6,7 +6,9 @@
         "CHARGING": "Cargando ...",
         "ACTIVE": "Activo",
         "INACTIVE": "Inactivo",
-        "REGRESAR": "Regresar"
+        "REGRESAR": "Regresar",
+        "MENU": "Menu",
+        "FILTERS": "Filtros"
     },
     "APLICACIONES": {
         "TITLE": "Administración de Aplicaciones",

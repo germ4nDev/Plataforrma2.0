@@ -25,12 +25,6 @@
 //   }
 // }
 
-:host {
-  display: flex;
-  flex-direction: row !important; /* fuerza horizontal */
-  align-items: center;
-  gap: 1rem;
-}
 
 .nav-right {
   display: flex;

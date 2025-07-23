@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ThemeStorageService } from './theme/shared/service/theme-storage.service';
-import { GradientConfig } from 'src/app/app-config';
+
+    declare var feather: any;
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,8 @@ import { GradientConfig } from 'src/app/app-config';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+
+
   constructor(
     private router: Router,
     private themeStorage: ThemeStorageService
@@ -23,6 +26,10 @@ export class AppComponent implements OnInit {
     // this.languageService.setLanguage(localLang);
   }
 
+  ngAfterViewInit(): void {
+    feather.replace();
+  }
+
   ngOnInit() {
     this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
@@ -34,5 +41,5 @@ export class AppComponent implements OnInit {
     });
   }
 
-  
+
 }

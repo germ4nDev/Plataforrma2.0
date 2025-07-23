@@ -17,7 +17,7 @@
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3"style="height: calc(100vh - 56px)">
+                <div class="p-3" style="height: calc(100vh - 56px)">
                     <h3>{{ 'APLICACIONES.FILTROS_TITULO' | translate }}</h3>
                     <input type="text" [(ngModel)]="filtroPersonalizado"
                         placeholder="{{ 'APLICACIONES.BUSCAR_NOMBRE' | translate }}" class="form-control mb-3" />
@@ -31,8 +31,7 @@
             <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
-                        <!-- <app-breadcrumb></app-breadcrumb> -->
+                        <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
                         <button type="button" (click)="OnNuevaAplicaicionClick()" class="btn-NuevoRegistro">
