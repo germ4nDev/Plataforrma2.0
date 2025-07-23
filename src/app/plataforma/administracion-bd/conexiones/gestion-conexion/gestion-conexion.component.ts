@@ -1,12 +1,213 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription, tap, catchError, of } from 'rxjs';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
+import { PTLPaquetesSCModel } from 'src/app/theme/shared/_helpers/models/PTLPaquetesSC.model';
+import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
+import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
+import { PtlAplicacionesService, LanguageService } from 'src/app/theme/shared/service';
+import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service';
+import { PTLPaquetesSCService } from 'src/app/theme/shared/service/ptlpaquetes-sc.service';
+import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import Swal from 'sweetalert2';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-gestion-conexion',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, SharedModule],
   templateUrl: './gestion-conexion.component.html',
   styleUrl: './gestion-conexion.component.scss'
 })
 export class GestionConexionComponent {
+  FormRegistro: PTLConexionBDModel = new PTLConexionBDModel();
+  aplicaciones: PTLAplicacionModel[] = [];
+  suscriptores: PTLSuscriptorModel[] = [];
+  paquetes: PTLPaquetesSCModel[] = [];
+  registrosSub?: Subscription;
+  form: undefined;
+  isSubmit: boolean = false;
+  modoEdicion: boolean = false;
+  codeRegistro = uuidv4();
 
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private registrosService: PTLConexionesBDSTService,
+    private aplicacionesService: PtlAplicacionesService,
+    private suscriptoresService: PTLSuscriptoresService,
+    private paquetesService: PTLPaquetesSCService,
+    private translate: TranslateService,
+    private languageService: LanguageService,
+    private BreadCrumb: BreadcrumbComponent
+  ) {
+    this.isSubmit = false;
+  }
+
+  ngOnInit() {
+    this.BreadCrumb.setBreadcrumb();
+    this.consultarAplicaciones();
+    this.consultarSuscriptores();
+    this.consultarPaquetes();
+    this.route.queryParams.subscribe((params) => {
+      const registroId = params['regId'];
+      if (registroId) {
+        // console.log('me llena el Id', registroId);
+        this.modoEdicion = true;
+        this.registrosService.getRegistroById(registroId).subscribe({
+          next: (resp: any) => {
+            console.log('resp', resp);
+            const app = this.aplicaciones.filter(x => x.aplicacionId == resp.aplicacionId)[0];
+            const susc = this.suscriptores.filter(x => x.suscriptorId == resp.suscriptorId)[0];
+            const paque = this.paquetes.filter(x => x.suscriptorPaqueteId == resp.suscriptorPaqueteId)[0];
+            resp.nombreAplicacion = app.nombreAplicacion;
+            resp.nombreSuscriptor = susc.nombreSuscriptor;
+            // resp.nombrePaquete = paque.nombrePaquetes;
+            this.FormRegistro = resp.paquetes;
+            console.log('datos del FormRegistro', this.FormRegistro);
+          },
+          error: () => {
+            Swal.fire('Error', 'No se pudo obtener el rol', 'error');
+          }
+        });
+      } else {
+        // console.log('no llena el Id', registroId);
+        this.modoEdicion = false;
+        // this.FormRegistro.aplicacionId = uuidv4();
+      }
+    });
+  }
+
+  consultarAplicaciones() {
+    this.registrosSub = this.aplicacionesService
+      .getAplicaciones()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.aplicaciones = resp.aplicaciones;
+            console.log('Todos las aplicaciones', this.aplicaciones);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarSuscriptores() {
+    this.registrosSub = this.suscriptoresService
+      .getSuscriptores()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.suscriptores = resp.suscriptores;
+            console.log('Todos las suscriptores', this.suscriptores);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+    consultarPaquetes() {
+    this.registrosSub = this.paquetesService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.paquetes = resp.paquetes;
+            // console.log('Todos las paquetes', this.paquetes);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  onAplicacionchangeClick(event: any) {
+    const value = event.target.value;
+    const app = this.aplicaciones.filter((x) => x.aplicacionId == value)[0];
+    // console.log('Código de aplicación seleccionado:', value);
+    // console.log('data aplicación seleccionado:', app);
+    this.FormRegistro.aplicacionId = app.aplicacionId;
+    this.FormRegistro.aplicacionId = value;
+    // this.suscriptorsApp = this.suscriptors.filter(x => x.aplicacionId == app.aplicacionId);
+  }
+
+  onSuscriptorChangeClick(event: any) {
+    const value = event.target.value;
+    const suscriptor = this.suscriptores.filter((x) => x.suscriptorId == value)[0];
+    // console.log('Código de suscriptor seleccionado:', value);
+    // console.log('data suscriptor seleccionado:', suscriptor);
+    this.FormRegistro.suscriptorId = suscriptor.suscriptorId;
+    this.FormRegistro.suscriptorId = value;
+  }
+
+   onPaqueteChangeClick(event: any) {
+    const value = event.target.value;
+    const paquete = this.paquetes.filter((x) => x.suscriptorPaqueteId == value)[0];
+    // console.log('Código de paquete seleccionado:', value);
+    // console.log('data paquete seleccionado:', paquete);
+    this.FormRegistro.paqueteId = paquete.suscriptorPaqueteId;
+    this.FormRegistro.paqueteId = value;
+  }
+
+  btnGestionarRegistroClick(form: any) {
+    this.isSubmit = true;
+    if (!form.valid) {
+      return;
+    }
+    if (this.modoEdicion) {
+      // console.log('1.0 modificar usuario', this.FormRegistro);
+      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
+            this.router.navigate(['/administracion-bd/conexiones']);
+          } else {
+            Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+        }
+      });
+    } else {
+      // console.log('formregistro', this.FormRegistro);
+      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
+            form.resetForm();
+            this.isSubmit = false;
+            this.router.navigate(['/administracion-bd/conexiones']);
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+        }
+      });
+    }
+  }
+
+  btnRegresarClick() {
+    this.router.navigate(['/administracion-bd/conexiones']);
+  }
 }

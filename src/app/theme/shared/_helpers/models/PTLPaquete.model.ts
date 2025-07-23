@@ -1,13 +1,13 @@
-export class PTLPquete {
+export class PTLPaquetesModel {
     constructor (
-        public paqueteId : number,
-        public nombrePaquete : string,
-        public descripcionPaquete : string,
-        public costoPaquete : number,
-        public preciooPaquete : number,
-        public promocionPaquete : boolean,
-        public promocionPromocion : boolean,
-        public acuerdoLicencia : string,
-        public estadoPaquete : boolean
+        public paquetesId? : number,
+        public nombrePaquetes? : string,
+        public descripcionPaquetes? : string,
+        public costoPquete? : number,
+        public precioPaquete? : number,
+        public promocion? : boolean,
+        public precioPromocion? : number,
+        public acuerdoLicencia? : string,
+        public estadoPaquetes? : boolean
    ) {}
 }

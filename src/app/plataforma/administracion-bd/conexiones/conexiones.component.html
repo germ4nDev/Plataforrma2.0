@@ -1,27 +1,105 @@
 <div class="row">
     <div class="col-sm-12">
-        <div class="card">
+        <div class="card card-header-sticky">
             <div class="card-header">
-                <h5>Column Searching</h5>
+                <h4>{{ 'CONEXIONES.TITLE' | translate }}</h4>
+                <hr />
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <app-breadcrumb></app-breadcrumb>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex">
+                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
+                            {{ 'CONEXIONES.NEW' | translate }}
+                        </button>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions"
-                        class="table table-striped row-border table-hover">
+                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+                        <thead>
+                            <tr>
+                                <th>{{ 'CONEXIONES.NOMBREAPLICACION' | translate }}</th>
+                                <th>{{ 'CONEXIONES.NOMBRESUSCRIPTOR' | translate }}</th>
+                                <th>{{ 'CONEXIONES.NOMBRESERVIDOR' | translate }}</th>
+                                <th>{{ 'CONEXIONES.NOMBREBD' | translate }}</th>
+                                <th>{{ 'CONEXIONES.ESTADOCONEXION' | translate }}</th>
+                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let reg of registros">
+                                <td>
+                                    {{ reg.nombreAplicacion }}
+                                </td>
+                                <td>
+                                    {{ reg.nombreSuscriptor }}
+                                </td>
+                                <td>
+                                    {{ reg.nombreServidor }}
+                                </td>
+                                <td>
+                                    {{ reg.BDNombre }}
+                                </td>
+                                <td>
+                                    {{ reg.nomEstado }}
+                                </td>
+                                <td style="text-align: center; width: 10%">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                            (click)="OnEditarRegistroClick(reg.conexionId?? 0)"
+                                            title="{{ 'CONEXIONES.UPDATE' | translate }}">
+                                            <i class="feather icon-edit"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                            (click)="OnEliminarRegistroClick(reg.conexionId?? 0, reg.nombreConexion?? '')"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{ 'CONEXIONES.DELETE' | translate }}">
+                                            <i class="feather icon-trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                         <tfoot>
                             <tr>
-                                <th><input type="text" placeholder="Search Name" name="search-name"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Position" name="search-position"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Office" name="search-office"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Age" name="search-age"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Satrt Date" name="search-date"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Salary" name="search-salary"
-                                        class="form-control" /></th>
+                                <th>
+                                    <input #aplicacionId
+                                        (keyup)="filtrarColumna(1, aplicacionId.value)"
+                                        type="text" placeholder="{{ 'CONEXIONES.FILTER_NAMEAPLICACION' | translate }}"
+                                        name="filtro-aplicacionId" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #suscriptorId
+                                        (keyup)="filtrarColumna(2, suscriptorId.value)" type="text"
+                                        placeholder="{{ 'CONEXIONES.FILTER_NOMBRESUSCRIPTOR' | translate }}"
+                                        name="filtro-suscriptorId" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #nombreServidor
+                                        (keyup)="filtrarColumna(3, nombreServidor.value)" type="text"
+                                        placeholder="{{ 'CONEXIONES.FILTER_NOMBRESERVIDOR' | translate }}"
+                                        name="filtro-nombreServidor" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #BDNombre
+                                        (keyup)="filtrarColumna(4, BDNombre.value)" type="text"
+                                        placeholder="{{ 'CONEXIONES.FILTER_NOMBREBD' | translate }}"
+                                        name="filtro-BDNombre" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #estadoConexion
+                                        (keyup)="filtrarColumna(5, estadoConexion.value)"
+                                        type="text" placeholder="{{ 'CONEXIONES.FILTRO_STATUSCONEXION' | translate }}"
+                                        name="filtro-estadoConexion" class="form-control" />
+                                </th>
+                                <th>
+                                </th>
                             </tr>
                         </tfoot>
                     </table>
@@ -30,3 +108,4 @@
         </div>
     </div>
 </div>
+
