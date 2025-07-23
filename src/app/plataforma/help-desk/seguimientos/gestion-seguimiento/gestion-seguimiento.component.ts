@@ -157,22 +157,22 @@ onEstadoChangeClick(event: any) {
         this.FormRegistro.estadoRequerimiento!
       ).subscribe({
         next: () => {
-          Swal.fire('', 'El registro se modificó correctamente', 'success');
+          Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
           this.router.navigate(['/help-desk/seguimientos/']);
         },
         error: (err) => {
           console.error('Error al actualizar requerimiento', err);
-          Swal.fire('Error', 'El registro se modificó, pero no se actualizó el estado del requerimiento.', 'warning');
+          Swal.fire('Error', this.translate.instant('SEGUIMIENTOS.GESTION.NOMODIFICOREQUERIMIENTO'), 'warning');
           this.router.navigate(['/help-desk/seguimientos/']);
         }
       });
     } else {
-      Swal.fire('Error', resp.message || 'No se pudo actualizar el registro', 'error');
+      Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
     }
   },
   error: (err: any) => {
     console.error(err);
-    Swal.fire('Error', 'No se pudo actualizar el registro', 'error');
+    Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
   }
       });
     } else {
@@ -180,7 +180,7 @@ onEstadoChangeClick(event: any) {
       this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', 'El registro se insertó correctamente', 'success');
+            Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
             form.resetForm();
             this.isSubmit = false;
             this.router.navigate(['/help-desk/seguimientos/']);
@@ -188,7 +188,7 @@ onEstadoChangeClick(event: any) {
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo insertar el registro', 'error');
+          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
         }
       });
     }

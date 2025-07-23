@@ -58,15 +58,15 @@ export class SeguimientosComponent implements OnInit, AfterViewInit {
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
-        .get(['SEGUIMIENTOS.NOMBRESEGUIMIENTO', 'SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO', 'SEGUIMIENTOS.ESTADOSEGUIMIENTO'])
+        .get(['TICKETS.SEGUIMIENTOS.NOMBRESEGUIMIENTO', 'TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO', 'TICKETS.SEGUIMIENTOS.ESTADOSEGUIMIENTO'])
         .subscribe((translations) => {
-          this.tituloPagina = translations['SEGUIMIENTOS.TITLE'];
+          this.tituloPagina = translations['TICKETS.SEGUIMIENTOS.TITLE'];
           this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
-              { title: translations['SEGUIMIENTOS.NOMBRESEGUIMIENTO'], data: 'nombreSeguimiento' },
-              { title: translations['SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO'], data: 'descripcionSeguimiento' },
-              { title: translations['SEGUIMIENTOS.ESTADOSEGUIMIENTO'], data: 'estadoSeguimiento' },
+              { title: translations['TICKETS.SEGUIMIENTOS.NOMBRESEGUIMIENTO'], data: 'nombreSeguimiento' },
+              { title: translations['TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO'], data: 'descripcionSeguimiento' },
+              { title: translations['TICKETS.SEGUIMIENTOS.ESTADOSEGUIMIENTO'], data: 'estadoSeguimiento' },
               { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
             ]
           };

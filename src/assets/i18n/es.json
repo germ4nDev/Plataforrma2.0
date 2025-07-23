@@ -8,7 +8,9 @@
         "INACTIVE": "Inactivo",
         "REGRESAR": "Regresar",
         "INSERTAR": "El registro se insertó correctamente",
-        "MODIFICAR": "El registro se modificó correctamente"
+        "MODIFICAR": "El registro se modificó correctamente",
+        "NOINSERTO": "No se pudo insertar el registro",
+        "NOMODIFICO": "No se pudo actualizar el registro"
     },
     "APLICACIONES": {
         "TITLE": "Administración de Aplicaciones",
@@ -152,9 +154,8 @@
             "APLICACION": "Aplicación",
             "PLACEHOLDERAPLICACION": "Seleccione una Aplicación",
             "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
-        }
-    },
-    "REQUERIMIENTOS": {
+        },
+        "REQUERIMIENTOS": {
         "TITLE": "Administración de Requerimientos",
         "NEW": "Nuevo Requerimiento",
         "UPDATE": "Modificar Requerimiento",
@@ -186,40 +187,42 @@
             "PLACEHOLDERTICKET": "Seleccione un Ticket",
             "REQUERIDOTICKET": "Por favor, seleccione un Ticket. Este campo es obligatorio."
         }
-    },
-    "SEGUIMIENTOS": {
-        "TITLE": "Administración de Seguimientos",
-        "NEW": "Nuevo Seguimiento",
-        "UPDATE": "Modificar Seguimiento",
-        "DELETE": "Eliminar Seguimiento",
-        "CREATE": "Crear Seguimiento",
-        "NOMBRESEGUIMIENTO": "Nombre",
-        "DESCRIPCIONSEGUIMIENTO": "Descripción",
-        "ESTADOSEGUIMIENTO": "Estado",
-        "FILTER_NAMESEGUIMIENTO": "Filtro Nombre",
-        "FILTER_DESCRIPCIONSEGUIMIENTO": "Filtro Descripción",
-        "FILTRO_STATUSSEGUIMIENTO": "Filtro Estado",
-        "ELIMINARTITULO": "¿Está seguro de eliminar?",
-        "ELIMINARTEXTO": "¡Será Eliminado el Seguimiento ",
-        "ELIMINAREXITOSA": "¡El Seguimiento fué eliminado correctamente ",
-        "ELIMINARERROR": "No se pudo eliminar el Seguimiento.",
-        "GESTION": {
-            "TITLE": "Crear/Actualizar un Seguimiento",
-            "CREATE": "Crear Seguimiento",
-            "UPDATE": "Actualizar Seguimiento",
+        },
+        "SEGUIMIENTOS": {
+            "TITLE": "Administración de Seguimientos",
             "NEW": "Nuevo Seguimiento",
-            "NAME": "Nombre Seguimiento",
-            "NAMEHOLDER": "Ingrese el Nombre del Seguimiento",
-            "DESCRIPTION": "Descripción Seguimiento",
-            "DESCRIPTIONHOLDER": "Ingrese la Descripción del Seguimiento",
-            "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
-            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
-            "STATUS": "Estado Seguimiento",
-            "REQUERIMIENTO": "Requerimiento",
-            "PLACEHOLDERREQUERIMIENTO": "Seleccione un Requerimiento",
-            "REQUERIDOREQUERIMIENTO": "Por favor, seleccione un Requerimiento. Este campo es obligatorio.",
-            "PLACEHOLDERESTADO": "Seleccione un Estado",
-            "REQUERIDOESTADO": "Por favor, seleccione un Estado. Este campo es obligatorio."
+            "UPDATE": "Modificar Seguimiento",
+            "DELETE": "Eliminar Seguimiento",
+            "CREATE": "Crear Seguimiento",
+            "NOMBRESEGUIMIENTO": "Nombre",
+            "DESCRIPCIONSEGUIMIENTO": "Descripción",
+            "ESTADOSEGUIMIENTO": "Estado",
+            "FILTER_NAMESEGUIMIENTO": "Filtro Nombre",
+            "FILTER_DESCRIPCIONSEGUIMIENTO": "Filtro Descripción",
+            "FILTRO_STATUSSEGUIMIENTO": "Filtro Estado",
+            "ELIMINARTITULO": "¿Está seguro de eliminar?",
+            "ELIMINARTEXTO": "¡Será Eliminado el Seguimiento ",
+            "ELIMINAREXITOSA": "¡El Seguimiento fué eliminado correctamente ",
+            "ELIMINARERROR": "No se pudo eliminar el Seguimiento.",
+            "GESTION": {
+                "TITLE": "Crear/Actualizar un Seguimiento",
+                "CREATE": "Crear Seguimiento",
+                "UPDATE": "Actualizar Seguimiento",
+                "NEW": "Nuevo Seguimiento",
+                "NAME": "Nombre Seguimiento",
+                "NAMEHOLDER": "Ingrese el Nombre del Seguimiento",
+                "DESCRIPTION": "Descripción Seguimiento",
+                "DESCRIPTIONHOLDER": "Ingrese la Descripción del Seguimiento",
+                "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+                "STATUS": "Estado Seguimiento",
+                "REQUERIMIENTO": "Requerimiento",
+                "PLACEHOLDERREQUERIMIENTO": "Seleccione un Requerimiento",
+                "REQUERIDOREQUERIMIENTO": "Por favor, seleccione un Requerimiento. Este campo es obligatorio.",
+                "PLACEHOLDERESTADO": "Seleccione un Estado",
+                "REQUERIDOESTADO": "Por favor, seleccione un Estado. Este campo es obligatorio.",
+                "NOMODIFICOREQUERIMIENTO": "El registro se modificó, pero no se actualizó el estado del requerimiento."
+            }
         }
     },
     "SERVIDORES": {

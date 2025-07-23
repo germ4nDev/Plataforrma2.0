@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <div class="card card-header-sticky">
             <div class="card-header">
-                <h4>{{ 'SEGUIMIENTOS.TITLE' | translate }}</h4>
+                <h4>{{ 'TICKETS.SEGUIMIENTOS.TITLE' | translate }}</h4>
                 <hr />
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
@@ -10,7 +10,7 @@
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
                         <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'SEGUIMIENTOS.NEW' | translate }}
+                            {{ 'TICKETS.SEGUIMIENTOS.NEW' | translate }}
                         </button>
                     </div>
                 </div>
@@ -22,9 +22,9 @@
                     <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
                         <thead>
                             <tr>
-                                <th>{{ 'SEGUIMIENTOS.NOMBRESEGUIMIENTO' | translate }}</th>
-                                <th>{{ 'SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO' | translate }}</th>
-                                <th>{{ 'SEGUIMIENTOS.ESTADOSEGUIMIENTO' | translate }}</th>
+                                <th>{{ 'TICKETS.SEGUIMIENTOS.NOMBRESEGUIMIENTO' | translate }}</th>
+                                <th>{{ 'TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO' | translate }}</th>
+                                <th>{{ 'TICKETS.SEGUIMIENTOS.ESTADOSEGUIMIENTO' | translate }}</th>
                                 <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
                             </tr>
                         </thead>
@@ -44,14 +44,14 @@
                                         <button type="button"
                                             class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
                                             (click)="OnEditarRegistroClick(reg.seguimientoId?? 0)"
-                                            title="{{ 'SEGUIMIENTOS.UPDATE' | translate }}">
+                                            title="{{ 'TICKETS.SEGUIMIENTOS.UPDATE' | translate }}">
                                             <i class="feather icon-edit"></i>
                                         </button>
                                         <button type="button"
                                             class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
                                             (click)="OnEliminarRegistroClick(reg.seguimientoId?? 0, reg.nombreSeguimiento?? '')"
                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'SEGUIMIENTOS.DELETE' | translate }}">
+                                            title="{{ 'TICKETS.SEGUIMIENTOS.DELETE' | translate }}">
                                             <i class="feather icon-trash-2"></i>
                                         </button>
                                     </div>
@@ -62,18 +62,18 @@
                             <tr>
                                 <th>
                                     <input #nombreSeguimiento (keyup)="filtrarColumna(1, nombreSeguimiento.value)"
-                                        type="text" placeholder="{{ 'SEGUIMIENTOS.FILTER_NAMESEGUIMIENTO' | translate }}"
+                                        type="text" placeholder="{{ 'TICKETS.SEGUIMIENTOS.FILTER_NAMESEGUIMIENTO' | translate }}"
                                         name="filtro-nombreSeguimiento" class="form-control" />
                                 </th>
                                 <th>
                                     <input #descripcionSeguimiento
                                         (keyup)="filtrarColumna(2, descripcionSeguimiento.value)" type="text"
-                                        placeholder="{{ 'SEGUIMIENTOS.FILTER_DESCRIPCIONSEGUIMIENTO' | translate }}"
+                                        placeholder="{{ 'TICKETS.SEGUIMIENTOS.FILTER_DESCRIPCIONSEGUIMIENTO' | translate }}"
                                         name="filtro-descripcionSeguimiento" class="form-control" />
                                 </th>
                                 <th>
                                     <input #estadoSeguimiento (keyup)="filtrarColumna(4, estadoSeguimiento.value)"
-                                        type="text" placeholder="{{ 'SEGUIMIENTOS.FILTRO_STATUSSEGUIMIENTO' | translate }}"
+                                        type="text" placeholder="{{ 'TICKETS.SEGUIMIENTOS.FILTRO_STATUSSEGUIMIENTO' | translate }}"
                                         name="filtro-estadoSeguimiento" class="form-control" />
                                 </th>
                                 <th>

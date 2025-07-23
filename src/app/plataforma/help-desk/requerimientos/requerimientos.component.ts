@@ -59,15 +59,15 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
-        .get(['REQUERIMIENTOS.NOMBREREQUERIMIENTO', 'REQUERIMIENTOS.DESCRICIONREQUERIMIENTO', 'REQUERIMIENTOS.ESTADOREQUERIMIENTO'])
+        .get(['TICKETS.REQUERIMIENTOS.NOMBREREQUERIMIENTO', 'TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO', 'TICKETS.REQUERIMIENTOS.ESTADOREQUERIMIENTO'])
         .subscribe((translations) => {
           this.tituloPagina = translations['REQUERIMIENTOS.TITLE'];
           this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
-              { title: translations['REQUERIMIENTOS.NOMBREREQUERIMIENTO'], data: 'nombreRequerimiento' },
-              { title: translations['REQUERIMIENTOS.DESCRICIONREQUERIMIENTO'], data: 'descripcionRequerimiento' },
-              { title: translations['REQUERIMIENTOS.ESTADOREQUERIMIENTO'], data: 'estadoRequerimiento' },
+              { title: translations['TICKETS.REQUERIMIENTOS.NOMBREREQUERIMIENTO'], data: 'nombreRequerimiento' },
+              { title: translations['TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO'], data: 'descripcionRequerimiento' },
+              { title: translations['TICKETS.REQUERIMIENTOS.ESTADOREQUERIMIENTO'], data: 'estadoRequerimiento' },
               { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
             ]
           };

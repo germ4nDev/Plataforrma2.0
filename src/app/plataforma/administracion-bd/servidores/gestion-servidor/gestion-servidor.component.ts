@@ -75,12 +75,12 @@ export class GestionServidorComponent {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
             this.router.navigate(['/administracion-bd/servidores/']);
           } else {
-            Swal.fire('Error', resp.message || 'No se pudo actualizar el registro', 'error');
+            Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo actualizar el registro', 'error');
+          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
         }
       });
     } else {
@@ -96,7 +96,7 @@ export class GestionServidorComponent {
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo insertar el registro', 'error');
+          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
         }
       });
     }
