@@ -18,6 +18,11 @@ export class ChatUserListComponent {
   friendsList: any[] = [];
   searchFriends = '';
 
+    constructor() {
+          console.log('abriendo navbar-chat-user-list');
+
+    }
+
   ChatOn(): void {
     this.ChatToggle.emit();
   }

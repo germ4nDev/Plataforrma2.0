@@ -1,0 +1,40 @@
+// :host {
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   gap: 1rem;
+
+//   .icon-button {
+//     background: none;
+//     border: none;
+//     color: white;
+//     font-size: 1.2rem;
+//     cursor: pointer;
+
+//     &:hover {
+//       color: #ccc;
+//     }
+//   }
+
+//   .profile-pic {
+//     width: 32px;
+//     height: 32px;
+//     border-radius: 50%;
+//     object-fit: cover;
+//     border: 2px solid white;
+//   }
+// }
+
+:host {
+  display: flex;
+  flex-direction: row !important; /* fuerza horizontal */
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-right {
+  display: flex;
+  flex-direction: row; /* Asegura que estén en fila */
+  align-items: center; /* Centra verticalmente */
+  gap: 1rem; /* Espaciado entre los iconos */
+}

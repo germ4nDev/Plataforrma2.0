@@ -1,5 +1,5 @@
 @if (this.gradientConfig['layout'] === 'vertical') {
-<ng-scrollbar (clickOutside)="navMob()" id="nav-ps-gradient-able" style="height: calc(100vh - 56px)">
+<ng-scrollbar id="nav-ps-gradient-able" style="height: calc(100vh - 56px)">
     <div class="navbar-content">
         <ul class="nav pcoded-inner-navbar" (clickOutside)="fireOutClick()">
             <ng-container *ngFor="let item of navigationItems">
@@ -15,7 +15,7 @@
     </div>
 </ng-scrollbar>
 }
-<!-- @if (this.gradientConfig['layout'] === 'horizontal') {
+<!-- @if (this.gradientConfig['layout'] === 'horizontal') {(clickOutside)="navMob()"
 <div #navbarWrapper class="navbar-content sidenav-horizontal" id="layout-sidenav">
     <a href="javascript:" class="sidenav-horizontal-prev" [ngClass]="prevDisabled" (click)="scrollMinus()"></a>
     <div class="sidenav-horizontal-wrapper">

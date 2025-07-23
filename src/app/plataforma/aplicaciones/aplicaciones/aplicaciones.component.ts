@@ -217,7 +217,7 @@
 //   }
 // }
 
-import { AfterViewInit, Component, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
@@ -246,6 +246,7 @@ import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.com
 })
 export class AplicacionesComponent implements OnInit, AfterViewInit {
   @ViewChild(DataTableDirective, { static: false }) datatableElement!: DataTableDirective;
+  @Output() toggleSidebar = new EventEmitter<void>();
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   aplicaciones: PTLAplicacionModel[] = [];
@@ -266,7 +267,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     private translate: TranslateService,
     private BreadCrumb: BreadcrumbComponent
   ) {
-        this.gradientConfig = GradientConfig;
+    this.gradientConfig = GradientConfig;
   }
 
   ngOnInit(): void {
@@ -383,5 +384,9 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
 
   toggleTheme(): void {
     document.body.classList.toggle('dark-theme');
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

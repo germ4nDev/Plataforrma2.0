@@ -21,7 +21,10 @@ export class ChatMsgComponent {
   friendWriting = false;
   newReplay = '';
 
-  constructor(private rend: Renderer2) {}
+  constructor(private rend: Renderer2) {
+        console.log('abriendo navbar-chat-msg');
+
+  }
 
   ngOnInit() {
     // Simula datos para pruebas, puede integrarse con servicio real

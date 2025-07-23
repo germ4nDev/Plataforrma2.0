@@ -5,12 +5,12 @@ import { GradientConfig } from 'src/app/app-config';
 import { NavLeftComponent } from './nav-left/nav-left.component';
 import { NavRightComponent } from './nav-right/nav-right.component';
 import { ConfigurationComponent } from '../configuration/configuration.component';
-
+import { NavSearchComponent } from './nav-left/nav-search/nav-search.component';
 
 @Component({
   selector: 'app-nav-bar',
- standalone: true,
-  imports: [CommonModule, RouterModule, NavLeftComponent, NavRightComponent],
+  standalone: true,
+  imports: [CommonModule, RouterModule, NavLeftComponent, NavRightComponent, NavSearchComponent],
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss']
 })
@@ -24,8 +24,7 @@ export class NavBarComponent {
   @Output() NavCollapsedMob = new EventEmitter<void>();
 
   constructor() {
-console.log('abriendo navbar');
-
+    console.log('abriendo navbar');
   }
 
   toggleMobOption(): void {

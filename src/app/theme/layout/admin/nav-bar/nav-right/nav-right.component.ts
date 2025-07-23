@@ -9,6 +9,8 @@ import { LanguageSelectorComponent } from 'src/app/theme/shared/components/langu
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 import { ChatMsgComponent } from './chat-msg/chat-msg.component';
+import { NavLeftComponent } from '../nav-left/nav-left.component';
+import { NavSearchComponent } from '../nav-left/nav-search/nav-search.component';
 
 @Component({
   selector: 'app-nav-right',
@@ -20,7 +22,9 @@ import { ChatMsgComponent } from './chat-msg/chat-msg.component';
     TranslateModule,
     LanguageSelectorComponent,
     ChatUserListComponent,
-    ChatMsgComponent
+    ChatMsgComponent,
+    NavLeftComponent,
+    NavSearchComponent
   ],
   templateUrl: './nav-right.component.html',
   styleUrls: ['./nav-right.component.scss'],
@@ -44,7 +48,10 @@ export class NavRightComponent implements DoCheck {
   constructor(
     private authenticationService: AuthenticationService,
     private translate: TranslateService
-  ) {}
+  ) {
+    console.log('abriendo navbar-right');
+
+  }
 
   onChatToggle(friendID: any) {
     this.friendId = friendID;
