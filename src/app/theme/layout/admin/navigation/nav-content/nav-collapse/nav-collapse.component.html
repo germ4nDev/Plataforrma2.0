@@ -1,55 +1,25 @@
-@if (!item.hidden) {
-<!-- horizontal layouts -->
-@if (themeLayout === 'horizontal') {
-<li (mouseenter)="navCollapse($event)" class="nav-item pcoded-hasmenu" [routerLinkActive]="['active']">
-    <a [routerLinkActive]="['active']" href="javascript:" class="nav-link">
-        <ng-container *ngTemplateOutlet="itemContent"></ng-container>
-    </a>
-    <ng-container *ngTemplateOutlet="subMenuContent"></ng-container>
-</li>
-}
-<!-- vertical layouts -->
-@if (themeLayout === 'vertical') {
-<li class="nav-item pcoded-hasmenu" [routerLinkActive]="['active']">
-    <a [routerLinkActive]="['active']" href="javascript:" class="nav-link" (click)="navCollapse($event)">
-        <ng-container *ngTemplateOutlet="itemContent"></ng-container>
-    </a>
-    <ng-container *ngTemplateOutlet="subMenuContent"></ng-container>
-</li>
-}
-<!-- all layout common -->
-<ng-template #itemContent>
-    @if (item.icon) {
-    <span class="pcoded-micon">
-        <i class="{{ item.icon }}"></i>
-    </span>
-    }
-    <span class="pcoded-mtext">{{ item.title | translate }}
-        @if (item.badge && themeLayout === 'horizontal') {
-        <span class="badge label" [ngClass]="item.badge.type">
-            {{ item.badge.title }}
-        </span>
-        }
-    </span>
-    @if (item.badge && themeLayout === 'vertical') {
-    <span class="pcoded-badge badge" [ngClass]="item.badge.type">
-        {{ item.badge.title }}
-    </span>
-    }
-</ng-template>
-<ng-template #subMenuContent>
-    <ul class="pcoded-submenu" [routerLinkActive]="['active']" [ngClass]="item.classes!">
-        @for (item of item.children; track item) {
-        @if (item.type === 'group') {
-        <app-nav-group [item]="item"></app-nav-group>
-        }
-        @if (item.type === 'collapse') {
-        <app-nav-collapse [item]="item"></app-nav-collapse>
-        }
-        @if (item.type === 'item') {
-        <app-nav-item [item]="item"></app-nav-item>
-        }
-        }
-    </ul>
-</ng-template>
-}
+<ng-container *ngIf="!item.hidden">
+    <li class="nav-item pcoded-hasmenu" [routerLinkActive]="['active']">
+        <a href="javascript:" class="nav-link" (click)="navCollapse($event)">
+            <!-- Ícono e información principal -->
+            <span *ngIf="item.icon" class="pcoded-micon">
+                <i class="{{ item.icon }}"></i>
+            </span>
+            <span class="pcoded-mtext">
+                {{ item.title | translate }}
+                <span *ngIf="item.badge" class="badge label" [ngClass]="item.badge.type">
+                    {{ item.badge.title }}
+                </span>
+            </span>
+        </a>
+
+        <!-- Submenú: solo si visible -->
+        <ul *ngIf="visible" [@slideInOut] class="pcoded-submenu" [ngClass]="item.classes">
+            <ng-container *ngFor="let child of item.children">
+                <app-nav-group *ngIf="child.type === 'group'" [item]="child"></app-nav-group>
+                <app-nav-collapse *ngIf="child.type === 'collapse'" [item]="child"></app-nav-collapse>
+                <app-nav-item *ngIf="child.type === 'item'" [item]="child"></app-nav-item>
+            </ng-container>
+        </ul>
+    </li>
+</ng-container>

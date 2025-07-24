@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { ThemeStorageService } from './theme/shared/service/theme-storage.service';
+
+    declare var feather: any;
 
 @Component({
   selector: 'app-root',
@@ -8,13 +11,23 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
 
+
   constructor(
-    private router: Router
+    private router: Router,
+    private themeStorage: ThemeStorageService
   ) {
+    // const saved = this.themeStorage.load();
+    // if (saved) {
+    //   Object.assign(GradientConfig, saved);
+    // }
     // this.translate.setDefaultLang('es');
     // const localLang = localStorage.getItem('lang') || 'es';
     // this.translate.use(localLang);
     // this.languageService.setLanguage(localLang);
+  }
+
+  ngAfterViewInit(): void {
+    feather.replace();
   }
 
   ngOnInit() {
@@ -27,4 +40,6 @@ export class AppComponent implements OnInit {
       }
     });
   }
+
+
 }

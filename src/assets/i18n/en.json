@@ -6,6 +6,20 @@
         "ACTIVE": "Active",
         "INACTIVE": "Inactive",
         "REGRESAR": "Go Back",
+        "MENU": "Menu",
+        "FILTERS": "Filters",
+        "REQUIRED": "Field Required",
+        "NAVBAR": {
+            "NOTIFICACIONES": "Notifications",
+            "READ": "Mark as Read",
+            "CLEAR": "Clear List",
+            "NEW": "New",
+            "EARLIER": "Earlier",
+            "SHOW": "Show All",
+            "PROFILE": "Profile",
+            "MESSAGES": "My Messages",
+            "LOCK": "Lock Screen"
+        }
         "INSERTAR": "The record was successfully created",
         "MODIFICAR": "The record was successfully updated",
         "NOINSERTO": "The record could not be inserted",
@@ -60,7 +74,6 @@
             "PLACEHOLDERPUERTO": "Site port",
             "REQUERIDOPUERTO": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Site description",
-
             "REQUERIDODESCRIPCION": "This field is required."
         },
         "ENLACES": {

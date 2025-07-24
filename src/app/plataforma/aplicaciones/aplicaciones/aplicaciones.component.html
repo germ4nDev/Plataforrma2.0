@@ -1,14 +1,55 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <!-- <div class="text-center"> -->
-                    <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
-                    <hr />
-                <!-- </div> -->
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3" style="height: calc(100vh - 56px)">
+                                    <!-- <form #validationForm="ngForm" class="editForm" novalidate>
+                    <p>{{ 'APLICACIONES.FILTROS_TITULO' | translate }}</p>
+                    <input type="text" [(ngModel)]="filtroPersonalizado"
+                        placeholder="{{ 'APLICACIONES.BUSCAR_NOMBRE' | translate }}" class="form-control mb-3" />
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="codigoAplicacion">
+                            {{ 'APLICACIONES.FILTROS.CODIGOAPP' | translate }}</label>
+                        <select class="form-control input-md" name="codigoAplicacion" id="codigoAplicacion"
+                            [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched) }"
+                            #codigoAplicacion="ngModel" required [(ngModel)]="codigoAplicacion"
+                            (change)="onFiltroCodigoChangeClick($event)">
+                            <option value="todos">{{ 'APLICACIONES.FILTROS.TODOS' | translate }}</option>
+                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.nombreAplicacion }}</option>
+                        </select>
+                        <label *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched)"
+                            class="error jquery-validation-error small form-text invalid-feedback">
+                            {{ 'PLATAFORMA.REQUIRED' | translate }}
+                        </label>
+                    </div>
+                                    </form> -->
+
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                        <h4>{{ 'APLICACIONES.TITLE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
                         <button type="button" (click)="OnNuevaAplicaicionClick()" class="btn-NuevoRegistro">
@@ -18,6 +59,7 @@
                 </div>
             </div>
         </div>
+
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -26,37 +68,26 @@
                             <tr>
                                 <th>{{ 'APLICACIONES.CODE' | translate }}</th>
                                 <th>{{ 'APLICACIONES.NAME' | translate }}</th>
-                                <th>{{ 'APLICACINES.DESCRIPTION' | translate }}</th>
+                                <th>{{ 'APLICACIONES.DESCRIPTION' | translate }}</th>
                                 <th>{{ 'APLICACIONES.STATUS' | translate }}</th>
                                 <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let app of aplicaciones">
-                                <td>
-                                    {{ app.codigoAplicacion }}
-                                </td>
-                                <td>
-                                    {{ app.nombreAplicacion }}
-                                </td>
-                                <td>
-                                    {{ app.descripcionAplicacion }}
-                                </td>
-                                <td>
-                                    {{ app.nomEstado }}
-                                </td>
-                                <td style="text-align: center; width: 10%">
+                                <td>{{ app.codigoAplicacion }}</td>
+                                <td>{{ app.nombreAplicacion }}</td>
+                                <td>{{ app.descripcionAplicacion }}</td>
+                                <td>{{ app.nomEstado }}</td>
+                                <td class="text-center" style="width: 10%">
                                     <div class="d-flex flex-wrap gap-2">
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                        <button type="button" class="btn btn-icon btn-outline-primary btnEdit"
                                             (click)="OnEditarAplicaicionClick(app.aplicacionId ?? 0)"
                                             title="{{ 'APLICACIONES.UPDATE' | translate }}">
                                             <i class="feather icon-edit"></i>
                                         </button>
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                        <button type="button" class="btn btn-icon btn-outline-danger btnDelet"
                                             (click)="OnEliminarAplicaicionClick(app.aplicacionId ?? 0, app.nombreAplicacion ?? '')"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
                                             title="{{ 'APLICACIONES.DELETE' | translate }}">
                                             <i class="feather icon-trash-2"></i>
                                         </button>
@@ -69,26 +100,25 @@
                                 <th>
                                     <input #codigoAplicacion (keyup)="filtrarColumna(0, codigoAplicacion.value)"
                                         type="text" placeholder="{{ 'APLICACIONES.FILTER_CODE' | translate }}"
-                                        name="filtro-url" class="form-control" />
+                                        class="form-control" />
                                 </th>
                                 <th>
                                     <input #nombreAplicacion (keyup)="filtrarColumna(1, nombreAplicacion.value)"
                                         type="text" placeholder="{{ 'APLICACIONES.FILTER_NAME' | translate }}"
-                                        name="filtro-nombre" class="form-control" />
+                                        class="form-control" />
                                 </th>
                                 <th>
                                     <input #descripcionAplicacion
                                         (keyup)="filtrarColumna(2, descripcionAplicacion.value)" type="text"
                                         placeholder="{{ 'APLICACIONES.FILTER_DESCRIPTION' | translate }}"
-                                        name="filtro-nombre" class="form-control" />
+                                        class="form-control" />
                                 </th>
                                 <th>
-                                    <input #estadoAplicacion (keyup)="filtrarColumna(4, estadoAplicacion.value)"
+                                    <input #estadoAplicacion (keyup)="filtrarColumna(3, estadoAplicacion.value)"
                                         type="text" placeholder="{{ 'APLICACIONES.FILTRO_STATUS' | translate }}"
-                                        name="filtro-estado" class="form-control" />
+                                        class="form-control" />
                                 </th>
-                                <th>
-                                </th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>

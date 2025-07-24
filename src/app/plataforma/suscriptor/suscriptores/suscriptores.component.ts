@@ -1,16 +1,15 @@
-import { CommonModule } from "@angular/common";
-import { Component, OnInit, AfterViewInit, ViewChild } from "@angular/core";
-import { Router } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { DataTablesModule, DataTableDirective } from "angular-datatables";
-import { Subscription, Subject, tap, catchError, of } from "rxjs";
-import { PTLSuscriptorModel } from "src/app/theme/shared/_helpers/models/PTLSuscriptor.model";
-import { BreadcrumbComponent } from "src/app/theme/shared/components/breadcrumb/breadcrumb.component";
-import { LanguageService } from "src/app/theme/shared/service";
-import { PTLSuscriptoresService } from "src/app/theme/shared/service/ptlsuscriptores.service";
-import { SharedModule } from "src/app/theme/shared/shared.module";
-import Swal from "sweetalert2";
-
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DataTablesModule, DataTableDirective } from 'angular-datatables';
+import { Subscription, Subject, tap, catchError, of } from 'rxjs';
+import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
+import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
+import { LanguageService } from 'src/app/theme/shared/service';
+import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-suscriptores',
@@ -19,8 +18,8 @@ import Swal from "sweetalert2";
   templateUrl: './suscriptores.component.html',
   styleUrl: './suscriptores.component.scss'
 })
-export class SuscriptoresComponent implements OnInit, AfterViewInit{
-//#region VARIABLES
+export class SuscriptoresComponent implements OnInit, AfterViewInit {
+  //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
@@ -28,7 +27,7 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit{
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
-  suscriptor: PTLSuscriptorModel[] = [];
+  suscriptores: PTLSuscriptorModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   //#endregion VARIABLES
@@ -59,25 +58,25 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit{
   ngOnInit() {
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
-      this.translate
-        .get(['SUSCRIPTORES.NAME', 'SUSCRIPTORES.DESCRIPTION', 'SUSCRIPTORES.ESTADO'])
-        .subscribe((translations) => {
-          this.tituloPagina = translations['SUSCRIPTORES.TITLE'];
-          this.dtColumnSearchingOptions = {
-            responsive: true,
-            columns: [
-              { title: translations['SUSCRIPTORES.NAME'], data: 'nombreSuscriptor' },
-              { title: translations['SUSCRIPTORES.DESCRIPTION'], data: 'descripcionSuscriptor' },
-              { title: translations['SUSCRIPTORES.STATUS'], data: 'estadoSuscriptor' },
-              { title: translations['SUSCRIPTORES.OPTIONS'], data: 'opciones' }
-            ]
-          };
-          this.consultarRegistros();
-        });
+      this.translate.get(['SUSCRIPTORES.CODE', 'SUSCRIPTORES.NAME', 'SUSCRIPTORES.IDENTIFICATION', 'SUSCRIPTORES.DESCRIPTION', 'SUSCRIPTORES.ESTADO']).subscribe((translations) => {
+        this.tituloPagina = translations['SUSCRIPTORES.TITLE'];
+        this.dtColumnSearchingOptions = {
+          responsive: true,
+          columns: [
+            { title: translations['SUSCRIPTORES.CODE'], data: 'nombreSuscriptor' },
+            { title: translations['SUSCRIPTORES.NAME'], data: 'nombreSuscriptor' },
+            { title: translations['SUSCRIPTORES.IDENTIFICATION'], data: 'nombreSuscriptor' },
+            { title: translations['SUSCRIPTORES.DESCRIPTION'], data: 'descripcionSuscriptor' },
+            { title: translations['SUSCRIPTORES.STATUS'], data: 'estadoSuscriptor' },
+            { title: translations['SUSCRIPTORES.OPTIONS'], data: 'opciones' }
+          ]
+        };
+        this.consultarRegistros();
+      });
     });
   }
 
-  ngOnDestroy(): void {
+  OnDestroy(): void {
     this.dtTrigger.unsubscribe();
   }
 
@@ -90,13 +89,14 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit{
             resp.suscriptores.forEach((regs: any) => {
               regs.nomEstado = regs.estadoSuscriptor == true ? 'Activo' : 'Inactivo';
             });
-            this.suscriptor = resp.suscriptores;
-            console.log('Todos los Suscriptores', this.suscriptor);
+            this.suscriptores = resp.suscriptores;
+            console.log('Todos los Suscriptores', this.suscriptores);
             this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
             return;
           }
         }),
         catchError((err) => {
+          console.log('error', err);
           return of(null);
         })
       )
@@ -130,7 +130,7 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit{
         this.suscriptoresService.eliminarSuscripctor(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.suscriptor = this.suscriptor.filter((s) => s.suscriptorId !== id);
+            this.suscriptores = this.suscriptores.filter((s) => s.suscriptorId !== id);
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('SUSCRIPTORES.ELIMINARERROR'), 'error');

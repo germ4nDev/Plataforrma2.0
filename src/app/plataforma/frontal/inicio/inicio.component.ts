@@ -32,7 +32,7 @@ export class InicioComponent implements OnInit {
     }
 
     ingresarPlataforma() {
-        const appId = 'asdfas-sdafsd-asdfsdf';
+        const appId = 'e1a8fa99-15db-479b-a0a4-9c2be72273b5';
         localStorage.setItem('aplicacionId', appId)
         this.router.navigate(['/aplicaciones/aplicaciones']);
     }

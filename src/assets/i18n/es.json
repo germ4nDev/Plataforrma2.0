@@ -7,6 +7,20 @@
         "ACTIVE": "Activo",
         "INACTIVE": "Inactivo",
         "REGRESAR": "Regresar",
+        "MENU": "Menu",
+        "FILTERS": "Filtros",
+        "REQUIRED": "Campp Requerido",
+        "NAVBAR": {
+            "NOTIFICACIONES": "Notificaciones",
+            "READ": "Marcar como Leído",
+            "CLEAR": "Limpiar Lista",
+            "NEW": "Recientes",
+            "EARLIER": "Anteriores",
+            "SHOW": "Mostrar Todas",
+            "PROFILE": "Perfil",
+            "MESSAGES": "Mis Mensajes",
+            "LOCK": "Bloquear Pantalla"
+        }
         "INSERTAR": "El registro se insertó correctamente",
         "MODIFICAR": "El registro se modificó correctamente",
         "NOINSERTO": "No se pudo insertar el registro",
@@ -121,6 +135,7 @@
                 "PLACEHOLDERAPLICACION": "Seleccione",
                 "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
             }
+
         }
     },
     "TICKETS": {
