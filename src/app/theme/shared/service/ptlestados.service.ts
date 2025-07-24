@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLTicketAPModel } from '../_helpers/models/PTLTicketAP.model';
+import { PTLEstadoModel } from '../_helpers/models/PTLEstado.model';
 
 const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
-export class PTLTicketsService {
+export class PTLEstadosService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
@@ -29,58 +29,61 @@ export class PTLTicketsService {
   }
 
   getRegistros() {
-    const url = `${base_url}/tickets`;
+    const url = `${base_url}/estados`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de ticket', resp);
+        console.log('servicio de estado', resp);
         return {
           ok: true,
-          tickets: resp.tickets
+          estados: resp.estados
         };
       })
     );
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/tickets/${id}`;
-    return this.http.get(url).pipe(
+    const url = `${base_url}/estados/${id}`;
+    return this.http.get(url)
+    .pipe(
       map((resp: any) => {
-        console.log('data de ticket', resp);
+        console.log('data de estado', resp);
         return {
           ok: true,
-          ticket: resp.ticket
+          estado: resp.estado
         };
       })
     );
   }
 
-  postCrearRegistro(ticket: PTLTicketAPModel) {
-    const url = `${base_url}/tickets`;
-    return this.http.post(url, ticket);
+  postCrearRegistro(estado: PTLEstadoModel) {
+    const url = `${base_url}/estados`;
+    return this.http.post(url, estado);
   }
 
-  putModificarRegistro(ticket: PTLTicketAPModel) {
-    const url = `${base_url}/tickets/${ticket.ticketId}`;
-    return this.http.put(url, ticket).pipe(
+  putModificarRegistro(estado: PTLEstadoModel) {
+    const url = `${base_url}/estados/${estado.estadoId}`;
+    return this.http.put(url, estado)
+    .pipe(
       map((resp: any) => {
-        console.log('data de ticket modificacda', resp);
+        console.log('data de estado modificacda', resp);
         return {
           ok: true,
-          ticket: resp.ticket
+          estado: resp.estado
         };
       })
     );
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/tickets/${_id}`;
-    return this.http.delete(url).pipe(
+    const url = `${base_url}/estados/${_id}`;
+    return this.http.delete(url)
+    .pipe(
       map((resp: any) => {
-        console.log('data de ticket eliminado', resp);
+        console.log('data de estado eliminado', resp);
         return {
           ok: true,
-          ticket: resp.ticket
+          estado: resp.estado
         };
       })
     );

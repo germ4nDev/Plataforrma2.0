@@ -1,10 +1,10 @@
-export class PTLRequerimientoTK {
+export class PTLRequerimientoTKModel {
     constructor (
-        public requerimientoId : number,
-        public ticketId : number,
-        public nombreRequerimiento : string,
-        public descripcionRequerimiento : string,
-        public codigoError : string,
-        public estadoRequerimiento : number
+        public requerimientoId? : number,
+        public ticketId? : number,
+        public nombreRequerimiento? : string,
+        public descripcionRequerimiento? : string,
+        public estadoRequerimiento? : string,
+        // public codigoError? : string
    ) {}
 }

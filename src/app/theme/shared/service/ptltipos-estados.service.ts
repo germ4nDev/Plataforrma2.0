@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLTicketAPModel } from '../_helpers/models/PTLTicketAP.model';
+import { PTLTiposEstadosModel } from '../_helpers/models/PTLTiposEstados.model';
 
 const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
-export class PTLTicketsService {
+export class PTLTiposEstadosService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
@@ -29,58 +29,61 @@ export class PTLTicketsService {
   }
 
   getRegistros() {
-    const url = `${base_url}/tickets`;
+    const url = `${base_url}/tipos-estados`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de ticket', resp);
+        console.log('servicio de tipoEstado', resp);
         return {
           ok: true,
-          tickets: resp.tickets
+          tiposEstados: resp.tiposEstados
         };
       })
     );
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/tickets/${id}`;
-    return this.http.get(url).pipe(
+    const url = `${base_url}/tipos-estados/${id}`;
+    return this.http.get(url)
+    .pipe(
       map((resp: any) => {
-        console.log('data de ticket', resp);
+        console.log('data de tipoEstado', resp);
         return {
           ok: true,
-          ticket: resp.ticket
+          tipoEstado: resp.tipoEstado
         };
       })
     );
   }
 
-  postCrearRegistro(ticket: PTLTicketAPModel) {
-    const url = `${base_url}/tickets`;
-    return this.http.post(url, ticket);
+  postCrearRegistro(tipoEstado: PTLTiposEstadosModel) {
+    const url = `${base_url}/tipos-estados`;
+    return this.http.post(url, tipoEstado);
   }
 
-  putModificarRegistro(ticket: PTLTicketAPModel) {
-    const url = `${base_url}/tickets/${ticket.ticketId}`;
-    return this.http.put(url, ticket).pipe(
+  putModificarRegistro(tipoEstado: PTLTiposEstadosModel) {
+    const url = `${base_url}/tipos-estados/${tipoEstado.tipoEstadoId}`;
+    return this.http.put(url, tipoEstado)
+    .pipe(
       map((resp: any) => {
-        console.log('data de ticket modificacda', resp);
+        console.log('data de tipoEstado modificacda', resp);
         return {
           ok: true,
-          ticket: resp.ticket
+          tipoEstado: resp.tipoEstado
         };
       })
     );
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/tickets/${_id}`;
-    return this.http.delete(url).pipe(
+    const url = `${base_url}/tipos-estados/${_id}`;
+    return this.http.delete(url)
+    .pipe(
       map((resp: any) => {
-        console.log('data de ticket eliminado', resp);
+        console.log('data de tipoEstado eliminado', resp);
         return {
           ok: true,
-          ticket: resp.ticket
+          tipoEstado: resp.tipoEstado
         };
       })
     );
