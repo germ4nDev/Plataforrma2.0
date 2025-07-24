@@ -4,7 +4,7 @@ export class PTLSeguimientoRQModel {
         public requerimientoId? : number,
         public nombreSeguimiento? : string,
         public descripcionSeguimiento? : string,
-        public estadoSeguimiento? : boolean,
-        public estadoRequerimiento? : number,
+        public estadoSeguimiento? : string,
+        public estadoRequerimiento? : string,
    ) {}
 }

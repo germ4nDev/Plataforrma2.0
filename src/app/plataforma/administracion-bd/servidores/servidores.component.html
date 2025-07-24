@@ -1,27 +1,93 @@
 <div class="row">
     <div class="col-sm-12">
-        <div class="card">
+        <div class="card card-header-sticky">
             <div class="card-header">
-                <h5>Column Searching</h5>
+                <h4>{{ 'SERVIDORES.TITLE' | translate }}</h4>
+                <hr />
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <app-breadcrumb></app-breadcrumb>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex">
+                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
+                            {{ 'SERVIDORES.NEW' | translate }}
+                        </button>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions"
-                        class="table table-striped row-border table-hover">
+                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+                        <thead>
+                            <tr>
+                                <th>{{ 'SERVIDORES.NOMBRESERVIDOR' | translate }}</th>
+                                <th>{{ 'SERVIDORES.DESCRIPCIONSERVIDOR' | translate }}</th>
+                                <th>{{ 'SERVIDORES.RUTASERVIDOR' | translate }}</th>
+                                <th>{{ 'SERVIDORES.ESTADOSERVIDOR' | translate }}</th>
+                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let reg of registros">
+                                <td>
+                                    {{ reg.nombreServidor }}
+                                </td>
+                                <td>
+                                    {{ reg.descripcionServidor }}
+                                </td>
+                                <td>
+                                    {{ reg.rutaServidor }}
+                                </td>
+                                <td>
+                                    {{ reg.nomEstado }}
+                                </td>
+                                <td style="text-align: center; width: 10%">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                            (click)="OnEditarRegistroClick(reg.servidorId?? 0)"
+                                            title="{{ 'SERVIDORES.UPDATE' | translate }}">
+                                            <i class="feather icon-edit"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                            (click)="OnEliminarRegistroClick(reg.servidorId?? 0, reg.nombreServidor?? '')"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{ 'SERVIDORES.DELETE' | translate }}">
+                                            <i class="feather icon-trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                         <tfoot>
                             <tr>
-                                <th><input type="text" placeholder="Search Name" name="search-name"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Position" name="search-position"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Office" name="search-office"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Age" name="search-age"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Satrt Date" name="search-date"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Salary" name="search-salary"
-                                        class="form-control" /></th>
+                                <th>
+                                    <input #nombreServidor (keyup)="filtrarColumna(1, nombreServidor.value)"
+                                        type="text" placeholder="{{ 'SERVIDORES.FILTER_NAMESERVIDOR' | translate }}"
+                                        name="filtro-nombreServidor" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #descripcionServidor
+                                        (keyup)="filtrarColumna(2, descripcionServidor.value)" type="text"
+                                        placeholder="{{ 'SERVIDORES.FILTER_DESCRIPCIONSERVIDOR' | translate }}"
+                                        name="filtro-descripcionServidor" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #rutaServidor
+                                        (keyup)="filtrarColumna(2, rutaServidor.value)" type="text"
+                                        placeholder="{{ 'SERVIDORES.FILTER_RUTASERVIDOR' | translate }}"
+                                        name="filtro-rutaServidor" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #estadoServidor (keyup)="filtrarColumna(4, estadoServidor.value)"
+                                        type="text" placeholder="{{ 'SERVIDORES.FILTRO_STATUSSERVIDOR' | translate }}"
+                                        name="filtro-estadoServidor" class="form-control" />
+                                </th>
+                                <th>
+                                </th>
                             </tr>
                         </tfoot>
                     </table>
@@ -30,3 +96,4 @@
         </div>
     </div>
 </div>
+

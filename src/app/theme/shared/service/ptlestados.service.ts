@@ -2,15 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PTLConexionBDModel } from '../_helpers/models/PTLConexionBD.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { PTLEstadoModel } from '../_helpers/models/PTLEstado.model';
 
 const base_url = environment.apiUrl;
+
 @Injectable({
   providedIn: 'root'
 })
-export class PTLConexionesBDSTService {
-
+export class PTLEstadosService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
@@ -29,61 +29,63 @@ export class PTLConexionesBDSTService {
   }
 
   getRegistros() {
-    const url = `${base_url}/conexiones-bd`;
+    const url = `${base_url}/estados`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de conexion', resp);
+        console.log('servicio de estado', resp);
         return {
           ok: true,
-          conexiones: resp.conexiones
+          estados: resp.estados
         };
       })
     );
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/conexiones-bd/${id}`;
-    return this.http.get(url).pipe(
+    const url = `${base_url}/estados/${id}`;
+    return this.http.get(url)
+    .pipe(
       map((resp: any) => {
-        console.log('data de conexion', resp);
+        console.log('data de estado', resp);
         return {
           ok: true,
-          conexion: resp.conexion
+          estado: resp.estado
         };
       })
     );
   }
 
-  postCrearRegistro(conexion: PTLConexionBDModel) {
-    const url = `${base_url}/conexiones-bd`;
-    return this.http.post(url, conexion);
+  postCrearRegistro(estado: PTLEstadoModel) {
+    const url = `${base_url}/estados`;
+    return this.http.post(url, estado);
   }
 
-  putModificarRegistro(conexion: PTLConexionBDModel) {
-    const url = `${base_url}/conexiones-bd/${conexion.conexionId}`;
-    return this.http.put(url, conexion).pipe(
+  putModificarRegistro(estado: PTLEstadoModel) {
+    const url = `${base_url}/estados/${estado.estadoId}`;
+    return this.http.put(url, estado)
+    .pipe(
       map((resp: any) => {
-        console.log('data de conexion modificacda', resp);
+        console.log('data de estado modificacda', resp);
         return {
           ok: true,
-          conexion: resp.conexion
+          estado: resp.estado
         };
       })
     );
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/conexiones-bd/${_id}`;
-    return this.http.delete(url).pipe(
+    const url = `${base_url}/estados/${_id}`;
+    return this.http.delete(url)
+    .pipe(
       map((resp: any) => {
-        console.log('data de conexion eliminado', resp);
+        console.log('data de estado eliminado', resp);
         return {
           ok: true,
-          conexion: resp.conexion
+          estado: resp.estado
         };
       })
     );
   }
 }
-

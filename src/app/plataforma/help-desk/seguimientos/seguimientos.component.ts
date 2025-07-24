@@ -7,7 +7,7 @@ import { Subscription, Subject, tap, catchError, of } from 'rxjs';
 import { PTLSeguimientoRQModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoRQ.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LanguageService } from 'src/app/theme/shared/service';
-import { PtlseguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
+import { PTLSeguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
 
@@ -34,7 +34,7 @@ export class SeguimientosComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private seguimientosService: PtlseguimientosRqService,
+    private seguimientosService: PTLSeguimientosRqService,
     private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
   ) {}
@@ -58,15 +58,15 @@ export class SeguimientosComponent implements OnInit, AfterViewInit {
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
-        .get(['SEGUIMIENTOS.NOMBRESEGUIMIENTO', 'SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO', 'SEGUIMIENTOS.ESTADOSEGUIMIENTO'])
+        .get(['TICKETS.SEGUIMIENTOS.NOMBRESEGUIMIENTO', 'TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO', 'TICKETS.SEGUIMIENTOS.ESTADOSEGUIMIENTO'])
         .subscribe((translations) => {
-          this.tituloPagina = translations['SEGUIMIENTOS.TITLE'];
+          this.tituloPagina = translations['TICKETS.SEGUIMIENTOS.TITLE'];
           this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
-              { title: translations['SEGUIMIENTOS.NOMBRESEGUIMIENTO'], data: 'nombreSeguimiento' },
-              { title: translations['SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO'], data: 'descripcionSeguimiento' },
-              { title: translations['SEGUIMIENTOS.ESTADOSEGUIMIENTO'], data: 'estadoSeguimiento' },
+              { title: translations['TICKETS.SEGUIMIENTOS.NOMBRESEGUIMIENTO'], data: 'nombreSeguimiento' },
+              { title: translations['TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO'], data: 'descripcionSeguimiento' },
+              { title: translations['TICKETS.SEGUIMIENTOS.ESTADOSEGUIMIENTO'], data: 'estadoSeguimiento' },
               { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
             ]
           };
@@ -85,7 +85,7 @@ export class SeguimientosComponent implements OnInit, AfterViewInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.seguimientos.forEach((seguimiento: any) => {
-              seguimiento.nomEstado = seguimiento.estadoSeguimiento == true ? 'Activo' : 'Inactivo';
+              seguimiento.nomEstado = seguimiento.estadoSeguimiento;
             });
             this.registros = resp.seguimientos;
             console.log('Todos las seguimientos', this.registros);

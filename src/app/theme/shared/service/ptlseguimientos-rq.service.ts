@@ -10,7 +10,7 @@ const base_url = environment.apiUrl;
 @Injectable({
   providedIn: 'root'
 })
-export class PtlseguimientosRqService {
+export class PTLSeguimientosRqService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}

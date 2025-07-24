@@ -2,15 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PTLConexionBDModel } from '../_helpers/models/PTLConexionBD.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { PTLTiposEstadosModel } from '../_helpers/models/PTLTiposEstados.model';
 
 const base_url = environment.apiUrl;
+
 @Injectable({
   providedIn: 'root'
 })
-export class PTLConexionesBDSTService {
-
+export class PTLTiposEstadosService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
@@ -29,61 +29,63 @@ export class PTLConexionesBDSTService {
   }
 
   getRegistros() {
-    const url = `${base_url}/conexiones-bd`;
+    const url = `${base_url}/tipos-estados`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de conexion', resp);
+        console.log('servicio de tipoEstado', resp);
         return {
           ok: true,
-          conexiones: resp.conexiones
+          tiposEstados: resp.tiposEstados
         };
       })
     );
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/conexiones-bd/${id}`;
-    return this.http.get(url).pipe(
+    const url = `${base_url}/tipos-estados/${id}`;
+    return this.http.get(url)
+    .pipe(
       map((resp: any) => {
-        console.log('data de conexion', resp);
+        console.log('data de tipoEstado', resp);
         return {
           ok: true,
-          conexion: resp.conexion
+          tipoEstado: resp.tipoEstado
         };
       })
     );
   }
 
-  postCrearRegistro(conexion: PTLConexionBDModel) {
-    const url = `${base_url}/conexiones-bd`;
-    return this.http.post(url, conexion);
+  postCrearRegistro(tipoEstado: PTLTiposEstadosModel) {
+    const url = `${base_url}/tipos-estados`;
+    return this.http.post(url, tipoEstado);
   }
 
-  putModificarRegistro(conexion: PTLConexionBDModel) {
-    const url = `${base_url}/conexiones-bd/${conexion.conexionId}`;
-    return this.http.put(url, conexion).pipe(
+  putModificarRegistro(tipoEstado: PTLTiposEstadosModel) {
+    const url = `${base_url}/tipos-estados/${tipoEstado.tipoEstadoId}`;
+    return this.http.put(url, tipoEstado)
+    .pipe(
       map((resp: any) => {
-        console.log('data de conexion modificacda', resp);
+        console.log('data de tipoEstado modificacda', resp);
         return {
           ok: true,
-          conexion: resp.conexion
+          tipoEstado: resp.tipoEstado
         };
       })
     );
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/conexiones-bd/${_id}`;
-    return this.http.delete(url).pipe(
+    const url = `${base_url}/tipos-estados/${_id}`;
+    return this.http.delete(url)
+    .pipe(
       map((resp: any) => {
-        console.log('data de conexion eliminado', resp);
+        console.log('data de tipoEstado eliminado', resp);
         return {
           ok: true,
-          conexion: resp.conexion
+          tipoEstado: resp.tipoEstado
         };
       })
     );
   }
 }
-

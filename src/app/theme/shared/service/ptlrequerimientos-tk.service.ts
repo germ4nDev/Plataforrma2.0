@@ -73,6 +73,17 @@ export class PTLRequerimientosTkService {
     );
   }
 
+  putModificarEstadoRequerimiento(requerimientoId: number, nuevoEstado: string) {
+  const url = `${base_url}/requerimientos-tk/${requerimientoId}`;
+  return this.http.patch(url, { estadoRequerimiento: nuevoEstado }).pipe(
+    map((resp: any) => {
+      console.log('Estado de requerimiento actualizado', resp);
+      return { ok: true };
+    })
+  );
+}
+
+
   deleteEliminarRegistro(_id: number) {
     const url = `${base_url}/requerimientos-tk/${_id}`;
     return this.http.delete(url).pipe(
