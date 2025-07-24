@@ -6,6 +6,7 @@ import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSusc
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,6 +22,7 @@ export class GestionSuscriptorComponent {
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;
+  cosigoSusucriptor = uuidv4();
 
   // constructor
   constructor(
@@ -51,6 +53,7 @@ export class GestionSuscriptorComponent {
         });
       } else {
         this.modoEdicion = false;
+        this.FormRegistro.codigoSuscriptor = uuidv4();
       }
     });
   }

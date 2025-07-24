@@ -8,4 +8,7 @@ export class GradientConfig {
   static nav_fixed_layout = true; // false
   static header_fixed_layout = true; // false
   static isBoxLayout = false; // true
+  static collapseMenu:boolean = false;
 }
+
+

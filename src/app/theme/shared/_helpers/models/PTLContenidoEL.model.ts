@@ -5,6 +5,7 @@ export class PTLContenidoELModel {
         public nombreContenido? : string,
         public descripcionContenido? : string,
         public contenido? : string,
-        public estadoContenido? : boolean
+        public estadoContenido? : boolean,
+        public nomEstado? : string
     ) {}
 }

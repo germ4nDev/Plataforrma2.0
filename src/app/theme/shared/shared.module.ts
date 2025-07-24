@@ -15,6 +15,9 @@ import { AlertComponent } from './components/alert/alert.component';
 import { CustomTranslateLoader } from './custom-translate-loader';
 import { GalleryModule } from '@ks89/angular-modal-gallery';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { NavCollapseComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-collapse/nav-collapse.component';
+import { NavGroupComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-group/nav-group.component';
+import { NavItemComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-item/nav-item.component';
 
 // third party
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -24,26 +27,26 @@ import 'mousetrap';
 
 // bootstrap import
 import {
-    NgbDropdownModule,
-    NgbNavModule,
-    NgbTooltipModule,
-    NgbModule,
-    NgbAccordionModule,
-    NgbCollapseModule,
-    NgbDatepickerModule,
-    NgbProgressbarModule
-  } from '@ng-bootstrap/ng-bootstrap';
+  NgbDropdownModule,
+  NgbNavModule,
+  NgbTooltipModule,
+  NgbModule,
+  NgbAccordionModule,
+  NgbCollapseModule,
+  NgbDatepickerModule,
+  NgbProgressbarModule
+} from '@ng-bootstrap/ng-bootstrap';
 
-  const bootstrap = [
-    NgbDropdownModule,
-    NgbNavModule,
-    NgbTooltipModule,
-    NgbModule,
-    NgbAccordionModule,
-    NgbCollapseModule,
-    NgbDatepickerModule,
-    NgbProgressbarModule
-  ];
+const bootstrap = [
+  NgbDropdownModule,
+  NgbNavModule,
+  NgbTooltipModule,
+  NgbModule,
+  NgbAccordionModule,
+  NgbCollapseModule,
+  NgbDatepickerModule,
+  NgbProgressbarModule
+];
 
 @NgModule({
   imports: [

@@ -5,7 +5,7 @@ import { NavigationEnd, Router, RouterModule, Event } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 
 // project import
-import { NavigationItem, NavigationItems } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationItem } from '../../../layout/admin/navigation/navigation';
 
 interface titleType {
   // eslint-disable-next-line
@@ -26,7 +26,7 @@ export class BreadcrumbComponent {
   // public props
   @Input() type: string;
 
-  navigations: NavigationItem[];
+  navigations: NavigationItem[] = [];
   breadcrumbList: Array<string> = [];
   navigationList!: titleType[];
 
@@ -35,7 +35,7 @@ export class BreadcrumbComponent {
     private route: Router,
     private titleService: Title
   ) {
-    this.navigations = NavigationItems;
+    this.navigations = [];
     this.type = 'theme2';
     this.setBreadcrumb();
   }

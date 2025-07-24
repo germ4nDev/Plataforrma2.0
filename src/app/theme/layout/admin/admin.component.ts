@@ -1,11 +1,14 @@
 // Angular Import
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Location, LocationStrategy } from '@angular/common';
+import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { GradientConfig } from 'src/app/app-config';
 import { LanguageService } from '../../shared/service/lenguage.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
