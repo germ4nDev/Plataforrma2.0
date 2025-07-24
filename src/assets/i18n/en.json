@@ -7,7 +7,19 @@
         "INACTIVE": "Inactive",
         "REGRESAR": "Go Back",
         "MENU": "Menu",
-        "FILTERS": "Filters"
+        "FILTERS": "Filters",
+        "REQUIRED": "Field Required",
+        "NAVBAR": {
+            "NOTIFICACIONES": "Notifications",
+            "READ": "Mark as Read",
+            "CLEAR": "Clear List",
+            "NEW": "New",
+            "EARLIER": "Earlier",
+            "SHOW": "Show All",
+            "PROFILE": "Profile",
+            "MESSAGES": "My Messages",
+            "LOCK": "Lock Screen"
+        }
     },
     "APLICACIONES": {
         "TITLE": "Aplications Administration",

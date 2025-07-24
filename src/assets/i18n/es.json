@@ -8,7 +8,19 @@
         "INACTIVE": "Inactivo",
         "REGRESAR": "Regresar",
         "MENU": "Menu",
-        "FILTERS": "Filtros"
+        "FILTERS": "Filtros",
+        "REQUIRED": "Campp Requerido",
+        "NAVBAR": {
+            "NOTIFICACIONES": "Notificaciones",
+            "READ": "Marcar como Leído",
+            "CLEAR": "Limpiar Lista",
+            "NEW": "Recientes",
+            "EARLIER": "Anteriores",
+            "SHOW": "Mostrar Todas",
+            "PROFILE": "Perfil",
+            "MESSAGES": "Mis Mensajes",
+            "LOCK": "Bloquear Pantalla"
+        }
     },
     "APLICACIONES": {
         "TITLE": "Administración de Aplicaciones",

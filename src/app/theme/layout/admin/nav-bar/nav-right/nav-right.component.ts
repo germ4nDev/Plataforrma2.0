@@ -9,8 +9,6 @@ import { LanguageSelectorComponent } from 'src/app/theme/shared/components/langu
 import { AuthenticationService } from 'src/app/theme/shared/service';
 import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 import { ChatMsgComponent } from './chat-msg/chat-msg.component';
-import { NavLeftComponent } from '../nav-left/nav-left.component';
-import { NavSearchComponent } from '../nav-left/nav-search/nav-search.component';
 
 @Component({
   selector: 'app-nav-right',
@@ -20,11 +18,10 @@ import { NavSearchComponent } from '../nav-left/nav-search/nav-search.component'
     RouterModule,
     NgbDropdownModule,
     TranslateModule,
+    TranslateModule,
     LanguageSelectorComponent,
     ChatUserListComponent,
-    ChatMsgComponent,
-    NavLeftComponent,
-    NavSearchComponent
+    ChatMsgComponent
   ],
   templateUrl: './nav-right.component.html',
   styleUrls: ['./nav-right.component.scss'],

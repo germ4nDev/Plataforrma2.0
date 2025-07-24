@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataTablesModule } from 'angular-datatables';
@@ -17,15 +17,18 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { LayoutComponent } from 'src/app/theme/shared/components/layout/layout.component';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 
 @Component({
   selector: 'app-gestion-aplicacion',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule, LayoutComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-aplicacion.component.html',
   styleUrl: './gestion-aplicacion.component.scss'
 })
 export class GestionAplicacionComponent implements OnInit {
+@Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLAplicacionModel = new PTLAplicacionModel();
   menuItems: NavigationItem[] = [];
   gradientConfig: any;
@@ -151,6 +154,7 @@ export class GestionAplicacionComponent implements OnInit {
     }
   }
 
-  onNavCollapse() {}
-  onNavCollapsedMob() {}
+  toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }

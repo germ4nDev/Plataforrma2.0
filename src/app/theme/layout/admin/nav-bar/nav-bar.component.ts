@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
@@ -8,21 +8,29 @@ import { NavSearchComponent } from './nav-left/nav-search/nav-search.component';
 @Component({
   selector: 'app-nav-bar',
   standalone: true,
-  imports: [CommonModule, RouterModule, NavRightComponent, NavSearchComponent],
+  imports: [CommonModule, RouterModule, NavRightComponent],
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss']
 })
-export class NavBarComponent {
+export class NavBarComponent implements OnInit {
   gradientConfig = GradientConfig;
+  navbarColor: string = '#052f5f';
   menuClass = false;
   collapseStyle = 'none';
   windowWidth = window.innerWidth;
-
+  logoEmpresa: string = 'assets/images/logo.png';
   @Output() NavCollapse = new EventEmitter<void>();
   @Output() NavCollapsedMob = new EventEmitter<void>();
 
   constructor() {
     console.log('abriendo navbar');
+  }
+
+  ngOnInit(): void {
+    const storedColor = localStorage.getItem('navbarColor');
+    if (storedColor) {
+      this.navbarColor = storedColor;
+    }
   }
 
   toggleMobOption(): void {

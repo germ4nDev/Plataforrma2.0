@@ -1,8 +1,6 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
-<!-- <br><br> -->
 <div class="layout-wrapper">
     <aside class="aside-left">
-        <!-- Tabs -->
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
@@ -18,9 +16,29 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3" style="height: calc(100vh - 56px)">
-                    <h3>{{ 'APLICACIONES.FILTROS_TITULO' | translate }}</h3>
+                                    <!-- <form #validationForm="ngForm" class="editForm" novalidate>
+                    <p>{{ 'APLICACIONES.FILTROS_TITULO' | translate }}</p>
                     <input type="text" [(ngModel)]="filtroPersonalizado"
                         placeholder="{{ 'APLICACIONES.BUSCAR_NOMBRE' | translate }}" class="form-control mb-3" />
+
+                    <div class="form-group">
+                        <label class="form-control-label" for="codigoAplicacion">
+                            {{ 'APLICACIONES.FILTROS.CODIGOAPP' | translate }}</label>
+                        <select class="form-control input-md" name="codigoAplicacion" id="codigoAplicacion"
+                            [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched) }"
+                            #codigoAplicacion="ngModel" required [(ngModel)]="codigoAplicacion"
+                            (change)="onFiltroCodigoChangeClick($event)">
+                            <option value="todos">{{ 'APLICACIONES.FILTROS.TODOS' | translate }}</option>
+                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.nombreAplicacion }}</option>
+                        </select>
+                        <label *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched)"
+                            class="error jquery-validation-error small form-text invalid-feedback">
+                            {{ 'PLATAFORMA.REQUIRED' | translate }}
+                        </label>
+                    </div>
+                                    </form> -->
+
                 </div>
             </ng-container>
         </div>

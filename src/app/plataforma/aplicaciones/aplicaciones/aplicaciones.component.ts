@@ -240,7 +240,7 @@ import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.com
 @Component({
   selector: 'app-aplicaciones',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './aplicaciones.component.html',
   styleUrl: './aplicaciones.component.scss'
 })
@@ -345,6 +345,10 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.column(columna).search(valor).draw();
     });
+  }
+
+  onFiltroCodigoChangeClick(evento: any) {
+    console.log('filtrar el codigo ', evento.target.value);
   }
 
   getEstado(estado: boolean): string {
