@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
@@ -14,12 +14,16 @@ import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { catchError, Subject, tap } from 'rxjs';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.scss'
 })
@@ -27,18 +31,24 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
   //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
+  @Output()
+  toggleSidebar = new EventEmitter<void>();
   datatableElement!: DataTableDirective;
   registrosSub?: Subscription;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  menuItems: NavigationItem[] = [];
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
   registros: PTLUsuarioModel[] = [];
+  registrosFiltrado: PTLUsuarioModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   //#endregion VARIABLES
 
   constructor(
     private router: Router,
+    private navigationService: NavigationService,
     private usuariosService: PTLUsuariosService,
     private translate: TranslateService,
     private languageService: LanguageService,
@@ -61,6 +71,9 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    console.log('elementos menu componente', this.menuItems);
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
@@ -106,6 +119,7 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
               regs.nomEstado = regs.estadoUsuario == true ? 'Activo' : 'Inactivo';
             });
             this.registros = resp.usuarios;
+            this.registrosFiltrado = resp.usuarios;
             console.log('Todos las usuarios', this.registros);
             this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
             return;
@@ -159,5 +173,36 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+
+  onFiltroIdentificacionChangeClick(evento: any) {
+    const textoFiltro = evento.target.value;
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
+        (app.identificacionUsuario || 0).includes(textoFiltro)
+      );
+    }
+  }
+
+  onFiltroNombreChangeClick(evento: any) {
+    console.log('filtrar el nombre ', evento.target.value);
+  }
+  onFiltroCorreoChangeClick(evento: any) {
+    console.log('filtrar el correo ', evento.target.value);
+  }
+  onFiltroUsernameChangeClick(evento: any) {
+    console.log('filtrar el username ', evento.target.value);
+  }
+  onFiltroDescripcionChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+  }
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

@@ -44,7 +44,16 @@
         "ELIMINARTEXTO": "¡Será Eliminada la Aplicación ",
         "ELIMINAREXITOSA": "¡la Aplicación fué eliminada correctamente ",
         "ELIMINARERROR": "No se pudo eliminar el Aplicación.",
-        "CREATE": "Crear Aplicación"
+        "CREATE": "Crear Aplicación",
+        "FILTROS": {
+            "TITULO" : "Filtros Aplicaciones",
+            "FILTROCODIGO" : "Código",
+            "FILTRONOMBRE" : "Nombre",
+            "FILTRODECRIPCION" : "Descripción",
+            "FILTROESTADO" : "Estado",
+            "TODOS" : "Mostrar Todos",
+            "DESCRIPCIONCHOLDER": "Descripción Aplicación"
+        }
     },
     "SITIOS": {
         "TITLE": "Sitios",

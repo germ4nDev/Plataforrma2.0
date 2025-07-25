@@ -245,14 +245,15 @@ import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.com
   styleUrl: './aplicaciones.component.scss'
 })
 export class AplicacionesComponent implements OnInit, AfterViewInit {
-  @ViewChild(DataTableDirective, { static: false }) datatableElement!: DataTableDirective;
+  @ViewChild(DataTableDirective, { static: false })
+  datatableElement!: DataTableDirective;
   @Output() toggleSidebar = new EventEmitter<void>();
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   aplicaciones: PTLAplicacionModel[] = [];
   aplicacionesFiltrado: PTLAplicacionModel[] = [];
   dtTrigger: Subject<any> = new Subject<any>();
   dtColumnSearchingOptions: DataTables.Settings = {};
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   menuItems: NavigationItem[] = [];
   filtroPersonalizado: string = '';
@@ -265,10 +266,23 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     private router: Router,
     private navigationService: NavigationService,
     private aplicacionesService: PtlAplicacionesService,
-    private translate: TranslateService,
-    private BreadCrumb: BreadcrumbComponent
+    private translate: TranslateService
   ) {
     this.gradientConfig = GradientConfig;
+  }
+
+  ngAfterViewInit(): void {
+    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      dtInstance.columns().every(function () {
+        const that = this;
+        $('input', this.header()).on('keyup change', function () {
+          const valor = $(this).val() as string;
+          if (that.search() !== valor) {
+            that.search(valor).draw();
+          }
+        });
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -300,21 +314,6 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
 
         this.consultarAplicaciones();
       });
-  }
-
-  ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
-        });
-      });
-    });
   }
 
   ngOnDestroy(): void {
@@ -351,7 +350,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
 
   onFiltroCodigoChangeClick(evento: any) {
     console.log('filtrar el codigo ', evento.target.value);
-    if (evento.target.value == '-1') {
+    if (evento.target.value == 'todos') {
       this.aplicacionesFiltrado = this.aplicaciones;
     } else {
       this.aplicacionesFiltrado = this.aplicacionesFiltrado.filter((x) => (x.codigoAplicacion = evento.target.value));
@@ -360,7 +359,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
 
   onFiltroNombreChangeClick(evento: any) {
     console.log('filtrar el nombre ', evento.target.value);
-    if (evento.target.value == '-1') {
+    if (evento.target.value == 'todos') {
       this.aplicacionesFiltrado = this.aplicaciones;
     } else {
       this.aplicacionesFiltrado = this.aplicacionesFiltrado.filter((x) => (x.nombreAplicacion = evento.target.value));
@@ -373,7 +372,19 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     if (!textoFiltro) {
       this.aplicacionesFiltrado = [... this.aplicaciones];
     } else {
-      this.aplicacionesFiltrado = this.aplicaciones.filter((app) => (app.descripcionAplicacion || '').toLowerCase().includes(textoFiltro));
+      this.aplicacionesFiltrado = this.aplicacionesFiltrado.filter((app) => (app.descripcionAplicacion || '').toLowerCase().includes(textoFiltro));
+    }
+  }
+
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+    // const estado: boolean = evento.target.value || true;
+    if (evento.target.value == 'todos') {
+      this.aplicacionesFiltrado = this.aplicaciones;
+    } else {
+        const estado = evento.target.value == "true" ? true : false;
+        console.log('Aplicaciones', this.aplicacionesFiltrado);
+      this.aplicacionesFiltrado = this.aplicacionesFiltrado.filter((x) => (x.estadoAplicacion = estado));
     }
   }
 

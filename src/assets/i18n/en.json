@@ -43,7 +43,16 @@
         "ELIMINARTEXTO": "¡Aplication will be eliminated ",
         "ELIMINAREXITOSA": "¡Aplication was successfully eliminated ",
         "ELIMINARERROR": "The aplication could't be eliminated.",
-        "CREATE": "Create Aplication"
+        "CREATE": "Create Aplication",
+        "FILTROS": {
+            "TITULO" : "Aplications Filters",
+            "FILTROCODIGO" : "Code",
+            "FILTRONOMBRE" : "Name",
+            "FILTRODECRIPCION" : "Descripction",
+            "FILTROESTADO" : "Status",
+            "TODOS" : "Show All",
+            "DESCRIPCIONCHOLDER": "aplication Descripction"
+        }
     },
     "SITIOS": {
         "TITLE": "Sites",
