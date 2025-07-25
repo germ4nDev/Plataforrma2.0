@@ -250,6 +250,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   aplicaciones: PTLAplicacionModel[] = [];
+  aplicacionesFiltrado: PTLAplicacionModel[] = [];
   dtTrigger: Subject<any> = new Subject<any>();
   dtColumnSearchingOptions: DataTables.Settings = {};
 
@@ -330,6 +331,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
               app.nomEstado = app.estadoAplicacion ? 'Activa' : 'Inactiva';
             });
             this.aplicaciones = resp.aplicaciones;
+            this.aplicacionesFiltrado = resp.aplicaciones;
             this.dtTrigger.next(null);
           }
         }),
@@ -349,6 +351,30 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
 
   onFiltroCodigoChangeClick(evento: any) {
     console.log('filtrar el codigo ', evento.target.value);
+    if (evento.target.value == '-1') {
+      this.aplicacionesFiltrado = this.aplicaciones;
+    } else {
+      this.aplicacionesFiltrado = this.aplicacionesFiltrado.filter((x) => (x.codigoAplicacion = evento.target.value));
+    }
+  }
+
+  onFiltroNombreChangeClick(evento: any) {
+    console.log('filtrar el nombre ', evento.target.value);
+    if (evento.target.value == '-1') {
+      this.aplicacionesFiltrado = this.aplicaciones;
+    } else {
+      this.aplicacionesFiltrado = this.aplicacionesFiltrado.filter((x) => (x.nombreAplicacion = evento.target.value));
+    }
+  }
+
+  onFiltroDescripcionChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.aplicacionesFiltrado = [... this.aplicaciones];
+    } else {
+      this.aplicacionesFiltrado = this.aplicaciones.filter((app) => (app.descripcionAplicacion || '').toLowerCase().includes(textoFiltro));
+    }
   }
 
   getEstado(estado: boolean): string {
@@ -384,10 +410,6 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
         });
       }
     });
-  }
-
-  toggleTheme(): void {
-    document.body.classList.toggle('dark-theme');
   }
 
   toggleNav(): void {

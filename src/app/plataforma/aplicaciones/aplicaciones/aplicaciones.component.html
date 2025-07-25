@@ -16,9 +16,32 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3" style="height: calc(100vh - 56px)">
-                                    <!-- <form #validationForm="ngForm" class="editForm" novalidate>
                     <p>{{ 'APLICACIONES.FILTROS_TITULO' | translate }}</p>
-                    <input type="text" [(ngModel)]="filtroPersonalizado"
+
+
+                    <div>
+                        <small>Codigo Aplicacion</small>
+                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control" required>
+                            <option value="-1">Seleccione una Aplicacion</option>
+                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.codigoAplicacion }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <small>Nombre Aplicacion</small>
+                        <select (input)="onFiltroNombreChangeClick($event)" class="form-control" required>
+                            <option value="todos">{{ 'APLICACIONES.FILTROS.TODOS' | translate }}</option>
+                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.nombreAplicacion }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <small>Descripcion Aplicacion</small>
+                        <input type="text" (change)="onFiltroDescripcionChangeClick($event)" class="form-control"
+                            placeholder="{{ 'APLICACIONES.BUSCAR_NOMBRE' | translate }}" />
+                    </div>
+
+                    <!-- <input type="text" [(ngModel)]="filtroPersonalizado"
                         placeholder="{{ 'APLICACIONES.BUSCAR_NOMBRE' | translate }}" class="form-control mb-3" />
 
                     <div class="form-group">
@@ -26,8 +49,7 @@
                             {{ 'APLICACIONES.FILTROS.CODIGOAPP' | translate }}</label>
                         <select class="form-control input-md" name="codigoAplicacion" id="codigoAplicacion"
                             [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched) }"
-                            #codigoAplicacion="ngModel" required [(ngModel)]="codigoAplicacion"
-                            (change)="onFiltroCodigoChangeClick($event)">
+                            #codigoAplicacion="ngModel" (change)="onFiltroCodigoChangeClick($event)">
                             <option value="todos">{{ 'APLICACIONES.FILTROS.TODOS' | translate }}</option>
                             <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.nombreAplicacion }}</option>
@@ -36,8 +58,7 @@
                             class="error jquery-validation-error small form-text invalid-feedback">
                             {{ 'PLATAFORMA.REQUIRED' | translate }}
                         </label>
-                    </div>
-                                    </form> -->
+                    </div> -->
 
                 </div>
             </ng-container>
@@ -74,7 +95,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let app of aplicaciones">
+                            <tr *ngFor="let app of aplicacionesFiltrado">
                                 <td>{{ app.codigoAplicacion }}</td>
                                 <td>{{ app.nombreAplicacion }}</td>
                                 <td>{{ app.descripcionAplicacion }}</td>

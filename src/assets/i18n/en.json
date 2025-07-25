@@ -19,7 +19,7 @@
             "PROFILE": "Profile",
             "MESSAGES": "My Messages",
             "LOCK": "Lock Screen"
-        }
+        },
         "INSERTAR": "The record was successfully created",
         "MODIFICAR": "The record was successfully updated",
         "NOINSERTO": "The record could not be inserted",
