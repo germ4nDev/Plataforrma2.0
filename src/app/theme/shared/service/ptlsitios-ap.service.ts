@@ -33,11 +33,12 @@ export class PTLSitiosAPService {
     };
   }
 
-  getSitios() {
-    return this.http.get<PTLSitiosAPModel>(`${environment.apiUrl}/sitios-ap`)
+  getRegistros() {
+    const url = `${base_url}/sitios-ap`;
+    return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('respuesta servicio', resp);
+        console.log('servicio de sitios', resp);
         return {
           ok: true,
           sitios: resp.sitios
@@ -46,11 +47,11 @@ export class PTLSitiosAPService {
     );
   }
 
-  getSitioById(id: number) {
+ getRegistroById(id: number) {
     const url = `${base_url}/sitios-ap/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('data de sitios', resp);
+        console.log('data de sitio', resp);
         return {
           ok: true,
           sitio: resp.sitio
@@ -59,16 +60,16 @@ export class PTLSitiosAPService {
     );
   }
 
-  insertarSitio(sitio: PTLSitiosAPModel) {
+  postCrearRegistro(sitio: PTLSitiosAPModel) {
     const url = `${base_url}/sitios-ap`;
     return this.http.post(url, sitio);
   }
 
-  modificarSitio(sitio: PTLSitiosAPModel) {
+  putModificarRegistro(sitio: PTLSitiosAPModel) {
     const url = `${base_url}/sitios-ap/${sitio.sitioId}`;
     return this.http.put(url, sitio).pipe(
       map((resp: any) => {
-        console.log('data de sitio modificada', resp);
+        console.log('data de sitio modificacda', resp);
         return {
           ok: true,
           sitio: resp.sitio
@@ -77,11 +78,11 @@ export class PTLSitiosAPService {
     );
   }
 
-  eliminarSitio(_id: number) {
+  deleteEliminarRegistro(_id: number) {
     const url = `${base_url}/sitios-ap/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        console.log('data de sitio modificacda', resp);
+        console.log('data de sitio eliminado', resp);
         return {
           ok: true,
           sitio: resp.sitio

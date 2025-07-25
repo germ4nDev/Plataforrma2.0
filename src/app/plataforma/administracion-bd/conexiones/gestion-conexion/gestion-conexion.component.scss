@@ -30,10 +30,11 @@
 .btn-NuevoRegistro:hover i {
     transform: translateX(-5px);
 }
+
 .card-header-sticky {
     position: sticky;
     top: 57px;
-    background: white;;
+    background: white;
     z-index: 100;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -48,7 +49,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-            margin-bottom: -15px;
+    margin-bottom: -15px;
   }
 
   .radio-button input[type="radio"] {

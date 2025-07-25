@@ -1,14 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
 import { Subscription, Subject, tap, catchError, of } from 'rxjs';
+import { GradientConfig } from 'src/app/app-config';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LanguageService, PtlAplicacionesService } from 'src/app/theme/shared/service';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -17,7 +22,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-conexciones',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './conexiones.component.html',
   styleUrl: './conexiones.component.scss'
 })
@@ -25,6 +30,9 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
  //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
+  @Output() toggleSidebar = new EventEmitter<void>();
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+
   datatableElement!: DataTableDirective;
   registrosSub?: Subscription;
   dtColumnSearchingOptions: DataTables.Settings = {};
@@ -34,6 +42,9 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
   suscriptores: PTLSuscriptorModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
+  menuItems: NavigationItem[] = [];
+  hasFiltersSlot: boolean = false;
+  gradientConfig;
 
   //#endregion VARIABLES
 
@@ -44,8 +55,11 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
     private aplicacionesService: PtlAplicacionesService,
     private suscriptoresService: PTLSuscriptoresService,
     private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
-  ) {}
+    private BreadCrumb: BreadcrumbComponent,
+    private navigationService: NavigationService
+  ) {
+    this.gradientConfig = GradientConfig;
+  }
 
   ngAfterViewInit(): void {
     this.BreadCrumb.setBreadcrumb();
@@ -63,10 +77,20 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.languageService.currentLang$.subscribe((lang) => {
-      this.translate.use(lang);
+    // this.languageService.currentLang$.subscribe((lang) => {
+    //   this.translate.use(lang);
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    console.log('elementos menu componente', this.menuItems);
+    this.hasFiltersSlot = true;
       this.translate
-        .get(['CONEXIONES.NOMBREAPLICACION', 'CONEXIONES.NOMBRESUSCRIPTOR', 'CONEXIONES.NOMBRESERVIDOR', 'CONEXIONES.NOMBREBD', 'CONEXIONES.ESTADOCONEXION'])
+        .get([
+            'CONEXIONES.NOMBREAPLICACION',
+            'CONEXIONES.NOMBRESUSCRIPTOR',
+            'CONEXIONES.NOMBRESERVIDOR',
+            'CONEXIONES.NOMBREBD',
+            'CONEXIONES.ESTADOCONEXION'
+        ])
         .subscribe((translations) => {
           this.tituloPagina = translations['CONEXIONES.TITLE'];
           this.dtColumnSearchingOptions = {
@@ -82,7 +106,7 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
           };
           this.consultarRegistros();
         });
-    });
+    // });
   }
 
   ngOnDestroy(): void {
@@ -192,5 +216,8 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

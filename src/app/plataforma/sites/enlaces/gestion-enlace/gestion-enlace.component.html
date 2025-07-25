@@ -1,25 +1,36 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h5>{{ 'ENLACES.GESTION.TITLE' | translate }}</h5>
-                <hr>
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+            </div>
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                        <h5>{{ 'ENLACES.GESTION.TITLE' | translate }}</h5>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex gap-3">
                         <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
-                            (click)="btnInsertEditEnlace(validationForm)">
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'ENLACES.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro"
-                            (click)="btnInsertEditEnlace(validationForm)">
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'ENLACES.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarEnlace()">
+                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
@@ -27,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        <div class="card content-scroll-wrapper">
             <div class="card-header">
                 <h4 *ngIf="!modoEdicion">{{ 'ENLACES.NEW' | translate }}</h4>
                 <h4 *ngIf="modoEdicion">{{ 'ENLACES.UPDATE' | translate }}</h4>
@@ -48,8 +59,7 @@
                                     <option [value]="sitio.sitioId" *ngFor="let sitio of sitios">
                                         {{ sitio.nombreSitio }}</option>
                                 </select>
-                                <label
-                                    *ngIf="!sitioId.valid && (sitioId.dirty || sitioId.touched || isSubmit)"
+                                <label *ngIf="!sitioId.valid && (sitioId.dirty || sitioId.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'ENLACES.GESTION.REQUERIDOSITIOS' | translate }}
                                 </label>

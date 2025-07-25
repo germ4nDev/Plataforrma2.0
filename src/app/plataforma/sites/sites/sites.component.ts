@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
@@ -15,17 +15,25 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
+import { GradientConfig } from 'src/app/app-config';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 
 @Component({
   selector: 'app-sites',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './sites.component.html',
   styleUrl: './sites.component.scss'
 })
 export class SitesComponent implements OnInit, AfterViewInit {
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
+  @Output() toggleSidebar = new EventEmitter<void>();
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+
   datatableElement!: DataTableDirective;
   registrosSub?: Subscription;
 
@@ -34,20 +42,36 @@ export class SitesComponent implements OnInit, AfterViewInit {
   sitiosAP: PTLSitiosAPModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
+  menuItems: NavigationItem[] = [];
+  hasFiltersSlot: boolean = false;
+  gradientConfig;
 
   constructor(
     private router: Router,
     private sitiosService: PTLSitiosAPService,
     private translate: TranslateService,
     private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
-  ) {}
+    private BreadCrumb: BreadcrumbComponent,
+    private navigationService: NavigationService,
+  ) {
+    this.gradientConfig = GradientConfig;
+  }
 
   ngOnInit() {
-    this.languageService.currentLang$.subscribe((lang) => {
-      this.translate.use(lang);
+    // this.languageService.currentLang$.subscribe((lang) => {
+    //   this.translate.use(lang);
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    console.log('elementos menu componente', this.menuItems);
+    this.hasFiltersSlot = true;
       this.translate
-        .get(['SITIOS.NAME', 'SITIOS.DESCRIPTION', 'SITIOS.URL', 'SITIOS.SITESPORT', 'SITIOS.STATUS', 'PLATAFORMA.OPTIONS'])
+        .get([
+            'SITIOS.NAME',
+            'SITIOS.DESCRIPTION',
+            'SITIOS.URL',
+            'SITIOS.SITESPORT',
+            'SITIOS.STATUS',
+            'PLATAFORMA.OPTIONS'])
         .subscribe((translations) => {
           this.tituloPagina = translations['SITIOS.TITLE'];
           this.dtColumnSearchingOptions = {
@@ -63,12 +87,12 @@ export class SitesComponent implements OnInit, AfterViewInit {
           };
           this.consultarSitios();
         });
-    });
+    // });
   }
 
   consultarSitios() {
     this.registrosSub = this.sitiosService
-      .getSitios()
+      .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
@@ -135,7 +159,7 @@ export class SitesComponent implements OnInit, AfterViewInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.sitiosService.eliminarSitio(id).subscribe({
+        this.sitiosService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SITIOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.sitiosAP = this.sitiosAP.filter((s) => s.sitioId !== id);
@@ -147,5 +171,8 @@ export class SitesComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

@@ -11,6 +11,9 @@ export class PTLConexionBDModel {
         public BDUser? : string,
         public BDPassword? : string,
         public BDPort? : string,
-        public estadoConexion? : boolean
+        public estadoConexion? : boolean,
+        public nombreAplicacion? : string,
+        public nombreSuscriptor? : string,
+        public nomEstado? : string
     ) {}
 }

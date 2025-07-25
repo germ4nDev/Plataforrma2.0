@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CommonModule, LocationStrategy, Location } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,16 +10,30 @@ import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLCon
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import { catchError, of, Subscription, tap } from 'rxjs';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { GradientConfig } from 'src/app/app-config';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
 @Component({
   selector: 'app-geston-contenido',
   standalone: true,
-  imports: [CommonModule, SharedModule, NarikCustomValidatorsModule],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-contenido.component.html',
   styleUrl: './gestion-contenido.component.scss'
 })
 export class GestonContenidoComponent implements OnInit {
+  @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLContenidoELModel = new PTLContenidoELModel();
+  menuItems: NavigationItem[] = [];
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
+
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;
@@ -28,23 +42,36 @@ export class GestonContenidoComponent implements OnInit {
 
   constructor(private router: Router,
     private route : ActivatedRoute,
-    private contenidoService : PTLContenidosELService,
+    private registrosService : PTLContenidosELService,
     private enlacesService: PTLEnlacesSTService,
-    private BreadCrumb : BreadcrumbComponent
+    private BreadCrumb : BreadcrumbComponent,
+    private layoutInitializer: LayoutInitializerService,
+    private locationStrategy: LocationStrategy,
+    private location: Location,
+    private navigationService: NavigationService,
+    private translate: TranslateService,
   ) {
     this.isSubmit = false;
+    GradientConfig.header_fixed_layout = true
+    this.gradientConfig = GradientConfig;
+    let current_url = this.location.path();
+    const baseHref = this.locationStrategy.getBaseHref();
+
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.navCollapsedMob = false;
   }
 
   ngOnInit() {
-      this.BreadCrumb.setBreadcrumb();
-      this.consultarEnlaces();
+    this.BreadCrumb.setBreadcrumb();
+    this.consultarEnlaces();
+    this.layoutInitializer.applyLayout();
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
       this.route.queryParams.subscribe(params => {
-        const id = params['regId'];
-        console.log('me llena el Id', id);
-
-        if (id) {
+        const registroId = params['regId'];
+      if (registroId) {
           this.modoEdicion = true;
-          this.contenidoService.getContenidoById(id).subscribe({
+          this.registrosService.getRegistroById(registroId).subscribe({
             next: (resp: any) => {
               this.FormRegistro = resp.contenido;
               console.log('respuesta componente', this.FormRegistro);
@@ -62,7 +89,7 @@ export class GestonContenidoComponent implements OnInit {
 
     consultarEnlaces() {
           this.enlaceSub = this.enlacesService
-            .getEnlaces()
+            .getRegistros()
             .pipe(
               tap((resp: any) => {
                 if (resp.ok) {
@@ -87,7 +114,7 @@ export class GestonContenidoComponent implements OnInit {
         this.FormRegistro.enlaceId = enlace.enlaceId;
       }
 
-    btnInsertEditContenido(form: any) {
+    btnGestionarRegistroClick(form: any) {
       this.isSubmit = true;
 
       if (!form.valid) {
@@ -95,27 +122,27 @@ export class GestonContenidoComponent implements OnInit {
       }
 
       if (this.modoEdicion) {
-          this.contenidoService.modificarContenido(this.FormRegistro).subscribe({
+          this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
             next: (resp: any) => {
               if (resp.ok) {
-                Swal.fire('', 'El contenido se modificó correctamente', 'success');
+                Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
                 this.router.navigate(['/sites/contenidos']);
               } else {
-                Swal.fire('Error', resp.message || 'No se pudo actualizar el contenido', 'error');
+                Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
               }
             },
             error: (err: any) => {
               console.error(err);
-              Swal.fire('Error', 'No se pudo actualizar el contenido', 'error');
+              Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
             }
           });
         }
         else
         {
-          this.contenidoService.insertarContenido(this.FormRegistro).subscribe({
+          this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
               next: (resp:any) => {
                 if (resp.ok) {
-                  Swal.fire('', 'El contenido se insertó correctamente', 'success');
+                  Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
                   form.resetForm();
                   this.isSubmit = false;
                   this.router.navigate(['/sites/contenidos']);
@@ -123,13 +150,16 @@ export class GestonContenidoComponent implements OnInit {
               },
               error: (err:any) => {
                 console.error(err);
-                Swal.fire('Error', 'No se pudo insertar el contenido', 'error');
+                Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
               }
             });
         }
     }
 
-    btnRegresarContenido() {
+    btnRegresarClick() {
       this.router.navigate(['/sites/contenidos']);
     }
+     toggleNav(): void {
+    this.toggleSidebar.emit();
+  }
 }
