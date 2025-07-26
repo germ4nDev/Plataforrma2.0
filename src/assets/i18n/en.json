@@ -20,6 +20,7 @@
             "MESSAGES": "My Messages",
             "LOCK": "Lock Screen"
         },
+        "FILTROTODOS": "Show All",
         "INSERTAR": "The record was successfully created",
         "MODIFICAR": "The record was successfully updated",
         "NOINSERTO": "The record could not be inserted",
@@ -43,7 +44,15 @@
         "ELIMINARTEXTO": "¡Aplication will be eliminated ",
         "ELIMINAREXITOSA": "¡Aplication was successfully eliminated ",
         "ELIMINARERROR": "The aplication could't be eliminated.",
-        "CREATE": "Create Aplication"
+        "CREATE": "Create Aplication",
+        "FILTROS": {
+            "TITULO" : "Aplications Filters",
+            "FILTROCODIGO" : "Code",
+            "FILTRONOMBRE" : "Name",
+            "FILTRODECRIPCION" : "Descripction",
+            "FILTROESTADO" : "Status",
+            "DESCRIPCIONCHOLDER": "aplication Descripction"
+        }
     },
     "SITIOS": {
         "TITLE": "Sites",
@@ -421,6 +430,20 @@
             "DESCRIPTION": "User's Description",
             "DESCRIPTIONHOLDER": "Enter the User's Description",
             "STATUS": "User's Status"
+        },
+        "FILTROS": {
+            "TITULO": "Users Filters",
+            "IDENTIFICACIONCHOLDER": "User Identification",
+            "IDENTIFICACION": "Identification",
+            "NOMBRE": "Name",
+            "NOMBREHOLDER": "User's Name",
+            "CORREO": "Email",
+            "CORREOHOLDER": "User's Email",
+            "USERNAME": "Username",
+            "USERNAMEHOLDER": "User's Username",
+            "DECRIPCION": "Descripction",
+            "DESCRIPCIONCHOLDER": "User's Description",
+            "ESTADO": "Status"
         }
     },
     "ROLES": {

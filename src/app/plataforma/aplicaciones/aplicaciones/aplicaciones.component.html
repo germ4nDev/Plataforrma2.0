@@ -15,30 +15,39 @@
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3" style="height: calc(100vh - 56px)">
-                                    <!-- <form #validationForm="ngForm" class="editForm" novalidate>
-                    <p>{{ 'APLICACIONES.FILTROS_TITULO' | translate }}</p>
-                    <input type="text" [(ngModel)]="filtroPersonalizado"
-                        placeholder="{{ 'APLICACIONES.BUSCAR_NOMBRE' | translate }}" class="form-control mb-3" />
-
-                    <div class="form-group">
-                        <label class="form-control-label" for="codigoAplicacion">
-                            {{ 'APLICACIONES.FILTROS.CODIGOAPP' | translate }}</label>
-                        <select class="form-control input-md" name="codigoAplicacion" id="codigoAplicacion"
-                            [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched) }"
-                            #codigoAplicacion="ngModel" required [(ngModel)]="codigoAplicacion"
-                            (change)="onFiltroCodigoChangeClick($event)">
-                            <option value="todos">{{ 'APLICACIONES.FILTROS.TODOS' | translate }}</option>
+                <div class="p-3 filtros-scroll-wrapper">
+                    <DIV class="text-center">
+                        <h6>{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                    </DIV>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control" required>
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.codigoAplicacion }}</option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <select (Change)="onFiltroNombreChangeClick($event)" class="form-control" required>
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.nombreAplicacion }}</option>
                         </select>
-                        <label *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched)"
-                            class="error jquery-validation-error small form-text invalid-feedback">
-                            {{ 'PLATAFORMA.REQUIRED' | translate }}
-                        </label>
                     </div>
-                                    </form> -->
-
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control"
+                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control" required>
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
                 </div>
             </ng-container>
         </div>
@@ -60,10 +69,10 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+                    <table datatable [dtOptions]="dtColumnSearchingOptions" class="table row-border">
                         <thead>
                             <tr>
                                 <th>{{ 'APLICACIONES.CODE' | translate }}</th>
@@ -74,7 +83,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let app of aplicaciones">
+                            <tr *ngFor="let app of aplicacionesFiltrado">
                                 <td>{{ app.codigoAplicacion }}</td>
                                 <td>{{ app.nombreAplicacion }}</td>
                                 <td>{{ app.descripcionAplicacion }}</td>

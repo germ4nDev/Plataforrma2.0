@@ -3,6 +3,7 @@ export class PTLPaquetesSCModel {
         public suscriptorPaqueteId? : number,
         public suscriptorId? : number,
         public paqueteId? : number,
+        public nombrePaquete? : string,
         public fechaInicio? : Date,
         public fechaVencimiento? : Date,
         public codigoLicencia? : string,

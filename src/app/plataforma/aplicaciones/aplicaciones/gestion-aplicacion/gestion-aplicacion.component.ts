@@ -28,7 +28,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
   styleUrl: './gestion-aplicacion.component.scss'
 })
 export class GestionAplicacionComponent implements OnInit {
-@Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLAplicacionModel = new PTLAplicacionModel();
   menuItems: NavigationItem[] = [];
   gradientConfig: any;
@@ -45,14 +45,13 @@ export class GestionAplicacionComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-        private layoutInitializer: LayoutInitializerService,
     private navigationService: NavigationService,
     private locationStrategy: LocationStrategy,
     private aplicacionesService: PtlAplicacionesService,
     private BreadCrumb: BreadcrumbComponent
   ) {
     this.isSubmit = false;
-    GradientConfig.header_fixed_layout = true
+    GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
     let current_url = this.location.path();
     const baseHref = this.locationStrategy.getBaseHref();
@@ -73,7 +72,6 @@ export class GestionAplicacionComponent implements OnInit {
 
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
-    this.layoutInitializer.applyLayout();
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.route.queryParams.subscribe((params) => {

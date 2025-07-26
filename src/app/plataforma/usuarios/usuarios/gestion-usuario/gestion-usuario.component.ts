@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataTablesModule } from 'angular-datatables';
@@ -7,25 +7,31 @@ import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLUsuarioModel } from '../../../../theme/shared/_helpers/models/PTLUsuario.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { HttpClient } from '@angular/common/http';
 import { UploadFilesService } from 'src/app/theme/shared/service/upload-files.service';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 
 @Component({
   selector: 'app-gestion-usuario',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-usuario.component.html',
   styleUrl: './gestion-usuario.component.scss'
 })
-export class GestionUsuarioComponent {
+export class GestionUsuarioComponent implements OnInit {
+  @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLUsuarioModel = new PTLUsuarioModel();
   form: undefined;
   isSubmit: boolean = false;
+  menuItems: NavigationItem[] = [];
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
   selectedFile: File | null = null;
@@ -37,6 +43,7 @@ export class GestionUsuarioComponent {
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
+    private navigationService: NavigationService,
     private registrosService: PTLUsuariosService,
     private translate: TranslateService,
     private languageService: LanguageService,
@@ -47,7 +54,8 @@ export class GestionUsuarioComponent {
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -135,5 +143,9 @@ export class GestionUsuarioComponent {
 
   btnRegresarClick() {
     this.router.navigate(['/usuarios/usuarios']);
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }
