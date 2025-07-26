@@ -1,25 +1,37 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h5>{{ 'SITIOS.GESTION.TITLE' | translate }}</h5>
-                <hr>
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+            </div>
+
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                        <h5>{{ 'SITIOS.GESTION.TITLE' | translate }}</h5>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex gap-3">
                         <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
-                            (click)="btnInsertEditSitios(validationForm)">
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SITIOS.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro"
-                            (click)="btnInsertEditSitios(validationForm)">
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SITIOS.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarSitio()">
+                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
@@ -27,10 +39,10 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        <div class="card content-scroll-wrapper">
             <div class="card-header">
-                <h4 *ngIf="!modoEdicion">{{ 'SITIOS.NEW' | translate }}</h4>
-                <h4 *ngIf="modoEdicion">{{ 'SITIOS.UPDATE' | translate }}</h4>
+                <h4 *ngIf="!modoEdicion">{{ 'SITIOS.GESTION.NEW' | translate }}</h4>
+                <h4 *ngIf="modoEdicion">{{ 'SITIOS.GESTION.UPDATE' | translate }}</h4>
             </div>
             <div class="card-body">
                 <form #validationForm="ngForm" class="editForm" novalidate>
@@ -39,11 +51,12 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="aplicacionId">
                                     {{ 'SITIOS.GESTION.APLICACION' | translate }}</label>
-                                <select class="form-control input-md" name="aplicacionId" id="aplicacionId"
+                                <select class="form-control input-md" style="cursor: pointer;" name="aplicacionId" id="aplicacionId"
                                     [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
                                     #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
                                     (change)="onAplicacionchangeClick($event)">
-                                    <option value="" disabled >{{ 'SITIOS.GESTION.PLACEHOLDERAPLICACION' | translate }}</option>
+                                    <option value="" disabled>{{ 'SITIOS.GESTION.PLACEHOLDERAPLICACION' | translate }}
+                                    </option>
                                     <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">
                                         {{ app.nombreAplicacion }}</option>
                                 </select>

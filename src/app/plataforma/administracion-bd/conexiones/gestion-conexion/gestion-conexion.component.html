@@ -1,12 +1,24 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h4>{{ 'CONEXIONES.GESTION.TITLE' | translate }}</h4>
-                <hr />
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+            </div>
+
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                        <h4>{{ 'CONEXIONES.GESTION.TITLE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex gap-3">
                         <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
@@ -19,8 +31,7 @@
                             {{ 'CONEXIONES.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoRegistro"
-                            (click)="btnRegresarClick()">
+                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
@@ -28,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        <div class="card content-scroll-wrapper">
             <div class="card-header">
                 <h4 *ngIf="!modoEdicion">{{ 'CONEXIONES.GESTION.NEW' | translate }}</h4>
                 <h4 *ngIf="modoEdicion">{{ 'CONEXIONES.GESTION.UPDATE' | translate }}</h4>
@@ -40,11 +51,15 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="aplicacionId">
                                     {{ 'CONEXIONES.GESTION.APLICACION' | translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="aplicacionId" id="aplicacionId"
+                                <select class="form-control input-md" style="cursor: pointer;" name="aplicacionId"
+                                    id="aplicacionId"
                                     [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
-                                    #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId" (change)="onAplicacionchangeClick($event)">
-                                    <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERAPLICACION' | translate }}</option>
-                                    <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">{{ app.nombreAplicacion }}</option>
+                                    #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
+                                    (change)="onAplicacionchangeClick($event)">
+                                    <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERAPLICACION' |
+                                        translate }}</option>
+                                    <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">{{
+                                        app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit)"
@@ -57,11 +72,17 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="suscriptorId">{{
                                     'CONEXIONES.GESTION.SUSCRIPTOR' | translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="suscriptorId" id="suscriptorId"
+                                <select class="form-control input-md" style="cursor: pointer;" name="suscriptorId"
+                                    id="suscriptorId"
                                     [ngClass]="{ 'is-invalid': !suscriptorId.valid && (suscriptorId.dirty || suscriptorId.touched || isSubmit) }"
-                                    #suscriptorId="ngModel" required [(ngModel)]="FormRegistro.suscriptorId" (change)="onSuscriptorChangeClick($event)">
-                                    <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERSUSCRIPTOR' | translate }}</option>
-                                    <option [value]="suscriptor.suscriptorId" *ngFor="let suscriptor of suscriptores">{{ suscriptor.nombreSuscriptor }}</option>
+                                    #suscriptorId="ngModel" required [(ngModel)]="FormRegistro.suscriptorId"
+                                    (change)="onSuscriptorChangeClick($event)">
+                                    <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERSUSCRIPTOR' |
+                                        translate }}</option>
+                                    <option [value]="suscriptor.suscriptorId" *ngFor="let suscriptor of suscriptores">{{
+                                        suscriptor.nombreSuscriptor
+                                        }}
+                                    </option>
                                 </select>
                                 <label
                                     *ngIf="!suscriptorId.valid && (suscriptorId.dirty || suscriptorId.touched || isSubmit)"
@@ -74,14 +95,18 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="paqueteId">{{
                                     'CONEXIONES.GESTION.PAQUETE' | translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="paqueteId" id="paqueteId"
+                                <select class="form-control input-md" style="cursor: pointer;" name="paqueteId"
+                                    id="paqueteId"
                                     [ngClass]="{ 'is-invalid': !paqueteId.valid && (paqueteId.dirty || paqueteId.touched || isSubmit) }"
-                                    #paqueteId="ngModel" required [(ngModel)]="FormRegistro.paqueteId" (change)="onPaqueteChangeClick($event)">
-                                    <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERPAQUETE' | translate }}</option>
-                                    <option [value]="paquete.paqueteId" *ngFor="let paquete of paquetes">{{ paquete.nombrePaquete }}</option>
+                                    #paqueteId="ngModel" required [(ngModel)]="FormRegistro.paqueteId"
+                                    (change)="onPaqueteChangeClick($event)">
+                                    <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERPAQUETE' |
+                                        translate
+                                        }}</option>
+                                    <option [value]="paquete.paqueteId" *ngFor="let paquete of paquetes">{{
+                                        paquete.nombrePaquete }}</option>
                                 </select>
-                                <label
-                                    *ngIf="!paqueteId.valid && (paqueteId.dirty || paqueteId.touched || isSubmit)"
+                                <label *ngIf="!paqueteId.valid && (paqueteId.dirty || paqueteId.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'CONEXIONES.GESTION.REQUERIDOPAQUETE' | translate }}
                                 </label>
@@ -91,11 +116,13 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreConexion">
                                     {{ 'CONEXIONES.GESTION.NAMECONEXION' | translate }}</label>
-                                <input class="form-control input-md" id="nombreConexion" name="nombreConexion" type="text"
+                                <input class="form-control input-md" id="nombreConexion" name="nombreConexion"
+                                    type="text"
                                     placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERNAMECONEXION' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreConexion.valid && (nombreConexion.dirty || nombreConexion.touched || isSubmit) }"
                                     #nombreConexion="ngModel" required [(ngModel)]="FormRegistro.nombreConexion" />
-                                <label *ngIf="!nombreConexion.valid && (nombreConexion.dirty || nombreConexion.touched || isSubmit)"
+                                <label
+                                    *ngIf="!nombreConexion.valid && (nombreConexion.dirty || nombreConexion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'CONEXIONES.GESTION.REQUERIDONAMECONEXION' | translate }}
                                 </label>
@@ -107,9 +134,11 @@
                                     {{ 'CONEXIONES.GESTION.DESCRIPCION' | translate }}</label>
                                 <textarea class="form-control"
                                     placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERDESCRIPCION' | translate }}"
-                                    name="descripcionConexion" [ngClass]="{
+                                    name="descripcionConexion"
+                                    [ngClass]="{
                                     'is-invalid': !descripcionConexion.valid && (descripcionConexion.dirty || descripcionConexion.touched || isSubmit)}"
-                                    #descripcionConexion="ngModel" required [(ngModel)]="FormRegistro.descripcionConexion" rows="5">
+                                    #descripcionConexion="ngModel" required
+                                    [(ngModel)]="FormRegistro.descripcionConexion" rows="5">
                                 </textarea>
                                 <label
                                     *ngIf="!descripcionConexion.valid && (descripcionConexion.dirty || descripcionConexion.touched || isSubmit)"
@@ -122,11 +151,12 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreServidor">
                                     {{ 'CONEXIONES.GESTION.NAMESERVIDOR' | translate }}</label>
-                                <input class="form-control input-md" id="nombreServidor" name="nombreServidor" type="text"
-                                    placeholder="{{ 'CONEXIONES.GESTION.NAMESERVIDORHOLDER' | translate }}"
+                                <input class="form-control input-md" id="nombreServidor" name="nombreServidor"
+                                    type="text" placeholder="{{ 'CONEXIONES.GESTION.NAMESERVIDORHOLDER' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreServidor.valid && (nombreServidor.dirty || nombreServidor.touched || isSubmit) }"
                                     #nombreServidor="ngModel" required [(ngModel)]="FormRegistro.nombreServidor" />
-                                <label *ngIf="!nombreServidor.valid && (nombreServidor.dirty || nombreServidor.touched || isSubmit)"
+                                <label
+                                    *ngIf="!nombreServidor.valid && (nombreServidor.dirty || nombreServidor.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'CONEXIONES.GESTION.REQUERIDONAMESERVIDOR' | translate }}
                                 </label>
@@ -135,9 +165,9 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="BDNombre">
-                                    {{ 'CONEXIONES.GESTION.NAMEBD' |  translate }}</label>
+                                    {{ 'CONEXIONES.GESTION.NAMEBD' | translate }}</label>
                                 <input class="form-control input-md" id="BDNombre" name="BDNombre" type="text"
-                                    placeholder="{{ 'CONEXIONES.GESTION.NAMEBDHOLDER' | translate }}"
+                                    placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERNAMEBD' | translate }}"
                                     [ngClass]="{ 'is-invalid': !BDNombre.valid && (BDNombre.dirty || BDNombre.touched || isSubmit) }"
                                     #BDNombre="ngModel" required [(ngModel)]="FormRegistro.BDNombre" />
                                 <label *ngIf="!BDNombre.valid && (BDNombre.dirty || BDNombre.touched || isSubmit)"
@@ -151,7 +181,7 @@
                                 <label class="form-control-label" for="BDUser">
                                     {{ 'CONEXIONES.GESTION.NAMEUSER' | translate }}</label>
                                 <input class="form-control input-md" id="BDUser" name="BDUser" type="text"
-                                    placeholder="{{ 'CONEXIONES.GESTION.NAMEUSERHOLDER' | translate }}"
+                                    placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERNAMEUSER' | translate }}"
                                     [ngClass]="{ 'is-invalid': !BDUser.valid && (BDUser.dirty || BDUser.touched || isSubmit) }"
                                     #BDUser="ngModel" required [(ngModel)]="FormRegistro.BDUser" />
                                 <label *ngIf="!BDUser.valid && (BDUser.dirty || BDUser.touched || isSubmit)"
@@ -163,14 +193,14 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="BDPassword">
-                                    {{ 'CONEXIONES.GESTION.PASSWORD' | translate }}</label>
+                                    {{ 'CONEXIONES.GESTION.PASSWORDBD' | translate }}</label>
                                 <input class="form-control input-md" id="BDPassword" name="BDPassword" type="text"
-                                    placeholder="{{ 'CONEXIONES.GESTION.PASSWORDHOLDER' | translate }}"
+                                    placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERPASSWORDBD' | translate }}"
                                     [ngClass]="{ 'is-invalid': !BDPassword.valid && (BDPassword.dirty || BDPassword.touched || isSubmit) }"
                                     #BDPassword="ngModel" required [(ngModel)]="FormRegistro.BDPassword" />
                                 <label *ngIf="!BDPassword.valid && (BDPassword.dirty || BDPassword.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'CONEXIONES.GESTION.REQUERIDOPASSWORD' | translate }}
+                                    {{ 'CONEXIONES.GESTION.REQUERIDOPASSWORDBD' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -179,7 +209,7 @@
                                 <label class="form-control-label" for="BDPort">
                                     {{ 'CONEXIONES.GESTION.BDPORT' | translate }}</label>
                                 <input class="form-control input-md" id="BDPort" name="BDPort" type="text"
-                                    placeholder="{{ 'CONEXIONES.GESTION.BDPORTHOLDER' | translate }}"
+                                    placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERBDPORT' | translate }}"
                                     [ngClass]="{ 'is-invalid': !BDPort.valid && (BDPort.dirty || BDPort.touched || isSubmit) }"
                                     #BDPort="ngModel" required [(ngModel)]="FormRegistro.BDPort" />
                                 <label *ngIf="!BDPort.valid && (BDPort.dirty || BDPort.touched || isSubmit)"

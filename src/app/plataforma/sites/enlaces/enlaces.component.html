@@ -1,104 +1,116 @@
-<div class="row">
-	<div class="col-sm-12">
-        <div class="card card-header-sticky">
-			<div class="card-header">
-                <h4>{{ 'ENLACES.TITLE' | translate }}</h4>
-                <hr>
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3" style="height: calc(100vh - 56px)">
+                    <!-- falta terminar -->
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                        <h4>{{ 'SITIOS.ENLACES.TITLE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="nuevoEnlace()" class="btn-NuevoRegistro">
-                            {{ 'ENLACES.NEW' | translate }}
+                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
+                            {{ 'SITIOS.ENLACES.GESTION.NEW' | translate }}
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-		<div class="card">
-			<div class="card-body">
-				<div class="table-responsive">
-					<table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
-						<thead>
+        <div class="card content-scroll-wrapper">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+                        <thead>
                             <tr>
-                                <th>{{ 'ENLACES.NAME' | translate }}</th>
-                                <th>{{ 'ENLACES.DESCRIPTION' | translate }}</th>
-                                <th>{{ 'ENLACES.RUTA' | translate }}</th>
-                                <th>{{ 'ENLACES.STATUS' | translate }}</th>
+                                <th>{{ 'SITIOS.ENLACES.NAME' | translate }}</th>
+                                <th>{{ 'SITIOS.ENLACES.DESCRIPTION' | translate }}</th>
+                                <th>{{ 'SITIOS.ENLACES.RUTA' | translate }}</th>
+                                <th>{{ 'SITIOS.ENLACES.STATUS' | translate }}</th>
                                 <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr *ngFor="let enlace of enlaceST">
-								<td>
-									{{ enlace.nombreEnlace }}
-								</td>
-								<td>
-									{{ enlace.descripcionEnlace }}
-								</td>
-								<td>
-									{{ enlace.rutaEnlace }}
-								</td>
-								<td>
-									{{ enlace.nomEstado }}
-								</td>
-								<td style="text-align: center; width: 10%;">
-									<div class="d-flex flex-wrap gap-2">
-										<button type="button" class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="editarEnlace(enlace.enlaceId?? 0)" title="{{ 'ENLACES.UPDATE' | translate }}">
-											<i class="feather icon-edit"></i>
-										</button>
-										<button type="button" class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="eliminarEnlace(enlace.enlaceId?? 0, enlace.nombreEnlace?? '')" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ 'ENLACES.DELETE' | translate }}">
-											<i class="feather icon-trash-2"></i>
-										</button>
-									</div>
-								</td>
-							</tr>
-						</tbody>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let reg of registros">
+                                <td>
+                                    {{ reg.nombreEnlace }}
+                                </td>
+                                <td>
+                                    {{ reg.descripcionEnlace }}
+                                </td>
+                                <td>
+                                    {{ reg.rutaEnlace }}
+                                </td>
+                                <td>
+                                    {{ reg.nomEstado }}
+                                </td>
+                                <td style="text-align: center; width: 10%;">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                            (click)="OnEditarRegistroClick(reg.enlaceId?? 0)"
+                                            title="{{ 'SITIOS.ENLACES.UPDATE' | translate }}">
+                                            <i class="feather icon-edit"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                            (click)="OnEliminarRegistroClick(reg.enlaceId?? 0, reg.nombreEnlace?? '')"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{ 'SITIOS.ENLACES.DELETE' | translate }}">
+                                            <i class="feather icon-trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                         <tfoot>
-							<tr>
-								<th>
-                                    <input #nombreEnlace
-                                        (keyup)="filtrarColumna(0, nombreEnlace.value)"
-                                        type="text"
-                                        placeholder="{{ 'ENLACES.FILTER_NAME' | translate }}"
-                                        name="filtro-nombre"
+                            <tr>
+                                <th>
+                                    <input #nombreEnlace (keyup)="filtrarColumna(0, nombreEnlace.value)" type="text"
+                                        placeholder="{{ 'SITIOS.ENLACES.FILTER_NAME' | translate }}" name="filtro-nombre"
                                         class="form-control">
                                 </th>
-								<th>
-									<input #descripcionEnlace
-										(keyup)="filtrarColumna(1, descripcionEnlace.value)"
-										type="text"
-										placeholder="{{ 'ENLACES.FILTER_DESCRIPTION' | translate }}"
-										name="filtro-descripción"
-										class="form-control">
-								</th>
-								<th>
-									<input #rutaEnlace
-										(keyup)="filtrarColumna(2, rutaEnlace.value)"
-										type="text"
-										placeholder="{{ 'ENLACES.FILTER_RUTA' | translate }}"
-										name="filtro-ruta"
-										class="form-control">
-								</th>
-								<th>
-									<input #estadoEnlace
-										(keyup)="filtrarColumna(3, estadoEnlace.value)"
-										type="text"
-										placeholder="{{ 'ENLACES.FILTER_STATUS' | translate }}"
-										name="filtro-estado"
-										class="form-control">
-								</th>
+                                <th>
+                                    <input #descripcionEnlace (keyup)="filtrarColumna(1, descripcionEnlace.value)"
+                                        type="text" placeholder="{{ 'SITIOS.ENLACES.FILTER_DESCRIPTION' | translate }}"
+                                        name="filtro-descripción" class="form-control">
+                                </th>
+                                <th>
+                                    <input #rutaEnlace (keyup)="filtrarColumna(2, rutaEnlace.value)" type="text"
+                                        placeholder="{{ 'SITIOS.ENLACES.FILTER_RUTA' | translate }}" name="filtro-ruta"
+                                        class="form-control">
+                                </th>
+                                <th>
+                                    <input #estadoEnlace (keyup)="filtrarColumna(3, estadoEnlace.value)" type="text"
+                                        placeholder="{{ 'SITIOS.ENLACES.FILTER_STATUS' | translate }}" name="filtro-estado"
+                                        class="form-control">
+                                </th>
                                 <th>
                                 </th>
-							</tr>
+                            </tr>
                         </tfoot>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-

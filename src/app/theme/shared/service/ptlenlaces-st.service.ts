@@ -32,60 +32,61 @@ export class PTLEnlacesSTService {
     };
   }
 
-  getEnlaces() {
-    return this.http.get<PTLEnlaceSTModel>(`${environment.apiUrl}/enlaces-st`).pipe(
-      map((resp: any) => {
-        console.log('respuesta servicio', resp);
-        return {
-          ok: true,
-          enlace: resp.enlace
-        };
-      })
-    );
-  }
-
-  getEnlaceById(id: number) {
-    const url = `${base_url}/enlaces-st/${id}`;
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        console.log('data de enlaces', resp);
-        return {
-          ok: true,
-          enlace: resp.enlace
-        };
-      })
-    );
-  }
-
-  insertarEnlace(enlace: PTLEnlaceSTModel) {
+  getRegistros() {
     const url = `${base_url}/enlaces-st`;
-    return this.http.post(url, enlace);
-  }
-
-  modificarEnlaces(enlace: PTLEnlaceSTModel) {
-      const url = `${base_url}/enlaces-st/${enlace.enlaceId}`;
-      console.log('URL a enviar:', url);
-    return this.http.put(url, enlace).pipe(
+    return this.http.get(url)
+    .pipe(
       map((resp: any) => {
-        console.log('data del enlace modificada', resp);
+        console.log('servicio de enlaces', resp);
         return {
           ok: true,
-          enlace: resp.enlace
+          enlaces: resp.enlaces
         };
       })
     );
   }
 
-  eliminarEnlace(id: number) {
-    const url = `${base_url}/enlaces-st/${id}`;
-    return this.http.delete(url).pipe(
-      map((resp: any) => {
-        console.log('data del enlace modificada', resp);
-        return {
-          ok: true,
-          enlace: resp.enlace
-        };
-      })
-    );
-  }
-}
+  getRegistroById(id: number) {
+     const url = `${base_url}/enlaces-st/${id}`;
+     return this.http.get(url).pipe(
+       map((resp: any) => {
+         console.log('data de enlace', resp);
+         return {
+           ok: true,
+           enlace: resp.enlace
+         };
+       })
+     );
+   }
+
+   postCrearRegistro(enlace: PTLEnlaceSTModel) {
+     const url = `${base_url}/enlaces-st`;
+     return this.http.post(url, enlace);
+   }
+
+   putModificarRegistro(enlace: PTLEnlaceSTModel) {
+     const url = `${base_url}/enlaces-st/${enlace.enlaceId}`;
+     return this.http.put(url, enlace).pipe(
+       map((resp: any) => {
+         console.log('data de enlace modificacda', resp);
+         return {
+           ok: true,
+           enlace: resp.enlace
+         };
+       })
+     );
+   }
+
+   deleteEliminarRegistro(_id: number) {
+     const url = `${base_url}/enlaces-st/${_id}`;
+     return this.http.delete(url).pipe(
+       map((resp: any) => {
+         console.log('data de enlace eliminado', resp);
+         return {
+           ok: true,
+           enlace: resp.enlace
+         };
+       })
+     );
+   }
+ }
