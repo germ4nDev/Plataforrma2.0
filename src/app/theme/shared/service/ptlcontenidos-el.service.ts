@@ -32,23 +32,25 @@ export class PTLContenidosELService {
     };
   }
 
-  getContenido() {
-    return this.http.get<PTLContenidoELModel>(`${environment.apiUrl}/contenidos-el`).pipe(
+  getRegistros() {
+    const url = `${base_url}/contenidos-el`;
+    return this.http.get(url)
+    .pipe(
       map((resp: any) => {
-        console.log('respuesta servicio', resp);
+        console.log('servicio de contenidos', resp);
         return {
           ok: true,
-          contenido: resp.contenido
+          contenidos: resp.contenidos
         };
       })
     );
   }
 
-  getContenidoById(id: number) {
+  getRegistroById(id: number) {
     const url = `${base_url}/contenidos-el/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('data de contenidos', resp);
+        console.log('data de contenido', resp);
         return {
           ok: true,
           contenido: resp.contenido
@@ -57,17 +59,16 @@ export class PTLContenidosELService {
     );
   }
 
-  insertarContenido(contenido: PTLContenidoELModel) {
+  postCrearRegistro(contenido: PTLContenidoELModel) {
     const url = `${base_url}/contenidos-el`;
     return this.http.post(url, contenido);
   }
 
-  modificarContenido(contenido: PTLContenidoELModel) {
+  putModificarRegistro(contenido: PTLContenidoELModel) {
     const url = `${base_url}/contenidos-el/${contenido.contenidoId}`;
-    console.log('URL a enviar:', url);
     return this.http.put(url, contenido).pipe(
       map((resp: any) => {
-        console.log('data del contenido modificada', resp);
+        console.log('data de contenido modificacda', resp);
         return {
           ok: true,
           contenido: resp.contenido
@@ -76,11 +77,11 @@ export class PTLContenidosELService {
     );
   }
 
-  eliminarContenido(id: number) {
-    const url = `${base_url}/contenidos-el/${id}`;
+  deleteEliminarRegistro(_id: number) {
+    const url = `${base_url}/contenidos-el/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        console.log('data del contenido modificada', resp);
+        console.log('data de contenido eliminado', resp);
         return {
           ok: true,
           contenido: resp.contenido

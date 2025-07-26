@@ -1,11 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, LocationStrategy, Location } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { GradientConfig } from 'src/app/app-config';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLServidorModel } from 'src/app/theme/shared/_helpers/models/PTLServidor.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LanguageService } from 'src/app/theme/shared/service';
+import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
@@ -14,12 +20,20 @@ import { v4 as uuidv4 } from 'uuid';
 @Component({
   selector: 'app-gestion-servidor',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-servidor.component.html',
   styleUrl: './gestion-servidor.component.scss'
 })
 export class GestionServidorComponent {
+  @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLServidorModel = new PTLServidorModel();
+  menuItems: NavigationItem[] = [];
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
+
+
   registrosSub?: Subscription;
   form: undefined;
   isSubmit: boolean = false;
@@ -32,13 +46,27 @@ export class GestionServidorComponent {
     private registrosService: PTLServidorService,
     private translate: TranslateService,
     private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private BreadCrumb: BreadcrumbComponent,
+    private layoutInitializer: LayoutInitializerService,
+    private locationStrategy: LocationStrategy,
+    private location: Location,
+    private navigationService: NavigationService
   ) {
     this.isSubmit = false;
+    GradientConfig.header_fixed_layout = true
+    this.gradientConfig = GradientConfig;
+    let current_url = this.location.path();
+    const baseHref = this.locationStrategy.getBaseHref();
+
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.navCollapsedMob = false;
   }
 
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
+    this.layoutInitializer.applyLayout();
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -104,5 +132,9 @@ export class GestionServidorComponent {
 
   btnRegresarClick() {
     this.router.navigate(['/administracion-bd/servidores/']);
+  }
+
+   toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

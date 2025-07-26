@@ -20,7 +20,7 @@
             "PROFILE": "Perfil",
             "MESSAGES": "Mis Mensajes",
             "LOCK": "Bloquear Pantalla"
-        }
+        },
         "INSERTAR": "El registro se insertó correctamente",
         "MODIFICAR": "El registro se modificó correctamente",
         "NOINSERTO": "No se pudo insertar el registro",
@@ -48,7 +48,6 @@
     },
     "SITIOS": {
         "TITLE": "Sitios",
-        "NEW": "Nuevo Sitio",
         "NAME": "Nombre",
         "DESCRIPTION": "Descripción",
         "URL": "URL",
@@ -67,6 +66,7 @@
         "ELIMINARERROR": "No se pudo eliminar el sitio.",
         "GESTION": {
             "TITLE": "Crear/Actualizar un Sitio",
+            "NEW": "Nuevo Sitio",
             "CREATE": "Crear Sitio",
             "PLACEHOLDERNAME": "Nombre del sitio",
             "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
@@ -75,11 +75,13 @@
             "PLACEHOLDERPUERTO": "Puerto del sitio",
             "REQUERIDOPUERTO": "Por favor, Ingrese el puerto del sitio. Este campo es obligatorio.",
             "PLACEHOLDERDESCRIPCION": "Descripcion del sitio",
-            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
+            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+            "APLICACION": "Aplicación",
+            "PLACEHOLDERAPLICACION": "Seleccione una Aplicación",
+            "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
         },
         "ENLACES": {
             "TITLE": "Enlaces",
-            "NEW": "Nuevo Enlace",
             "NAME": "Nombre",
             "DESCRIPTION": "Descripción",
             "RUTA": "Ruta Enlace",
@@ -96,18 +98,21 @@
             "ELIMINARERROR": "No se pudo eliminar el enlace.",
             "GESTION": {
                 "TITLE": "Crear/Actualizar un enlace",
+                "NEW": "Nuevo Enlace",
                 "CREATE": "Crear enlace",
                 "PLACEHOLDERNAME": "Nombre del enlace",
                 "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
                 "PLACEHOLDERRUTA": "Ruta del enlace",
                 "REQUERIDORUTA": "Por favor, ingrese una Ruta. Este campo es obligatorio.",
                 "PLACEHOLDERDESCRIPCION": "Descripcion del enlace",
-                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio."
+                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+                "SITIOS": "Sitios",
+                "PLACEHOLDERSITIOS": "Seleccione un sitio",
+                "REQUERIDOSITIOS": "Por favor, seleccione un sitio. Este campo es obligatorio."
             }
         },
         "CONTENIDOS": {
             "TITLE": "Contenidos",
-            "NEW": "Nuevo Contenido",
             "NAME": "Nombre",
             "DESCRIPTION": "Descripción",
             "CONTENIDO": "Contenido",
@@ -124,6 +129,7 @@
             "ELIMINARERROR": "No se pudo eliminar el contenido.",
             "GESTION": {
                 "TITLE": "Crear/Actualizar un contenido",
+                "NEW": "Nuevo Contenido",
                 "CREATE": "Crear contenido",
                 "PLACEHOLDERNAME": "Nombre del contenido",
                 "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
@@ -133,7 +139,10 @@
                 "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
                 "APLICACION": "Aplicación",
                 "PLACEHOLDERAPLICACION": "Seleccione",
-                "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
+                "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio.",
+                "ENLACES": "Enlaces",
+                "PLACEHOLDERENLACES": "Seleccione un enlace",
+                "REQUERIDOENLACES": "Por favor, seleccione un enlaces. Este campo es obligatorio."
             }
 
         }
@@ -285,42 +294,55 @@
             "REQUERIDOSUSCRIPTOR": "Por favor, seleccione un Suscriptor. Este campo es obligatorio.",
             "PAQUETE": "Paquete",
             "PLACEHOLDERPAQUETE": "Seleccione un Paquete",
-            "REQUERIDOPAQUETE": "Por favor, seleccione un Paquete. Este campo es obligatorio."
-        }
-    },
-    "SERVIDORES": {
-        "TITLE": "Administración de Servidores",
-        "NEW": "Nuevo Servidor",
-        "UPDATE": "Modificar Servidor",
-        "DELETE": "Eliminar Servidor",
-        "CREATE": "Crear Servidor",
-        "NOMBRESERVIDOR": "Nombre",
-        "DESCRIPCIONSERVIDOR": "Descripción",
-        "RUTASERVIDOR": "Ruta Servidor",
-        "ESTADOSERVIDOR": "Estado",
-        "FILTER_NAMESERVIDOR": "Filtro Nombre",
-        "FILTER_DESCRIPCIONSERVIDOR": "Filtro Descripción",
-        "FILTER_RUTASERVIDOR": "Filtro Ruta Servidor",
-        "FILTRO_STATUSSERVIDOR": "Filtro Estado",
-        "ELIMINARTITULO": "¿Está seguro de eliminar?",
-        "ELIMINARTEXTO": "¡Será Eliminado el Servidor!",
-        "ELIMINAREXITOSA": "¡El Servidor fué eliminado correctamente!",
-        "ELIMINARERROR": "No se pudo eliminar el Servidor.",
-        "GESTION": {
-            "TITLE": "Crear/Actualizar un Servidor",
-            "CREATE": "Crear Servidor",
-            "UPDATE": "Actualizar Servidor",
+            "REQUERIDOPAQUETE": "Por favor, seleccione un Paquete. Este campo es obligatorio.",
+            "NAMEBD": "Nombre Base de Datos",
+            "PLACEHOLDERNAMEBD": "Ingrese la Base de Datos",
+            "REQUERIDONAMEBD": "Por favor, ingrese la base de datos. Este campo es obligatorio.",
+            "NAMEUSER": "Usuario Base de Datos",
+            "PLACEHOLDERNAMEUSER": "Ingrese el Usuario",
+            "REQUERIDONAMEUSER": "Por favor, ingrese un Usuario. Este campo es obligatorio.",
+            "PASSWORDBD": "Contraseña Base de Datos",
+            "PLACEHOLDERPASSWORDBD": "Ingrese una contraseña",
+            "REQUERIDOPASSWORDBD": "Por favor, ingrese una contraseña. Este campo es obligatorio.",
+            "BDPORT": "Port Base de Datos",
+            "PLACEHOLDERBDPORT": "Ingrese Port Base de Datos",
+            "REQUERIDOBDPORT": "Por favor, ingrese un Port. Este campo es obligatorio."
+
+        },
+            "SERVIDORES": {
+            "TITLE": "Administración de Servidores",
             "NEW": "Nuevo Servidor",
-            "NAME": "Nombre Servidor",
-            "NAMEHOLDER": "Ingrese el Nombre del Servidor",
-            "RUTAHOLDER": "Ingrese la Ruta del Servidor",
-            "RUTA": "Ruta Servidor",
-            "DESCRIPTION": "Descripción Servidor",
-            "DESCRIPTIONHOLDER": "Ingrese la Descripción del Servidor",
-            "REQUERIDORUTA": "Por favor, Ingrese la ruta del servidor. Este campo es obligatorio.",
-            "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
-            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
-            "STATUS": "Estado Servidor"
+            "UPDATE": "Modificar Servidor",
+            "DELETE": "Eliminar Servidor",
+            "CREATE": "Crear Servidor",
+            "NOMBRESERVIDOR": "Nombre",
+            "DESCRIPCIONSERVIDOR": "Descripción",
+            "RUTASERVIDOR": "Ruta Servidor",
+            "ESTADOSERVIDOR": "Estado",
+            "FILTER_NAMESERVIDOR": "Filtro Nombre",
+            "FILTER_DESCRIPCIONSERVIDOR": "Filtro Descripción",
+            "FILTER_RUTASERVIDOR": "Filtro Ruta Servidor",
+            "FILTRO_STATUSSERVIDOR": "Filtro Estado",
+            "ELIMINARTITULO": "¿Está seguro de eliminar?",
+            "ELIMINARTEXTO": "¡Será Eliminado el Servidor!",
+            "ELIMINAREXITOSA": "¡El Servidor fué eliminado correctamente!",
+            "ELIMINARERROR": "No se pudo eliminar el Servidor.",
+            "GESTION": {
+                "TITLE": "Crear/Actualizar un Servidor",
+                "CREATE": "Crear Servidor",
+                "UPDATE": "Actualizar Servidor",
+                "NEW": "Nuevo Servidor",
+                "NAME": "Nombre Servidor",
+                "NAMEHOLDER": "Ingrese el Nombre del Servidor",
+                "RUTAHOLDER": "Ingrese la Ruta del Servidor",
+                "RUTA": "Ruta Servidor",
+                "DESCRIPTION": "Descripción Servidor",
+                "DESCRIPTIONHOLDER": "Ingrese la Descripción del Servidor",
+                "REQUERIDORUTA": "Por favor, Ingrese la ruta del servidor. Este campo es obligatorio.",
+                "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+                "STATUS": "Estado Servidor"
+            }
         }
     },
     "SUSCRIPTORES": {

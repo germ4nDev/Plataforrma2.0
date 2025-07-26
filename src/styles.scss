@@ -702,6 +702,12 @@ body.dark-theme {
   padding-right: 1rem;
 }
 
+.content-scroll-wrapper {
+    height: calc(100vh - 215px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .config-toggle-btn {
   position: fixed;
   bottom: 20px;

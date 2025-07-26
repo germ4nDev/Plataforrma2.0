@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CommonModule, LocationStrategy, Location } from '@angular/common';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 // third party
-import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
@@ -14,17 +13,31 @@ import Swal from 'sweetalert2';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 import { catchError, of, Subscription, tap } from 'rxjs';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { GradientConfig } from 'src/app/app-config';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
 @Component({
   selector: 'app-gestion-enlace',
   standalone: true,
-  imports: [CommonModule, SharedModule, NarikCustomValidatorsModule],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-enlace.component.html',
   styleUrl: './gestion-enlace.component.scss'
 })
 export class GestionEnlaceComponent {
   // private props
+  @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLEnlaceSTModel = new PTLEnlaceSTModel();
+  menuItems: NavigationItem[] = [];
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
+
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;
@@ -36,21 +49,35 @@ export class GestionEnlaceComponent {
     private router: Router,
     private route: ActivatedRoute,
     private BreadCrumb: BreadcrumbComponent,
-    private enlacesService: PTLEnlacesSTService,
+    private registrosService: PTLEnlacesSTService,
     private sitiosService: PTLSitiosAPService,
+    private translate: TranslateService,
+    private layoutInitializer: LayoutInitializerService,
+    private locationStrategy: LocationStrategy,
+    private location: Location,
+    private navigationService: NavigationService
   ) {
     this.isSubmit = false;
+    GradientConfig.header_fixed_layout = true
+    this.gradientConfig = GradientConfig;
+    let current_url = this.location.path();
+    const baseHref = this.locationStrategy.getBaseHref();
+
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.navCollapsedMob = false;
   }
 
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
     this.consultarSitios();
+    this.layoutInitializer.applyLayout();
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.route.queryParams.subscribe((params) => {
-      const id = params['regId'];
-      console.log('me llena el Id', id);
-      if (id) {
+      const registroId = params['regId'];
+      if (registroId) {
         this.modoEdicion = true;
-        this.enlacesService.getEnlaceById(id).subscribe({
+        this.registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.enlace;
             console.log('respuesta componente', this.FormRegistro);
@@ -67,7 +94,7 @@ export class GestionEnlaceComponent {
 
   consultarSitios() {
       this.sitiosSub = this.sitiosService
-        .getSitios()
+        .getRegistros()
         .pipe(
           tap((resp: any) => {
             if (resp.ok) {
@@ -92,7 +119,7 @@ export class GestionEnlaceComponent {
     this.FormRegistro.sitioId = sitio.sitioId;
   }
 
-  btnInsertEditEnlace(form: any) {
+  btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
     if (!form.valid) {
       return;
@@ -100,25 +127,25 @@ export class GestionEnlaceComponent {
     if (this.modoEdicion) {
         console.log('Datos a enviar (FormRegistro):', this.FormRegistro);
 
-      this.enlacesService.modificarEnlaces(this.FormRegistro).subscribe({
+      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', 'El enlace se modificó correctamente', 'success');
+            Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
             this.router.navigate(['/sites/enlaces']);
           } else {
-            Swal.fire('Error', resp.message || 'No se pudo actualizar el sitio', 'error');
+            Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo actualizar el enlace', 'error');
+          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
         }
       });
     } else {
-      this.enlacesService.insertarEnlace(this.FormRegistro).subscribe({
+      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', 'El enlace se insertó correctamente', 'success');
+            Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
             form.resetForm();
             this.isSubmit = false;
             this.router.navigate(['/sites/enlaces']);
@@ -126,13 +153,16 @@ export class GestionEnlaceComponent {
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo insertar el enlace', 'error');
+          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
         }
       });
     }
   }
 
-  btnRegresarEnlace() {
+  btnRegresarClick() {
     this.router.navigate(['/sites/enlaces']);
+  }
+     toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }
