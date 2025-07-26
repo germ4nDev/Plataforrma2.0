@@ -40,19 +40,20 @@ export class GestonContenidoComponent implements OnInit {
   enlaceSub?: Subscription;
   enlaces: PTLEnlaceSTModel[] = [];
 
-  constructor(private router: Router,
-    private route : ActivatedRoute,
-    private registrosService : PTLContenidosELService,
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private registrosService: PTLContenidosELService,
     private enlacesService: PTLEnlacesSTService,
-    private BreadCrumb : BreadcrumbComponent,
+    private BreadCrumb: BreadcrumbComponent,
     private layoutInitializer: LayoutInitializerService,
     private locationStrategy: LocationStrategy,
     private location: Location,
     private navigationService: NavigationService,
-    private translate: TranslateService,
+    private translate: TranslateService
   ) {
     this.isSubmit = false;
-    GradientConfig.header_fixed_layout = true
+    GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
     let current_url = this.location.path();
     const baseHref = this.locationStrategy.getBaseHref();
@@ -67,99 +68,96 @@ export class GestonContenidoComponent implements OnInit {
     this.layoutInitializer.applyLayout();
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
-      this.route.queryParams.subscribe(params => {
-        const registroId = params['regId'];
+    this.route.queryParams.subscribe((params) => {
+      const registroId = params['regId'];
       if (registroId) {
-          this.modoEdicion = true;
-          this.registrosService.getRegistroById(registroId).subscribe({
-            next: (resp: any) => {
-              this.FormRegistro = resp.contenido;
-              console.log('respuesta componente', this.FormRegistro);
-            },
-            error: () => {
-              Swal.fire('Error', 'No se pudo obtener el contenido', 'error');
-            }
-          });
+        this.modoEdicion = true;
+        this.registrosService.getRegistroById(registroId).subscribe({
+          next: (resp: any) => {
+            this.FormRegistro = resp.contenido;
+            console.log('respuesta componente', this.FormRegistro);
+          },
+          error: () => {
+            Swal.fire('Error', 'No se pudo obtener el contenido', 'error');
+          }
+        });
+      } else {
+        this.modoEdicion = false;
+      }
+    });
+  }
+
+  consultarEnlaces() {
+    this.enlaceSub = this.enlacesService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.enlaces = resp.enlaces;
+            console.log('Todos los enlaces', this.enlaces);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  onContenidochangeClick(event: any) {
+    const value = event.target.value;
+    const enlace = this.enlaces.filter((x) => x.enlaceId == value)[0];
+    console.log('Id del enlace seleccionado:', value);
+    console.log('datal enlace seleccionado:', enlace);
+    this.FormRegistro.enlaceId = enlace.enlaceId;
+  }
+
+  btnGestionarRegistroClick(form: any) {
+    this.isSubmit = true;
+
+    if (!form.valid) {
+      return;
+    }
+
+    if (this.modoEdicion) {
+      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
+            this.router.navigate(['/sites/contenidos']);
+          } else {
+            Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
         }
-        else {
-          this.modoEdicion = false;
+      });
+    } else {
+      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
+            form.resetForm();
+            this.isSubmit = false;
+            this.router.navigate(['/sites/contenidos']);
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
         }
       });
     }
+  }
 
-    consultarEnlaces() {
-          this.enlaceSub = this.enlacesService
-            .getRegistros()
-            .pipe(
-              tap((resp: any) => {
-                if (resp.ok) {
-                  this.enlaces = resp.enlace;
-                  console.log('Todos los enlaces', this.enlaces);
-                  return;
-                }
-              }),
-              catchError((err) => {
-                console.log('Ha ocurrido un error', err);
-                return of(null);
-              })
-            )
-            .subscribe();
-        }
-
-        onContenidochangeClick(event: any) {
-        const value = event.target.value;
-        const enlace = this.enlaces.filter((x) => x.enlaceId == value)[0];
-        console.log('Id del enlace seleccionado:', value);
-        console.log('datal enlace seleccionado:', enlace);
-        this.FormRegistro.enlaceId = enlace.enlaceId;
-      }
-
-    btnGestionarRegistroClick(form: any) {
-      this.isSubmit = true;
-
-      if (!form.valid) {
-        return;
-      }
-
-      if (this.modoEdicion) {
-          this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
-            next: (resp: any) => {
-              if (resp.ok) {
-                Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
-                this.router.navigate(['/sites/contenidos']);
-              } else {
-                Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
-              }
-            },
-            error: (err: any) => {
-              console.error(err);
-              Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
-            }
-          });
-        }
-        else
-        {
-          this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
-              next: (resp:any) => {
-                if (resp.ok) {
-                  Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
-                  form.resetForm();
-                  this.isSubmit = false;
-                  this.router.navigate(['/sites/contenidos']);
-                }
-              },
-              error: (err:any) => {
-                console.error(err);
-                Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
-              }
-            });
-        }
-    }
-
-    btnRegresarClick() {
-      this.router.navigate(['/sites/contenidos']);
-    }
-     toggleNav(): void {
+  btnRegresarClick() {
+    this.router.navigate(['/sites/contenidos']);
+  }
+  toggleNav(): void {
     this.toggleSidebar.emit();
   }
 }

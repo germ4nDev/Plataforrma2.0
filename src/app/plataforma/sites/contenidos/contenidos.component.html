@@ -26,11 +26,11 @@
             <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <h4>{{ 'CONTENIDOS.TITLE' | translate }}</h4>
+                        <h4>{{ 'SITIOS.CONTENIDOS.TITLE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
                         <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'CONTENIDOS.NEW' | translate }}
+                            {{ 'SITIOS.CONTENIDOS.GESTION.NEW' | translate }}
                         </button>
                     </div>
                 </div>
@@ -42,10 +42,10 @@
                     <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
                         <thead>
                             <tr>
-                                <th>{{ 'CONTENIDOS.NAME' | translate }}</th>
-                                <th>{{ 'CONTENIDOS.DESCRIPTION' | translate }}</th>
-                                <th>{{ 'CONTENIDOS.CONTENIDO' | translate }}</th>
-                                <th>{{ 'CONTENIDOS.STATUS' | translate }}</th>
+                                <th>{{ 'SITIOS.CONTENIDOS.NAME' | translate }}</th>
+                                <th>{{ 'SITIOS.CONTENIDOS.DESCRIPTION' | translate }}</th>
+                                <th>{{ 'SITIOS.CONTENIDOS.CONTENIDO' | translate }}</th>
+                                <th>{{ 'SITIOS.CONTENIDOS.STATUS' | translate }}</th>
                                 <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
                             </tr>
                         </thead>
@@ -70,14 +70,14 @@
                                         <button type="button"
                                             class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
                                             (click)="OnEditarRegistroClick(reg.contenidoId?? 0)"
-                                            title="{{ 'CONTENIDOS.UPDATE' | translate }}">
+                                            title="{{ 'SITIOS.CONTENIDOS.UPDATE' | translate }}">
                                             <i class="feather icon-edit"></i>
                                         </button>
                                         <button type="button"
                                             class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
                                             (click)="OnEliminarRegistroClick(reg.contenidoId?? 0, reg.nombreContenido?? '')"
                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'CONTENIDOS.DELETE' | translate }}">
+                                            title="{{ 'SITIOS.CONTENIDOS.DELETE' | translate }}">
                                             <i class="feather icon-trash-2"></i>
                                         </button>
                                     </div>
@@ -88,22 +88,22 @@
                             <tr>
                                 <th>
                                     <input #nombreContenido (keyup)="filtrarColumna(0, nombreContenido.value)"
-                                        type="text" placeholder="{{ 'CONTENIDOS.FILTER_NAME' | translate }}"
+                                        type="text" placeholder="{{ 'SITIOS.CONTENIDOS.FILTER_NAME' | translate }}"
                                         name="filtro-nombre" class="form-control">
                                 </th>
                                 <th>
                                     <input #descripcionContenido (keyup)="filtrarColumna(1, descripcionContenido.value)"
-                                        type="text" placeholder="{{ 'CONTENIDOS.FILTER_DESCRIPTION' | translate }}"
+                                        type="text" placeholder="{{ 'SITIOS.CONTENIDOS.FILTER_DESCRIPTION' | translate }}"
                                         name="filtro-nombre" class="form-control">
                                 </th>
                                 <th>
                                     <input #contenido (keyup)="filtrarColumna(2, contenido.value)" type="text"
-                                        placeholder="{{ 'CONTENIDOS.FILTER_CONTENIDO' | translate }}"
+                                        placeholder="{{ 'SITIOS.CONTENIDOS.FILTER_CONTENIDO' | translate }}"
                                         name="filtro-contenido" class="form-control">
                                 </th>
                                 <th>
                                     <input #estadoContenido (keyup)="filtrarColumna(3, estadoContenido.value)"
-                                        type="text" placeholder="{{ 'CONTENIDOS.FILTER_STATUS' | translate }}"
+                                        type="text" placeholder="{{ 'SITIOS.CONTENIDOS.FILTER_STATUS' | translate }}"
                                         name="filtro-estado" class="form-control">
                                 </th>
                                 <th>

@@ -47,7 +47,6 @@
     },
     "SITIOS": {
         "TITLE": "Sites",
-        "NEW": "New Site",
         "NAME": "Name",
         "DESCRIPTION": "Description",
         "URL": "URL",
@@ -66,6 +65,7 @@
         "ELIMINARERROR": "The site could not be deleted. Please try again.",
         "GESTION": {
             "TITLE": "Create/Update an Site",
+            "NEW": "New Site",
             "CREATE": "Create Site",
             "PLACEHOLDERNAME": "Site name",
             "REQUERIDONAME": "This field is required.",
@@ -74,11 +74,13 @@
             "PLACEHOLDERPUERTO": "Site port",
             "REQUERIDOPUERTO": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Site description",
-            "REQUERIDODESCRIPCION": "This field is required."
+            "REQUERIDODESCRIPCION": "This field is required.",
+            "APLICACION": "Application",
+            "PLACEHOLDERAPLICACION": "Select an Application",
+            "REQUERIDOAPLICACION": "This field is required."
         },
         "ENLACES": {
             "TITLE": "Links",
-            "NEW": "New Link",
             "NAME": "Name",
             "DESCRIPTION": "Description",
             "RUTA": "URL Path",
@@ -95,18 +97,21 @@
             "ELIMINARERROR": "The link could not be deleted. Please try again.",
             "GESTION": {
                 "TITLE": "Create/Update an Link",
+                "NEW": "New Link",
                 "CREATE": "Create Link",
                 "PLACEHOLDERNAME": "Link name",
                 "REQUERIDONAME": "This field is required.",
                 "PLACEHOLDERRUTA": "Link URL",
                 "REQUERIDORUTA": "This field is required.",
                 "PLACEHOLDERDESCRIPCION": "Link description",
-                "REQUERIDODESCRIPCION": "This field is required."
+                "REQUERIDODESCRIPCION": "This field is required.",
+                "SITIOS": "Sites",
+                "PLACEHOLDERSITIOS": "Select a site",
+                "REQUERIDOSITIOS": "This field is required."
             }
         },
         "CONTENIDOS": {
             "TITLE": "Contents",
-            "NEW": "New Content",
             "NAME": "Name",
             "DESCRIPTION": "Description",
             "CONTENIDO": "Content",
@@ -123,6 +128,7 @@
             "ELIMINARERROR": "The content could not be deleted. Please try again.",
             "GESTION": {
                 "TITLE": "Create/Update Content",
+                "NEW": "New Content",
                 "CREATE": "Create Content",
                 "PLACEHOLDERNAME": "Content Name",
                 "REQUERIDONAME": "This field is required.",
@@ -131,8 +137,11 @@
                 "PLACEHOLDERDESCRIPCION": "Content Description",
                 "REQUERIDODESCRIPCION": "This field is required.",
                 "APLICACION": "Application",
-                "PLACEHOLDERAPLICACION": "Please select",
-                "REQUERIDOAPLICACION": "This field is required."
+                "PLACEHOLDERAPLICACION": "Select an Application",
+                "REQUERIDOAPLICACION": "This field is required.",
+                "ENLACES": "Links",
+                "PLACEHOLDERENLACES": "Select a link",
+                "REQUERIDOENLACES": "This field is required."
             }
         }
     },

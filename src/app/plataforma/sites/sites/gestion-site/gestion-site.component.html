@@ -51,7 +51,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="aplicacionId">
                                     {{ 'SITIOS.GESTION.APLICACION' | translate }}</label>
-                                <select class="form-control input-md" name="aplicacionId" id="aplicacionId"
+                                <select class="form-control input-md" style="cursor: pointer;" name="aplicacionId" id="aplicacionId"
                                     [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
                                     #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
                                     (change)="onAplicacionchangeClick($event)">

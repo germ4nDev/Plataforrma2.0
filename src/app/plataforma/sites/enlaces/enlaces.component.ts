@@ -62,21 +62,21 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
     this.hasFiltersSlot = true;
       this.translate
         .get([
-            'ENLACES.NAME',
-            'ENLACES.DESCRIPTION',
-            'ENLACES.RUTA',
-            'ENLACES.STATUS',
+            'SITIOS.ENLACES.NAME',
+            'SITIOS.ENLACES.DESCRIPTION',
+            'SITIOS.ENLACES.RUTA',
+            'SITIOS.ENLACES.STATUS',
             'PLATAFORMA.OPTIONS'
         ])
         .subscribe((translations) => {
-          this.tituloPagina = translations['ENLACES.TITLE'];
+          this.tituloPagina = translations['SITIOS.ENLACES.TITLE'];
           this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
-              { title: this.translate.instant('ENLACES.NAME'), data: 'nombreEnlace' },
-              { title: this.translate.instant('ENLACES.DESCRIPTION'), data: 'descripcionEnlace' },
-              { title: this.translate.instant('ENLACES.RUTA'), data: 'rutaEnlace' },
-              { title: this.translate.instant('ENLACES.STATUS'), data: 'estadoEnlace' },
+              { title: this.translate.instant('SITIOS.ENLACES.NAME'), data: 'nombreEnlace' },
+              { title: this.translate.instant('SITIOS.ENLACES.DESCRIPTION'), data: 'descripcionEnlace' },
+              { title: this.translate.instant('SITIOS.ENLACES.RUTA'), data: 'rutaEnlace' },
+              { title: this.translate.instant('SITIOS.ENLACES.STATUS'), data: 'estadoEnlace' },
               { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' }
             ]
           };
@@ -142,8 +142,8 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
 
   OnEliminarRegistroClick(id: number, nombre: string) {
     Swal.fire({
-      title: this.translate.instant('ENLACES.ELIMINARTITULO'),
-      text: this.translate.instant('ENLACES.ELIMINARTEXTO') + `"${nombre}".!`,
+      title: this.translate.instant('SITIOS.ENLACES.ELIMINARTITULO'),
+      text: this.translate.instant('SITIOS.ENLACES.ELIMINARTEXTO') + `"${nombre}".!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -152,11 +152,11 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
       if (result.isConfirmed) {
         this.enlacesService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('ENLACES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            Swal.fire(this.translate.instant('SITIOS.ENLACES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.enlaceId !== id);
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('ENLACES.ELIMINARERROR'), 'error');
+            Swal.fire('Error', this.translate.instant('SITIOS.ENLACES.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });

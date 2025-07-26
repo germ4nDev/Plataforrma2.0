@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
@@ -61,21 +62,21 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
     this.hasFiltersSlot = true;
       this.translate
         .get([
-            'CONTENIDOS.NAME',
-            'CONTENIDOS.DESCRIPTION',
-            'CONTENIDOS.CONTENIDO',
-            'CONTENIDOS.STATUS',
+            'SITIOS.CONTENIDOS.NAME',
+            'SITIOS.CONTENIDOS.DESCRIPTION',
+            'SITIOS.CONTENIDOS.CONTENIDO',
+            'SITIOS.CONTENIDOS.STATUS',
             'PLATAFORMA.OPTIONS'
         ])
         .subscribe((translations) => {
-          this.tituloPagina = translations['CONTENIDOS.TITLE'];
+          this.tituloPagina = translations['SITIOS.CONTENIDOS.TITLE'];
           this.dtColumnSearchingOptions = {
             responsive: true,
             columns: [
-              { title: this.translate.instant('CONTENIDOS.NAME'), data: 'nombreContenido' },
-              { title: this.translate.instant('CONTENIDOS.DESCRIPTION'), data: 'descripcionContenido' },
-              { title: this.translate.instant('CONTENIDOS.CONTENIDO'), data: 'contenido' },
-              { title: this.translate.instant('CONTENIDOS.STATUS'), data: 'estadoContenido' },
+              { title: this.translate.instant('SITIOS.CONTENIDOS.NAME'), data: 'nombreContenido' },
+              { title: this.translate.instant('SITIOS.CONTENIDOS.DESCRIPTION'), data: 'descripcionContenido' },
+              { title: this.translate.instant('SITIOS.CONTENIDOS.CONTENIDO'), data: 'contenido' },
+              { title: this.translate.instant('SITIOS.CONTENIDOS.STATUS'), data: 'estadoContenido' },
               { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' }
             ]
           };
@@ -141,8 +142,8 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
 
   OnEliminarRegistroClick(id: number, nombre: string) {
     Swal.fire({
-      title: this.translate.instant('CONTENIDOS.ELIMINARTITULO'),
-      text: this.translate.instant('CONTENIDOS.ELIMINARTEXTO') + `"${nombre}".!`,
+      title: this.translate.instant('SITIOS.CONTENIDOS.ELIMINARTITULO'),
+      text: this.translate.instant('SITIOS.CONTENIDOS.ELIMINARTEXTO') + `"${nombre}".!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -151,11 +152,11 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
       if (result.isConfirmed) {
         this.contenidoService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('CONTENIDOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            Swal.fire(this.translate.instant('SITIOS.CONTENIDOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registro = this.registro.filter((s) => s.contenidoId !== id);
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('CONTENIDOS.ELIMINARERROR'), 'error');
+            Swal.fire('Error', this.translate.instant('SITIOS.CONTENIDOS.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });
