@@ -21,6 +21,7 @@
             "MESSAGES": "Mis Mensajes",
             "LOCK": "Bloquear Pantalla"
         },
+        "FILTROTODOS": "Mostrar Todos",
         "INSERTAR": "El registro se insertó correctamente",
         "MODIFICAR": "El registro se modificó correctamente",
         "NOINSERTO": "No se pudo insertar el registro",
@@ -411,6 +412,21 @@
             "DESCRIPTION": "Descripción Usuario",
             "DESCRIPTIONHOLDER": "Ingrese la Descripción del Usuario",
             "STATUS": "Estado Usuario"
+        },
+        "FILTROS": {
+            "TITULO": "Filtros Usuarios",
+            "IDENTIFICACIONCHOLDER": "Identificación del Usuario",
+            "IDENTIFICACION": "Identificación",
+            "NOMBRE": "Nombre",
+            "NOMBREHOLDER": "Nombre del Usuario",
+            "CORREO": "Correo",
+            "CORREOHOLDER": "Correo del Usuario",
+            "USERNAME": "Username",
+            "USERNAMEHOLDER": "Username del Usuario",
+            "DECRIPCION": "Descripción",
+            "DESCRIPCIONCHOLDER": "Descripción Usuario",
+            "ESTADO": "Estado",
+            "TODOS": "Mostrar Todos"
         }
     },
     "ROLES": {

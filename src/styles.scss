@@ -122,6 +122,10 @@ body.gradient-dark {
   display: none !important;
 }
 
+.filtro {
+    margin-bottom: 1rem;
+}
+
 /// /* Tema claro por defecto */
 :root {
   --header-bg: #004085;
@@ -184,10 +188,6 @@ body.dark-theme {
 
 .aside-left {
   width: 250px;
-  //   background-color: var(--aside-bg);
-//   border-right: 1px solid var(--aside-border);
-  //   display: flex;
-  //   flex-direction: column;
 }
 
 .nav-tabs-custom {
@@ -232,6 +232,10 @@ body.dark-theme {
   padding-right: 1rem;
 }
 
+.card-table {
+    margin-top: -1rem !important;
+}
+
 .filtros-scroll-wrapper {
   height: calc(100vh - 135px);
   overflow-y: auto;
@@ -239,7 +243,7 @@ body.dark-theme {
 }
 
 .content-scroll-wrapper {
-  height: calc(100vh - 215px);
+  height: calc(100vh - 195px);
   overflow-y: auto;
   overflow-x: hidden;
 }

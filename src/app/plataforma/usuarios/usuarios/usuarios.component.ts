@@ -31,8 +31,7 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
   //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
-  @Output()
-  toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
   datatableElement!: DataTableDirective;
   registrosSub?: Subscription;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
@@ -176,30 +175,72 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
   }
 
   onFiltroIdentificacionChangeClick(evento: any) {
+    console.log('filtrar el nombre ', evento.target.value);
     const textoFiltro = evento.target.value;
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
-        (app.identificacionUsuario || 0).includes(textoFiltro)
-      );
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) => String(usuario.identificacionUsuario || 0).includes(textoFiltro));
     }
   }
 
   onFiltroNombreChangeClick(evento: any) {
     console.log('filtrar el nombre ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
+        (usuario.nombreUsuario || '').toLowerCase().includes(textoFiltro)
+      );
+    }
   }
+
   onFiltroCorreoChangeClick(evento: any) {
     console.log('filtrar el correo ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
+        (usuario.correoUsuario || '').toLowerCase().includes(textoFiltro)
+      );
+    }
   }
+
   onFiltroUsernameChangeClick(evento: any) {
     console.log('filtrar el username ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
+        (usuario.userNameUsuario || '').toLowerCase().includes(textoFiltro)
+      );
+    }
   }
+
   onFiltroDescripcionChangeClick(evento: any) {
     console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
+        (usuario.descripcionUsuario || '').toLowerCase().includes(textoFiltro)
+      );
+    }
   }
+
   onFiltroEstadoChangeClick(evento: any) {
     console.log('filtrar el estado ', evento.target.value);
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      const estado = evento.target.value == 'true' ? true : false;
+      console.log('Usuarios', this.registrosFiltrado);
+      this.registrosFiltrado = this.registros.filter((x) => (x.estadoUsuario = estado));
+    }
   }
 
   toggleNav(): void {

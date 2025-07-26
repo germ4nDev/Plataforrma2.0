@@ -1,7 +1,7 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
@@ -18,12 +18,16 @@ import { catchError, Subject, tap } from 'rxjs';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-roles',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './roles.component.html',
   styleUrl: './roles.component.scss'
 })
@@ -31,11 +35,14 @@ export class RolesComponent implements OnInit, AfterViewInit {
   //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
+@Output() toggleSidebar = new EventEmitter<void>();
   datatableElement!: DataTableDirective;
   registrosSub?: Subscription;
   suitesSub?: Subscription;
   suites: any[] = [];
+    activeTab: 'menu' | 'filters' | 'main' = 'menu';
   aplicaciones: PTLAplicacionModel[] = [];
+  menuItems: NavigationItem[] = [];
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
@@ -48,6 +55,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
     private router: Router,
     private rolesAPService: PTLRolesAPService,
     private translate: TranslateService,
+    private navigationService: NavigationService,
     private aplicacionesService: PtlAplicacionesService,
     private suitesService: PtlSuitesAPService,
     private languageService: LanguageService,
@@ -70,6 +78,8 @@ export class RolesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+        const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
@@ -206,5 +216,9 @@ export class RolesComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

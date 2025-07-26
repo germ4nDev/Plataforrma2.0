@@ -22,7 +22,7 @@
                     <div class="filtro">
                         <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
                         <select (change)="onFiltroCodigoChangeClick($event)" class="form-control" required>
-                            <option value="todos">{{ 'APLICACIONES.FILTROS.TODOS' | translate }}</option>
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.codigoAplicacion }}</option>
                         </select>
@@ -30,7 +30,7 @@
                     <div class="filtro">
                         <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <select (Change)="onFiltroNombreChangeClick($event)" class="form-control" required>
-                            <option value="todos">{{ 'APLICACIONES.FILTROS.TODOS' | translate }}</option>
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.nombreAplicacion }}</option>
                         </select>
@@ -43,7 +43,7 @@
                     <div class="filtro">
                         <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control" required>
-                            <option value="todos">{{ 'APLICACIONES.FILTROS.TODOS' | translate }}</option>
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
                         </select>
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <div class="card content-scroll-wrapper">
+        <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <div class="table-responsive">
                     <table datatable [dtOptions]="dtColumnSearchingOptions" class="table row-border">

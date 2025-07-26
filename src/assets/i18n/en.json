@@ -20,6 +20,7 @@
             "MESSAGES": "My Messages",
             "LOCK": "Lock Screen"
         },
+        "FILTROTODOS": "Show All",
         "INSERTAR": "The record was successfully created",
         "MODIFICAR": "The record was successfully updated",
         "NOINSERTO": "The record could not be inserted",
@@ -50,7 +51,6 @@
             "FILTRONOMBRE" : "Name",
             "FILTRODECRIPCION" : "Descripction",
             "FILTROESTADO" : "Status",
-            "TODOS" : "Show All",
             "DESCRIPCIONCHOLDER": "aplication Descripction"
         }
     },
@@ -361,6 +361,20 @@
             "DESCRIPTION": "User's Description",
             "DESCRIPTIONHOLDER": "Enter the User's Description",
             "STATUS": "User's Status"
+        },
+        "FILTROS": {
+            "TITULO": "Users Filters",
+            "IDENTIFICACIONCHOLDER": "User Identification",
+            "IDENTIFICACION": "Identification",
+            "NOMBRE": "Name",
+            "NOMBREHOLDER": "User's Name",
+            "CORREO": "Email",
+            "CORREOHOLDER": "User's Email",
+            "USERNAME": "Username",
+            "USERNAMEHOLDER": "User's Username",
+            "DECRIPCION": "Descripction",
+            "DESCRIPCIONCHOLDER": "User's Description",
+            "ESTADO": "Status"
         }
     },
     "ROLES": {
