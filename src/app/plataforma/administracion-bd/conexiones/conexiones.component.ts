@@ -163,7 +163,7 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
 
   consultarSuscriptores() {
     this.registrosSub = this.suscriptoresService
-      .getSuscriptores()
+      .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {

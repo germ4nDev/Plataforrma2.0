@@ -1,12 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, LocationStrategy, Location } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of } from 'rxjs';
+import { GradientConfig } from 'src/app/app-config';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PtlAplicacionesService, LanguageService } from 'src/app/theme/shared/service';
+import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
@@ -15,12 +21,19 @@ import { v4 as uuidv4 } from 'uuid';
 @Component({
   selector: 'app-gestion-ticket',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-ticket.component.html',
   styleUrl: './gestion-ticket.component.scss'
 })
 export class GestionTicketComponent {
+  @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLTicketAPModel = new PTLTicketAPModel();
+  menuItems: NavigationItem[] = [];
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
+
   aplicaciones: PTLAplicacionModel[] = [];
   registrosSub?: Subscription;
   form: undefined;
@@ -33,16 +46,30 @@ export class GestionTicketComponent {
     private route: ActivatedRoute,
     private registrosService: PTLTicketsService,
     private aplicacionesService: PtlAplicacionesService,
-    private translate: TranslateService,
     private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private BreadCrumb: BreadcrumbComponent,
+    private translate: TranslateService,
+    private layoutInitializer: LayoutInitializerService,
+    private locationStrategy: LocationStrategy,
+    private location: Location,
+    private navigationService: NavigationService
   ) {
     this.isSubmit = false;
+    GradientConfig.header_fixed_layout = true
+    this.gradientConfig = GradientConfig;
+    let current_url = this.location.path();
+    const baseHref = this.locationStrategy.getBaseHref();
+
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.navCollapsedMob = false;
   }
 
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
     this.consultarAplicaciones();
+    this.layoutInitializer.applyLayout();
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -59,9 +86,7 @@ export class GestionTicketComponent {
           }
         });
       } else {
-        // console.log('no llena el Id', registroId);
         this.modoEdicion = false;
-        // this.FormRegistro.codigoAplicacion = uuidv4();
       }
     });
   }
@@ -139,6 +164,10 @@ export class GestionTicketComponent {
 
   btnRegresarClick() {
     this.router.navigate(['/help-desk/tickets/']);
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }
 

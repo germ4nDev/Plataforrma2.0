@@ -347,12 +347,12 @@
     },
     "SUSCRIPTORES": {
         "TITLE": "Suscriptores",
-        "NEW": "Nuevo Suscriptor",
+        "IDENTIFICATION": "Identificación",
         "NAME": "Nombre",
         "DESCRIPTION": "Descripción",
         "STATUS": "Estado",
-        "UPDATE": "Modificar Suscriptor",
         "DELETE": "Eliminar Suscriptor",
+        "FILTER_IDENTIFICATION": "Filtro Identificación",
         "FILTER_NAME": "Filtro Nombre",
         "FILTER_DESCRIPTION": "Filtro descripción",
         "FILTRO_STATUS": "Filtro Estado",
@@ -362,8 +362,12 @@
         "ELIMINARERROR": "No se pudo eliminar el Suscriptor.",
         "GESTION": {
             "TITLE": "Crear/Actualizar un Suscriptor",
+            "NEW": "Nuevo Suscriptor",
             "CREATE": "Crear Suscriptor",
+            "UPDATE": "Modificar Suscriptor",
+            "PLACEHOLDERIDENTIFICACION": "Identificación del Suscriptor",
             "PLACEHOLDERNAME": "Nombre del Suscriptor",
+            "REQUERIDOIDENTIFICACION": "Por favor, Ingrese una identificación. Este campo es obligatorio.",
             "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
             "PLACEHOLDERDESCRIPCION": "Descripcion del Suscriptor",
             "REQUERIDODESCRIPCION": "Por favor, ingrese una descripcion. Este campo es obligatorio."

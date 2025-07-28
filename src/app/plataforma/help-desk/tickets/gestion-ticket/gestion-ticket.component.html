@@ -1,12 +1,24 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h4>{{ 'TICKETS.GESTION.TITLE' | translate }}</h4>
-                <hr />
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+            </div>
+
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                        <h4>{{ 'TICKETS.GESTION.TITLE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex gap-3">
                         <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
@@ -27,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        <div class="card content-scroll-wrapper">
             <div class="card-header">
                 <h4 *ngIf="!modoEdicion">{{ 'TICKETS.NEW' | translate }}</h4>
                 <h4 *ngIf="modoEdicion">{{ 'TICKETS.UPDATE' | translate }}</h4>
@@ -40,11 +52,15 @@
                                 <label class="form-control-label" for="codigoAplicacion">{{
                                     'TICKETS.GESTION.APLICACION' |
                                     translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="codigoAplicacion" id="codigoAplicacion"
+                                <select class="form-control input-md" style="cursor: pointer;" name="codigoAplicacion"
+                                    id="codigoAplicacion"
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
-                                    #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.aplicacionId" (change)="onAplicacionchangeClick($event)">
-                                    <option value="" disabled >{{ 'TICKETS.GESTION.PLACEHOLDERAPLICACION' | translate }}</option>
-                                    <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">{{ app.nombreAplicacion }}</option>
+                                    #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
+                                    (change)="onAplicacionchangeClick($event)">
+                                    <option value="" disabled>{{ 'TICKETS.GESTION.PLACEHOLDERAPLICACION' | translate }}
+                                    </option>
+                                    <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">{{
+                                        app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
@@ -61,7 +77,8 @@
                                     placeholder="{{ 'TICKETS.GESTION.NAMEHOLDER' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreTicket.valid && (nombreTicket.dirty || nombreTicket.touched || isSubmit) }"
                                     #nombreTicket="ngModel" required [(ngModel)]="FormRegistro.nombreTicket" />
-                                <label *ngIf="!nombreTicket.valid && (nombreTicket.dirty || nombreTicket.touched || isSubmit)"
+                                <label
+                                    *ngIf="!nombreTicket.valid && (nombreTicket.dirty || nombreTicket.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'TICKETS.GESTION.REQUERIDONAME' | translate }}
                                 </label>
@@ -72,9 +89,11 @@
                                 <label class="form-label">{{ 'TICKETS.GESTION.DESCRIPTION' | translate }}</label>
                                 <textarea class="form-control"
                                     placeholder="{{ 'TICKETS.GESTION.DESCRIPTIONHOLDER' | translate }}"
-                                    name="descripcionTicket" [ngClass]="{
+                                    name="descripcionTicket"
+                                    [ngClass]="{
                                     'is-invalid': !descripcionTicket.valid && (descripcionTicket.dirty || descripcionTicket.touched || isSubmit)}"
-                                    #descripcionTicket="ngModel" required [(ngModel)]="FormRegistro.descripcionTicket" rows="5">
+                                    #descripcionTicket="ngModel" required [(ngModel)]="FormRegistro.descripcionTicket"
+                                    rows="5">
                                 </textarea>
                                 <label
                                     *ngIf="!descripcionTicket.valid && (descripcionTicket.dirty || descripcionTicket.touched || isSubmit)"

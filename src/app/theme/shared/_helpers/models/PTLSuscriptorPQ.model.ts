@@ -1,12 +1,12 @@
-export class PTLSuscriptorPQ {
+export class PTLSuscriptoresPQModelo {
   constructor(
     public suscriptoPaqueteId?: number,
     public codigoSuscriptor?: string,
     public paqueteId?: number,
+    public conexionId?: number,
     public fechaInicio?: Date,
     public fechaVencimiento?: Date,
-    public cdigoLicencia?: string,
-    public conexionId?: number,
+    public codigoLicencia?: string,
     public estadoLicencia?: boolean
   ) {}
 }

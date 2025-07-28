@@ -1,12 +1,32 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h4>{{ 'TICKETS.TITLE' | translate }}</h4>
-                <hr />
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3" style="height: calc(100vh - 56px)">
+                    <!-- falta terminar -->
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                        <h4>{{ 'TICKETS.TITLE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex">
                         <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
@@ -16,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        <div class="card content-scroll-wrapper">
             <div class="card-body">
                 <div class="table-responsive">
                     <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
@@ -61,19 +81,18 @@
                         <tfoot>
                             <tr>
                                 <th>
-                                    <input #nombreTicket (keyup)="filtrarColumna(1, nombreTicket.value)"
-                                        type="text" placeholder="{{ 'TICKETS.FILTER_NAMETICKET' | translate }}"
+                                    <input #nombreTicket (keyup)="filtrarColumna(1, nombreTicket.value)" type="text"
+                                        placeholder="{{ 'TICKETS.FILTER_NAMETICKET' | translate }}"
                                         name="filtro-nombreTicket" class="form-control" />
                                 </th>
                                 <th>
-                                    <input #descripcionTicket
-                                        (keyup)="filtrarColumna(2, descripcionTicket.value)" type="text"
-                                        placeholder="{{ 'TICKETS.FILTER_DESCRIPCIONTICKET' | translate }}"
+                                    <input #descripcionTicket (keyup)="filtrarColumna(2, descripcionTicket.value)"
+                                        type="text" placeholder="{{ 'TICKETS.FILTER_DESCRIPCIONTICKET' | translate }}"
                                         name="filtro-descripcionTicket" class="form-control" />
                                 </th>
                                 <th>
-                                    <input #estadoTicket (keyup)="filtrarColumna(4, estadoTicket.value)"
-                                        type="text" placeholder="{{ 'TICKETS.FILTRO_STATUSTICKET' | translate }}"
+                                    <input #estadoTicket (keyup)="filtrarColumna(4, estadoTicket.value)" type="text"
+                                        placeholder="{{ 'TICKETS.FILTRO_STATUSTICKET' | translate }}"
                                         name="filtro-estadoTicket" class="form-control" />
                                 </th>
                                 <th>
@@ -86,4 +105,3 @@
         </div>
     </div>
 </div>
-

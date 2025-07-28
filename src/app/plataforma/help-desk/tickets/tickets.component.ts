@@ -1,12 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
 import { Subscription, Subject, tap, catchError, of } from 'rxjs';
+import { GradientConfig } from 'src/app/app-config';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LanguageService } from 'src/app/theme/shared/service';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
 import { PTLTiposEstadosService } from 'src/app/theme/shared/service/ptltipos-estados.service';
@@ -16,7 +21,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-tickets',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './tickets.component.html',
   styleUrl: './tickets.component.scss'
 })
@@ -24,6 +29,9 @@ export class TicketsComponent implements OnInit, AfterViewInit {
   //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
+  @Output() toggleSidebar = new EventEmitter<void>();
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+
   datatableElement!: DataTableDirective;
   registrosSub?: Subscription;
   dtColumnSearchingOptions: DataTables.Settings = {};
@@ -34,6 +42,10 @@ export class TicketsComponent implements OnInit, AfterViewInit {
   tipoEstado: number = 1;
   estadosFiltrados: any[] = [];
 
+  menuItems: NavigationItem[] = [];
+  hasFiltersSlot: boolean = false;
+  gradientConfig;
+
   //#endregion VARIABLES
 
   constructor(
@@ -43,8 +55,11 @@ export class TicketsComponent implements OnInit, AfterViewInit {
     private tiposEstados: PTLTiposEstadosService,
     private estados: PTLEstadosService,
     private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
-  ) {}
+    private BreadCrumb: BreadcrumbComponent,
+    private navigationService: NavigationService,
+  ) {
+    this.gradientConfig = GradientConfig;
+  }
 
   ngAfterViewInit(): void {
     this.BreadCrumb.setBreadcrumb();
@@ -62,10 +77,16 @@ export class TicketsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.languageService.currentLang$.subscribe((lang) => {
-      this.translate.use(lang);
+   const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    console.log('elementos menu componente', this.menuItems);
+    this.hasFiltersSlot = true;
       this.translate
-        .get(['TICKETS.NOMBRETICKET', 'TICKETS.DESCRIPCIONTICKET', 'TICKETS.ESTADOTICKET'])
+        .get([
+            'TICKETS.NOMBRETICKET',
+            'TICKETS.DESCRIPCIONTICKET',
+            'TICKETS.ESTADOTICKET'
+        ])
         .subscribe((translations) => {
           this.tituloPagina = translations['TICKETS.TITLE'];
           this.dtColumnSearchingOptions = {
@@ -80,7 +101,6 @@ export class TicketsComponent implements OnInit, AfterViewInit {
           this.consultarRegistros();
           this.consultarEstado();
         });
-    });
   }
 
   ngOnDestroy(): void {
@@ -170,5 +190,8 @@ consultarEstado() {
         });
       }
     });
+  }
+    toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

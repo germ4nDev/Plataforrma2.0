@@ -7,7 +7,6 @@
                     {{ 'PLATAFORMA.MENU' | translate }}
                 </button>
             </div>
-
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
@@ -55,7 +54,8 @@
                                     [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
                                     #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
                                     (change)="onAplicacionchangeClick($event)">
-                                    <option value="" disabled>{{ 'SITIOS.GESTION.PLACEHOLDERAPLICACION' | translate }}
+                                    <option value="" disabled>
+                                        {{ 'SITIOS.GESTION.PLACEHOLDERAPLICACION' | translate }}
                                     </option>
                                     <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">
                                         {{ app.nombreAplicacion }}</option>

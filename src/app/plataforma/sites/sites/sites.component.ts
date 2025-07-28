@@ -29,22 +29,22 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
   styleUrl: './sites.component.scss'
 })
 export class SitesComponent implements OnInit, AfterViewInit {
-  [x: string]: any;
-  @ViewChild(DataTableDirective, { static: false })
-  @Output() toggleSidebar = new EventEmitter<void>();
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+    [x: string]: any;
+    @ViewChild(DataTableDirective, { static: false })
+    @Output() toggleSidebar = new EventEmitter<void>();
+    activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
-  datatableElement!: DataTableDirective;
-  registrosSub?: Subscription;
+    datatableElement!: DataTableDirective;
+    registrosSub?: Subscription;
 
-  dtColumnSearchingOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject<any>();
-  sitiosAP: PTLSitiosAPModel[] = [];
-  lang: string = localStorage.getItem('lang') || '';
-  tituloPagina: string = '';
-  menuItems: NavigationItem[] = [];
-  hasFiltersSlot: boolean = false;
-  gradientConfig;
+    dtColumnSearchingOptions: DataTables.Settings = {};
+    dtTrigger: Subject<any> = new Subject<any>();
+    sitiosAP: PTLSitiosAPModel[] = [];
+    lang: string = localStorage.getItem('lang') || '';
+    tituloPagina: string = '';
+    menuItems: NavigationItem[] = [];
+    hasFiltersSlot: boolean = false;
+    gradientConfig;
 
   constructor(
     private router: Router,
@@ -52,14 +52,12 @@ export class SitesComponent implements OnInit, AfterViewInit {
     private translate: TranslateService,
     private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent,
-    private navigationService: NavigationService,
+    private navigationService: NavigationService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit() {
-    // this.languageService.currentLang$.subscribe((lang) => {
-    //   this.translate.use(lang);
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     console.log('elementos menu componente', this.menuItems);

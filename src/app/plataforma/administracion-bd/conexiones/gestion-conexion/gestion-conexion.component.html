@@ -58,8 +58,8 @@
                                     (change)="onAplicacionchangeClick($event)">
                                     <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERAPLICACION' |
                                         translate }}</option>
-                                    <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">{{
-                                        app.nombreAplicacion }}</option>
+                                    <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">
+                                        {{ app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit)"
@@ -79,9 +79,8 @@
                                     (change)="onSuscriptorChangeClick($event)">
                                     <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERSUSCRIPTOR' |
                                         translate }}</option>
-                                    <option [value]="suscriptor.suscriptorId" *ngFor="let suscriptor of suscriptores">{{
-                                        suscriptor.nombreSuscriptor
-                                        }}
+                                    <option [value]="suscriptor.suscriptorId" *ngFor="let suscriptor of suscriptores">
+                                        {{ suscriptor.nombreSuscriptor }}
                                     </option>
                                 </select>
                                 <label
@@ -93,16 +92,14 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="paqueteId">{{
-                                    'CONEXIONES.GESTION.PAQUETE' | translate }}</label>
+                                <label class="form-control-label" for="paqueteId">
+                                    {{ 'CONEXIONES.GESTION.PAQUETE' | translate }}</label>
                                 <select class="form-control input-md" style="cursor: pointer;" name="paqueteId"
                                     id="paqueteId"
                                     [ngClass]="{ 'is-invalid': !paqueteId.valid && (paqueteId.dirty || paqueteId.touched || isSubmit) }"
                                     #paqueteId="ngModel" required [(ngModel)]="FormRegistro.paqueteId"
                                     (change)="onPaqueteChangeClick($event)">
-                                    <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERPAQUETE' |
-                                        translate
-                                        }}</option>
+                                    <option value="" disabled>{{ 'CONEXIONES.GESTION.PLACEHOLDERPAQUETE' | translate }}</option>
                                     <option [value]="paquete.paqueteId" *ngFor="let paquete of paquetes">{{
                                         paquete.nombrePaquete }}</option>
                                 </select>

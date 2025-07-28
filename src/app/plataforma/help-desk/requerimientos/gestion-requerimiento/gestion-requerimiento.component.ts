@@ -1,13 +1,19 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, LocationStrategy, Location } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of } from 'rxjs';
+import { GradientConfig } from 'src/app/app-config';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LanguageService } from 'src/app/theme/shared/service';
+import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
@@ -19,13 +25,19 @@ import { v4 as uuidv4 } from 'uuid';
 @Component({
   selector: 'tickets-gestion-requerimiento',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-requerimiento.component.html',
   styleUrl: './gestion-requerimiento.component.scss'
 })
 export class GestionRequerimientoComponent {
-
+  @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLRequerimientoTKModel = new PTLRequerimientoTKModel();
+  menuItems: NavigationItem[] = [];
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
+
   ticket: PTLTicketAPModel[] = [];
   registrosSub?: Subscription;
   form: undefined;
@@ -42,17 +54,31 @@ export class GestionRequerimientoComponent {
     private tickesService: PTLTicketsService,
     private tiposEstados: PTLTiposEstadosService,
     private estados: PTLEstadosService,
-    private translate: TranslateService,
     private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private BreadCrumb: BreadcrumbComponent,
+    private translate: TranslateService,
+    private layoutInitializer: LayoutInitializerService,
+    private locationStrategy: LocationStrategy,
+    private location: Location,
+    private navigationService: NavigationService
   ) {
     this.isSubmit = false;
+    GradientConfig.header_fixed_layout = true;
+    this.gradientConfig = GradientConfig;
+    let current_url = this.location.path();
+    const baseHref = this.locationStrategy.getBaseHref();
+
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
+    this.navCollapsedMob = false;
   }
 
   ngOnInit() {
     this.BreadCrumb.setBreadcrumb();
     this.consultarTickets();
     this.consultarEstado();
+    this.layoutInitializer.applyLayout();
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -72,43 +98,39 @@ export class GestionRequerimientoComponent {
         // console.log('no llena el Id', registroId);
         this.modoEdicion = false;
         this.FormRegistro = {
-        ...this.FormRegistro,
-        estadoRequerimiento: 'PE',
-      };
+          ...this.FormRegistro,
+          estadoRequerimiento: 'PE'
+        };
         // this.FormRegistro.requerimientoId = uuidv4();
       }
     });
   }
-consultarEstado() {
-  this.estados
-    .getRegistros()
-    .pipe(
-      tap((resp: any) => {
-        if (resp.ok) {
-          // ✅ Usar comparación con doble igual (o triple)
-          this.estadosFiltrados = resp.estados.filter(
-            (estado: any) => estado.tipoEstado === this.tipoEstado
-          );
-          console.log('Estados filtrados:', this.estadosFiltrados);
-        }
-      }),
-      catchError((err) => {
-        console.error('Error al consultar estados:', err);
-        return of(null);
-      })
-    )
-    .subscribe();
-}
-
-onEstadoChangeClick(event: any) {
-  const value = event.target.value;
-  const estadoSeleccionado = this.estadosFiltrados.find(
-    (x) => x.estadoId == value
-  );
-  if (estadoSeleccionado) {
-    this.FormRegistro.estadoRequerimiento = estadoSeleccionado.siglaEstado;
+  consultarEstado() {
+    this.estados
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            // ✅ Usar comparación con doble igual (o triple)
+            this.estadosFiltrados = resp.estados.filter((estado: any) => estado.tipoEstado === this.tipoEstado);
+            console.log('Estados filtrados:', this.estadosFiltrados);
+          }
+        }),
+        catchError((err) => {
+          console.error('Error al consultar estados:', err);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
-}
+
+  onEstadoChangeClick(event: any) {
+    const value = event.target.value;
+    const estadoSeleccionado = this.estadosFiltrados.find((x) => x.estadoId == value);
+    if (estadoSeleccionado) {
+      this.FormRegistro.estadoRequerimiento = estadoSeleccionado.siglaEstado;
+    }
+  }
 
   consultarTickets() {
     this.registrosSub = this.tickesService
@@ -128,7 +150,7 @@ onEstadoChangeClick(event: any) {
       .subscribe();
   }
 
-    onTicketchangeClick(event: any) {
+  onTicketchangeClick(event: any) {
     const value = event.target.value;
     const ticket = this.ticket.filter((x) => x.ticketId == value)[0];
     this.FormRegistro.ticketId = ticket.ticketId;
@@ -157,7 +179,7 @@ onEstadoChangeClick(event: any) {
         }
       });
     } else {
-    //   console.log('formregistro', this.FormRegistro);
+      //   console.log('formregistro', this.FormRegistro);
       this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
@@ -177,5 +199,9 @@ onEstadoChangeClick(event: any) {
 
   btnRegresarClick() {
     this.router.navigate(['/help-desk/requerimientos/']);
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

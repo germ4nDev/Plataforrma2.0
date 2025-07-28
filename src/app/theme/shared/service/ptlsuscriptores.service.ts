@@ -30,11 +30,12 @@ export class PTLSuscriptoresService {
     };
   }
 
-  getSuscriptores() {
-    return this.http.get<PTLSuscriptorModel>(`${environment.apiUrl}/suscriptores`)
+  getRegistros() {
+    const url = `${base_url}/suscriptores`;
+    return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('respuesta servicio', resp);
+        console.log('servicio de suscriptores', resp);
         return {
           ok: true,
           suscriptores: resp.suscriptores
@@ -43,12 +44,11 @@ export class PTLSuscriptoresService {
     );
   }
 
-  getSuscriptorById(id: PTLSuscriptorModel) {
+  getRegistroById(id: number) {
     const url = `${base_url}/suscriptores/${id}`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('data de suscriptores', resp);
+        console.log('data de suscriptor', resp);
         return {
           ok: true,
           suscriptor: resp.suscriptor
@@ -57,29 +57,14 @@ export class PTLSuscriptoresService {
     );
   }
 
-  crearSuscriptor(suscriptor: PTLSuscriptorModel) {
+  postCrearRegistro(suscriptor: PTLSuscriptorModel) {
     const url = `${base_url}/suscriptores`;
     return this.http.post(url, suscriptor);
   }
 
-  actualizarSuscriptor(suscriptor: PTLSuscriptorModel) {
+  putModificarRegistro(suscriptor: PTLSuscriptorModel) {
     const url = `${base_url}/suscriptores/${suscriptor.suscriptorId}`;
-    return this.http.put(url, suscriptor)
-    .pipe(
-      map((resp: any) => {
-        console.log('data de suscriptor modificada', resp);
-        return {
-          ok: true,
-          suscriptor: resp.suscriptor
-        };
-      })
-    );
-  }
-
-  eliminarSuscripctor(_id: number) {
-    const url = `${base_url}/suscriptores/${_id}`;
-    return this.http.delete(url)
-    .pipe(
+    return this.http.put(url, suscriptor).pipe(
       map((resp: any) => {
         console.log('data de suscriptor modificacda', resp);
         return {
@@ -89,4 +74,18 @@ export class PTLSuscriptoresService {
       })
     );
   }
+
+  deleteEliminarRegistro(_id: number) {
+    const url = `${base_url}/suscriptores/${_id}`;
+    return this.http.delete(url).pipe(
+      map((resp: any) => {
+        console.log('data de suscriptor eliminado', resp);
+        return {
+          ok: true,
+          suscriptor: resp.suscriptor
+        };
+      })
+    );
+  }
 }
+

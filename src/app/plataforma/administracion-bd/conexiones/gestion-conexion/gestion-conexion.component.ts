@@ -5,12 +5,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
-import { PTLPaquetesSCModel } from 'src/app/theme/shared/_helpers/models/PTLPaquetesSC.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PtlAplicacionesService, LanguageService } from 'src/app/theme/shared/service';
 import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service';
-import { PTLPaquetesSCService } from 'src/app/theme/shared/service/ptlpaquetes-sc.service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
@@ -21,6 +19,8 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { PTLPaquetesModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model';
+import { PTLPaquetesService } from 'src/app/theme/shared/service/ptlpaquetes.service';
 
 @Component({
   selector: 'app-gestion-conexion',
@@ -40,7 +40,7 @@ export class GestionConexionComponent {
 
   aplicaciones: PTLAplicacionModel[] = [];
   suscriptores: PTLSuscriptorModel[] = [];
-  paquetes: PTLPaquetesSCModel[] = [];
+  paquetes: PTLPaquetesModel[] = [];
   registrosSub?: Subscription;
   form: undefined;
   isSubmit: boolean = false;
@@ -53,7 +53,7 @@ export class GestionConexionComponent {
     private registrosService: PTLConexionesBDSTService,
     private aplicacionesService: PtlAplicacionesService,
     private suscriptoresService: PTLSuscriptoresService,
-    private paquetesService: PTLPaquetesSCService,
+    private paquetesService: PTLPaquetesService,
     private translate: TranslateService,
     private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent,
@@ -83,18 +83,12 @@ export class GestionConexionComponent {
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
-        // console.log('me llena el Id', registroId);
+        console.log('me llena el Id', registroId);
         this.modoEdicion = true;
         this.registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
-            const app = this.aplicaciones.filter(x => x.aplicacionId == resp.aplicacionId)[0];
-            const susc = this.suscriptores.filter(x => x.suscriptorId == resp.suscriptorId)[0];
-            const paque = this.paquetes.filter(x => x.suscriptorPaqueteId == resp.suscriptorPaqueteId)[0];
-            resp.nombreAplicacion = app.nombreAplicacion;
-            resp.nombreSuscriptor = susc.nombreSuscriptor;
-            // resp.nombrePaquete = paque.nombrePaquetes;
-            this.FormRegistro = resp.paquetes;
+            this.FormRegistro = resp.conexion;
             console.log('datos del FormRegistro', this.FormRegistro);
           },
           error: () => {
@@ -130,7 +124,7 @@ export class GestionConexionComponent {
 
   consultarSuscriptores() {
     this.registrosSub = this.suscriptoresService
-      .getSuscriptores()
+      .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
@@ -187,10 +181,10 @@ export class GestionConexionComponent {
 
    onPaqueteChangeClick(event: any) {
     const value = event.target.value;
-    const paquete = this.paquetes.filter((x) => x.suscriptorPaqueteId == value)[0];
+    const paquete = this.paquetes.filter((x) => x.paqueteId == value)[0];
     // console.log('Código de paquete seleccionado:', value);
     // console.log('data paquete seleccionado:', paquete);
-    this.FormRegistro.paqueteId = paquete.suscriptorPaqueteId;
+    this.FormRegistro.paqueteId = paquete.paqueteId;
     this.FormRegistro.paqueteId = value;
   }
 
