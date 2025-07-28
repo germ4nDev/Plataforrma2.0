@@ -28,12 +28,12 @@ import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.com
 export class AplicacionesComponent implements OnInit, AfterViewInit {
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
+  dtTrigger: Subject<any> = new Subject<any>();
+  dtColumnSearchingOptions: DataTables.Settings = {};
   @Output() toggleSidebar = new EventEmitter<void>();
 
   aplicaciones: PTLAplicacionModel[] = [];
   aplicacionesFiltrado: PTLAplicacionModel[] = [];
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtColumnSearchingOptions: DataTables.Settings = {};
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   menuItems: NavigationItem[] = [];
@@ -42,6 +42,7 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
   hasFiltersSlot: boolean = false;
   registrosSub?: Subscription;
   gradientConfig;
+  lang = localStorage.getItem('lang');
 
   constructor(
     private router: Router,
@@ -83,15 +84,27 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
       .subscribe((translations) => {
         this.tituloPagina = translations['APLICACIONES.TITLE'];
         this.dtColumnSearchingOptions = {
+          pageLength: 10,
           responsive: true,
+          dom: `<"dt-toolbar d-flex justify-content-between align-items-center mb-2" <"dt-length"l> <"dt-right-buttons"B>> rt <"dt-footer d-flex justify-content-between align-items-center" i p > `,
+          buttons: [
+            {
+              extend: 'excelHtml5',
+              text: '<i class="feather icon-file-text" title="Exportar a Excel"></i>',
+              className: 'btn btn-outline-primary'
+            }
+          ],
           columns: [
             { title: translations['APLICACIONES.CODE'], data: 'codigoAplicacion' },
             { title: translations['APLICACIONES.NAME'], data: 'nombreAplicacion' },
             { title: translations['APLICACIONES.DESCRIPTION'], data: 'descripcionAplicacion' },
             { title: translations['APLICACIONES.STATUS'], data: 'estadoAplicacion' },
             { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-          ]
-        };
+          ],
+          language: {
+            url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/English.json'
+          }
+        } as any;
 
         this.consultarAplicaciones();
       });
@@ -151,9 +164,11 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     console.log('filtrar el descripcion ', evento.target.value);
     const textoFiltro = evento.target.value.toLowerCase();
     if (!textoFiltro) {
-      this.aplicacionesFiltrado = [... this.aplicaciones];
+      this.aplicacionesFiltrado = [...this.aplicaciones];
     } else {
-      this.aplicacionesFiltrado = this.aplicacionesFiltrado.filter((app) => (app.descripcionAplicacion || '').toLowerCase().includes(textoFiltro));
+      this.aplicacionesFiltrado = this.aplicacionesFiltrado.filter((app) =>
+        (app.descripcionAplicacion || '').toLowerCase().includes(textoFiltro)
+      );
     }
   }
 
@@ -163,8 +178,8 @@ export class AplicacionesComponent implements OnInit, AfterViewInit {
     if (evento.target.value == 'todos') {
       this.aplicacionesFiltrado = this.aplicaciones;
     } else {
-        const estado = evento.target.value == "true" ? true : false;
-        console.log('Aplicaciones', this.aplicacionesFiltrado);
+      const estado = evento.target.value == 'true' ? true : false;
+      console.log('Aplicaciones', this.aplicacionesFiltrado);
       this.aplicacionesFiltrado = this.aplicaciones.filter((x) => (x.estadoAplicacion = estado));
     }
   }

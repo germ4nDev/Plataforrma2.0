@@ -59,7 +59,7 @@ export class PtlusuariosRolesApService {
   }
 
   putModificarRegistro(role: PTLUsuarioRoleAP) {
-    console.log('data usuRole', role)
+    console.log('data usuRole', role);
     const url = `${base_url}/usuarios-roles/${role.usuarioRoleId}`;
     return this.http.put(url, role).pipe(
       map((resp: any) => {
@@ -73,14 +73,26 @@ export class PtlusuariosRolesApService {
   }
 
   deleteEliminarRegistro(_id: number) {
-
-        console.log('eliminar el registro id', _id);
+    console.log('eliminar el registro id', _id);
     const url = `${base_url}/usuarios-roles/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de role eliminado', resp);
         return {
           ok: true,
+          usuarioRole: resp.usuarioRole
+        };
+      })
+    );
+  }
+
+  deleteTodosRolesByAppIsSuiteId(usId:number, apId: number, suId: number) {
+    const url = `${base_url}/usuarios-roles/clean/${usId}/${apId}/${suId}`;
+    return this.http.delete(url).pipe(
+      map((resp: any) => {
+        console.log('data de role eliminado', resp);
+        return {
+          ok: resp.ok,
           usuarioRole: resp.usuarioRole
         };
       })

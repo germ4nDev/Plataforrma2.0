@@ -35,17 +35,20 @@ export class RolesComponent implements OnInit, AfterViewInit {
   //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
-@Output() toggleSidebar = new EventEmitter<void>();
+  dtColumnSearchingOptions: DataTables.Settings = {};
   datatableElement!: DataTableDirective;
+  dtTrigger: Subject<any> = new Subject<any>();
+
+  @Output()
+  toggleSidebar = new EventEmitter<void>();
+
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  menuItems: NavigationItem[] = [];
   registrosSub?: Subscription;
   suitesSub?: Subscription;
   suites: any[] = [];
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
   aplicaciones: PTLAplicacionModel[] = [];
-  menuItems: NavigationItem[] = [];
 
-  dtColumnSearchingOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject<any>();
   registros: PTLRoleAPModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
@@ -63,7 +66,6 @@ export class RolesComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.columns().every(function () {
         const that = this;
@@ -78,8 +80,9 @@ export class RolesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-        const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.consultarRegistros();
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
@@ -97,7 +100,6 @@ export class RolesComponent implements OnInit, AfterViewInit {
               { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
             ]
           };
-          this.consultarRegistros();
         });
     });
   }

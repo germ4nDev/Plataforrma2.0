@@ -1,21 +1,34 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h4>{{ 'ROLES.ROLESUSUARIOS.GESTION.TITLE' | translate }}</h4>
-                <hr />
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+            </div>
+
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                        <h4>{{ 'ROLES.ROLESUSUARIOS.GESTION.TITLE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex gap-3">
                         <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
-                            (click)="btnGestionarRegistroClick(validationForm)">
+                            (click)="onGestionarRegistroClick(validationForm)">
                             {{ 'ROLES.ROLESUSUARIOS.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                         <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro"
-                            (click)="btnGestionarRegistroClick(validationForm)">
+                            (click)="onGestionarRegistroClick(validationForm)">
                             {{ 'ROLES.ROLESUSUARIOS.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
@@ -27,7 +40,8 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+
+        <div class="card card-table content-scroll-wrapper">
             <div class="card-header">
                 <h4 *ngIf="!modoEdicion">{{ 'ROLES.ROLESUSUARIOS.GESTION.NEW' | translate }}</h4>
                 <h4 *ngIf="modoEdicion">{{ 'ROLES.ROLESUSUARIOS.GESTION.UPDATE' | translate }}</h4>
@@ -38,13 +52,13 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-control-label" for="usuarioId">{{
-                                    'ROLES.ROLESUSUARIOS.GESTION.USUARIO' |
-                                    translate }}</label>
+                                    'ROLES.ROLESUSUARIOS.GESTION.USUARIO' | translate }}</label>
                                 <select class="form-control input-md" name="usuarioId" id="usuarioId"
                                     [ngClass]="{ 'is-invalid': !usuarioId.valid && (usuarioId.dirty || usuarioId.touched || isSubmit) }"
                                     #usuarioId="ngModel" required [(ngModel)]="FormRegistro.usuarioId"
                                     (change)="onUsuarioChangeClick($event)">
-                                    <option value="">{{ 'ROLES.ROLESUSUARIOS.GESTION.USUARIOHOLDER' | translate }}</option>
+                                    <option value="">{{ 'ROLES.ROLESUSUARIOS.GESTION.USUARIOHOLDER' | translate }}
+                                    </option>
                                     <option [value]="user.usuarioId" *ngFor="let user of usuarios">{{ user.nombreUsuario
                                         }}</option>
                                 </select>
@@ -57,13 +71,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="aplicacionId">{{
-                                    'ROLES.ROLESUSUARIOS.GESTION.APLICACION' |
-                                    translate }}</label>
+                                    'ROLES.ROLESUSUARIOS.GESTION.APLICACION' | translate }}</label>
                                 <select class="form-control input-md" name="aplicacionId" id="aplicacionId"
                                     [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
                                     #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
                                     (change)="onAplicacionChangeClick($event)">
-                                    <option value="">{{ 'ROLES.ROLESUSUARIOS.GESTION.APLICACIONHOLDER' | translate }}</option>
+                                    <option value="">{{ 'ROLES.ROLESUSUARIOS.GESTION.APLICACIONHOLDER' | translate }}
+                                    </option>
                                     <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">{{
                                         app.nombreAplicacion }}</option>
                                 </select>
@@ -80,9 +94,12 @@
                                     'ROLES.ROLESUSUARIOS.GESTION.SUITE' | translate }}</label>
                                 <select class="form-control input-md" name="codigoSuite" id="codigoSuite"
                                     [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
-                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.suiteId" (change)="onSuiteChangeClick($event)">
-                                    <option value="">{{ 'ROLES.ROLESUSUARIOS.GESTION.SUITEHOLDER' | translate }}</option>
-                                    <option [value]="suite.suiteId" *ngFor="let suite of suitesApp">{{ suite.nombreSuite }}</option>
+                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.suiteId"
+                                    (change)="onSuiteChangeClick($event)">
+                                    <option value="">{{ 'ROLES.ROLESUSUARIOS.GESTION.SUITEHOLDER' | translate }}
+                                    </option>
+                                    <option [value]="suite.suiteId" *ngFor="let suite of suitesApp">{{ suite.nombreSuite
+                                        }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)"
@@ -93,8 +110,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreRole">{{ 'ROLES.ROLESUSUARIOS.GESTION.ROLES' |
-                                    translate }}</label>
+                                <label class="form-control-label" for="nombreRole">{{
+                                    'ROLES.ROLESUSUARIOS.GESTION.ROLES' | translate }}</label>
                                 <div class="checkbox-container" *ngFor="let role of rolesAplicacion">
                                     <label>
                                         <input class="checkbox-custom" type="checkbox" [value]="role.roleId"
@@ -105,25 +122,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="form-label">{{ 'ROLES.ROLESUSUARIOS.GESTION.STATUS' | translate }}</label>
-                                <div class="radio-buttons">
-                                    <label class="radio-button">
-                                        <input name="option" type="radio" [value]="true"
-                                            [(ngModel)]="FormRegistro.estadoUsuarioRole" />
-                                        <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
-                                    </label><br />
-                                    <label class="radio-button">
-                                        <input name="option" type="radio" [value]="false"
-                                            [(ngModel)]="FormRegistro.estadoUsuarioRole" />
-                                        <div class="radio-circle"></div>
-                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
-                                    </label>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                 </form>
             </div>

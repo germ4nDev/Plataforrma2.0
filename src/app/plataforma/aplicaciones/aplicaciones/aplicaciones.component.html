@@ -72,7 +72,7 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions" class="table row-border">
+                    <table datatable [dtOptions]="dtColumnSearchingOptions" [dtTrigger]="dtTrigger" class="table row-border" #datatableElement>
                         <thead>
                             <tr>
                                 <th>{{ 'APLICACIONES.CODE' | translate }}</th>

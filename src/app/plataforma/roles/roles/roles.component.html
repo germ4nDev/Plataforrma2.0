@@ -76,7 +76,7 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+                    <table datatable [dtOptions]="dtColumnSearchingOptions" [dtTrigger]="dtTrigger" class="table row-border" #datatableElement>
                         <thead>
                             <tr>
                                 <th>{{ 'ROLES.NOMBREAPLICACION' | translate }}</th>
@@ -131,8 +131,14 @@
                                         name="filtro-codigoAplicacion" class="form-control" />
                                 </th>
                                 <th>
-                                    <input #nombreRole (keyup)="filtrarColumna(1, nombreRole.value)"
-                                        type="text" placeholder="{{ 'ROLES.FILTER_NAMEROLE' | translate }}"
+                                    <input #nombreSuite (keyup)="filtrarColumna(1, nombreSuite.value)"
+                                        type="text" placeholder="{{ 'ROLES.FILTER_NAMESUITE' | translate }}"
+                                        name="filtro-nombreSuite" class="form-control" />
+                                </th>
+                                <th>
+                                    <input #nombreRole
+                                        (keyup)="filtrarColumna(2, nombreRole.value)" type="text"
+                                        placeholder="{{ 'ROLES.FILTER_NOMBREROLE' | translate }}"
                                         name="filtro-nombreRole" class="form-control" />
                                 </th>
                                 <th>

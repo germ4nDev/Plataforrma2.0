@@ -1,45 +1,52 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 //#region IMPORTS
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
+import { catchError, Subject, map, firstValueFrom, of, Subscription, lastValueFrom } from 'rxjs';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
+import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { PtlusuariosRolesApService } from 'src/app/theme/shared/service/ptlusuarios-roles-ap.service';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
-import { catchError, Subject, map, firstValueFrom, of, Subscription, lastValueFrom } from 'rxjs';
-import Swal from 'sweetalert2';
-// import { PTLUsuarioRoleAP } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
-import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
-import { PTLRolesAPService } from 'src/app/theme/shared/service';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { PTLRolesAPService } from 'src/app/theme/shared/service';
+import Swal from 'sweetalert2';
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-roles-usuarios',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './roles-usuarios.component.html',
   styleUrl: './roles-usuarios.component.scss'
 })
 export class RolesUsuariosComponent implements OnInit, AfterViewInit {
   //#region VARIABLES
   [x: string]: any;
+  @Output()
+  toggleSidebar = new EventEmitter<void>();
   @ViewChild(DataTableDirective, { static: false })
   datatableElement!: DataTableDirective;
+  dtColumnSearchingOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject<any>();
+
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  menuItems: NavigationItem[] = [];
   rolesSub?: Subscription;
   registrosSub?: Subscription;
   raplicacionesSub?: Subscription;
   usuariosSub?: Subscription;
-  dtColumnSearchingOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject<any>();
 
   role: PTLRoleAPModel = new PTLRoleAPModel();
   usuario: PTLUsuarioModel = new PTLUsuarioModel();
@@ -54,16 +61,15 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
     private router: Router,
     private rolesAPService: PTLRolesAPService,
     private usuariosService: PTLUsuariosService,
+    private navigationService: NavigationService,
     private rolesUsuariosService: PtlusuariosRolesApService,
     private aplicacionesService: PtlAplicacionesService,
     private suitesService: PtlSuitesAPService,
     private translate: TranslateService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private languageService: LanguageService
   ) {}
 
   ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
       dtInstance.columns().every(function () {
         const that = this;
@@ -78,6 +84,10 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.getOnInitPage();
+    this.consultarRegistros();
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
@@ -98,7 +108,6 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
               { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
             ]
           };
-          this.consultarRegistros();
         });
     });
   }
@@ -107,7 +116,20 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
     this.dtTrigger.unsubscribe();
   }
 
-  async consultarRoleById(roleId: number): Promise<any> {
+  private async getOnInitPage() {
+    return await new Promise((resolve, reject) => {
+      try {
+        return Promise.all([
+          this.consultarRegistros(),
+          resolve(true)
+        ]);
+      } catch (error) {
+        return reject(false);
+      }
+    });
+  }
+
+  private async consultarRoleById(roleId: number): Promise<any> {
     try {
       const resp = await firstValueFrom(
         this.rolesAPService.getRegistroById(roleId).pipe(
@@ -128,7 +150,7 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async consultarAplicacionById(aplicacionId: number) {
+  private async consultarAplicacionById(aplicacionId: number) {
     try {
       const resp = await firstValueFrom(
         this.aplicacionesService.getAplicacionById(aplicacionId).pipe(
@@ -149,7 +171,7 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async consultarSuiteById(suiteId: number) {
+  private async consultarSuiteById(suiteId: number) {
     try {
       const resp = await firstValueFrom(
         this.suitesService.getSuiteAPById(suiteId).pipe(
@@ -170,7 +192,7 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async consultarUsuarioById(usuarioId: number) {
+  private async consultarUsuarioById(usuarioId: number) {
     try {
       const resp = await firstValueFrom(
         this.usuariosService.getUsuarioById(usuarioId).pipe(
@@ -191,7 +213,7 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async consultarRegistros() {
+  private async consultarRegistros() {
     try {
       const resp: any = await lastValueFrom(this.rolesUsuariosService.getRegistros());
       if (!resp.ok) {
@@ -365,5 +387,9 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
         ? this.translate.instant('USUARIOSROLES.ACTIVATETITULO')
         : this.translate.instant('USUARIOSROLES.INACTIVATETITULO');
     return tooltipEstado;
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

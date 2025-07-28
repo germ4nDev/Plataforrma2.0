@@ -1,12 +1,25 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h4>{{ 'ROLES.GESTION.TITLE' | translate }}</h4>
-                <hr />
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+            </div>
+
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+                        <h4>{{ 'ROLES.GESTION.TITLE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex gap-3">
                         <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
@@ -27,7 +40,8 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+
+        <div class="card card-table content-scroll-wrapper">
             <div class="card-header">
                 <h4 *ngIf="!modoEdicion">{{ 'ROLES.GESTION.NEW' | translate }}</h4>
                 <h4 *ngIf="modoEdicion">{{ 'ROLES.GESTION.UPDATE' | translate }}</h4>
@@ -42,9 +56,11 @@
                                     translate }}</label>
                                 <select class="form-control input-md" name="codigoAplicacion" id="codigoAplicacion"
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
-                                    #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion" (change)="onAplicacionchangeClick($event)">
+                                    #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
+                                    (change)="onAplicacionchangeClick($event)">
                                     <option value="">{{ 'ROLES.GESTION.APLICACIONHOLDER' | translate }}</option>
-                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{ app.nombreAplicacion }}</option>
+                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{
+                                        app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
@@ -59,9 +75,11 @@
                                     'ROLES.GESTION.SUITE' | translate }}</label>
                                 <select class="form-control input-md" name="codigoSuite" id="codigoSuite"
                                     [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
-                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite" (change)="onSuiteChangeClick($event)">
+                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite"
+                                    (change)="onSuiteChangeClick($event)">
                                     <option value="">{{ 'ROLES.GESTION.SUITEHOLDER' | translate }}</option>
-                                    <option [value]="suite.codigoSuite" *ngFor="let suite of suitesApp">{{ suite.nombreSuite }}</option>
+                                    <option [value]="suite.codigoSuite" *ngFor="let suite of suitesApp">{{
+                                        suite.nombreSuite }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
@@ -89,9 +107,11 @@
                                 <label class="form-label">{{ 'ROLES.GESTION.DESCRIPTION' | translate }}</label>
                                 <textarea class="form-control"
                                     placeholder="{{ 'ROLES.GESTION.DESCRIPTIONHOLDER' | translate }}"
-                                    name="descripcionRole" [ngClass]="{
+                                    name="descripcionRole"
+                                    [ngClass]="{
                                     'is-invalid': !descripcionRole.valid && (descripcionRole.dirty || descripcionRole.touched || isSubmit)}"
-                                    #descripcionRole="ngModel" required [(ngModel)]="FormRegistro.descripcionRole" rows="5">
+                                    #descripcionRole="ngModel" required [(ngModel)]="FormRegistro.descripcionRole"
+                                    rows="5">
                                 </textarea>
                                 <label
                                     *ngIf="!descripcionRole.valid && (descripcionRole.dirty || descripcionRole.touched || isSubmit)"

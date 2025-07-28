@@ -1,11 +1,11 @@
 //#region IMPORTS
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLRoleAPModel } from '../../../../theme/shared/_helpers/models/PTLRoleAP.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PTLRolesAPService } from 'src/app/theme/shared/service/ptlroles-ap.service';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
@@ -14,16 +14,22 @@ import Swal from 'sweetalert2';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { catchError, of, Subscription, tap } from 'rxjs';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-gestion-roles',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-roles.component.html',
   styleUrl: './gestion-roles.component.scss'
 })
 export class GestionRolesComponent implements OnInit {
+  @Output() toggleSidebar = new EventEmitter<void>();
+  menuItems: NavigationItem[] = [];
   FormRegistro: PTLRoleAPModel = new PTLRoleAPModel();
   aplicaciones: PTLAplicacionModel[] = [];
   registrosSub?: Subscription;
@@ -38,6 +44,7 @@ export class GestionRolesComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private navigationService: NavigationService,
     private registrosService: PTLRolesAPService,
     private aplicacionesService: PtlAplicacionesService,
     private suitesService: PtlSuitesAPService,
@@ -49,7 +56,8 @@ export class GestionRolesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.consultarAplicaciones();
     this.consultarSuites();
     this.route.queryParams.subscribe((params) => {
@@ -60,7 +68,7 @@ export class GestionRolesComponent implements OnInit {
         this.registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
-            this.suitesApp = this.suites.filter(x => x.aplicacionId == resp.role.aplicacionId);
+            this.suitesApp = this.suites.filter((x) => x.aplicacionId == resp.role.aplicacionId);
             this.FormRegistro = resp.role;
             console.log('datos del FormRegistro', this.FormRegistro);
           },
@@ -121,7 +129,7 @@ export class GestionRolesComponent implements OnInit {
     // console.log('data aplicación seleccionado:', app);
     this.FormRegistro.aplicacionId = app.aplicacionId;
     this.FormRegistro.codigoAplicacion = value;
-    this.suitesApp = this.suites.filter(x => x.aplicacionId == app.aplicacionId);
+    this.suitesApp = this.suites.filter((x) => x.aplicacionId == app.aplicacionId);
   }
 
   onSuiteChangeClick(event: any) {
@@ -175,5 +183,9 @@ export class GestionRolesComponent implements OnInit {
 
   btnRegresarClick() {
     this.router.navigate(['/roles/roles']);
+  }
+
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }
