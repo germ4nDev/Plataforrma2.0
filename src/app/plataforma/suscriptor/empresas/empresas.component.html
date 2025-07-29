@@ -1,27 +1,102 @@
-<div class="row">
-    <div class="col-sm-12">
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
         <div class="card">
-            <div class="card-header">
-                <h5>Column Searching</h5>
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
             </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3" style="height: calc(100vh - 56px)">
+                    <!-- falta terminar -->
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+    <div class="content-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <h4>{{ 'SUSCRIPTORES.EMPRESASSC.TITLE' | translate }}</h4>
+                    </div>
+                    <div class="col-sm-6 justify-content-end d-flex">
+                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
+                            {{ 'SUSCRIPTORES.EMPRESASSC.GESTION.NEW' | translate }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card content-scroll-wrapper">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions"
-                        class="table table-striped row-border table-hover">
+                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
+                        <thead>
+                            <tr>
+                                <th>{{ 'SUSCRIPTORES.EMPRESASSC.NAME' | translate }}</th>
+                                <th>{{ 'SUSCRIPTORES.EMPRESASSC.DESCRIPTION' | translate }}</th>
+                                <th>{{ 'SUSCRIPTORES.EMPRESASSC.STATUS' | translate }}</th>
+                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let reg of registro">
+                                <td>
+                                    {{ reg.nombreEmpresa }}
+                                </td>
+                                <td>
+                                    {{ reg.descripcionEmpresa }}
+                                </td>
+                                <td>
+                                    {{ reg.nomEstado?? ''}}
+                                </td>
+                                <td style="text-align: center; width: 10%;">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
+                                            (click)="OnEditarRegistroClick(reg.empresaId?? 0)"
+                                            title="{{ 'SUSCRIPTORES.EMPRESASSC.UPDATE' | translate }}">
+                                            <i class="feather icon-edit"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
+                                            (click)="OnEliminarRegistroClick(reg.empresaId?? 0, reg.nombreEmpresa?? '')"
+                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                            title="{{ 'SUSCRIPTORES.EMPRESASSC.DELETE' | translate }}">
+                                            <i class="feather icon-trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                         <tfoot>
                             <tr>
-                                <th><input type="text" placeholder="Search Name" name="search-name"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Position" name="search-position"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Office" name="search-office"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Age" name="search-age"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Satrt Date" name="search-date"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Salary" name="search-salary"
-                                        class="form-control" /></th>
+                                <th>
+                                    <input #nombreEmpresa (keyup)="filtrarColumna(0, nombreEmpresa.value)" type="text"
+                                        placeholder="{{ 'SUSCRIPTORES.EMPRESASSC.FILTER_NAME' | translate }}" name="filtro-nombre"
+                                        class="form-control">
+                                </th>
+                                <th>
+                                    <input #descripcionEmpresa (keyup)="filtrarColumna(1, descripcionEmpresa.value)"
+                                        type="text" placeholder="{{ 'SUSCRIPTORES.EMPRESASSC.FILTER_DESCRIPTION' | translate }}"
+                                        name="filtro-nombre" class="form-control">
+                                </th>
+                                <th>
+                                    <input #estadoEmpresa (keyup)="filtrarColumna(2, estadoEmpresa.value)" type="text"
+                                        placeholder="{{ 'SUSCRIPTORES.EMPRESASSC.FILTER_STATUS' | translate }}" name="filtro-estado"
+                                        class="form-control">
+                                </th>
+                                <th>
+                                </th>
                             </tr>
                         </tfoot>
                     </table>

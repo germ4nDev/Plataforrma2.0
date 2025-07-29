@@ -368,6 +368,34 @@
             "REQUERIDONAME": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Subscriber Description",
             "REQUERIDODESCRIPCION": "This field is required."
+        },
+        "EMPRESASSC": {
+            "TITLE": "Companies",
+            "NAME": "Name",
+            "DESCRIPTION": "Description",
+            "STATUS": "Status",
+            "DELETE": "Delete Company",
+            "FILTER_NAME": "Filter Name",
+            "FILTER_DESCRIPTION": "Filter Description",
+            "FILTER_STATUS": "Filter Status",
+            "ELIMINARTITULO": "Confirm Deletion",
+            "ELIMINARTEXTO": "You are about to permanently delete the Company: ",
+            "ELIMINAREXITOSA": "Deleted successfully",
+            "ELIMINARERROR": "The Company could not be deleted. Please try again.",
+            "GESTION": {
+                "TITLE": "Create/Update Company",
+                "NEW": "New Company",
+                "CREATE": "Create Company",
+                "UPDATE": "Update Company",
+                "PLACEHOLDERNAME": "Company Name",
+                "REQUERIDOIDENTIFICACION": "Please enter a company. This field is required.",
+                "REQUERIDONAME": "This field is required.",
+                "PLACEHOLDERDESCRIPCION": "Company Description",
+                "REQUERIDODESCRIPCION": "This field is required.",
+                "SUSCRIPTOR": "Subscribers",
+                "PLACEHOLDERSUSCRIPTOR": "Select a Subscriber",
+                "REQUERIDOSUSCRIPTOR": "This field is required."
+            }
         }
     },
     "LOGIN": {

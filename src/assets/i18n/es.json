@@ -355,7 +355,7 @@
         "FILTER_IDENTIFICATION": "Filtro Identificación",
         "FILTER_NAME": "Filtro Nombre",
         "FILTER_DESCRIPTION": "Filtro descripción",
-        "FILTRO_STATUS": "Filtro Estado",
+        "FILTER_STATUS": "Filtro Estado",
         "ELIMINARTITULO": "¿Estás seguro de eliminar?",
         "ELIMINARTEXTO": "estas apunto de eliminar el Suscriptor ",
         "ELIMINAREXITOSA": "Eliminado",
@@ -371,6 +371,34 @@
             "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
             "PLACEHOLDERDESCRIPCION": "Descripcion del Suscriptor",
             "REQUERIDODESCRIPCION": "Por favor, ingrese una descripcion. Este campo es obligatorio."
+        },
+        "EMPRESASSC": {
+            "TITLE": "Empresas",
+            "NAME": "Nombre",
+            "DESCRIPTION": "Descripción",
+            "STATUS": "Estado",
+            "DELETE": "Eliminar Empresa",
+            "FILTER_NAME": "Filtro Nombre",
+            "FILTER_DESCRIPTION": "Filtro descripción",
+            "FILTER_STATUS": "Filtro Estado",
+            "ELIMINARTITULO": "¿Estás seguro de eliminar?",
+            "ELIMINARTEXTO": "estas apunto de eliminar la Empresa ",
+            "ELIMINAREXITOSA": "Eliminado",
+            "ELIMINARERROR": "No se pudo eliminar la Empresa.",
+            "GESTION": {
+                "TITLE": "Crear/Actualizar la Empresa",
+                "NEW": "Nueva Empresa",
+                "CREATE": "Crear Empresa",
+                "UPDATE": "Modificar Empresa",
+                "PLACEHOLDERNAME": "Nombre de la Empresa",
+                "REQUERIDOIDENTIFICACION": "Por favor, Ingrese una Empresa. Este campo es obligatorio.",
+                "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+                "PLACEHOLDERDESCRIPCION": "Descripcion de la Empresa",
+                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripcion. Este campo es obligatorio.",
+                "SUSCRIPTOR": "Suscriptores",
+                "PLACEHOLDERSUSCRIPTOR": "Seleccione un Suscriptores",
+                "REQUERIDOSUSCRIPTOR": "Por favor, seleccione un Suscriptores. Este campo es obligatorio."
+            }
         }
     },
     "LOGIN": {

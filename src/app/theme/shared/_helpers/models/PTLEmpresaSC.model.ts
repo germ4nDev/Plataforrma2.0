@@ -1,9 +1,9 @@
-export class PTLEmpresaSC {
+export class PTLEmpresasSCModel {
     constructor (
-        public empresaId : number,
-        public suscriptorId : number,
-        public nombreEmpresa : string,
-        public descripcionEmpresa : string,
-        public estadoEmpresa : boolean
+        public empresaId? : number,
+        public suscriptorId? : number,
+        public nombreEmpresa? : string,
+        public descripcionEmpresa? : string,
+        public estadoEmpresa? : boolean
     ) {}
 }
