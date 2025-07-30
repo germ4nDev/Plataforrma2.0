@@ -31,8 +31,8 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
   //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
-  @Output() toggleSidebar = new EventEmitter<void>();
   datatableElement!: DataTableDirective;
+  @Output() toggleSidebar = new EventEmitter<void>();
   registrosSub?: Subscription;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   menuItems: NavigationItem[] = [];
