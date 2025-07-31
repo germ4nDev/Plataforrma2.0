@@ -1,45 +1,100 @@
-<table *ngIf="dtOptions" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border">
-  <thead>
-    <tr>
-      <th *ngFor="let title of columnTitles">{{ title | translate }}</th>
-      <th *ngIf="showActions">{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of data">
-      <td *ngFor="let col of columns">{{ item[col] }}</td>
-      <td *ngIf="showActions" class="text-center">
-        <button
-          type="button"
-          class="btn btn-icon btn-outline-primary btn-sm me-1"
-          (click)="onEditClick(item[idField])"
-          [title]="'APLICACIONES.UPDATE' | translate"
-        >
-          <i class="feather icon-edit"></i>
-        </button>
-        <button
-          type="button"
-          class="btn btn-icon btn-outline-danger btn-sm"
-          (click)="onDeleteClick(item[idField], item.nombreAplicacion)"
-          [title]="'APLICACIONES.DELETE' | translate"
-        >
-          <i class="feather icon-trash-2"></i>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-  <tfoot>
-  <tr>
-    <ng-container *ngFor="let filter of columnFilters; let i = index">
-      <th *ngIf="filter">
-        <input type="text" class="form-control"
-               [placeholder]="columnTitles[i] | translate"
-               (keyup)="filtrarColumna(i, $event)">
-      </th>
-      <th *ngIf="!filter"></th>
-    </ng-container>
-    <th *ngIf="showActions"></th>
-  </tr>
-</tfoot>
+<!-- <table *ngIf="dtOptions" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border">
+    <thead>
+        <tr>
+            <th *ngFor="let title of columnTitles">{{ title | translate }}</th>
+            <th *ngIf="showActions">{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of data">
+            <td *ngFor="let col of columns">{{ item[col] }}</td>
+            <td *ngIf="showActions" class="text-center">
+                <button type="button" class="btn btn-icon btn-outline-primary btn-sm me-1"
+                    (click)="onEditClick(item[idField])" [title]="'APLICACIONES.UPDATE' | translate">
+                    <i class="feather icon-edit"></i>
+                </button>
+                <button type="button" class="btn btn-icon btn-outline-danger btn-sm"
+                    (click)="onDeleteClick(item[idField], item.nombreAplicacion)"
+                    [title]="'APLICACIONES.DELETE' | translate">
+                    <i class="feather icon-trash-2"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <ng-container *ngFor="let filter of columnFilters; let i = index">
+                <th *ngIf="filter">
+                    <input type="text" class="form-control" [placeholder]="columnTitles[i] | translate"
+                        (keyup)="filtrarColumna(i, $event)" />
+                </th>
+                <th *ngIf="!filter"></th>
+            </ng-container>
+            <th *ngIf="showActions"></th>
+        </tr>
+    </tfoot>
+</table> -->
 
-</table>
+
+<!-- data-table.component.html -->
+<div class="datatable-wrapper">
+  <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover table nowrap w-100" *ngIf="data?.length">
+    <thead>
+      <tr>
+        <th *ngFor="let title of columnTitles">{{ title }}</th>
+        <th *ngIf="showActions">{{ 'GLOBAL.ACTIONS' | translate }}</th>
+      </tr>
+    </thead>
+
+    <tfoot *ngIf="columnFilters?.length">
+      <tr>
+        <ng-container *ngFor="let filter of columnFilters; let i = index">
+          <td *ngIf="filter">
+            <input
+              type="text"
+              class="form-control"
+              [placeholder]="columnTitles[i]"
+              (keyup)="filtrarColumna(i, $event)"
+            />
+          </td>
+          <td *ngIf="!filter"></td>
+        </ng-container>
+        <td *ngIf="showActions"></td>
+      </tr>
+    </tfoot>
+
+    <tbody>
+      <tr *ngFor="let item of data">
+        <td *ngFor="let key of columns">{{ item[key] }}</td>
+        <td *ngIf="showActions">
+          <button class="btn btn-sm btn-outline-primary me-1" (click)="onEditClick(item[idField])">
+            <i class="feather icon-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" (click)="onDeleteClick(item[idField], item['nombre'])">
+            <i class="feather icon-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Custom style for title positioning (optional) -->
+<style>
+  .dt-center-title {
+    flex: 1;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+</style>
+
+<!-- Script to insert title dynamically in toolbar -->
+<script>
+  setTimeout(() => {
+    const titleContainer = document.querySelector('.dt-center-title');
+    if (titleContainer) {
+      titleContainer.innerHTML = '{{ tableTitle }}';
+    }
+  }, 0);
+</script>

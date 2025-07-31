@@ -331,24 +331,24 @@ export class AplicacionesComponent implements OnInit {
 
     this.translate
       .get([
-        'APLICACIONES.CODE',
-        'APLICACIONES.NAME',
-        'APLICACIONES.DESCRIPTION',
-        'APLICACIONES.STATUS',
-        'PLATAFORMA.OPTIONS',
+        // 'APLICACIONES.CODE',
+        // 'APLICACIONES.NAME',
+        // 'APLICACIONES.DESCRIPTION',
+        // 'APLICACIONES.STATUS',
+        // 'PLATAFORMA.OPTIONS',
         'APLICACIONES.TITLE',
         'PLATAFORMA.EXCEL'
       ])
       .subscribe((translations) => {
         this.tituloPagina = translations['APLICACIONES.TITLE'];
         this.labelExportar = translations['PLATAFORMA.EXCEL'];
-        this.columnasDatatable = [
-          { title: translations['APLICACIONES.CODE'], data: 'codigoAplicacion' },
-          { title: translations['APLICACIONES.NAME'], data: 'nombreAplicacion' },
-          { title: translations['APLICACIONES.DESCRIPTION'], data: 'descripcionAplicacion' },
-          { title: translations['APLICACIONES.STATUS'], data: 'nomEstado' },
-          { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-        ];
+        // this.columnasDatatable = [
+        //   { title: translations['APLICACIONES.CODE'], data: 'codigoAplicacion' },
+        //   { title: translations['APLICACIONES.NAME'], data: 'nombreAplicacion' },
+        //   { title: translations['APLICACIONES.DESCRIPTION'], data: 'descripcionAplicacion' },
+        //   { title: translations['APLICACIONES.STATUS'], data: 'nomEstado' },
+        //   { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
+        // ];
       });
 
     this.consultarAplicaciones();

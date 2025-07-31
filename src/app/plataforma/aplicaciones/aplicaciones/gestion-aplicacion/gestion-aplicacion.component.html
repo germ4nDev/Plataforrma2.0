@@ -19,7 +19,8 @@
             <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
                     <div class="col-sm-6">
-                        <h4>{{ 'APLICACIONES.TITLEGEST' | translate }}</h4>
+                        <h4 *ngIf="!modoEdicion">{{ 'APLICACIONES.NEW' | translate }}</h4>
+                        <h4 *ngIf="modoEdicion">{{ 'APLICACIONES.UPDATE' | translate }}</h4>
                     </div>
                     <div class="col-sm-6 justify-content-end d-flex gap-3">
                         <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
@@ -39,14 +40,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="card content-scroll-wrapper">
-            <div class="card-header">
-                <h4 *ngIf="!modoEdicion">{{ 'APLICACIONES.NEW' | translate }}</h4>
-                <h4 *ngIf="modoEdicion">{{ 'APLICACIONES.UPDATE' | translate }}</h4>
-            </div>
-            <div class="card-body">
+            <div class="card-body content-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
                         <div class="col-md-6">
