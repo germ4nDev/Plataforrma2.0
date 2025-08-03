@@ -25,7 +25,17 @@
         "INSERTAR": "El registro se insertó correctamente",
         "MODIFICAR": "El registro se modificó correctamente",
         "NOINSERTO": "No se pudo insertar el registro",
-        "NOMODIFICO": "No se pudo actualizar el registro"
+        "NOMODIFICO": "No se pudo actualizar el registro",
+        "DATATABLE": {
+            "SHOW": "Mostrar",
+            "ENTRIES": "Entradas",
+            "ACTIONS": "Opciones",
+            "SHOWING": "Mostrando",
+            "TO": "De",
+            "OF": "Total",
+            "PREVIOUS": "Anterior",
+            "NEXT": "Siguiente"
+        }
     },
     "APLICACIONES": {
         "TITLE": "Administración de Aplicaciones",

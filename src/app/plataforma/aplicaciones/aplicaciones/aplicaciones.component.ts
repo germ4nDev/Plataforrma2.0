@@ -268,26 +268,26 @@
 //   }
 // }
 
-import { AfterViewInit, Component, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Subject, Subscription, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { GradientConfig } from 'src/app/app-config';
+
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { LanguageService } from 'src/app/theme/shared/service';
 
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { GradientConfig } from 'src/app/app-config';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import Swal from 'sweetalert2';
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-aplicaciones',
@@ -303,16 +303,11 @@ export class AplicacionesComponent implements OnInit {
   aplicacionesFiltrado: PTLAplicacionModel[] = [];
   menuItems: NavigationItem[] = [];
   filtroPersonalizado: string = '';
-  tituloPagina: string = '';
   hasFiltersSlot: boolean = false;
   registrosSub?: Subscription;
   gradientConfig;
   lang = localStorage.getItem('lang');
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtColumnSearchingOptions: DataTables.Settings = {};
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  columnasDatatable: any[] = [];
-  labelExportar = '';
 
   constructor(
     private router: Router,
@@ -328,29 +323,6 @@ export class AplicacionesComponent implements OnInit {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.hasFiltersSlot = true;
-
-    this.translate
-      .get([
-        // 'APLICACIONES.CODE',
-        // 'APLICACIONES.NAME',
-        // 'APLICACIONES.DESCRIPTION',
-        // 'APLICACIONES.STATUS',
-        // 'PLATAFORMA.OPTIONS',
-        'APLICACIONES.TITLE',
-        'PLATAFORMA.EXCEL'
-      ])
-      .subscribe((translations) => {
-        this.tituloPagina = translations['APLICACIONES.TITLE'];
-        this.labelExportar = translations['PLATAFORMA.EXCEL'];
-        // this.columnasDatatable = [
-        //   { title: translations['APLICACIONES.CODE'], data: 'codigoAplicacion' },
-        //   { title: translations['APLICACIONES.NAME'], data: 'nombreAplicacion' },
-        //   { title: translations['APLICACIONES.DESCRIPTION'], data: 'descripcionAplicacion' },
-        //   { title: translations['APLICACIONES.STATUS'], data: 'nomEstado' },
-        //   { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-        // ];
-      });
-
     this.consultarAplicaciones();
   }
 
@@ -364,7 +336,7 @@ export class AplicacionesComponent implements OnInit {
               app.nomEstado = app.estadoAplicacion ? 'Activo' : 'Inactivo';
             });
             this.aplicaciones = resp.aplicaciones;
-            this.aplicacionesFiltrado = [...resp.aplicaciones];
+            this.aplicacionesFiltrado = resp.aplicaciones;
           }
         }),
         catchError((err) => {
@@ -407,6 +379,7 @@ export class AplicacionesComponent implements OnInit {
       this.aplicacionesFiltrado = this.aplicacionesFiltrado.filter((app) =>
         (app.descripcionAplicacion || '').toLowerCase().includes(textoFiltro)
       );
+      console.log('filtrados', this.aplicacionesFiltrado);
     }
   }
 
@@ -430,10 +403,11 @@ export class AplicacionesComponent implements OnInit {
     this.router.navigate(['aplicaciones/gestion-aplicacion'], { queryParams: { aplicacionId: id } });
   }
 
-  OnEliminarAplicaicionClick(id: number, nombre: string): void {
+  OnEliminarAplicaicionClick(id: number): void {
+    const nombreApp = this.aplicacionesFiltrado.filter(x => x.aplicacionId == id)[0];
     Swal.fire({
       title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombre}".`,
+      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreAplicacion}".`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),

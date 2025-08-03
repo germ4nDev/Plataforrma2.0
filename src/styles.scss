@@ -226,6 +226,7 @@ body.dark-theme {
   top: 0;
   min-height: 0;
   overflow-y: auto;
+  padding-top: 1rem;
   background-color: #f9f9f9;
   height: 100%;
   padding-left: 1rem;
@@ -243,7 +244,7 @@ body.dark-theme {
 }
 
 .content-scroll-wrapper {
-  height: calc(100vh - 195px);
+  height: calc(100vh - 90px);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -354,4 +355,30 @@ table tr {
   .content-wrapper {
     order: 2;
   }
+}
+
+/* styles.scss */
+
+/* Estilos para que los botones se vean como los de NuevoRegistro */
+.btn.btn-NuevoRegistro {
+  background-color: #eef7fd !important;
+  color: #3b4650 !important;
+  height: 2.9em !important;
+  border: #d1d1d1 0.15em solid !important;
+  border-radius: 11px !important;
+  transition: all 0.6s ease !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  white-space: nowrap !important;
+  margin-left: 0.5rem;
+}
+
+.btn.btn-NuevoRegistro:hover {
+  background-color: #034ba6 !important;
+  color: #c9d0d5 !important;
+  cursor: pointer;
+}
+
+.btn.btn-NuevoRegistro:active {
+  transform: scale(0.95) !important;
 }

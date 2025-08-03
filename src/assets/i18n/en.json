@@ -24,7 +24,17 @@
         "INSERTAR": "The record was successfully created",
         "MODIFICAR": "The record was successfully updated",
         "NOINSERTO": "The record could not be inserted",
-        "NOMODIFICO": "The record could not be updated"
+        "NOMODIFICO": "The record could not be updated",
+        "DATATABLE": {
+            "SHOW": "Show",
+            "ENTRIES": "Entries",
+            "ACTIONS": "Options",
+            "SHOWING": "Showing",
+            "TO": "To",
+            "OF": "Of",
+            "PREVIOUS": "Previous",
+            "NEXT": "Next"
+        }
     },
     "APLICACIONES": {
         "TITLE": "Aplications Administration",
