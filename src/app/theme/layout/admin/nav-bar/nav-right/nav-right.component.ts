@@ -1,4 +1,4 @@
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -6,9 +6,11 @@ import { GradientConfig } from 'src/app/app-config';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
-import { AuthenticationService } from 'src/app/theme/shared/service';
+import { AuthenticationService, LanguageService } from 'src/app/theme/shared/service';
 import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 import { ChatMsgComponent } from './chat-msg/chat-msg.component';
+import { ThemeService } from 'src/app/theme/shared/service/theme.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-nav-right',
@@ -18,7 +20,7 @@ import { ChatMsgComponent } from './chat-msg/chat-msg.component';
     RouterModule,
     NgbDropdownModule,
     TranslateModule,
-    TranslateModule,
+    FormsModule,
     LanguageSelectorComponent,
     ChatUserListComponent,
     ChatMsgComponent
@@ -36,18 +38,57 @@ import { ChatMsgComponent } from './chat-msg/chat-msg.component';
     ])
   ]
 })
-export class NavRightComponent implements DoCheck {
+export class NavRightComponent implements DoCheck, OnInit {
   visibleUserList: boolean = false;
   chatMessage: boolean = false;
   friendId!: number;
   gradientConfig = GradientConfig;
+  isDarkTheme: boolean = false;
+  navbarColor: string = '';
+  currentLanguage: string = 'es';
+  colorPalette: any[] = [
+    { color: '#66b5ff', iconos: '#000', texto: '#000' },
+    { color: '#2c3e50', iconos: '#fff', texto: '#fff' },
+    { color: '#c0392b', iconos: '#fff', texto: '#fff' },
+    { color: '#27ae60', iconos: '#fff', texto: '#fff' },
+    { color: '#f39c12', iconos: '#000', texto: '#000' }
+  ];
 
   constructor(
     private authenticationService: AuthenticationService,
-    private translate: TranslateService
+    private themeService: ThemeService,
+    private languageService: LanguageService
   ) {
-    console.log('abriendo navbar-right');
+    console.log('abriendo navbar-right', this.colorPalette);
+  }
 
+  ngOnInit(): void {
+    this.themeService.isDarkTheme$.subscribe((isDark) => {
+      this.isDarkTheme = isDark;
+    });
+    this.themeService.navbarColor$.subscribe((color) => {
+      this.navbarColor = color;
+    });
+    this.languageService.currentLang$.subscribe((lang) => {
+      this.currentLanguage = lang;
+    });
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleDarkTheme();
+  }
+
+  onNavbarColorChange(i: number): void {
+    const color = this.colorPalette[i];
+    console.log('palette color', color);
+    this.themeService.setNavbarColor(color.color);
+    this.themeService.setIconosColor(color.iconos);
+    this.themeService.setTextoColor(color.texto);
+  }
+
+  changeLanguage(event: Event): void {
+    const lang = (event.target as HTMLSelectElement).value;
+    this.languageService.setLanguage(lang);
   }
 
   onChatToggle(friendID: any) {

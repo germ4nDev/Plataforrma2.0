@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 import { NavRightComponent } from './nav-right/nav-right.component';
 import { NavSearchComponent } from './nav-left/nav-search/nav-search.component';
+import { ThemeService } from 'src/app/theme/shared/service/theme.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -22,15 +23,18 @@ export class NavBarComponent implements OnInit {
   @Output() NavCollapse = new EventEmitter<void>();
   @Output() NavCollapsedMob = new EventEmitter<void>();
 
-  constructor() {
+  constructor(private themeService: ThemeService) {
     console.log('abriendo navbar');
   }
 
   ngOnInit(): void {
-    const storedColor = localStorage.getItem('navbarColor');
-    if (storedColor) {
-      this.navbarColor = storedColor;
-    }
+    this.themeService.navbarColor$.subscribe(color => {
+      this.navbarColor = color;
+    });
+    // const storedColor = localStorage.getItem('navbarColor');
+    // if (storedColor) {
+    //   this.navbarColor = storedColor;
+    // }
   }
 
   toggleMobOption(): void {

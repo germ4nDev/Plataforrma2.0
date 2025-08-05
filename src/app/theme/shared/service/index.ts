@@ -6,3 +6,8 @@ export * from './upload-files.service';
 export * from './lenguage.service';
 export * from './ptlroles-ap.service';
 export * from './ptlusuarios-roles-ap.service';
+export * from './theme.service';
+export * from './lenguage.service';
+export * from './navigation.service';
+export * from './utilidades.service';
+export * from './upload-files.service';

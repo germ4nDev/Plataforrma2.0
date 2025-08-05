@@ -38,6 +38,8 @@ export class GestionUsuarioComponent implements OnInit {
   previewUrl: string | ArrayBuffer | null = null;
   userPhotoUrl: string = '';
   claveUsuario: string = '';
+  fileName: string | null = null;
+  selectedFileUrl: string | null = null;
 
   constructor(
     private router: Router,
@@ -65,6 +67,7 @@ export class GestionUsuarioComponent implements OnInit {
           next: (resp: any) => {
             this.FormRegistro = resp.usuario;
             this.claveUsuario = resp.usuario.claveUsuario;
+            this.selectedFileUrl = 'assets/images/user/' +  resp.usuario.fotoUsuario;
             // this.codeRegistro = resp.aplicacion.codigoAplicacion;
           },
           error: () => {
@@ -88,14 +91,24 @@ export class GestionUsuarioComponent implements OnInit {
     };
 
     if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
       this.uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path) => {
           this.userPhotoUrl = path;
         },
         error: () => {
           alert('Error al subir la imagen');
+        //   this.selectedFileUrl = null;
         }
       });
+    } else {
+      this.selectedFileUrl = null;
+      this.userPhotoUrl = '';
     }
   }
 

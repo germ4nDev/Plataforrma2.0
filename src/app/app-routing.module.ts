@@ -17,14 +17,6 @@ const routes: Routes = [
                 pathMatch: 'full'
             },
             {
-                path: 'tbl-bootstrap',
-                loadChildren: () => import('./plataforma/table/tbl-bootstrap/tbl-bootstrap.module').then((module) => module.TblBootstrapModule)
-            },
-            {
-                path: 'tbl-datatable',
-                loadComponent: () => import('./plataforma/table/tbl-datatable/tbl-datatable.component')
-            },
-            {
                 path: 'administracion-bd',
                 loadChildren: () =>
                     import('./plataforma/administracion-bd/administracion-bd.module').then((module) => module.AdministracionBDModule)

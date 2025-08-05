@@ -1,29 +1,3 @@
-// :host {
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   gap: 1rem;
-
-//   .icon-button {
-//     background: none;
-//     border: none;
-//     color: white;
-//     font-size: 1.2rem;
-//     cursor: pointer;
-
-//     &:hover {
-//       color: #ccc;
-//     }
-//   }
-
-//   .profile-pic {
-//     width: 32px;
-//     height: 32px;
-//     border-radius: 50%;
-//     object-fit: cover;
-//     border: 2px solid white;
-//   }
-// }
 .icon-lg {
   font-size: 24px; // o el tamaño que necesites
 }
@@ -243,4 +217,24 @@
 .noti-body::-webkit-scrollbar-thumb {
   background-color: #555;
   border-radius: 4px;
+}
+
+// Asegura que las cajas de color tengan un tamaño visible
+.color-box {
+  width: 24px; // Puedes ajustar el tamaño
+  height: 24px; // Puedes ajustar el tamaño
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+// Asegura que el dropdown sea visible y esté sobre otros elementos
+.dropdown-menu {
+  z-index: 1050; // Un valor alto para asegurar que se muestre encima
+}
+
+// Opcional: Estilo para la caja de color seleccionada
+.color-box.selected {
+  border: 2px solid #fff; // Un borde blanco para destacar la selección
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }

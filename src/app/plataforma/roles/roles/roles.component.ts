@@ -22,12 +22,13 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-roles',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './roles.component.html',
   styleUrl: './roles.component.scss'
 })
@@ -50,6 +51,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
   aplicaciones: PTLAplicacionModel[] = [];
 
   registros: PTLRoleAPModel[] = [];
+  registrosFiltrado: PTLRoleAPModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   //#endregion VARIABLES
@@ -165,6 +167,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
               role.nomEstado = role.estadoRole == true ? 'Activo' : 'Inactivo';
             });
             this.registros = resp.roles;
+            this.registrosFiltrado = resp.roles;
             console.log('Todos las roles', this.registros);
             this.dtTrigger.next(null);
             return;
@@ -196,10 +199,11 @@ export class RolesComponent implements OnInit, AfterViewInit {
     this.router.navigate(['roles/gestion-roles'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number, nombre: string) {
+  OnEliminarRegistroClick(id: number) {
+    const nombre = this.registrosFiltrado.filter((x) => x.roleId == id)[0];
     Swal.fire({
       title: this.translate.instant('ROLES.ELIMINARTITULO'),
-      text: this.translate.instant('ROLES.ELIMINARTEXTO') + `"${nombre}".!`,
+      text: this.translate.instant('ROLES.ELIMINARTEXTO') + `"${nombre.nombreRole}".!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),

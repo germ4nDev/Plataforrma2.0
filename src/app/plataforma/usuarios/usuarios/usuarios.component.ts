@@ -18,12 +18,13 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.scss'
 })
@@ -150,10 +151,11 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
     this.router.navigate(['usuarios/gestion-usuario'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number, nombre: string) {
+  OnEliminarRegistroClick(id: number) {
+    const nombre = this.registrosFiltrado.filter((x) => x.usuarioId == id)[0];
     Swal.fire({
       title: this.translate.instant('USUARIOS.ELIMINARTITULO'),
-      text: this.translate.instant('USUARIOS.ELIMINARTEXTO') + `"${nombre}".!`,
+      text: `this.translate.instant('USUARIOS.ELIMINARTEXTO') + "${nombre.nombreUsuario}".`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),

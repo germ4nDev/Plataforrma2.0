@@ -17,7 +17,7 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <DIV class="text-center">
-                        <h6>{{ 'ROLES.FILTROS.TITULO' | translate }}</h6>
+                        <h6 class="filtros-title">{{ 'ROLES.FILTROS.TITULO' | translate }}</h6>
                     </DIV>
                     <!-- <div class="filtro">
                         <small>{{ 'ROLES.FILTROS.IDENTIFICACION' | translate }}</small>
@@ -58,106 +58,32 @@
     </aside>
 
     <div class="content-area">
-        <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4>{{ 'ROLES.TITLE' | translate }}</h4>
-                    </div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'ROLES.NEW' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions" [dtTrigger]="dtTrigger" class="table row-border" #datatableElement>
-                        <thead>
-                            <tr>
-                                <th>{{ 'ROLES.NOMBREAPLICACION' | translate }}</th>
-                                <th>{{ 'ROLES.NOMBRESUITE' | translate }}</th>
-                                <th>{{ 'ROLES.NOMBREROL' | translate }}</th>
-                                <th>{{ 'ROLES.DESCRIPCIONROL' | translate }}</th>
-                                <th>{{ 'ROLES.ESTADOROLE' | translate }}</th>
-                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let reg of registros">
-                                <td>
-                                    {{ reg.nombreAplicacion }}
-                                </td>
-                                <td>
-                                    {{ reg.nombreSuite}}
-                                </td>
-                                <td>
-                                    {{ reg.nombreRole }}
-                                </td>
-                                <td>
-                                    {{ reg.descripcionRole }}
-                                </td>
-                                <td>
-                                    {{ reg.nomEstado }}
-                                </td>
-                                <td style="text-align: center; width: 10%">
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="OnEditarRegistroClick(reg.roleId?? 0)"
-                                            title="{{ 'ROLES.UPDATE' | translate }}">
-                                            <i class="feather icon-edit"></i>
-                                        </button>
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="OnEliminarRegistroClick(reg.roleId?? 0, reg.nombreRole?? '')"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'ROLES.DELETE' | translate }}">
-                                            <i class="feather icon-trash-2"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>
-                                    <input #codigoAplicacion (keyup)="filtrarColumna(0, codigoAplicacion.value)"
-                                        type="text" placeholder="{{ 'ROLES.FILTER_CODIGOAPLICACION' | translate }}"
-                                        name="filtro-codigoAplicacion" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #nombreSuite (keyup)="filtrarColumna(1, nombreSuite.value)"
-                                        type="text" placeholder="{{ 'ROLES.FILTER_NAMESUITE' | translate }}"
-                                        name="filtro-nombreSuite" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #nombreRole
-                                        (keyup)="filtrarColumna(2, nombreRole.value)" type="text"
-                                        placeholder="{{ 'ROLES.FILTER_NOMBREROLE' | translate }}"
-                                        name="filtro-nombreRole" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #descripcionRole
-                                        (keyup)="filtrarColumna(2, descripcionRole.value)" type="text"
-                                        placeholder="{{ 'ROLES.FILTER_DESCRIPCIONROLE' | translate }}"
-                                        name="filtro-descripcionRole" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #estadoRole (keyup)="filtrarColumna(4, estadoRole.value)"
-                                        type="text" placeholder="{{ 'ROLES.FILTRO_STATUS' | translate }}"
-                                        name="filtro-estadoRole" class="form-control" />
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                <app-data-table
+                    [data]="registrosFiltrado"
+                    [columns]="['nombreAplicacion', 'nombreSuite', 'nombreRole', 'descripcionRole', 'nomEstado']"
+                    [columnTitles]="[
+                        'ROLES.NOMBREAPLICACION' | translate,
+                        'ROLES.NOMBRESUITE' | translate,
+                        'ROLES.NOMBREROL' | translate,
+                        'ROLES.DESCRIPCIONROL' | translate,
+                        'ROLES.ESTADOROLE' | translate
+                    ]"
+                    [idField]="'roleId'"
+                    [tableTitle]="'ROLES.TITLE' | translate"
+                    [showAvatar]="false"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'ROLES.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
             </div>
         </div>
     </div>

@@ -256,10 +256,167 @@
 //   }
 // }
 
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+// import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import { FormsModule } from '@angular/forms';
+// import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+// @Component({
+//   selector: 'app-data-table',
+//   standalone: true,
+//   templateUrl: './data-table.component.html',
+//   styleUrls: ['./data-table.component.scss'],
+//   imports: [CommonModule, TranslateModule, FormsModule]
+// })
+// export class DatatableComponent implements OnInit {
+//   @Input() data: any[] = [];
+//   @Input() columns: string[] = [];
+//   @Input() columnTitles: string[] = [];
+//   @Input() exportLabel: string = 'Exportar';
+//   @Input() newButtonLabel: string = 'Nueva Aplicación';
+//   @Input() showActions: boolean = true;
+//   @Input() idField: string = 'id';
+//   @Input() showSearchBox: boolean = true;
+//   @Input() tableTitle: string = '';
+//   @Input() showNewButton: boolean = false;
+//   @Input() showViewButton: boolean = false;
+//   @Input() showEditButton: boolean = false;
+//   @Input() showDeleteButton: boolean = false;
+//   @Input() buttonsClass: string = 'btn btn-primary';
+
+//   @Output() viewRecord = new EventEmitter<void>();
+//   @Output() newRecord = new EventEmitter<void>();
+//   @Output() editRecord = new EventEmitter<any>();
+//   @Output() deleteRecord = new EventEmitter<any>();
+
+//   public filteredData: any[] = [];
+//   public paginatedData: any[] = [];
+//   public currentPage: number = 1;
+//   public itemsPerPage: number = 10;
+//   public totalPages: number = 1;
+//   public filterValues: { [key: string]: string } = {};
+
+//   public sortByColumn: string | null = null;
+//   public sortDirection: 'asc' | 'desc' = 'asc';
+
+//   constructor(private translateService: TranslateService) {}
+
+//   ngOnInit(): void {
+//     this.applyFiltersAndPagination();
+//   }
+
+//   applyFiltersAndPagination(): void {
+//     let tempFilteredData = this.data.filter((row) => {
+//       for (const key of Object.keys(this.filterValues)) {
+//         const filterValue = this.filterValues[key].toLowerCase();
+//         const rowValue = String(row[key]).toLowerCase();
+//         if (filterValue && !rowValue.includes(filterValue)) {
+//           return false;
+//         }
+//       }
+//       return true;
+//     });
+
+//     if (this.sortByColumn) {
+//       tempFilteredData = this.sortData(tempFilteredData);
+//     }
+
+//     this.filteredData = tempFilteredData;
+//     this.totalPages = Math.ceil(this.filteredData.length / this.itemsPerPage);
+//     if (this.currentPage > this.totalPages) {
+//       this.currentPage = this.totalPages > 0 ? this.totalPages : 1;
+//     }
+//     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+//     this.paginatedData = this.filteredData.slice(startIndex, startIndex + this.itemsPerPage);
+//   }
+
+//   onPageChange(page: number): void {
+//     if (page >= 1 && page <= this.totalPages) {
+//       this.currentPage = page;
+//       this.applyFiltersAndPagination();
+//     }
+//   }
+
+//   onItemsPerPageChange(): void {
+//     this.currentPage = 1;
+//     this.applyFiltersAndPagination();
+//   }
+
+//   sortData(data: any[]): any[] {
+//     const column = this.sortByColumn;
+//     if (!column) {
+//       return data;
+//     }
+
+//     return [...data].sort((a, b) => {
+//       const aValue = a[column];
+//       const bValue = b[column];
+//       let comparison = 0;
+
+//       if (aValue > bValue) {
+//         comparison = 1;
+//       } else if (aValue < bValue) {
+//         comparison = -1;
+//       }
+
+//       return this.sortDirection === 'desc' ? comparison * -1 : comparison;
+//     });
+//   }
+
+//   onSort(column: string): void {
+//     if (this.sortByColumn === column) {
+//       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+//     } else {
+//       this.sortByColumn = column;
+//       this.sortDirection = 'asc';
+//     }
+//     this.applyFiltersAndPagination();
+//   }
+
+//   getPages(): number[] {
+//     const pages = [];
+//     for (let i = 1; i <= this.totalPages; i++) {
+//       pages.push(i);
+//     }
+//     return pages;
+//   }
+
+//   // Métodos de eventos
+//   onView(row: any): void {
+//     this.viewRecord.emit(row[this.idField]);
+//   }
+
+//   onEdit(row: any): void {
+//     this.editRecord.emit(row[this.idField]);
+//   }
+
+//   onDelete(row: any): void {
+//     this.deleteRecord.emit({ id: row[this.idField], nombre: row['nombreAplicacion'] });
+//   }
+
+//   onFilter(column: string, event: Event): void {
+//     const target = event.target as HTMLInputElement;
+//     this.filterValues[column] = target.value;
+//     this.currentPage = 1;
+//     this.applyFiltersAndPagination();
+//   }
+
+//   onNewRecord(): void {
+//     this.newRecord.emit();
+//   }
+
+//   onExcelExport(): void {
+//     this.newRecord.emit();
+//   }
+// }
+
+// importaciones necesarias
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+// Añade OnChanges y SimpleChanges a las importaciones
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-data-table',
@@ -268,12 +425,14 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   styleUrls: ['./data-table.component.scss'],
   imports: [CommonModule, TranslateModule, FormsModule]
 })
-export class DatatableComponent implements OnInit {
+// Añade 'implements OnChanges' a la declaración de la clase
+export class DatatableComponent implements OnInit, OnChanges {
   @Input() data: any[] = [];
   @Input() columns: string[] = [];
   @Input() columnTitles: string[] = [];
   @Input() exportLabel: string = 'Exportar';
   @Input() newButtonLabel: string = 'Nueva Aplicación';
+  @Input() showAvatar: boolean = false;
   @Input() showActions: boolean = true;
   @Input() idField: string = 'id';
   @Input() showSearchBox: boolean = true;
@@ -302,10 +461,18 @@ export class DatatableComponent implements OnInit {
   constructor(private translateService: TranslateService) {}
 
   ngOnInit(): void {
-    this.applyFiltersAndPagination();
+    // Aquí puedes dejar lógica que se ejecuta solo una vez si es necesario.
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data']) {
+      this.currentPage = 1;
+      this.applyFiltersAndPagination();
+    }
   }
 
   applyFiltersAndPagination(): void {
+    console.log('array que recibo', this.data);
     let tempFilteredData = this.data.filter((row) => {
       for (const key of Object.keys(this.filterValues)) {
         const filterValue = this.filterValues[key].toLowerCase();
@@ -381,7 +548,6 @@ export class DatatableComponent implements OnInit {
     return pages;
   }
 
-  // Métodos de eventos
   onView(row: any): void {
     this.viewRecord.emit(row[this.idField]);
   }

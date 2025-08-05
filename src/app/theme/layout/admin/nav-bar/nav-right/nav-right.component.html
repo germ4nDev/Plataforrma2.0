@@ -3,7 +3,7 @@
     <li>
       <div class="dropdown" ngbDropdown placement="auto">
         <a ngbDropdownToggle href="javascript:">
-          <i class="icon feather icon-bell icon-lg" title="Notification"></i>
+          <i class="icon feather icon-bell icon-lg icon-style" title="Notification"></i>
           <span class="badge bg-danger"><span class="sr-only"></span></span>
         </a>
         <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end notification">
@@ -22,7 +22,9 @@
               <div class="media">
                 <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="Generic placeholder image" />
                 <div class="media-body">
-                  <p><strong>John Doe</strong><span class="n-time text-muted"><i class="icon feather icon-clock"></i>30 min</span></p>
+                  <p
+                    ><strong>John Doe</strong><span class="n-time text-muted"><i class="icon feather icon-clock"></i>30 min</span></p
+                  >
                   <p>New ticket Added</p>
                 </div>
               </div>
@@ -34,7 +36,9 @@
               <div class="media">
                 <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image" />
                 <div class="media-body">
-                  <p><strong>Joseph William</strong><span class="n-time text-muted"><i data-feather="clock"></i>30 min</span></p>
+                  <p
+                    ><strong>Joseph William</strong><span class="n-time text-muted"><i data-feather="clock"></i>30 min</span></p
+                  >
                   <p>Purchase New Theme and make payment</p>
                 </div>
               </div>
@@ -43,7 +47,10 @@
               <div class="media">
                 <img class="img-radius" src="assets/images/user/avatar-3.jpg" alt="Generic placeholder image" />
                 <div class="media-body">
-                  <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>30 min</span></p>
+                  <p
+                    ><strong>Sara Soudein</strong
+                    ><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>30 min</span></p
+                  >
                   <p>currently login</p>
                 </div>
               </div>
@@ -56,22 +63,59 @@
       </div>
     </li>
 
-    <!-- Email -->
     <li (click)="this.visibleUserList = !this.visibleUserList">
       <div class="dropdown">
         <a href="javascript:" class="displayChatbox dropdown-toggle">
-          <i class="icon feather icon-mail icon-lg" title="Mail InBox"></i>
+          <i class="icon feather icon-mail icon-lg icon-style" title="Mail InBox"></i>
           <span class="badge bg-success"><span class="sr-only"></span></span>
         </a>
       </div>
     </li>
 
-    <!-- Idioma -->
     <li>
       <app-language-selector></app-language-selector>
     </li>
 
-    <!-- Perfil de usuario -->
+    <li>
+      <div>
+        <!-- <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="darkThemeSwitch"
+          [(ngModel)]="isDarkTheme"
+          (change)="toggleTheme()"
+        /> -->
+          <i *ngIf="!isDarkTheme" class="fas fa-moon icon-lg icon-style" [(ngModel)]="isDarkTheme" (click)="toggleTheme()"></i>
+          <i *ngIf="isDarkTheme" class="fas fa-sun icon-lg icon-style" [(ngModel)]="isDarkTheme" (click)="toggleTheme()"></i>
+        <!-- <label class="form-check-label" for="darkThemeSwitch">
+        </label> -->
+      </div>
+    </li>
+
+    <li>
+      <div class="dropdown" ngbDropdown placement="auto">
+        <a href="javascript:" ngbDropdownToggle>
+          <i class="icon feather icon-droplet icon-lg icon-style" title="Color del Navbar"></i>
+        </a>
+        <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end drop-menu">
+          <ul class="pro-body">
+            <li class="d-flex flex-wrap p-2 gap-2">
+              <div
+                *ngFor="let color of colorPalette; let i = index"
+                class="color-box"
+                [style.background-color]="color.color"
+                [class.selected]="color.color === navbarColor"
+                (click)="navbarColor = color.color; onNavbarColorChange(i)"
+                [title]="color.color"
+              >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </li>
+
     <li>
       <div class="dropdown drp-user" ngbDropdown placement="auto">
         <a href="javascript:" ngbDropdownToggle>
@@ -86,34 +130,51 @@
             </a>
           </div>
           <ul class="pro-body">
-            <li><a href="javascript:" class="dropdown-item"><i class="feather icon-user"></i> {{ 'PLATAFORMA.NAVBAR.PROFILE' | translate }}</a></li>
-            <li><a href="javascript:" class="dropdown-item"><i class="feather icon-mail"></i> {{ 'PLATAFORMA.NAVBAR.MESSAGES' | translate }}</a></li>
-            <li><a href="javascript:" class="dropdown-item"><i class="feather icon-lock"></i> {{ 'PLATAFORMA.NAVBAR.LOCK' | translate }}</a></li>
+            <li
+              ><a href="javascript:" class="dropdown-item"
+                ><i class="feather icon-user"></i> {{ 'PLATAFORMA.NAVBAR.PROFILE' | translate }}</a
+              ></li
+            >
+            <li
+              ><a href="javascript:" class="dropdown-item"
+                ><i class="feather icon-mail"></i> {{ 'PLATAFORMA.NAVBAR.MESSAGES' | translate }}</a
+              ></li
+            >
+            <li
+              ><a href="javascript:" class="dropdown-item"
+                ><i class="feather icon-lock"></i> {{ 'PLATAFORMA.NAVBAR.LOCK' | translate }}</a
+              ></li
+            >
           </ul>
         </div>
       </div>
     </li>
   </ul>
-
-  <!-- Chat Sections -->
-  <section *ngIf="visibleUserList && !gradientConfig.isRtlLayout" class="header-user-list" [ngClass]="{ open: visibleUserList }" [@slideInOutLeft]>
+  <section
+    *ngIf="visibleUserList && !gradientConfig.isRtlLayout"
+    class="header-user-list"
+    [ngClass]="{ open: visibleUserList }"
+    [@slideInOutLeft]
+  >
     <app-chat-user-list
       (ChatToggle)="onChatToggle($event)"
       (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"
     ></app-chat-user-list>
   </section>
-
   <section *ngIf="chatMessage && !gradientConfig.isRtlLayout" class="header-chat" [ngClass]="{ open: chatMessage }" [@slideInOutLeft]>
     <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
   </section>
-
-  <section *ngIf="visibleUserList && gradientConfig.isRtlLayout" class="header-user-list" [ngClass]="{ open: visibleUserList }" [@slideInOutRight]>
+  <section
+    *ngIf="visibleUserList && gradientConfig.isRtlLayout"
+    class="header-user-list"
+    [ngClass]="{ open: visibleUserList }"
+    [@slideInOutRight]
+  >
     <app-chat-user-list
       (ChatToggle)="onChatToggle($event)"
       (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"
     ></app-chat-user-list>
   </section>
-
   <section *ngIf="chatMessage && gradientConfig.isRtlLayout" class="header-chat" [ngClass]="{ open: chatMessage }" [@slideInOutRight]>
     <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
   </section>

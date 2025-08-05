@@ -13,40 +13,39 @@
             </ng-container>
         </div>
     </aside>
-
-    <div class="content-area">
+    <div class="form-area">
         <div class="card">
             <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4 *ngIf="!modoEdicion">{{ 'APLICACIONES.NEW' | translate }}</h4>
-                        <h4 *ngIf="modoEdicion">{{ 'APLICACIONES.UPDATE' | translate }}</h4>
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'APLICACIONES.NEW' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'APLICACIONES.UPDATE' | translate }}</h4>
                     </div>
-                    <div class="col-sm-6 justify-content-end d-flex gap-3">
-                        <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
+                    <div class="d-flex">
+                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarAplicacionClick(validationForm)">
                             {{ 'APLICACIONES.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro"
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarAplicacionClick(validationForm)">
                             {{ 'APLICACIONES.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <div class="card-body content-scroll-wrapper">
+            <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreAplicacion">nombre</label>
-                                <input class="form-control input-md" id="nombreAplicacion" name="nombreAplicacion"
+                                <input class="form-control form-input" id="nombreAplicacion" name="nombreAplicacion"
                                     type="text" placeholder="{{ 'APLICACIONES.NAME' | translate }}"
                                     [ngClass]="{'is-invalid': !nombreAplicacion.valid && (nombreAplicacion.dirty || nombreAplicacion.touched || isSubmit)}"
                                     #nombreAplicacion="ngModel" required [(ngModel)]="FormRegistro.nombreAplicacion" />
@@ -60,7 +59,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'APLICACIONES.CODE' | translate }}</label>
-                                <input type="text" class="form-control" name="codigoAplicacion"
+                                <input type="text" class="form-control form-input" name="codigoAplicacion"
                                     placeholder="Ruta del enlace"
                                     [ngClass]="{'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
@@ -75,7 +74,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'APLICACIONES.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control"
+                                <textarea class="form-control form-input"
                                     placeholder="{{ 'APLICACIONES.DESCRIPTIONHOLDER' | translate }}"
                                     name="descripcionAplicacion"
                                     [ngClass]="{'is-invalid': !descripcionAplicacion.valid && (descripcionAplicacion.dirty || descripcionAplicacion.touched || isSubmit)}"
@@ -98,7 +97,8 @@
                                             [(ngModel)]="FormRegistro.estadoAplicacion">
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
-                                    </label><br>
+                                    </label>
+
                                     <label class="radio-button">
                                         <input name="option" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoAplicacion">

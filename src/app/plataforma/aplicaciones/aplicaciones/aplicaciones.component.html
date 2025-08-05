@@ -16,12 +16,10 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <div class="text-center">
-                        <h6>{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
-                    </div>
+                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
                         <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
-                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control">
+                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.codigoAplicacion }}
@@ -30,7 +28,7 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control">
+                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
                                 {{ app.nombreAplicacion }}
@@ -39,12 +37,12 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control"
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control">
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
@@ -56,20 +54,9 @@
     </aside>
 
     <div class="content-area">
-        <!-- <div class="card">
-            <div class="card-header card-header-sticky d-flex justify-content-between align-items-center">
-                <h4 class="m-0">{{ 'APLICACIONES.TITLE' | translate }}</h4>
-                <button type="button" (click)="OnNuevaAplicaicionClick()" class="btn-NuevoRegistro">
-                    {{ 'APLICACIONES.NEW' | translate }}
-                </button>
-            </div>
-        </div> -->
-
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-
                 <app-data-table
-                    *ngIf="aplicacionesFiltrado.length > 0"
                     [data]="aplicacionesFiltrado"
                     [columns]="['codigoAplicacion', 'nombreAplicacion', 'descripcionAplicacion', 'nomEstado']"
                     [columnTitles]="[
@@ -80,6 +67,7 @@
                     ]"
                     [idField]="'aplicacionId'"
                     [tableTitle]="'APLICACIONES.TITLE' | translate"
+                    [showAvatar]="false"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"
@@ -91,30 +79,6 @@
                     (editRecord)="OnEditarAplicaicionClick($event)"
                     (deleteRecord)="OnEliminarAplicaicionClick($event)">
                 </app-data-table>
-
-                <!-- <app-data-table
-                    *ngIf="aplicacionesFiltrado.length > 0"
-                    [data]="aplicacionesFiltrado"
-                    [columns]="['codigoAplicacion', 'nombreAplicacion', 'descripcionAplicacion', 'nomEstado']"
-                    [columnTitles]="[
-                      'APLICACIONES.CODE' | translate,
-                      'APLICACIONES.NAME' | translate,
-                      'APLICACIONES.DESCRIPTION' | translate,
-                      'APLICACIONES.STATUS' | translate
-                    ]"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                    [newButtonLabel]="'APLICACIONES.NEW' | translate"
-                    [idField]="'aplicacionId'"
-                    [tableTitle]="'APLICACIONES.TITLE' | translate"
-                    [columnFilters]="[true, true, true, true]"
-                    [showSearchBox]="false"
-                    [showActions]="true"
-                    [showNewButton]="true"
-                    [buttonsClass]="'btn-NuevoRegistro'"
-                    (newRecord)="OnNuevaAplicaicionClick()"
-                    (editRecord)="OnEditarAplicaicionClick($event)"
-                    (deleteRecord)="OnEliminarAplicaicionClick($event.id, $event.nombre)"
-                ></app-data-table> -->
             </div>
         </div>
     </div>

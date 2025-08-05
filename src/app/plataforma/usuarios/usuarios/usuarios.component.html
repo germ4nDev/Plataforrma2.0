@@ -17,36 +17,36 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <DIV class="text-center">
-                        <h6>{{ 'USUARIOS.FILTROS.TITULO' | translate }}</h6>
+                        <h6 class="filtros-title">{{ 'USUARIOS.FILTROS.TITULO' | translate }}</h6>
                     </DIV>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.FILTROS.IDENTIFICACION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)" class="form-control"
+                        <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'USUARIOS.FILTROS.IDENTIFICACIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.FILTROS.NOMBRE' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control"
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'USUARIOS.FILTROS.NOMBREHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.FILTROS.CORREO' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroCorreoChangeClick($event)" class="form-control"
+                        <input type="text" (keyup)="onFiltroCorreoChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'USUARIOS.FILTROS.CORREOHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.FILTROS.USERNAME' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroUsernameChangeClick($event)" class="form-control"
+                        <input type="text" (keyup)="onFiltroUsernameChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'USUARIOS.FILTROS.USERNAMEHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.FILTROS.DECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control"
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'USUARIOS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.FILTROS.ESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control" required>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-input" required>
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
@@ -58,114 +58,34 @@
     </aside>
 
     <div class="content-area">
-        <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4>{{ 'USUARIOS.TITLE' | translate }}</h4>
-                    </div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'USUARIOS.NEW' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions" [dtTrigger]="dtTrigger" class="table row-border" #datatableElement>
-                        <thead>
-                            <tr>
-                                <th>{{ 'USUARIOS.FOTO' | translate }}</th>
-                                <th>{{ 'USUARIOS.IDENTIFICACION' | translate }}</th>
-                                <th>{{ 'USUARIOS.NAME' | translate }}</th>
-                                <th>{{ 'USUARIOS.CORREO' | translate }}</th>
-                                <th>{{ 'USUARIOS.USERNAME' | translate }}</th>
-                                <th>{{ 'USUARIOS.STATUS' | translate }}</th>
-                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let reg of registrosFiltrado">
-                                <td>
-                                    <img src="assets/images/user/{{ reg.fotoUsuario }}" class="img-radius wid-40"
-                                        alt="User-Profile-Image" />
-                                    <!-- {{ reg.fotoUsuario }} -->
-                                </td>
-                                <td>
-                                    {{ reg.identificacionUsuario }}
-                                </td>
-                                <td>
-                                    {{ reg.nombreUsuario }}
-                                </td>
-                                <td>
-                                    {{ reg.correoUsuario }}
-                                </td>
-                                <td>
-                                    {{ reg.userNameUsuario }}
-                                </td>
-                                <td>
-                                    {{ reg.nomEstado }}
-                                </td>
-                                <td style="text-align: center; width: 10%">
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="OnEditarRegistroClick(reg.usuarioId?? 0)"
-                                            title="{{ 'USUARIOS.UPDATE' | translate }}">
-                                            <i class="feather icon-edit"></i>
-                                        </button>
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="OnEliminarRegistroClick(reg.usuarioId?? 0, reg.nombreUsuario?? '')"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'USUARIOS.DELETE' | translate }}">
-                                            <i class="feather icon-trash-2"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>
-
-                                </th>
-                                <th>
-                                    <input #identificacionUsuario (keyup)="filtrarColumna(0, identificacionUsuario.value)"
-                                        type="text" placeholder="{{ 'USUARIOS.FILTER_IDENTIFICACION' | translate }}"
-                                        name="filtro-url" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #nombreUsuario (keyup)="filtrarColumna(1, nombreUsuario.value)"
-                                        type="text" placeholder="{{ 'USUARIOS.FILTER_NAME' | translate }}"
-                                        name="filtro-nombre" class="form-control" />
-                                </th>
-                                                                <th>
-                                    <input #correoUsuario (keyup)="filtrarColumna(1, correoUsuario.value)"
-                                        type="text" placeholder="{{ 'USUARIOS.FILTER_CORREO' | translate }}"
-                                        name="filtro-nombre" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #userNameUsuario
-                                        (keyup)="filtrarColumna(2, userNameUsuario.value)" type="text"
-                                        placeholder="{{ 'USUARIOS.FILTER_USERNAME' | translate }}"
-                                        name="filtro-nombre" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #estadoUsuario (keyup)="filtrarColumna(4, estadoUsuario.value)"
-                                        type="text" placeholder="{{ 'USUARIOS.FILTRO_STATUS' | translate }}"
-                                        name="filtro-estado" class="form-control" />
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                <app-data-table
+                    [data]="registrosFiltrado"
+                    [columns]="['fotoUsuario', 'identificacionUsuario', 'nombreUsuario', 'correoUsuario', 'userNameUsuario', 'userNameUsuario', 'nomEstado']"
+                    [columnTitles]="[
+                        'USUARIOS.FOTO' | translate,
+                        'USUARIOS.IDENTIFICACION' | translate,
+                        'USUARIOS.NAME' | translate,
+                        'USUARIOS.CORREO' | translate,
+                        'USUARIOS.USERNAME' | translate,
+                        'USUARIOS.STATUS' | translate,
+                        'PLATAFORMA.OPTIONS' | translate
+                    ]"
+                    [idField]="'usuarioId'"
+                    [tableTitle]="'USUARIOS.TITLE' | translate"
+                    [showAvatar]="true"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'USUARIOS.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
             </div>
         </div>
     </div>
