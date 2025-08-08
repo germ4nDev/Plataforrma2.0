@@ -22,12 +22,13 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLRolesAPService } from 'src/app/theme/shared/service';
 import Swal from 'sweetalert2';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-roles-usuarios',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './roles-usuarios.component.html',
   styleUrl: './roles-usuarios.component.scss'
 })
@@ -52,6 +53,8 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
   usuario: PTLUsuarioModel = new PTLUsuarioModel();
   usuariosRoles: any[] = [];
   registros: any[] = [];
+  registrosFiltrado: any[] = [];
+  registrosData: any[] = [];
   aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
@@ -119,10 +122,7 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
   private async getOnInitPage() {
     return await new Promise((resolve, reject) => {
       try {
-        return Promise.all([
-          this.consultarRegistros(),
-          resolve(true)
-        ]);
+        return Promise.all([this.consultarRegistros(), resolve(true)]);
       } catch (error) {
         return reject(false);
       }
@@ -268,11 +268,32 @@ export class RolesUsuariosComponent implements OnInit, AfterViewInit {
           suiteRef.roles.push(role);
         }
       }
-      this.registros = Array.from(usuarioMap.values());
+    //   this.registros = Array.from(usuarioMap.values());
+      this.registrosFiltrado = Array.from(usuarioMap.values());
+      this.procesarDatosParaDatatable();
       this.dtTrigger.next(null);
     } catch (error) {
       console.error('Error en consultarRegistros', error);
     }
+  }
+
+  procesarDatosParaDatatable(): void {
+    this.registrosData = this.registrosFiltrado.map((usuRole: any) => {
+      const aplicaciones = usuRole.aplicaciones.map((app: any) => app.nombreAplicacion);
+      const suites = usuRole.aplicaciones.flatMap((app: any) => app.suites.map((suite: any) => suite.nombreSuite));
+      const roles = usuRole.aplicaciones.flatMap((app: any) =>
+        app.suites.flatMap((suite: any) => suite.roles.map((rol: any) => rol))
+      );
+
+      return {
+        foto: usuRole.foto,
+        usuario: usuRole.nombre,
+        aplicaciones: aplicaciones,
+        suites: suites,
+        roles: roles,
+        id: usuRole.usuarioId
+      };
+    });
   }
 
   getTotalRoles(usuario: any): number {

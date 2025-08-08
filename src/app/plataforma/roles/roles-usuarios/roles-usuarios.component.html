@@ -151,4 +151,34 @@
             </div>
         </div>
     </div>
+
+        <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <app-data-table
+                    [data]="registrosData"
+                    [columns]="['codigoAplicacion', 'nombreAplicacion', 'descripcionAplicacion', 'nomEstado']"
+                    [columnTitles]="[
+                      'APLICACIONES.CODE' | translate,
+                      'APLICACIONES.NAME' | translate,
+                      'APLICACIONES.DESCRIPTION' | translate,
+                      'APLICACIONES.STATUS' | translate
+                    ]"
+                    [idField]="'usuarioRoleId'"
+                    [tableTitle]="'APLICACIONES.TITLE' | translate"
+                    [showAvatar]="false"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'APLICACIONES.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevaAplicaicionClick()"
+                    (editRecord)="OnEditarAplicaicionClick($event)"
+                    (deleteRecord)="OnEliminarAplicaicionClick($event)">
+                </app-data-table>
+            </div>
+        </div>
+    </div>
 </div>
