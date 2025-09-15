@@ -1,174 +1,167 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
 import { Subscription, Subject, tap, catchError, of } from 'rxjs';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService } from 'src/app/theme/shared/service';
-import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
-import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
-import { PTLTiposEstadosService } from 'src/app/theme/shared/service/ptltipos-estados.service';
+import { LanguageService, NavigationService } from 'src/app/theme/shared/service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
+import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
+import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
+import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
+import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { GradientConfig } from 'src/app/app-config';
 
 @Component({
-  selector: 'app-tickets',
-  standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
-  templateUrl: './tickets.component.html',
-  styleUrl: './tickets.component.scss'
+    selector: 'app-tickets',
+    standalone: true,
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, DatatableComponent, NavContentComponent, NavBarComponent],
+    templateUrl: './tickets.component.html',
+    styleUrl: './tickets.component.scss'
 })
 export class TicketsComponent implements OnInit, AfterViewInit {
-  //#region VARIABLES
-  [x: string]: any;
-  @ViewChild(DataTableDirective, { static: false })
-  datatableElement!: DataTableDirective;
-  registrosSub?: Subscription;
-  dtColumnSearchingOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject<any>();
-  registros: PTLTicketAPModel[] = [];
-  lang: string = localStorage.getItem('lang') || '';
-  tituloPagina: string = '';
-  tipoEstado: number = 1;
-  estadosFiltrados: any[] = [];
+    @Output() toggleSidebar = new EventEmitter<void>();
 
-  //#endregion VARIABLES
+    //#region VARIABLES
+    [x: string]: any;
+    @ViewChild(DataTableDirective, { static: false })
+    datatableElement!: DataTableDirective;
+    registrosSub?: Subscription;
+    dtColumnSearchingOptions: DataTables.Settings = {};
+    dtTrigger: Subject<any> = new Subject<any>();
+    registros: PTLTicketAPModel[] = [];
+    lang: string = localStorage.getItem('lang') || '';
+    tituloPagina: string = '';
+    //#endregion VARIABLES
+    gradientConfig;
+    hasFiltersSlot: boolean = false;
+    menuItems: NavigationItem[] = [];
+    activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
-  constructor(
-    private router: Router,
-    private translate: TranslateService,
-    private ticketsService: PTLTicketsService,
-    private tiposEstados: PTLTiposEstadosService,
-    private estados: PTLEstadosService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
-  ) {}
+    constructor(
+        private router: Router,
+        private translate: TranslateService,
+        private ticketsService: PTLTicketsService,
+        private navigationService: NavigationService,
+        private languageService: LanguageService,
+        private BreadCrumb: BreadcrumbComponent
+    ) {
+        this.gradientConfig = GradientConfig;
+    }
 
-  ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
+    ngAfterViewInit(): void {
+        // this.BreadCrumb.setBreadcrumb();
+        // this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        //     dtInstance.columns().every(function () {
+        //         const that = this;
+        //         $('input', this.header()).on('keyup change', function () {
+        //             const valor = $(this).val() as string;
+        //             if (that.search() !== valor) {
+        //                 that.search(valor).draw();
+        //             }
+        //         });
+        //     });
+        // });
+    }
+
+    ngOnInit() {
+        const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+        this.menuItems = this.navigationService.getNavigationItems(appCode);
+        this.hasFiltersSlot = true;
+        this.consultarRegistros();
+
+        // this.languageService.currentLang$.subscribe((lang) => {
+        //     this.translate.use(lang);
+        //     this.translate
+        //         .get(['TICKETS.NOMBRETICKET', 'TICKETS.DESCRIPCIONTICKET', 'TICKETS.ESTADOTICKET'])
+        //         .subscribe((translations) => {
+        //             this.tituloPagina = translations['TICKETS.TITLE'];
+        //             this.dtColumnSearchingOptions = {
+        //                 responsive: true,
+        //                 columns: [
+        //                     { title: translations['TICKETS.NOMBRETICKET'], data: 'nombreTicket' },
+        //                     { title: translations['TICKETS.DESCRIPCIONTICKET'], data: 'descripcionTicket' },
+        //                     { title: translations['TICKETS.ESTADOTICKET'], data: 'estadoTicket' },
+        //                     { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
+        //                 ]
+        //             };
+        //             this.consultarRegistros();
+        //         });
+        // });
+    }
+
+    ngOnDestroy(): void {
+        this.dtTrigger.unsubscribe();
+    }
+
+    consultarRegistros() {
+        this.registrosSub = this.ticketsService
+            .getRegistros()
+            .pipe(
+                tap((resp: any) => {
+                    if (resp.ok) {
+                        resp.tickets.forEach((role: any) => {
+                            role.nomEstado = role.estadoTicket == true ? 'Activo' : 'Inactivo';
+                        });
+                        this.registros = resp.tickets;
+                        console.log('Todos las tickets', this.registros);
+                        this.dtTrigger.next(null);
+                        return;
+                    }
+                }),
+                catchError((err) => {
+                    console.log('Ha ocurrido un error', err);
+                    return of(null);
+                })
+            )
+            .subscribe();
+    }
+
+    filtrarColumna(columna: number, valor: string) {
+        this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
+            dtInstance.column(columna).search(valor).draw();
         });
-      });
-    });
-  }
+    }
 
-  ngOnInit() {
-    this.languageService.currentLang$.subscribe((lang) => {
-      this.translate.use(lang);
-      this.translate
-        .get(['TICKETS.NOMBRETICKET', 'TICKETS.DESCRIPCIONTICKET', 'TICKETS.ESTADOTICKET'])
-        .subscribe((translations) => {
-          this.tituloPagina = translations['TICKETS.TITLE'];
-          this.dtColumnSearchingOptions = {
-            responsive: true,
-            columns: [
-              { title: translations['TICKETS.NOMBRETICKET'], data: 'nombreTicket' },
-              { title: translations['TICKETS.DESCRIPCIONTICKET'], data: 'descripcionTicket' },
-              { title: translations['TICKETS.ESTADOTICKET'], data: 'estadoTicket' },
-              { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-            ]
-          };
-          this.consultarRegistros();
-          this.consultarEstado();
+    OnNuevoRegistroClick() {
+        this.router.navigate(['help-desk/gestion-ticket']);
+    }
+
+    OnEditarRegistroClick(id: number) {
+        this.router.navigate(['help-desk/gestion-ticket'], { queryParams: { regId: id } });
+    }
+
+    OnEliminarRegistroClick(id: number) {
+        Swal.fire({
+            title: this.translate.instant('TICKETS.ELIMINARTITULO'),
+            text: this.translate.instant('TICKETS.ELIMINARTEXTO'),
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+        }).then((result: any) => {
+            if (result.isConfirmed) {
+                this.ticketsService.deleteEliminarRegistro(id).subscribe({
+                    next: (resp: any) => {
+                        Swal.fire(this.translate.instant('TICKETS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+                        this.registros = this.registros.filter((s) => s.ticketId !== id);
+                    },
+                    error: (err: any) => {
+                        Swal.fire('Error', this.translate.instant('TICKETS.ELIMINARERROR'), 'error');
+                        console.error('Error eliminando', err);
+                    }
+                });
+            }
         });
-    });
-  }
+    }
 
-  ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
-  }
-
-consultarEstado() {
-  this.estados
-    .getRegistros()
-    .pipe(
-      tap((resp: any) => {
-        if (resp.ok) {
-          // Filtra los estados con tipoEstado igual a 1
-          const estadosFiltrados = resp.estados.filter(
-            (estado: any) => estado.tipoEstado = this.tipoEstado
-          );
-          console.log('Estados con tipoEstado = 1:', estadosFiltrados);
-          this.estadosFiltrados = estadosFiltrados;
-
-          this.dtTrigger.next(null);
-        }
-      }),
-      catchError((err) => {
-        console.error('Error al consultar estados:', err);
-        return of(null);
-      })
-    )
-    .subscribe();
+    toggleNav(): void {
+        this.toggleSidebar.emit();
+    }
 }
 
-  consultarRegistros() {
-    this.registrosSub = this.ticketsService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            resp.tickets.forEach((ticket: any) => {
-              ticket.nomEstado = ticket.estadoTicket == true ? 'Activo' : 'Inactivo';
-            });
-            this.registros = resp.tickets;
-            console.log('Todos las tickets', this.registros);
-            this.dtTrigger.next(null);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
-        })
-      )
-      .subscribe();
-  }
 
-  filtrarColumna(columna: number, valor: string) {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.column(columna).search(valor).draw();
-    });
-  }
-
-  OnNuevoRegistroClick() {
-    this.router.navigate(['help-desk/gestion-ticket/']);
-  }
-
-  OnEditarRegistroClick(id: number) {
-    this.router.navigate(['help-desk/gestion-ticket/'], { queryParams: { regId: id } });
-  }
-
-  OnEliminarRegistroClick(id: number, nombre: string) {
-    Swal.fire({
-      title: this.translate.instant('TICKETS.ELIMINARTITULO'),
-      text: this.translate.instant('TICKETS.ELIMINARTEXTO') + `"${nombre}".!`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        this.ticketsService.deleteEliminarRegistro(id).subscribe({
-          next: (resp: any) => {
-            Swal.fire(this.translate.instant('TICKETS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.ticketId !== id);
-          },
-          error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('TICKETS.ELIMINARERROR'), 'error');
-            console.error('Error eliminando', err);
-          }
-        });
-      }
-    });
-  }
-}

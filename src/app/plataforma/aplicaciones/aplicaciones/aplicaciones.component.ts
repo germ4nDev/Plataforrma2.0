@@ -27,15 +27,14 @@ import Swal from 'sweetalert2';
 })
 export class AplicacionesComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
-
   aplicaciones: PTLAplicacionModel[] = [];
   aplicacionesFiltrado: PTLAplicacionModel[] = [];
-  menuItems: NavigationItem[] = [];
   filtroPersonalizado: string = '';
   hasFiltersSlot: boolean = false;
   registrosSub?: Subscription;
   gradientConfig;
   lang = localStorage.getItem('lang');
+  menuItems: NavigationItem[] = [];
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   constructor(

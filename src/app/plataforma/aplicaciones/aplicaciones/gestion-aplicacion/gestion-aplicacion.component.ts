@@ -71,7 +71,6 @@ export class GestionAplicacionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.route.queryParams.subscribe((params) => {

@@ -1,87 +1,83 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h4>{{ 'TICKETS.REQUERIMIENTOS.TITLE' | translate }}</h4>
-                <hr />
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
-                    </div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'TICKETS.REQUERIMIENTOS.NEW' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
         <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <!-- <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.codigoAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.nombreAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
+                </div> -->
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
-                        <thead>
-                            <tr>
-                                <th>{{ 'TICKETS.REQUERIMIENTOS.NOMBREREQUERIMIENTO' | translate }}</th>
-                                <th>{{ 'TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO' | translate }}</th>
-                                <th>{{ 'TICKETS.REQUERIMIENTOS.ESTADOREQUERIMIENTO' | translate }}</th>
-                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let reg of registros">
-                                <td>
-                                    {{ reg.nombreRequerimiento }}
-                                </td>
-                                <td>
-                                    {{ reg.descripcionRequerimiento }}
-                                </td>
-                                <td>
-                                    {{ reg.nomEstado }}
-                                </td>
-                                <td style="text-align: center; width: 10%">
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="OnEditarRegistroClick(reg.requerimientoId?? 0)"
-                                            title="{{ 'TICKETS.REQUERIMIENTOS.UPDATE' | translate }}">
-                                            <i class="feather icon-edit"></i>
-                                        </button>
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="OnEliminarRegistroClick(reg.requerimientoId?? 0, reg.nombreRequerimiento?? '')"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'TICKETS.REQUERIMIENTOS.DELETE' | translate }}">
-                                            <i class="feather icon-trash-2"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>
-                                    <input #nombreRequerimiento (keyup)="filtrarColumna(1, nombreRequerimiento.value)"
-                                        type="text" placeholder="{{ 'TICKETS.REQUERIMIENTOS.FILTER_NAMEREQUERIMIENTO' | translate }}"
-                                        name="filtro-nombreRequerimiento" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #descripcionRequerimiento
-                                        (keyup)="filtrarColumna(2, descripcionRequerimiento.value)" type="text"
-                                        placeholder="{{ 'TICKETS.REQUERIMIENTOS.FILTER_DESCRIPCIONREQUERIMIENTO' | translate }}"
-                                        name="filtro-descripcionRequerimiento" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #estadoRequerimiento (keyup)="filtrarColumna(4, estadoRequerimiento.value)"
-                                        type="text" placeholder="{{ 'TICKETS.REQUERIMIENTOS.FILTRO_STATUSREQUERIMIENTO' | translate }}"
-                                        name="filtro-estadoRequerimiento" class="form-control" />
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                <app-data-table
+                    [data]="registros"
+                    [columns]="['nombreRequerimiento', 'descripcionRequerimiento', 'nomEstado']"
+                    [columnTitles]="[
+                      'TICKETS.REQUERIMIENTOS.NOMBREREQUERIMIENTO' | translate,
+                      'TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO'| translate,
+                      'TICKETS.REQUERIMIENTOS.ESTADOREQUERIMIENTO' | translate
+                    ]"
+                    [idField]="'ticketId'"
+                    [tableTitle]="'TICKETS.REQUERIMIENTOS.TITLE' | translate"
+                    [showAvatar]="false"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'TICKETS.REQUERIMIENTOS.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
             </div>
         </div>
     </div>
