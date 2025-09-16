@@ -27,14 +27,9 @@ export class TicketsComponent implements OnInit, AfterViewInit {
     @Output() toggleSidebar = new EventEmitter<void>();
 
     //#region VARIABLES
-    [x: string]: any;
-    @ViewChild(DataTableDirective, { static: false })
-    datatableElement!: DataTableDirective;
-    registrosSub?: Subscription;
-    dtColumnSearchingOptions: DataTables.Settings = {};
-    dtTrigger: Subject<any> = new Subject<any>();
     registros: PTLTicketAPModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
+    registrosSub?: Subscription;
     tituloPagina: string = '';
     //#endregion VARIABLES
     gradientConfig;
@@ -95,7 +90,6 @@ export class TicketsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnDestroy(): void {
-        this.dtTrigger.unsubscribe();
     }
 
     consultarRegistros() {
@@ -109,7 +103,6 @@ export class TicketsComponent implements OnInit, AfterViewInit {
                         });
                         this.registros = resp.tickets;
                         console.log('Todos las tickets', this.registros);
-                        this.dtTrigger.next(null);
                         return;
                     }
                 }),
@@ -119,12 +112,6 @@ export class TicketsComponent implements OnInit, AfterViewInit {
                 })
             )
             .subscribe();
-    }
-
-    filtrarColumna(columna: number, valor: string) {
-        this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-            dtInstance.column(columna).search(valor).draw();
-        });
     }
 
     OnNuevoRegistroClick() {
