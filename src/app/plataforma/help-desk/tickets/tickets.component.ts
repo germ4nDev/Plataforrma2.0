@@ -135,7 +135,7 @@ export class TicketsComponent implements OnInit, AfterViewInit {
         this.router.navigate(['help-desk/gestion-ticket'], { queryParams: { regId: id } });
     }
 
-    OnEliminarRegistroClick(id: number) {
+    OnEliminarRegistroClick(id: any) {
         Swal.fire({
             title: this.translate.instant('TICKETS.ELIMINARTITULO'),
             text: this.translate.instant('TICKETS.ELIMINARTEXTO'),
@@ -145,10 +145,10 @@ export class TicketsComponent implements OnInit, AfterViewInit {
             cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
-                this.ticketsService.deleteEliminarRegistro(id).subscribe({
+                this.ticketsService.deleteEliminarRegistro(id.id).subscribe({
                     next: (resp: any) => {
                         Swal.fire(this.translate.instant('TICKETS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-                        this.registros = this.registros.filter((s) => s.ticketId !== id);
+                        this.registros = this.registros.filter((s) => s.ticketId !== id.id);
                     },
                     error: (err: any) => {
                         Swal.fire('Error', this.translate.instant('TICKETS.ELIMINARERROR'), 'error');

@@ -1,45 +1,53 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h4>{{ 'TICKETS.SEGUIMIENTOS.GESTION.TITLE' | translate }}</h4>
-                <hr />
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button>
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+            </div>
+
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="form-area">
+        <div class="card">
+            <div class="card-header card-header-sticky">
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'TICKETS.SEGUIMIENTOS.NEW' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'TICKETS.SEGUIMIENTOS.UPDATE' | translate }}</h4>
                     </div>
-                    <div class="col-sm-6 justify-content-end d-flex gap-3">
-                        <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
+                    <div class="d-flex">
+                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'TICKETS.SEGUIMIENTOS.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro"
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'TICKETS.SEGUIMIENTOS.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card">
-            <div class="card-header">
-                <h4 *ngIf="!modoEdicion">{{ 'TICKETS.SEGUIMIENTOS.NEW' | translate }}</h4>
-                <h4 *ngIf="modoEdicion">{{ 'TICKETS.SEGUIMIENTOS.UPDATE' | translate }}</h4>
-            </div>
-            <div class="card-body">
+            <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="requerimientoId">{{
                                     'TICKETS.SEGUIMIENTOS.GESTION.REQUERIMIENTO' | translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="requerimientoId" id="requerimientoId"
+                                <select class="form-control form-input" style="cursor: pointer;" name="requerimientoId" id="requerimientoId"
                                     [ngClass]="{ 'is-invalid': !requerimientoId.valid && (requerimientoId.dirty || requerimientoId.touched || isSubmit) }"
                                     #requerimientoId="ngModel" required [(ngModel)]="FormRegistro.requerimientoId" (change)="onRequerimientochangeClick($event)">
                                     <option value="" disabled >{{ 'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERREQUERIMIENTO' | translate }}</option>
@@ -55,7 +63,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreSeguimiento">{{ 'TICKETS.SEGUIMIENTOS.GESTION.NAME' | translate }}</label>
-                                <input class="form-control input-md" id="nombreSeguimiento" name="nombreSeguimiento" type="text"
+                                <input class="form-control form-input" id="nombreSeguimiento" name="nombreSeguimiento" type="text"
                                     placeholder="{{ 'TICKETS.SEGUIMIENTOS.GESTION.NAMEHOLDER' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreSeguimiento.valid && (nombreSeguimiento.dirty || nombreSeguimiento.touched || isSubmit) }"
                                     #nombreSeguimiento="ngModel" required [(ngModel)]="FormRegistro.nombreSeguimiento" />
@@ -68,7 +76,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'TICKETS.SEGUIMIENTOS.GESTION.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control"
+                                <textarea class="form-control form-input"
                                     placeholder="{{ 'TICKETS.SEGUIMIENTOS.GESTION.DESCRIPTIONHOLDER' | translate }}"
                                     name="descripcionSeguimiento" [ngClass]="{
                                     'is-invalid': !descripcionSeguimiento.valid && (descripcionSeguimiento.dirty || descripcionSeguimiento.touched || isSubmit)}"
@@ -85,7 +93,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="estadoId">
                                     {{ 'TICKETS.SEGUIMIENTOS.GESTION.STATUS' | translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="estadoId" id="estadoId"
+                                <select class="form-control form-input" style="cursor: pointer;" name="estadoId" id="estadoId"
                                     [ngClass]="{ 'is-invalid': !estadoId.valid && (estadoId.dirty || estadoId.touched || isSubmit) }"
                                     #estadoId="ngModel" required [(ngModel)]="FormRegistro.estadoSeguimiento" (change)="onEstadoChangeClick($event)">
                                     <option value="" disabled >{{ 'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERESTADO' | translate }}</option>
@@ -104,3 +112,4 @@
         </div>
     </div>
 </div>
+

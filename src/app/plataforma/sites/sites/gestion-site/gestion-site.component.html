@@ -13,45 +13,41 @@
             </ng-container>
         </div>
     </aside>
-    <div class="content-area">
+
+    <div class="form-area">
         <div class="card">
             <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h5>{{ 'SITIOS.GESTION.TITLE' | translate }}</h5>
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'SITIOS.GESTION.NEW' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'SITIOS.UPDATE' | translate }}</h4>
                     </div>
-                    <div class="col-sm-6 justify-content-end d-flex gap-3">
-                        <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
+                    <div class="d-flex">
+                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SITIOS.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro"
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SITIOS.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card content-scroll-wrapper">
-            <div class="card-header">
-                <h4 *ngIf="!modoEdicion">{{ 'SITIOS.GESTION.NEW' | translate }}</h4>
-                <h4 *ngIf="modoEdicion">{{ 'SITIOS.GESTION.UPDATE' | translate }}</h4>
-            </div>
-            <div class="card-body">
+            <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="aplicacionId">
                                     {{ 'SITIOS.GESTION.APLICACION' | translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="aplicacionId" id="aplicacionId"
+                                <select class="form-control form-input" style="cursor: pointer;" name="aplicacionId" id="aplicacionId"
                                     [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
                                     #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
                                     (change)="onAplicacionchangeClick($event)">
@@ -71,7 +67,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreSitio">{{ 'SITIOS.NAME' | translate
                                     }}</label>
-                                <input class="form-control input-md" id="nombreSitio" name="nombreSitio" type="text"
+                                <input class="form-control form-input" id="nombreSitio" name="nombreSitio" type="text"
                                     placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERNAME' | translate }}"
                                     [ngClass]="{'is-invalid': !nombreSitio.valid && (nombreSitio.dirty || nombreSitio.touched || isSubmit)}"
                                     #nombreSitio="ngModel" required [(ngModel)]="FormRegistro.nombreSitio" />
@@ -85,7 +81,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SITIOS.URL' | translate }}</label>
-                                <input type="text" class="form-control" name="urlSitio"
+                                <input type="text" class="form-control form-input" name="urlSitio"
                                     placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERURL' | translate }}"
                                     [ngClass]="{'is-invalid': !urlSitio.valid && (urlSitio.dirty || urlSitio.touched || isSubmit) }"
                                     #urlSitio="ngModel" required [(ngModel)]="FormRegistro.urlSitio" />
@@ -99,7 +95,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="puertoSitio">{{ 'SITIOS.SITESPORT' | translate
                                     }}</label>
-                                <input class="form-control input-md" id="puertoSitio" name="puertoSitio" type="text"
+                                <input class="form-control form-input" id="puertoSitio" name="puertoSitio" type="text"
                                     placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERPUERTO' | translate }}"
                                     [ngClass]="{'is-invalid': !puertoSitio.valid && (puertoSitio.dirty || puertoSitio.touched || isSubmit)}"
                                     #puertoSitio="ngModel" required [(ngModel)]="FormRegistro.puertoSitio" />
@@ -113,7 +109,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SITIOS.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control"
+                                <textarea class="form-control form-input"
                                     placeholder="{{ 'SITIOS.GESTION.PLACEHOLDERDESCRIPCION' | translate }}"
                                     name="descripcionSitio"
                                     [ngClass]="{'is-invalid': !descripcionSitio.valid && (descripcionSitio.dirty || descripcionSitio.touched || isSubmit)}"
@@ -152,3 +148,5 @@
         </div>
     </div>
 </div>
+
+

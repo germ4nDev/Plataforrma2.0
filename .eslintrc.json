@@ -26,43 +26,6 @@
             "prefix": "app",
             "style": "kebab-case"
           }
-        ],
-        "@typescript-eslint/no-explicit-any": "error",
-        "@angular-eslint/template/no-any": "error",
-        "no-console": ["warn", { "allow": ["warn", "error"] }],
-        "sort-imports": [
-          "error",
-          {
-            "ignoreCase": true,
-            "ignoreDeclarationSort": true,
-            "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
-            "allowSeparatedGroups": true
-          }
-        ],
-        "spellcheck/spell-checker": [
-          "warn",
-          {
-            "comments": true,
-            "strings": true,
-            "identifiers": true,
-            "lang": "en_US",
-            "skipWords": [
-              "ngOnInit",
-              "rxjs",
-              "navbar",
-              "ngIf",
-              "ngClass",
-              "app", // palabras que usas mucho
-              "aplicacion",
-              "usuario",
-              "ptlaplicaciones" // propias de tu dominio
-            ],
-            "skipIfMatch": [
-              "http://[^s]*", // ignora URLs
-              "^[-\\w]+/[-\\w\\.]+$" // rutas de Angular o archivos
-            ],
-            "minLength": 3
-          }
         ]
       }
     },

@@ -13,11 +13,13 @@
             <span>{{ 'PLATAFORMA.DATATABLE.ENTRIES' | translate }}</span>
         </div>
         <div class="d-flex">
-            <button class="btn btn-primary btn-NuevoRegistro" (click)="onExcelExport()">
+            <button class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="onExcelExport()">
                 {{ exportLabel | translate }}
+                <i class="feather ms-2 icon-download"></i>
             </button>
-            <button *ngIf="showNewButton" class="btn btn-primary btn-NuevoRegistro" (click)="onNewRecord()">
+            <button *ngIf="showNewButton" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="onNewRecord()">
                 {{ newButtonLabel | translate }}
+                <i class="feather ms-2 icon-plus"></i>
             </button>
         </div>
     </div>

@@ -6,7 +6,6 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { catchError, of, Subscription, tap } from 'rxjs';
@@ -48,7 +47,6 @@ export class GestionSiteComponent implements OnInit {
     private registrosService: PTLSitiosAPService,
     private aplicacionesService: PtlAplicacionesService,
     private route: ActivatedRoute,
-    private BreadCrumb: BreadcrumbComponent,
     private translate: TranslateService,
     private layoutInitializer: LayoutInitializerService,
     private locationStrategy: LocationStrategy,
@@ -66,11 +64,10 @@ export class GestionSiteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
-    this.consultarAplicaciones();
-    this.layoutInitializer.applyLayout();
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.consultarAplicaciones();
+    this.layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {

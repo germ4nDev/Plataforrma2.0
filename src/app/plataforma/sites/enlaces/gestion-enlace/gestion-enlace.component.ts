@@ -68,11 +68,10 @@ export class GestionEnlaceComponent {
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
-    this.consultarSitios();
-    this.layoutInitializer.applyLayout();
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.consultarSitios();
+    this.layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {

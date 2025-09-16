@@ -9,6 +9,7 @@
         "MENU": "Menu",
         "FILTERS": "Filters",
         "REQUIRED": "Field Required",
+        "EXCEL":"Download Excel file",
         "NAVBAR": {
             "NOTIFICACIONES": "Notifications",
             "READ": "Mark as Read",
