@@ -23,17 +23,17 @@
                         <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'TICKETS.UPDATE' | translate }}</h4>
                     </div>
                     <div class="d-flex">
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
+                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'TICKETS.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'TICKETS.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
@@ -48,7 +48,7 @@
                                 <label class="form-control-label" for="codigoAplicacion">{{
                                     'TICKETS.GESTION.APLICACION' |
                                     translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="codigoAplicacion" id="codigoAplicacion"
+                                <select class="form-control form-input" style="cursor: pointer;" name="codigoAplicacion" id="codigoAplicacion"
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.aplicacionId" (change)="onAplicacionchangeClick($event)">
                                     <option value="" disabled >{{ 'TICKETS.GESTION.PLACEHOLDERAPLICACION' | translate }}</option>
@@ -65,7 +65,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreTicket">{{ 'TICKETS.GESTION.NAME' |
                                     translate }}</label>
-                                <input class="form-control input-md" id="nombreTicket" name="nombreTicket" type="text"
+                                <input class="form-control form-input" id="nombreTicket" name="nombreTicket" type="text"
                                     placeholder="{{ 'TICKETS.GESTION.NAMEHOLDER' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreTicket.valid && (nombreTicket.dirty || nombreTicket.touched || isSubmit) }"
                                     #nombreTicket="ngModel" required [(ngModel)]="FormRegistro.nombreTicket" />
@@ -78,7 +78,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'TICKETS.GESTION.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control"
+                                <textarea class="form-control form-input"
                                     placeholder="{{ 'TICKETS.GESTION.DESCRIPTIONHOLDER' | translate }}"
                                     name="descripcionTicket" [ngClass]="{
                                     'is-invalid': !descripcionTicket.valid && (descripcionTicket.dirty || descripcionTicket.touched || isSubmit)}"

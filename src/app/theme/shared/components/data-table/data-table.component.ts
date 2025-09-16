@@ -557,7 +557,7 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   onDelete(row: any): void {
-    this.deleteRecord.emit({ id: row[this.idField], nombre: row['nombreAplicacion'] });
+    this.deleteRecord.emit({ id: row[this.idField] });
   }
 
   onFilter(column: string, event: Event): void {

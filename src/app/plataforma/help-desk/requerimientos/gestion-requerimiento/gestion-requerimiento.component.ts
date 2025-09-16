@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of } from 'rxjs';
@@ -7,7 +7,7 @@ import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.m
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService } from 'src/app/theme/shared/service';
+import { LanguageService, NavigationService } from 'src/app/theme/shared/service';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
@@ -15,16 +15,20 @@ import { PTLTiposEstadosService } from 'src/app/theme/shared/service/ptltipos-es
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
+import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
+import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 
 @Component({
   selector: 'tickets-gestion-requerimiento',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-requerimiento.component.html',
   styleUrl: './gestion-requerimiento.component.scss'
 })
 export class GestionRequerimientoComponent {
-
+  @Output() toggleSidebar = new EventEmitter<void>();
+  menuItems: NavigationItem[] = [];
   FormRegistro: PTLRequerimientoTKModel = new PTLRequerimientoTKModel();
   ticket: PTLTicketAPModel[] = [];
   registrosSub?: Subscription;
@@ -38,6 +42,7 @@ export class GestionRequerimientoComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private navigationService: NavigationService,
     private registrosService: PTLRequerimientosTkService,
     private tickesService: PTLTicketsService,
     private tiposEstados: PTLTiposEstadosService,
@@ -50,7 +55,8 @@ export class GestionRequerimientoComponent {
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.consultarTickets();
     this.consultarEstado();
     this.route.queryParams.subscribe((params) => {
@@ -72,43 +78,39 @@ export class GestionRequerimientoComponent {
         // console.log('no llena el Id', registroId);
         this.modoEdicion = false;
         this.FormRegistro = {
-        ...this.FormRegistro,
-        estadoRequerimiento: 'PE',
-      };
+          ...this.FormRegistro,
+          estadoRequerimiento: 'PE'
+        };
         // this.FormRegistro.requerimientoId = uuidv4();
       }
     });
   }
-consultarEstado() {
-  this.estados
-    .getRegistros()
-    .pipe(
-      tap((resp: any) => {
-        if (resp.ok) {
-          // ✅ Usar comparación con doble igual (o triple)
-          this.estadosFiltrados = resp.estados.filter(
-            (estado: any) => estado.tipoEstado === this.tipoEstado
-          );
-          console.log('Estados filtrados:', this.estadosFiltrados);
-        }
-      }),
-      catchError((err) => {
-        console.error('Error al consultar estados:', err);
-        return of(null);
-      })
-    )
-    .subscribe();
-}
-
-onEstadoChangeClick(event: any) {
-  const value = event.target.value;
-  const estadoSeleccionado = this.estadosFiltrados.find(
-    (x) => x.estadoId == value
-  );
-  if (estadoSeleccionado) {
-    this.FormRegistro.estadoRequerimiento = estadoSeleccionado.siglaEstado;
+  consultarEstado() {
+    this.estados
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            // ✅ Usar comparación con doble igual (o triple)
+            this.estadosFiltrados = resp.estados.filter((estado: any) => estado.tipoEstado === this.tipoEstado);
+            console.log('Estados filtrados:', this.estadosFiltrados);
+          }
+        }),
+        catchError((err) => {
+          console.error('Error al consultar estados:', err);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
-}
+
+  onEstadoChangeClick(event: any) {
+    const value = event.target.value;
+    const estadoSeleccionado = this.estadosFiltrados.find((x) => x.estadoId == value);
+    if (estadoSeleccionado) {
+      this.FormRegistro.estadoRequerimiento = estadoSeleccionado.siglaEstado;
+    }
+  }
 
   consultarTickets() {
     this.registrosSub = this.tickesService
@@ -128,7 +130,7 @@ onEstadoChangeClick(event: any) {
       .subscribe();
   }
 
-    onTicketchangeClick(event: any) {
+  onTicketchangeClick(event: any) {
     const value = event.target.value;
     const ticket = this.ticket.filter((x) => x.ticketId == value)[0];
     this.FormRegistro.ticketId = ticket.ticketId;
@@ -157,7 +159,7 @@ onEstadoChangeClick(event: any) {
         }
       });
     } else {
-    //   console.log('formregistro', this.FormRegistro);
+      //   console.log('formregistro', this.FormRegistro);
       this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
@@ -177,5 +179,8 @@ onEstadoChangeClick(event: any) {
 
   btnRegresarClick() {
     this.router.navigate(['/help-desk/requerimientos/']);
+  }
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }
