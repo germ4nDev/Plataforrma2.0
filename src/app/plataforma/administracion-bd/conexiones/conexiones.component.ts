@@ -18,34 +18,30 @@ import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexi
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
+import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
 
 @Component({
   selector: 'app-conexciones',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './conexiones.component.html',
   styleUrl: './conexiones.component.scss'
 })
 export class ConexionesComponent implements OnInit, AfterViewInit {
- //#region VARIABLES
-  [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
   @Output() toggleSidebar = new EventEmitter<void>();
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
-
-  datatableElement!: DataTableDirective;
+  //#region VARIABLES
   registrosSub?: Subscription;
-  dtColumnSearchingOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject<any>();
   registros: PTLConexionBDModel[] = [];
-  aplicaciones: PTLAplicacionModel[] = [];
-  suscriptores: PTLSuscriptorModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
-  menuItems: NavigationItem[] = [];
-  hasFiltersSlot: boolean = false;
   gradientConfig;
-
+  hasFiltersSlot: boolean = false;
+  menuItems: NavigationItem[] = [];
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  datatableElement!: DataTableDirective;
+  aplicaciones: PTLAplicacionModel[] = [];
+  suscriptores: PTLSuscriptorModel[] = [];
   //#endregion VARIABLES
 
   constructor(
@@ -54,7 +50,6 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
     private conexionService: PTLConexionesBDSTService,
     private aplicacionesService: PtlAplicacionesService,
     private suscriptoresService: PTLSuscriptoresService,
-    private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent,
     private navigationService: NavigationService
   ) {
@@ -62,55 +57,17 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
-        });
-      });
-    });
   }
 
   ngOnInit() {
-    // this.languageService.currentLang$.subscribe((lang) => {
-    //   this.translate.use(lang);
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     console.log('elementos menu componente', this.menuItems);
     this.hasFiltersSlot = true;
-      this.translate
-        .get([
-            'CONEXIONES.NOMBREAPLICACION',
-            'CONEXIONES.NOMBRESUSCRIPTOR',
-            'CONEXIONES.NOMBRESERVIDOR',
-            'CONEXIONES.NOMBREBD',
-            'CONEXIONES.ESTADOCONEXION'
-        ])
-        .subscribe((translations) => {
-          this.tituloPagina = translations['CONEXIONES.TITLE'];
-          this.dtColumnSearchingOptions = {
-            responsive: true,
-            columns: [
-              { title: translations['CONEXIONES.NOMBREAPLICACION'], data: 'nombreAplicacion' },
-              { title: translations['CONEXIONES.NOMBRESUSCRIPTOR'], data: 'nombreSuscriptor' },
-              { title: translations['CONEXIONES.NOMBREconexion'], data: 'nombreconexion' },
-              { title: translations['CONEXIONES.NOMBREBD'], data: 'BDNombre' },
-              { title: translations['CONEXIONES.ESTADOCONEXION'], data: 'estadoConexion' },
-              { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-            ]
-          };
-          this.consultarRegistros();
-        });
-    // });
+    this.consultarRegistros();
   }
 
   ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
   }
 
   consultarRegistros() {
@@ -122,15 +79,14 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.conexiones.forEach((conexion: any) => {
-                const app = this.aplicaciones.filter((x) => x.aplicacionId == conexion.aplicacionId)[0];
-                const susc = this.suscriptores.filter((x) => x.suscriptorId == conexion.suscriptorId)[0];
-                conexion.nombreAplicacion = app.nombreAplicacion;
-                conexion.nombreSuscriptor = susc.nombreSuscriptor;
-                conexion.nomEstado = conexion.estadoConexion == true ? 'Activo' : 'Inactivo';
+              const app = this.aplicaciones.filter((x) => x.aplicacionId == conexion.aplicacionId)[0];
+              const susc = this.suscriptores.filter((x) => x.suscriptorId == conexion.suscriptorId)[0];
+              conexion.nombreAplicacion = app.nombreAplicacion;
+              conexion.nombreSuscriptor = susc.nombreSuscriptor;
+              conexion.nomEstado = conexion.estadoConexion == true ? 'Activo' : 'Inactivo';
             });
             this.registros = resp.conexiones;
             console.log('Todos las conexiones', this.registros);
-            this.dtTrigger.next(null);
             return;
           }
         }),
@@ -142,7 +98,7 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-    consultarAplicaciones() {
+  consultarAplicaciones() {
     this.registrosSub = this.aplicacionesService
       .getAplicaciones()
       .pipe(
@@ -180,12 +136,6 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  filtrarColumna(columna: number, valor: string) {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.column(columna).search(valor).draw();
-    });
-  }
-
   OnNuevoRegistroClick() {
     this.router.navigate(['administracion-bd/gestion-conexion/']);
   }
@@ -194,20 +144,20 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
     this.router.navigate(['administracion-bd/gestion-conexion/'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number, nombre: string) {
+  OnEliminarRegistroClick(id: any) {
     Swal.fire({
       title: this.translate.instant('CONEXIONES.ELIMINARTITULO'),
-      text: this.translate.instant('CONEXIONES.ELIMINARTEXTO') + `"${nombre}".!`,
+      text: this.translate.instant('CONEXIONES.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.conexionService.deleteEliminarRegistro(id).subscribe({
+        this.conexionService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('CONEXIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.conexionId !== id);
+            this.registros = this.registros.filter((s) => s.conexionId !== id.id);
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('CONEXIONES.ELIMINARERROR'), 'error');

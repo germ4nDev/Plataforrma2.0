@@ -15,102 +15,73 @@
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3" style="height: calc(100vh - 56px)">
-                    <!-- falta terminar -->
-                </div>
+                <!-- <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.codigoAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.nombreAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
+                </div> -->
             </ng-container>
         </div>
     </aside>
+
     <div class="content-area">
-        <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4>{{ 'CONEXIONES.SERVIDORES.TITLE' | translate }}</h4>
-                    </div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'CONEXIONES.SERVIDORES.NEW' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
+        <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
-                        <thead>
-                            <tr>
-                                <th>{{ 'CONEXIONES.SERVIDORES.NOMBRESERVIDOR' | translate }}</th>
-                                <th>{{ 'CONEXIONES.SERVIDORES.DESCRIPCIONSERVIDOR' | translate }}</th>
-                                <th>{{ 'CONEXIONES.SERVIDORES.RUTASERVIDOR' | translate }}</th>
-                                <th>{{ 'CONEXIONES.SERVIDORES.ESTADOSERVIDOR' | translate }}</th>
-                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let reg of registros">
-                                <td>
-                                    {{ reg.nombreServidor }}
-                                </td>
-                                <td>
-                                    {{ reg.descripcionServidor }}
-                                </td>
-                                <td>
-                                    {{ reg.rutaServidor }}
-                                </td>
-                                <td>
-                                    {{ reg.nomEstado }}
-                                </td>
-                                <td style="text-align: center; width: 10%">
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="OnEditarRegistroClick(reg.servidorId?? 0)"
-                                            title="{{ 'CONEXIONES.SERVIDORES.UPDATE' | translate }}">
-                                            <i class="feather icon-edit"></i>
-                                        </button>
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="OnEliminarRegistroClick(reg.servidorId?? 0, reg.nombreServidor?? '')"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'CONEXIONES.SERVIDORES.DELETE' | translate }}">
-                                            <i class="feather icon-trash-2"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>
-                                    <input #nombreServidor (keyup)="filtrarColumna(1, nombreServidor.value)" type="text"
-                                        placeholder="{{ 'CONEXIONES.SERVIDORES.FILTER_NAMESERVIDOR' | translate }}"
-                                        name="filtro-nombreServidor" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #descripcionServidor (keyup)="filtrarColumna(2, descripcionServidor.value)"
-                                        type="text"
-                                        placeholder="{{ 'CONEXIONES.SERVIDORES.FILTER_DESCRIPCIONSERVIDOR' | translate }}"
-                                        name="filtro-descripcionServidor" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #rutaServidor (keyup)="filtrarColumna(2, rutaServidor.value)" type="text"
-                                        placeholder="{{ 'CONEXIONES.SERVIDORES.FILTER_RUTASERVIDOR' | translate }}"
-                                        name="filtro-rutaServidor" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #estadoServidor (keyup)="filtrarColumna(4, estadoServidor.value)" type="text"
-                                        placeholder="{{ 'CONEXIONES.SERVIDORES.FILTRO_STATUSSERVIDOR' | translate }}"
-                                        name="filtro-estadoServidor" class="form-control" />
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                <app-data-table
+                    [data]="registros"
+                    [columns]="['nombreServidor', 'descripcionServidor', 'rutaServidor', 'nomEstado']"
+                    [columnTitles]="[
+                      'CONEXIONES.SERVIDORES.NOMBRESERVIDOR' | translate,
+                      'CONEXIONES.SERVIDORES.DESCRIPCIONSERVIDOR'| translate,
+                      'CONEXIONES.SERVIDORES.RUTASERVIDOR' | translate,
+                      'CONEXIONES.SERVIDORES.ESTADOSERVIDOR' | translate
+                    ]"
+                    [idField]="'servidorId'"
+                    [tableTitle]="'CONEXIONES.SERVIDORES.TITLE' | translate"
+                    [showAvatar]="false"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'CONEXIONES.SERVIDORES.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
             </div>
         </div>
     </div>
+</div>
+
+

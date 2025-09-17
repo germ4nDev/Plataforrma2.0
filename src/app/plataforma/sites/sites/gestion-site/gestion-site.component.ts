@@ -34,7 +34,6 @@ export class GestionSiteComponent implements OnInit {
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
   windowWidth: number = 0;
-
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;

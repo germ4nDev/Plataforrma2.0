@@ -9,7 +9,6 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLServidorModel } from 'src/app/theme/shared/_helpers/models/PTLServidor.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService } from 'src/app/theme/shared/service';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.service';
@@ -32,8 +31,6 @@ export class GestionServidorComponent {
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
   windowWidth: number = 0;
-
-
   registrosSub?: Subscription;
   form: undefined;
   isSubmit: boolean = false;
@@ -45,7 +42,6 @@ export class GestionServidorComponent {
     private route: ActivatedRoute,
     private registrosService: PTLServidorService,
     private translate: TranslateService,
-    private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent,
     private layoutInitializer: LayoutInitializerService,
     private locationStrategy: LocationStrategy,
@@ -63,10 +59,9 @@ export class GestionServidorComponent {
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
-    this.layoutInitializer.applyLayout();
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {

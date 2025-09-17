@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
@@ -10,74 +10,53 @@ import { LanguageService } from 'src/app/theme/shared/service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
+import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
+import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
+import { GradientConfig } from 'src/app/app-config';
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+
 
 @Component({
   selector: 'app-suscriptores',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, BreadcrumbComponent, TranslateModule],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './suscriptores.component.html',
   styleUrl: './suscriptores.component.scss'
 })
 export class SuscriptoresComponent implements OnInit, AfterViewInit {
-  //#region VARIABLES
-  [x: string]: any;
-  @ViewChild(DataTableDirective, { static: false })
-  datatableElement!: DataTableDirective;
-  registrosSub?: Subscription;
-
-  dtColumnSearchingOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject<any>();
-  suscriptores: PTLSuscriptorModel[] = [];
-  lang: string = localStorage.getItem('lang') || '';
-  tituloPagina: string = '';
-  //#endregion VARIABLES
-
+    @Output() toggleSidebar = new EventEmitter<void>();
+    //#region VARIABLES
+    registrosSub?: Subscription;
+    registros: PTLSuscriptorModel[] = [];
+    lang: string = localStorage.getItem('lang') || '';
+    tituloPagina: string = '';
+    gradientConfig;
+    hasFiltersSlot: boolean = false;
+    menuItems: NavigationItem[] = [];
+    activeTab: 'menu' | 'filters' | 'main' = 'menu';
+    //#endregion VARIABLES
   constructor(
     private router: Router,
     private translate: TranslateService,
     private suscriptoresService: PTLSuscriptoresService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
-  ) {}
+    private navigationService: NavigationService
+  ) {
+        this.gradientConfig = GradientConfig;
+  }
 
   ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
-        });
-      });
-    });
   }
 
   ngOnInit() {
-    this.languageService.currentLang$.subscribe((lang) => {
-      this.translate.use(lang);
-      this.translate.get(['SUSCRIPTORES.CODE', 'SUSCRIPTORES.NAME', 'SUSCRIPTORES.IDENTIFICATION', 'SUSCRIPTORES.DESCRIPTION', 'SUSCRIPTORES.ESTADO']).subscribe((translations) => {
-        this.tituloPagina = translations['SUSCRIPTORES.TITLE'];
-        this.dtColumnSearchingOptions = {
-          responsive: true,
-          columns: [
-            { title: translations['SUSCRIPTORES.CODE'], data: 'nombreSuscriptor' },
-            { title: translations['SUSCRIPTORES.NAME'], data: 'nombreSuscriptor' },
-            { title: translations['SUSCRIPTORES.IDENTIFICATION'], data: 'nombreSuscriptor' },
-            { title: translations['SUSCRIPTORES.DESCRIPTION'], data: 'descripcionSuscriptor' },
-            { title: translations['SUSCRIPTORES.STATUS'], data: 'estadoSuscriptor' },
-            { title: translations['SUSCRIPTORES.OPTIONS'], data: 'opciones' }
-          ]
-        };
-        this.consultarRegistros();
-      });
-    });
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.hasFiltersSlot = true;
+    this.consultarRegistros();
   }
 
   OnDestroy(): void {
-    this.dtTrigger.unsubscribe();
   }
 
   consultarRegistros() {
@@ -86,12 +65,11 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.suscriptores.forEach((regs: any) => {
+            resp.registros.forEach((regs: any) => {
               regs.nomEstado = regs.estadoSuscriptor == true ? 'Activo' : 'Inactivo';
             });
-            this.suscriptores = resp.suscriptores;
-            console.log('Todos los Suscriptores', this.suscriptores);
-            this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
+            this.registros = resp.registros;
+            console.log('Todos los Suscriptores', this.registros);
             return;
           }
         }),
@@ -103,12 +81,6 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  filtrarColumna(columna: number, valor: string) {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.column(columna).search(valor).draw();
-    });
-  }
-
   OnNuevoRegistroClick() {
     this.router.navigate(['/suscriptor/gestion-suscriptor']);
   }
@@ -117,20 +89,20 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/suscriptor/gestion-suscriptor'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number, nombre: string) {
+  OnEliminarRegistroClick(id: any) {
     Swal.fire({
       title: this.translate.instant('SUSCRIPTORES.ELIMINARTITULO'),
-      text: this.translate.instant('SUSCRIPTORES.ELIMINARTEXTO') + `"${nombre}".!`,
+      text: this.translate.instant('SUSCRIPTORES.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.suscriptoresService.eliminarSuscripctor(id).subscribe({
+        this.suscriptoresService.eliminarSuscripctor(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.suscriptores = this.suscriptores.filter((s) => s.suscriptorId !== id);
+            this.registros = this.registros.filter((s) => s.suscriptorId !== id.id);
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('SUSCRIPTORES.ELIMINARERROR'), 'error');
@@ -139,5 +111,8 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+    toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }
