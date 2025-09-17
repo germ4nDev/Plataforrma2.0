@@ -13,45 +13,41 @@
             </ng-container>
         </div>
     </aside>
-    <div class="content-area">
+
+    <div class="form-area">
         <div class="card">
             <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4>{{ 'CONEXIONES.GESTION.TITLE' | translate }}</h4>
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'CONEXIONES.GESTION.NEW' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'CONEXIONES.GESTION.UPDATE' | translate }}</h4>
                     </div>
-                    <div class="col-sm-6 justify-content-end d-flex gap-3">
-                        <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
+                    <div class="d-flex">
+                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'CONEXIONES.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro"
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'CONEXIONES.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card content-scroll-wrapper">
-            <div class="card-header">
-                <h4 *ngIf="!modoEdicion">{{ 'CONEXIONES.GESTION.NEW' | translate }}</h4>
-                <h4 *ngIf="modoEdicion">{{ 'CONEXIONES.GESTION.UPDATE' | translate }}</h4>
-            </div>
-            <div class="card-body">
+            <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="aplicacionId">
                                     {{ 'CONEXIONES.GESTION.APLICACION' | translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="aplicacionId"
+                                <select class="form-control form-input" style="cursor: pointer;" name="aplicacionId"
                                     id="aplicacionId"
                                     [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
                                     #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
@@ -72,7 +68,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="suscriptorId">{{
                                     'CONEXIONES.GESTION.SUSCRIPTOR' | translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="suscriptorId"
+                                <select class="form-control form-input" style="cursor: pointer;" name="suscriptorId"
                                     id="suscriptorId"
                                     [ngClass]="{ 'is-invalid': !suscriptorId.valid && (suscriptorId.dirty || suscriptorId.touched || isSubmit) }"
                                     #suscriptorId="ngModel" required [(ngModel)]="FormRegistro.suscriptorId"
@@ -95,7 +91,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="paqueteId">{{
                                     'CONEXIONES.GESTION.PAQUETE' | translate }}</label>
-                                <select class="form-control input-md" style="cursor: pointer;" name="paqueteId"
+                                <select class="form-control form-input" style="cursor: pointer;" name="paqueteId"
                                     id="paqueteId"
                                     [ngClass]="{ 'is-invalid': !paqueteId.valid && (paqueteId.dirty || paqueteId.touched || isSubmit) }"
                                     #paqueteId="ngModel" required [(ngModel)]="FormRegistro.paqueteId"
@@ -116,7 +112,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreConexion">
                                     {{ 'CONEXIONES.GESTION.NAMECONEXION' | translate }}</label>
-                                <input class="form-control input-md" id="nombreConexion" name="nombreConexion"
+                                <input class="form-control form-input" id="nombreConexion" name="nombreConexion"
                                     type="text"
                                     placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERNAMECONEXION' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreConexion.valid && (nombreConexion.dirty || nombreConexion.touched || isSubmit) }"
@@ -132,7 +128,7 @@
                             <div class="form-group">
                                 <label class="form-label">
                                     {{ 'CONEXIONES.GESTION.DESCRIPCION' | translate }}</label>
-                                <textarea class="form-control"
+                                <textarea class="form-control form-input"
                                     placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERDESCRIPCION' | translate }}"
                                     name="descripcionConexion"
                                     [ngClass]="{
@@ -151,7 +147,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreServidor">
                                     {{ 'CONEXIONES.GESTION.NAMESERVIDOR' | translate }}</label>
-                                <input class="form-control input-md" id="nombreServidor" name="nombreServidor"
+                                <input class="form-control form-input" id="nombreServidor" name="nombreServidor"
                                     type="text" placeholder="{{ 'CONEXIONES.GESTION.NAMESERVIDORHOLDER' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreServidor.valid && (nombreServidor.dirty || nombreServidor.touched || isSubmit) }"
                                     #nombreServidor="ngModel" required [(ngModel)]="FormRegistro.nombreServidor" />
@@ -166,7 +162,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="BDNombre">
                                     {{ 'CONEXIONES.GESTION.NAMEBD' | translate }}</label>
-                                <input class="form-control input-md" id="BDNombre" name="BDNombre" type="text"
+                                <input class="form-control form-input" id="BDNombre" name="BDNombre" type="text"
                                     placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERNAMEBD' | translate }}"
                                     [ngClass]="{ 'is-invalid': !BDNombre.valid && (BDNombre.dirty || BDNombre.touched || isSubmit) }"
                                     #BDNombre="ngModel" required [(ngModel)]="FormRegistro.BDNombre" />
@@ -180,7 +176,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="BDUser">
                                     {{ 'CONEXIONES.GESTION.NAMEUSER' | translate }}</label>
-                                <input class="form-control input-md" id="BDUser" name="BDUser" type="text"
+                                <input class="form-control form-input" id="BDUser" name="BDUser" type="text"
                                     placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERNAMEUSER' | translate }}"
                                     [ngClass]="{ 'is-invalid': !BDUser.valid && (BDUser.dirty || BDUser.touched || isSubmit) }"
                                     #BDUser="ngModel" required [(ngModel)]="FormRegistro.BDUser" />
@@ -194,7 +190,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="BDPassword">
                                     {{ 'CONEXIONES.GESTION.PASSWORDBD' | translate }}</label>
-                                <input class="form-control input-md" id="BDPassword" name="BDPassword" type="text"
+                                <input class="form-control form-input" id="BDPassword" name="BDPassword" type="text"
                                     placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERPASSWORDBD' | translate }}"
                                     [ngClass]="{ 'is-invalid': !BDPassword.valid && (BDPassword.dirty || BDPassword.touched || isSubmit) }"
                                     #BDPassword="ngModel" required [(ngModel)]="FormRegistro.BDPassword" />
@@ -208,7 +204,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="BDPort">
                                     {{ 'CONEXIONES.GESTION.BDPORT' | translate }}</label>
-                                <input class="form-control input-md" id="BDPort" name="BDPort" type="text"
+                                <input class="form-control form-input" id="BDPort" name="BDPort" type="text"
                                     placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERBDPORT' | translate }}"
                                     [ngClass]="{ 'is-invalid': !BDPort.valid && (BDPort.dirty || BDPort.touched || isSubmit) }"
                                     #BDPort="ngModel" required [(ngModel)]="FormRegistro.BDPort" />
@@ -243,3 +239,6 @@
         </div>
     </div>
 </div>
+
+
+

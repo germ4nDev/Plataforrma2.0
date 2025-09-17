@@ -15,111 +15,73 @@
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3" style="height: calc(100vh - 56px)">
-                    <!-- falta terminar -->
-                </div>
+                <!-- <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.codigoAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.nombreAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
+                </div> -->
             </ng-container>
         </div>
     </aside>
+
     <div class="content-area">
-        <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4>{{ 'CONEXIONES.TITLE' | translate }}</h4>
-                    </div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'CONEXIONES.NEW' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card content-scroll-wrapper">
+        <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
-                        <thead>
-                            <tr>
-                                <th>{{ 'CONEXIONES.NOMBREAPLICACION' | translate }}</th>
-                                <th>{{ 'CONEXIONES.NOMBRESUSCRIPTOR' | translate }}</th>
-                                <th>{{ 'CONEXIONES.NOMBRESERVIDOR' | translate }}</th>
-                                <th>{{ 'CONEXIONES.NOMBREBD' | translate }}</th>
-                                <th>{{ 'CONEXIONES.ESTADOCONEXION' | translate }}</th>
-                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let reg of registros">
-                                <td>
-                                    {{ reg.nombreAplicacion }}
-                                </td>
-                                <td>
-                                    {{ reg.nombreSuscriptor }}
-                                </td>
-                                <td>
-                                    {{ reg.nombreServidor }}
-                                </td>
-                                <td>
-                                    {{ reg.BDNombre }}
-                                </td>
-                                <td>
-                                    {{ reg.nomEstado }}
-                                </td>
-                                <td style="text-align: center; width: 10%">
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="OnEditarRegistroClick(reg.conexionId?? 0)"
-                                            title="{{ 'CONEXIONES.UPDATE' | translate }}">
-                                            <i class="feather icon-edit"></i>
-                                        </button>
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="OnEliminarRegistroClick(reg.conexionId?? 0, reg.nombreConexion?? '')"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'CONEXIONES.DELETE' | translate }}">
-                                            <i class="feather icon-trash-2"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>
-                                    <input #aplicacionId (keyup)="filtrarColumna(1, aplicacionId.value)" type="text"
-                                        placeholder="{{ 'CONEXIONES.FILTER_NAMEAPLICACION' | translate }}"
-                                        name="filtro-aplicacionId" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #suscriptorId (keyup)="filtrarColumna(2, suscriptorId.value)" type="text"
-                                        placeholder="{{ 'CONEXIONES.FILTER_NOMBRESUSCRIPTOR' | translate }}"
-                                        name="filtro-suscriptorId" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #nombreServidor (keyup)="filtrarColumna(3, nombreServidor.value)" type="text"
-                                        placeholder="{{ 'CONEXIONES.FILTER_NOMBRESERVIDOR' | translate }}"
-                                        name="filtro-nombreServidor" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #BDNombre (keyup)="filtrarColumna(4, BDNombre.value)" type="text"
-                                        placeholder="{{ 'CONEXIONES.FILTER_NOMBREBD' | translate }}"
-                                        name="filtro-BDNombre" class="form-control" />
-                                </th>
-                                <th>
-                                    <input #estadoConexion (keyup)="filtrarColumna(5, estadoConexion.value)" type="text"
-                                        placeholder="{{ 'CONEXIONES.FILTRO_STATUSCONEXION' | translate }}"
-                                        name="filtro-estadoConexion" class="form-control" />
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                <app-data-table
+                    [data]="registros"
+                    [columns]="['nombreAplicacion', 'nombreSuscriptor', 'nombreServidor', 'BDNombre', 'nomEstado']"
+                    [columnTitles]="[
+                      'CONEXIONES.NOMBREAPLICACION' | translate,
+                      'CONEXIONES.NOMBRESUSCRIPTOR'| translate,
+                      'CONEXIONES.NOMBRESERVIDOR' | translate,
+                      'CONEXIONES.NOMBREBD' | translate,
+                      'CONEXIONES.ESTADOCONEXION' | translate
+                    ]"
+                    [idField]="'conexionId'"
+                    [tableTitle]="'CONEXIONES.TITLE' | translate"
+                    [showAvatar]="false"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'CONEXIONES.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
             </div>
         </div>
     </div>
 </div>
+

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
@@ -8,17 +8,27 @@ import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscript
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
+import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
+import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
+import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
 @Component({
   selector: 'app-gestion-suscriptor',
   standalone: true,
-  imports: [CommonModule, SharedModule, NarikCustomValidatorsModule],
+  imports: [CommonModule, SharedModule, NarikCustomValidatorsModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-suscriptor.component.html',
   styleUrl: './gestion-suscriptor.component.scss'
 })
 export class GestionSuscriptorComponent {
  // private props
+  @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLSuscriptorModel = new PTLSuscriptorModel();
+  menuItems: NavigationItem[] = [];
+  gradientConfig: any;
+  navCollapsed: boolean = false;
+  navCollapsedMob: boolean = false;
+  windowWidth: number = 0;
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;
@@ -29,14 +39,15 @@ export class GestionSuscriptorComponent {
     private router: Router,
     private suscriptoresService: PTLSuscriptoresService,
     private route: ActivatedRoute,
-    private BreadCrumb: BreadcrumbComponent
+    private BreadCrumb: BreadcrumbComponent,
+    private navigationService: NavigationService
   ) {
     this.isSubmit = false;
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
-    // this.FormRegistro.aplicacionId = -1;
+    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
+    this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.route.queryParams.subscribe((params) => {
       const id = params['regId'];
       console.log('me llena el Id', id);
@@ -98,5 +109,8 @@ export class GestionSuscriptorComponent {
 
   btnRegresarClick() {
     this.router.navigate(['/suscriptor/suscriptores']);
+  }
+    toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

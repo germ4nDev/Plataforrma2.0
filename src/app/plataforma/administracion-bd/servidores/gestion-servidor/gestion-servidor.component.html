@@ -13,45 +13,41 @@
             </ng-container>
         </div>
     </aside>
-    <div class="content-area">
+
+    <div class="form-area">
         <div class="card">
             <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4>{{ 'CONEXIONES.SERVIDORES.GESTION.TITLE' | translate }}</h4>
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'CONEXIONES.SERVIDORES.NEW' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'CONEXIONES.SERVIDORES.UPDATE' | translate }}</h4>
                     </div>
-                    <div class="col-sm-6 justify-content-end d-flex gap-3">
-                        <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
+                    <div class="d-flex">
+                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'CONEXIONES.SERVIDORES.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro"
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'CONEXIONES.SERVIDORES.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card content-scroll-wrapper">
-            <div class="card-header">
-                <h4 *ngIf="!modoEdicion">{{ 'CONEXIONES.SERVIDORES.NEW' | translate }}</h4>
-                <h4 *ngIf="modoEdicion">{{ 'CONEXIONES.SERVIDORES.UPDATE' | translate }}</h4>
-            </div>
-            <div class="card-body">
+            <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreServidor">{{ 'CONEXIONES.SERVIDORES.GESTION.NAME' |
                                     translate }}</label>
-                                <input class="form-control input-md" id="nombreServidor" name="nombreServidor"
+                                <input class="form-control form-input" id="nombreServidor" name="nombreServidor"
                                     type="text" placeholder="{{ 'CONEXIONES.SERVIDORES.GESTION.NAMEHOLDER' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreServidor.valid && (nombreServidor.dirty || nombreServidor.touched || isSubmit) }"
                                     #nombreServidor="ngModel" required [(ngModel)]="FormRegistro.nombreServidor" />
@@ -66,7 +62,7 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="rutaServidor">{{ 'CONEXIONES.SERVIDORES.GESTION.RUTA' |
                                     translate }}</label>
-                                <input class="form-control input-md" id="rutaServidor" name="rutaServidor" type="text"
+                                <input class="form-control form-input" id="rutaServidor" name="rutaServidor" type="text"
                                     placeholder="{{ 'CONEXIONES.SERVIDORES.GESTION.RUTAHOLDER' | translate }}"
                                     [ngClass]="{ 'is-invalid': !rutaServidor.valid && (rutaServidor.dirty || rutaServidor.touched || isSubmit) }"
                                     #rutaServidor="ngModel" required [(ngModel)]="FormRegistro.rutaServidor" />
@@ -80,7 +76,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'CONEXIONES.SERVIDORES.GESTION.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control"
+                                <textarea class="form-control form-input"
                                     placeholder="{{ 'CONEXIONES.SERVIDORES.GESTION.DESCRIPTIONHOLDER' | translate }}"
                                     name="descripcionServidor"
                                     [ngClass]="{
@@ -120,3 +116,6 @@
         </div>
     </div>
 </div>
+
+
+

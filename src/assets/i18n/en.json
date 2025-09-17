@@ -365,7 +365,9 @@
     "SUSCRIPTORES": {
         "TITLE": "Subscribers",
         "NEW": "New Subscriber",
+        "CODE": "Code",
         "NAME": "Name",
+        "IDENTIFICATION": "Identification",
         "DESCRIPTION": "Description",
         "STATUS": "Current Status",
         "UPDATE": "Update Subscriber",
@@ -379,9 +381,14 @@
         "ELIMINARERROR": "Unable to delete the subscriber.",
         "GESTION": {
             "TITLE": "Create/Update Subscriber",
+            "IDENTIFICATION": "Identification",
+            "CODE": "Code",
+            "NAME": "Name",
             "CREATE": "Create Subscriber",
             "PLACEHOLDERNAME": "Subscriber name",
+            "PLACEHOLDERIDENTIFICACION": "Subscriber Identification",
             "REQUERIDONAME": "This field is required.",
+            "REQUERIDOIDENTIFICATION": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Subscriber Description",
             "REQUERIDODESCRIPCION": "This field is required."
         }
