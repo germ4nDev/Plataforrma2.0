@@ -15,103 +15,70 @@
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3" style="height: calc(100vh - 56px)">
-                    <!-- falta terminar -->
-                </div>
+                <!-- <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.codigoAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.nombreAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
+                </div> -->
             </ng-container>
         </div>
     </aside>
+
     <div class="content-area">
-        <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4>{{ 'SITIOS.CONTENIDOS.TITLE' | translate }}</h4>
-                    </div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'SITIOS.CONTENIDOS.GESTION.NEW' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card content-scroll-wrapper">
+        <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <div class="table-responsive">
-                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
-                        <thead>
-                            <tr>
-                                <th>{{ 'SITIOS.CONTENIDOS.NAME' | translate }}</th>
-                                <th>{{ 'SITIOS.CONTENIDOS.DESCRIPTION' | translate }}</th>
-                                <th>{{ 'SITIOS.CONTENIDOS.CONTENIDO' | translate }}</th>
-                                <th>{{ 'SITIOS.CONTENIDOS.STATUS' | translate }}</th>
-                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let reg of registro">
-                                <td>
-                                    {{ reg.nombreContenido }}
-                                </td>
-                                <td>
-                                    {{ reg.descripcionContenido }}
-                                </td>
-                                <td>
-                                    {{ reg.contenido }}
-                                </td>
-                                <td>
-
-                                    {{ reg.nomEstado }}
-
-                                </td>
-                                <td style="text-align: center; width: 10%;">
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="OnEditarRegistroClick(reg.contenidoId?? 0)"
-                                            title="{{ 'SITIOS.CONTENIDOS.UPDATE' | translate }}">
-                                            <i class="feather icon-edit"></i>
-                                        </button>
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="OnEliminarRegistroClick(reg.contenidoId?? 0, reg.nombreContenido?? '')"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'SITIOS.CONTENIDOS.DELETE' | translate }}">
-                                            <i class="feather icon-trash-2"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>
-                                    <input #nombreContenido (keyup)="filtrarColumna(0, nombreContenido.value)"
-                                        type="text" placeholder="{{ 'SITIOS.CONTENIDOS.FILTER_NAME' | translate }}"
-                                        name="filtro-nombre" class="form-control">
-                                </th>
-                                <th>
-                                    <input #descripcionContenido (keyup)="filtrarColumna(1, descripcionContenido.value)"
-                                        type="text" placeholder="{{ 'SITIOS.CONTENIDOS.FILTER_DESCRIPTION' | translate }}"
-                                        name="filtro-nombre" class="form-control">
-                                </th>
-                                <th>
-                                    <input #contenido (keyup)="filtrarColumna(2, contenido.value)" type="text"
-                                        placeholder="{{ 'SITIOS.CONTENIDOS.FILTER_CONTENIDO' | translate }}"
-                                        name="filtro-contenido" class="form-control">
-                                </th>
-                                <th>
-                                    <input #estadoContenido (keyup)="filtrarColumna(3, estadoContenido.value)"
-                                        type="text" placeholder="{{ 'SITIOS.CONTENIDOS.FILTER_STATUS' | translate }}"
-                                        name="filtro-estado" class="form-control">
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                <app-data-table
+                    [data]="registros"
+                    [columns]="['nombreContenido', 'descripcionContenido', 'contenido', 'nomEstado']"
+                    [columnTitles]="[
+                      'SITIOS.CONTENIDOS.NAME' | translate,
+                      'SITIOS.CONTENIDOS.DESCRIPTION'| translate,
+                      'SITIOS.CONTENIDOS.CONTENIDO' | translate,
+                      'SITIOS.CONTENIDOS.STATUS' | translate
+                    ]"
+                    [idField]="'contenidoId'"
+                    [tableTitle]="'SITIOS.CONTENIDOS.TITLE' | translate"
+                    [showAvatar]="false"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'SITIOS.CONTENIDOS.GESTION.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
             </div>
         </div>
     </div>

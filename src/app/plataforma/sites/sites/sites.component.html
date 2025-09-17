@@ -1,4 +1,4 @@
-<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<!-- <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
     <aside class="aside-left">
         <div class="card">
@@ -16,7 +16,7 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3" style="height: calc(100vh - 56px)">
-                    <!-- falta terminar -->
+
                 </div>
             </ng-container>
         </div>
@@ -122,4 +122,93 @@
             </div>
         </div>
     </div>
+</div> -->
+
+
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <!-- <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.codigoAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
+                                {{ app.nombreAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
+                </div> -->
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <app-data-table
+                    [data]="registros"
+                    [columns]="['nombreSitio', 'descripcionSitio', 'urlSitio', 'puertoSitio', 'nomEstado']"
+                    [columnTitles]="[
+                      'SITIOS.NAME' | translate,
+                      'SITIOS.DESCRIPTION'| translate,
+                      'SITIOS.URL' | translate,
+                      'SITIOS.SITESPORT' | translate,
+                      'SITIOS.STATUS' | translate
+                    ]"
+                    [idField]="'sitioId'"
+                    [tableTitle]="'SITIOS.TITLE' | translate"
+                    [showAvatar]="false"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'SITIOS.GESTION.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
+            </div>
+        </div>
+    </div>
 </div>
+

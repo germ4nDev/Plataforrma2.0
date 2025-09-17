@@ -13,81 +13,48 @@ import Swal from 'sweetalert2';
 import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 import { GradientConfig } from 'src/app/app-config';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
 
 @Component({
   selector: 'app-sites',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './sites.component.html',
   styleUrl: './sites.component.scss'
 })
 export class SitesComponent implements OnInit, AfterViewInit {
-  [x: string]: any;
-  @ViewChild(DataTableDirective, { static: false })
-  @Output() toggleSidebar = new EventEmitter<void>();
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
-
-  datatableElement!: DataTableDirective;
-  registrosSub?: Subscription;
-
-  dtColumnSearchingOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject<any>();
-  sitiosAP: PTLSitiosAPModel[] = [];
-  lang: string = localStorage.getItem('lang') || '';
-  tituloPagina: string = '';
-  menuItems: NavigationItem[] = [];
-  hasFiltersSlot: boolean = false;
-  gradientConfig;
-
+    @Output() toggleSidebar = new EventEmitter<void>();
+    //#region VARIABLES
+    registrosSub?: Subscription;
+    registros: PTLSitiosAPModel[] = [];
+    lang: string = localStorage.getItem('lang') || '';
+    tituloPagina: string = '';
+    gradientConfig;
+    hasFiltersSlot: boolean = false;
+    menuItems: NavigationItem[] = [];
+    activeTab: 'menu' | 'filters' | 'main' = 'menu';
+    //#endregion VARIABLES
   constructor(
     private router: Router,
     private sitiosService: PTLSitiosAPService,
     private translate: TranslateService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent,
     private navigationService: NavigationService,
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit() {
-    // this.languageService.currentLang$.subscribe((lang) => {
-    //   this.translate.use(lang);
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
-    console.log('elementos menu componente', this.menuItems);
     this.hasFiltersSlot = true;
-      this.translate
-        .get([
-            'SITIOS.NAME',
-            'SITIOS.DESCRIPTION',
-            'SITIOS.URL',
-            'SITIOS.SITESPORT',
-            'SITIOS.STATUS',
-            'PLATAFORMA.OPTIONS'])
-        .subscribe((translations) => {
-          this.tituloPagina = translations['SITIOS.TITLE'];
-          this.dtColumnSearchingOptions = {
-            responsive: true,
-            columns: [
-              { title: this.translate.instant('SITIOS.NAME'), data: 'nombreSitio' },
-              { title: this.translate.instant('SITIOS.DESCRIPTION'), data: 'descripcionSitio' },
-              { title: this.translate.instant('SITIOS.URL'), data: 'urlSitio' },
-              { title: this.translate.instant('SITIOS.SITESPORT'), data: 'puertoSitio' },
-              { title: this.translate.instant('SITIOS.STATUS'), data: 'estadoSitio' },
-              { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' }
-            ]
-          };
-          this.consultarSitios();
-        });
-    // });
+    this.consultarSitios();
+    console.log('elementos menu componente', this.menuItems);
   }
 
   consultarSitios() {
@@ -99,9 +66,8 @@ export class SitesComponent implements OnInit, AfterViewInit {
             resp.sitios.forEach((app: any) => {
               app.nomEstado = app.estadoSitio == true ? 'Activa' : 'Inactiva';
             });
-            this.sitiosAP = resp.sitios;
-            console.log('Todos las sitiosAP', this.sitiosAP);
-            this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
+            this.registros = resp.sitios;
+            console.log('Todos las sitiosAP', this.registros);
             return;
           }
         }),
@@ -114,24 +80,6 @@ export class SitesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
-        });
-      });
-    });
-  }
-
-  filtrarColumna(columna: number, valor: string) {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.column(columna).search(valor).draw();
-    });
   }
 
   getEstado(estado: boolean): string {
@@ -139,30 +87,32 @@ export class SitesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe(); // <--- Destruye el trigger para evitar memory leaks
   }
-  nuevoSitio() {
+
+  OnNuevoRegistroClick() {
     this.router.navigate(['/sites/gestion-site']);
   }
 
-  editarSitio(id: number) {
+  OnEditarRegistroClick(id: number) {
     this.router.navigate(['/sites/gestion-site'], { queryParams: { regId: id } });
   }
 
-  eliminarSitio(id: number, nombre: string) {
+  OnEliminarRegistroClick(id: any) {
+    console.log('id eliminar', id.id);
+
     Swal.fire({
       title: this.translate.instant('SITIOS.ELIMINARTITULO'),
-      text: this.translate.instant('SITIOS.ELIMINARTEXTO') + `"${nombre}".!`,
+      text: this.translate.instant('SITIOS.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.sitiosService.deleteEliminarRegistro(id).subscribe({
+        this.sitiosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SITIOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.sitiosAP = this.sitiosAP.filter((s) => s.sitioId !== id);
+            this.registros = this.registros.filter((s) => s.sitioId !== id.id);
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('SITIOS.ELIMINARERROR'), 'error');

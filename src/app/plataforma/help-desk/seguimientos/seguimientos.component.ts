@@ -81,14 +81,14 @@ export class SeguimientosComponent implements OnInit {
     }
 
     OnNuevoRegistroClick() {
-        this.router.navigate(['help-desk/gestion-seguimiento/']);
+        this.router.navigate(['help-desk/gestion-seguimiento']);
     }
 
     OnEditarRegistroClick(id: number) {
-        this.router.navigate(['help-desk/gestion-seguimiento/'], { queryParams: { regId: id } });
+        this.router.navigate(['help-desk/gestion-seguimiento'], { queryParams: { regId: id } });
     }
 
-    OnEliminarRegistroClick(id: number) {
+    OnEliminarRegistroClick(id: any) {
         Swal.fire({
             title: this.translate.instant('SEGUIMIENTOS.ELIMINARTITULO'),
             text: this.translate.instant('SEGUIMIENTOS.ELIMINARTEXTO') + `Registro.!`,
@@ -98,10 +98,10 @@ export class SeguimientosComponent implements OnInit {
             cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
-                this.seguimientosService.deleteEliminarRegistro(id).subscribe({
+                this.seguimientosService.deleteEliminarRegistro(id.id).subscribe({
                     next: (resp: any) => {
                         Swal.fire(this.translate.instant('SEGUIMIENTOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-                        this.registros = this.registros.filter((s) => s.seguimientoId !== id);
+                        this.registros = this.registros.filter((s) => s.seguimientoId !== id.id);
                     },
                     error: (err: any) => {
                         Swal.fire('Error', this.translate.instant('SEGUIMIENTOS.ELIMINARERROR'), 'error');

@@ -8,7 +8,6 @@ import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { catchError, of, Subject, Subscription, tap } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -16,37 +15,31 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
 
 @Component({
   selector: 'app-enlaces',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './enlaces.component.html',
   styleUrls: ['./enlaces.component.scss']
 })
 export class EnlacesComponent implements OnInit, AfterViewInit {
-  [x: string]: any;
-  @ViewChild(DataTableDirective, { static: false })
-  @Output() toggleSidebar = new EventEmitter<void>();
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
-
-  datatableElement!: DataTableDirective;
-  registrosSub?: Subscription;
-
-  dtColumnSearchingOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject<any>();
-  registros: PTLEnlaceSTModel[] = [];
-  lang: string = localStorage.getItem('lang') || '';
-  tituloPagina: string = '';
-  menuItems: NavigationItem[] = [];
-  hasFiltersSlot: boolean = false;
-  gradientConfig;
-
+    @Output() toggleSidebar = new EventEmitter<void>();
+    //#region VARIABLES
+    registrosSub?: Subscription;
+    registros: PTLEnlaceSTModel[] = [];
+    lang: string = localStorage.getItem('lang') || '';
+    tituloPagina: string = '';
+    gradientConfig;
+    hasFiltersSlot: boolean = false;
+    menuItems: NavigationItem[] = [];
+    activeTab: 'menu' | 'filters' | 'main' = 'menu';
+    //#endregion VARIABLES
   constructor(
     private router: Router,
     private BreadCrumb: BreadcrumbComponent,
     private translate: TranslateService,
-    private languageService: LanguageService,
     private enlacesService: PTLEnlacesSTService,
     private navigationService: NavigationService
     ) {
@@ -54,35 +47,10 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
     }
 
   ngOnInit() {
-    // this.languageService.currentLang$.subscribe((lang) => {
-    //   this.translate.use(lang);
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
-    console.log('elementos menu componente', this.menuItems);
     this.hasFiltersSlot = true;
-      this.translate
-        .get([
-            'SITIOS.ENLACES.NAME',
-            'SITIOS.ENLACES.DESCRIPTION',
-            'SITIOS.ENLACES.RUTA',
-            'SITIOS.ENLACES.STATUS',
-            'PLATAFORMA.OPTIONS'
-        ])
-        .subscribe((translations) => {
-          this.tituloPagina = translations['SITIOS.ENLACES.TITLE'];
-          this.dtColumnSearchingOptions = {
-            responsive: true,
-            columns: [
-              { title: this.translate.instant('SITIOS.ENLACES.NAME'), data: 'nombreEnlace' },
-              { title: this.translate.instant('SITIOS.ENLACES.DESCRIPTION'), data: 'descripcionEnlace' },
-              { title: this.translate.instant('SITIOS.ENLACES.RUTA'), data: 'rutaEnlace' },
-              { title: this.translate.instant('SITIOS.ENLACES.STATUS'), data: 'estadoEnlace' },
-              { title: this.translate.instant('PLATAFORMA.OPTIONS'), data: 'opciones' }
-            ]
-          };
-          this.consultarRegistros();
-        });
-    // });
+    this.consultarRegistros();
   }
 
   consultarRegistros() {
@@ -96,7 +64,6 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
             });
             this.registros = resp.enlaces;
             console.log('Todos los enlaces', this.registros);
-            this.dtTrigger.next(null); // <--- Dispara la actualización de la tabla
             return;
           }
         }),
@@ -109,29 +76,11 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
-        });
-      });
-    });
-  }
-
-  filtrarColumna(columna: number, valor: string) {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.column(columna).search(valor).draw();
-    });
   }
 
   ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe(); // <--- Destruye el trigger para evitar memory leaks
   }
+
   OnNuevoRegistroClick() {
     this.router.navigate(['/sites/gestion-enlace']);
   }
@@ -140,20 +89,20 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/sites/gestion-enlace'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number, nombre: string) {
+  OnEliminarRegistroClick(id: any) {
     Swal.fire({
       title: this.translate.instant('SITIOS.ENLACES.ELIMINARTITULO'),
-      text: this.translate.instant('SITIOS.ENLACES.ELIMINARTEXTO') + `"${nombre}".!`,
+      text: this.translate.instant('SITIOS.ENLACES.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.enlacesService.deleteEliminarRegistro(id).subscribe({
+        this.enlacesService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SITIOS.ENLACES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.enlaceId !== id);
+            this.registros = this.registros.filter((s) => s.enlaceId !== id.id);
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('SITIOS.ENLACES.ELIMINARERROR'), 'error');

@@ -5,7 +5,6 @@ import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenidos-el.service';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import { catchError, of, Subscription, tap } from 'rxjs';
@@ -45,7 +44,6 @@ export class GestonContenidoComponent implements OnInit {
     private route: ActivatedRoute,
     private registrosService: PTLContenidosELService,
     private enlacesService: PTLEnlacesSTService,
-    private BreadCrumb: BreadcrumbComponent,
     private layoutInitializer: LayoutInitializerService,
     private locationStrategy: LocationStrategy,
     private location: Location,
@@ -63,11 +61,10 @@ export class GestonContenidoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
-    this.consultarEnlaces();
-    this.layoutInitializer.applyLayout();
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.consultarEnlaces();
+    this.layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {

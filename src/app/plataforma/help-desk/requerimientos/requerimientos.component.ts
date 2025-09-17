@@ -28,22 +28,20 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
     @Output() toggleSidebar = new EventEmitter<void>();
 
     //#region VARIABLES
-    //   [x: string]: any;
-    //   @ViewChild(DataTableDirective, { static: false })
-    //   datatableElement!: DataTableDirective;
     registrosSub?: Subscription;
-    //   dtColumnSearchingOptions: DataTables.Settings = {};
-    //   dtTrigger: Subject<any> = new Subject<any>();
     registros: PTLRequerimientoTKModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
-    //#endregion VARIABLES
-
     gradientConfig;
     hasFiltersSlot: boolean = false;
     menuItems: NavigationItem[] = [];
     activeTab: 'menu' | 'filters' | 'main' = 'menu';
-
+    //   [x: string]: any;
+    //   @ViewChild(DataTableDirective, { static: false })
+    //   datatableElement!: DataTableDirective;
+    //   dtColumnSearchingOptions: DataTables.Settings = {};
+    //   dtTrigger: Subject<any> = new Subject<any>();
+    //#endregion VARIABLES
     constructor(
         private router: Router,
         private translate: TranslateService,
@@ -54,22 +52,6 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
     ) {
         this.gradientConfig = GradientConfig;
     }
-
-    ngAfterViewInit(): void {
-        // this.BreadCrumb.setBreadcrumb();
-        // this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        //   dtInstance.columns().every(function () {
-        //     const that = this;
-        //     $('input', this.header()).on('keyup change', function () {
-        //       const valor = $(this).val() as string;
-        //       if (that.search() !== valor) {
-        //         that.search(valor).draw();
-        //       }
-        //     });
-        //   });
-        // });
-    }
-
     ngOnInit() {
         const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
         this.menuItems = this.navigationService.getNavigationItems(appCode);
@@ -95,13 +77,8 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
         // });
     }
 
-    ngOnDestroy(): void {
-        // this.dtTrigger.unsubscribe();
-    }
-
     consultarRegistros() {
         console.log('formregistro', this.requerimientosService);
-
         this.registrosSub = this.requerimientosService
             .getRegistros()
             .pipe(
@@ -126,6 +103,25 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
             .subscribe();
     }
 
+    ngAfterViewInit(): void {
+        // this.BreadCrumb.setBreadcrumb();
+        // this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        //   dtInstance.columns().every(function () {
+        //     const that = this;
+        //     $('input', this.header()).on('keyup change', function () {
+        //       const valor = $(this).val() as string;
+        //       if (that.search() !== valor) {
+        //         that.search(valor).draw();
+        //       }
+        //     });
+        //   });
+        // });
+    }
+
+    ngOnDestroy(): void {
+        // this.dtTrigger.unsubscribe();
+    }
+
     //   filtrarColumna(columna: number, valor: string) {
     //     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
     //       dtInstance.column(columna).search(valor).draw();
@@ -140,7 +136,7 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
         this.router.navigate(['help-desk/gestion-requerimiento/'], { queryParams: { regId: id } });
     }
 
-    OnEliminarRegistroClick(id: number) {
+    OnEliminarRegistroClick(id: any) {
         Swal.fire({
             title: this.translate.instant('REQUERIMIENTOS.ELIMINARTITULO'),
             text: this.translate.instant('REQUERIMIENTOS.ELIMINARTEXTO') + `registro!`,
@@ -150,10 +146,10 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
             cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
         }).then((result: any) => {
             if (result.isConfirmed) {
-                this.requerimientosService.deleteEliminarRegistro(id).subscribe({
+                this.requerimientosService.deleteEliminarRegistro(id.id).subscribe({
                     next: (resp: any) => {
                         Swal.fire(this.translate.instant('REQUERIMIENTOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-                        this.registros = this.registros.filter((s) => s.requerimientoId !== id);
+                        this.registros = this.registros.filter((s) => s.requerimientoId !== id.id);
                     },
                     error: (err: any) => {
                         Swal.fire('Error', this.translate.instant('REQUERIMIENTOS.ELIMINARERROR'), 'error');
