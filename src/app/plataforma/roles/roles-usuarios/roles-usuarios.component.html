@@ -57,7 +57,7 @@
         </div>
     </aside>
 
-    <div class="content-area">
+    <!-- <div class="content-area">
         <div class="card">
             <div class="card-header card-header-sticky">
                 <div class="row col-sm-12">
@@ -150,35 +150,36 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
-        <!-- <div class="content-area">
+    <div class="content-area">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-data-table
-                    [data]="registrosData"
-                    [columns]="['codigoAplicacion', 'nombreAplicacion', 'descripcionAplicacion', 'nomEstado']"
+                    [data]="registrosFiltrado"
+                    [columns]="['fotoUsuario', 'nombreUsuario', 'aplicaciones', 'suites', 'roles']"
                     [columnTitles]="[
-                      'APLICACIONES.CODE' | translate,
-                      'APLICACIONES.NAME' | translate,
-                      'APLICACIONES.DESCRIPTION' | translate,
-                      'APLICACIONES.STATUS' | translate
+                      'ROLESUSUARIOS.FOTO' | translate,
+                      'ROLESUSUARIOS.USUARIO' | translate,
+                      'ROLESUSUARIOS.APLICACIONES' | translate,
+                      'ROLESUSUARIOS.SUITES' | translate,
+                      'ROLESUSUARIOS.ROLES' | translate
                     ]"
                     [idField]="'usuarioRoleId'"
-                    [tableTitle]="'APLICACIONES.TITLE' | translate"
+                    [tableTitle]="'ROLESUSUARIOS.TITLE' | translate"
                     [showAvatar]="false"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
-                    [newButtonLabel]="'APLICACIONES.NEW' | translate"
+                    [newButtonLabel]="'ROLESUSUARIOS.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                    (newRecord)="OnNuevaAplicaicionClick()"
-                    (editRecord)="OnEditarAplicaicionClick($event)"
-                    (deleteRecord)="OnEliminarAplicaicionClick($event)">
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick()"
+                    (deleteRecord)="OnEliminarRegistroClick()">
                 </app-data-table>
             </div>
         </div>
-    </div> -->
+    </div>
 </div>

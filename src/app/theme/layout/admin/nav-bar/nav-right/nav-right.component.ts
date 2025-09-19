@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { GradientConfig } from 'src/app/app-config';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import { AuthenticationService, LanguageService } from 'src/app/theme/shared/service';
 import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';

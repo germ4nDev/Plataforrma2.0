@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'angular-datatables';
@@ -118,7 +119,7 @@ export class AplicacionesComponent implements OnInit {
     } else {
       const estado = evento.target.value == 'true' ? true : false;
       console.log('Aplicaciones', this.aplicacionesFiltrado);
-      this.aplicacionesFiltrado = this.aplicaciones.filter((x) => (x.estadoAplicacion = estado));
+      this.aplicacionesFiltrado = this.aplicaciones.filter(x => x.estadoAplicacion == estado);
     }
   }
 
