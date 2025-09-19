@@ -85,6 +85,7 @@
     "screenfull": "^6.0.2",
     "sweetalert2": "^11.10.3",
     "tslib": "^2.5.2",
+    "uuid": "^11.1.0",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
@@ -105,7 +106,6 @@
     "@types/mousetrap": "^1.6.11",
     "@types/node": "^20.4.1",
     "@types/quill": "^2.0.10",
-    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "6.9.1",
     "@typescript-eslint/parser": "6.9.1",
     "eslint": "^8.54.0",

@@ -10,97 +10,55 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLServidorModel } from 'src/app/theme/shared/_helpers/models/PTLServidor.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService } from 'src/app/theme/shared/service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
+import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
 
 @Component({
   selector: 'app-servidores',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
   templateUrl: './servidores.component.html',
   styleUrl: './servidores.component.scss'
 })
 export class ServidoresComponent implements OnInit, AfterViewInit {
- //#region VARIABLES
-  [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
-  @Output() toggleSidebar = new EventEmitter<void>();
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
-
-  datatableElement!: DataTableDirective;
+  @Output()toggleSidebar = new EventEmitter<void>();
+  //#region VARIABLES
   registrosSub?: Subscription;
-  dtColumnSearchingOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject<any>();
   registros: PTLServidorModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
-  menuItems: NavigationItem[] = [];
-  hasFiltersSlot: boolean = false;
   gradientConfig;
-
+  hasFiltersSlot: boolean = false;
+  menuItems: NavigationItem[] = [];
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  datatableElement!: DataTableDirective;
   //#endregion VARIABLES
-
   constructor(
     private router: Router,
     private translate: TranslateService,
     private servidorService: PTLServidorService,
-    private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent,
-    private navigationService: NavigationService,
+    private navigationService: NavigationService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
-        });
-      });
-    });
   }
 
   ngOnInit() {
-    // this.languageService.currentLang$.subscribe((lang) => {
-    //   this.translate.use(lang);
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     console.log('elementos menu componente', this.menuItems);
     this.hasFiltersSlot = true;
-      this.translate
-        .get([
-            'CONEXIONES.SERVIDORES.NOMBRESERVIDOR',
-            'CONEXIONES.SERVIDORES.DESCRIPCIONSERVIDOR',
-            'CONEXIONES.SERVIDORES.RUTASERVIDOR',
-            'CONEXIONES.SERVIDORES.ESTADOSERVIDOR'])
-        .subscribe((translations) => {
-          this.tituloPagina = translations['CONEXIONES.SERVIDORES.TITLE'];
-          this.dtColumnSearchingOptions = {
-            responsive: true,
-            columns: [
-              { title: translations['CONEXIONES.SERVIDORES.NOMBRESERVIDOR'], data: 'nombreServidor' },
-              { title: translations['CONEXIONES.SERVIDORES.DESCRIPCIONSERVIDOR'], data: 'descripcionServidor' },
-              { title: translations['CONEXIONES.SERVIDORES.RUTASERVIDOR'], data: 'rutaServidor' },
-              { title: translations['CONEXIONES.SERVIDORES.ESTADOSERVIDOR'], data: 'estadoServidor' },
-              { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-            ]
-          };
-          this.consultarRegistros();
-        });
-    // });
+    this.consultarRegistros();
   }
 
   ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
   }
 
   consultarRegistros() {
@@ -114,7 +72,6 @@ export class ServidoresComponent implements OnInit, AfterViewInit {
             });
             this.registros = resp.servidores;
             console.log('Todos las servidores', this.registros);
-            this.dtTrigger.next(null);
             return;
           }
         }),
@@ -126,12 +83,6 @@ export class ServidoresComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  filtrarColumna(columna: number, valor: string) {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.column(columna).search(valor).draw();
-    });
-  }
-
   OnNuevoRegistroClick() {
     this.router.navigate(['administracion-bd/gestion-servidor/']);
   }
@@ -140,20 +91,20 @@ export class ServidoresComponent implements OnInit, AfterViewInit {
     this.router.navigate(['administracion-bd/gestion-servidor/'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number, nombre: string) {
+  OnEliminarRegistroClick(id: any) {
     Swal.fire({
       title: this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARTITULO'),
-      text: this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARTEXTO') + `"${nombre}".!`,
+      text: this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.servidorService.deleteEliminarRegistro(id).subscribe({
+        this.servidorService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('CONEXIONES.SERVIDORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.servidorId !== id);
+            this.registros = this.registros.filter((s) => s.servidorId !== id.id);
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARERROR'), 'error');
