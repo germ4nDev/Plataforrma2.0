@@ -66,7 +66,7 @@
         }
     },
     "SITIOS": {
-        "TITLE": "Sites",
+        "TITLE": "Administration Sites",
         "NAME": "Name",
         "DESCRIPTION": "Description",
         "URL": "URL",
@@ -99,8 +99,17 @@
             "PLACEHOLDERAPLICACION": "Select an Application",
             "REQUERIDOAPLICACION": "This field is required."
         },
+        "FILTROS": {
+            "TITULO" : "Sites Filters",
+            "FILTRONOMBRE" : "Name",
+            "FILTRODECRIPCION" : "Descripction",
+            "FILTROESTADO" : "Status",
+            "TODOS" : "Show All",
+            "NOMBRECHOLDER" : "Name Site",
+            "DESCRIPCIONCHOLDER": "aplication Descripction"
+        },
         "ENLACES": {
-            "TITLE": "Links",
+            "TITLE": "Links Administration",
             "NAME": "Name",
             "DESCRIPTION": "Description",
             "RUTA": "URL Path",
@@ -128,10 +137,19 @@
                 "SITIOS": "Sites",
                 "PLACEHOLDERSITIOS": "Select a site",
                 "REQUERIDOSITIOS": "This field is required."
+            },
+            "FILTROS": {
+                "TITULO" : "Link Filters",
+                "FILTRONOMBRE" : "Name",
+                "FILTRODECRIPCION" : "Descripction",
+                "FILTROESTADO" : "Status",
+                "TODOS" : "Show All",
+                "NOMBRECHOLDER" : "Name Link",
+                "DESCRIPCIONCHOLDER": "Link Descripction"
             }
         },
         "CONTENIDOS": {
-            "TITLE": "Contents",
+            "TITLE": "Contents Administration",
             "NAME": "Name",
             "DESCRIPTION": "Description",
             "CONTENIDO": "Content",
@@ -162,6 +180,15 @@
                 "ENLACES": "Links",
                 "PLACEHOLDERENLACES": "Select a link",
                 "REQUERIDOENLACES": "This field is required."
+            },
+            "FILTROS": {
+                "TITULO" : "Content Filters",
+                "FILTRONOMBRE" : "Name",
+                "FILTRODECRIPCION" : "Descripction",
+                "FILTROESTADO" : "Status",
+                "TODOS" : "Show All",
+                "NOMBRECHOLDER" : "Name Content",
+                "DESCRIPCIONCHOLDER": "Content Descripction"
             }
         }
     },

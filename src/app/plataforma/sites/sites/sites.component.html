@@ -16,6 +16,7 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'SITIOS.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
                         <small>{{ 'SITIOS.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"

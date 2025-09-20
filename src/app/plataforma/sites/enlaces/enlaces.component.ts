@@ -29,6 +29,7 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
     //#region VARIABLES
     registrosSub?: Subscription;
     registros: PTLEnlaceSTModel[] = [];
+    registrosFiltrado: PTLEnlaceSTModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
     gradientConfig;
@@ -63,6 +64,7 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
               enlace.nomEstado = enlace.estadoEnlace== true ? 'Activa' : 'Inactiva';
             });
             this.registros = resp.enlaces;
+            this.registrosFiltrado = this.registros;
             console.log('Todos los enlaces', this.registros);
             return;
           }
@@ -112,6 +114,43 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  onFiltroNombreChangeClick(evento: any) {
+        console.log('filtrar el NOMBRE ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((sitio) =>
+                (sitio.nombreEnlace || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroDescripcionChangeClick(evento: any) {
+        console.log('filtrar el descripcion ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
+                (app.descripcionEnlace || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroEstadoChangeClick(evento: any) {
+        console.log('filtrar el estado ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            const estado = evento.target.value == 'true' ? true : false;
+            this.registrosFiltrado = this.registros.filter(x => x.estadoEnlace == estado);
+        }
+    }
+
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
