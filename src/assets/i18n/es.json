@@ -68,7 +68,7 @@
         }
     },
     "SITIOS": {
-        "TITLE": "Sitios",
+        "TITLE": "Administración de Sitios",
         "NAME": "Nombre",
         "DESCRIPTION": "Descripción",
         "URL": "URL",
@@ -101,8 +101,17 @@
             "PLACEHOLDERAPLICACION": "Seleccione una Aplicación",
             "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
         },
+        "FILTROS": {
+            "TITULO" : "Filtros Sitios",
+            "FILTRONOMBRE" : "Nombre",
+            "FILTRODECRIPCION" : "Descripción",
+            "FILTROESTADO" : "Estado",
+            "TODOS" : "Mostrar Todos",
+            "NOMBRECHOLDER" : "Nombre Sitio",
+            "DESCRIPCIONCHOLDER": "Descripción Sitio"
+        },
         "ENLACES": {
-            "TITLE": "Enlaces",
+            "TITLE": "Administración de Enlaces",
             "NAME": "Nombre",
             "DESCRIPTION": "Descripción",
             "RUTA": "Ruta Enlace",
@@ -130,10 +139,19 @@
                 "SITIOS": "Sitios",
                 "PLACEHOLDERSITIOS": "Seleccione un sitio",
                 "REQUERIDOSITIOS": "Por favor, seleccione un sitio. Este campo es obligatorio."
+            },
+            "FILTROS": {
+                "TITULO" : "Filtros Enlaces",
+                "FILTRONOMBRE" : "Nombre",
+                "FILTRODECRIPCION" : "Descripción",
+                "FILTROESTADO" : "Estado",
+                "TODOS" : "Mostrar Todos",
+                "NOMBRECHOLDER" : "Nombre Enlaces",
+                "DESCRIPCIONCHOLDER": "Descripción Enlaces"
             }
         },
         "CONTENIDOS": {
-            "TITLE": "Contenidos",
+            "TITLE": "Administración de Contenidos",
             "NAME": "Nombre",
             "DESCRIPTION": "Descripción",
             "CONTENIDO": "Contenido",
@@ -164,8 +182,16 @@
                 "ENLACES": "Enlaces",
                 "PLACEHOLDERENLACES": "Seleccione un enlace",
                 "REQUERIDOENLACES": "Por favor, seleccione un enlaces. Este campo es obligatorio."
+            },
+            "FILTROS": {
+                "TITULO" : "Filtros Contenidos",
+                "FILTRONOMBRE" : "Nombre",
+                "FILTRODECRIPCION" : "Descripción",
+                "FILTROESTADO" : "Estado",
+                "TODOS" : "Mostrar Todos",
+                "NOMBRECHOLDER" : "Nombre Contenidos",
+                "DESCRIPCIONCHOLDER": "Descripción Contenidos"
             }
-
         }
     },
     "TICKETS": {
@@ -367,7 +393,7 @@
         }
     },
     "SUSCRIPTORES": {
-        "TITLE": "Suscriptores",
+        "TITLE": "Administración de Suscriptores",
         "NEW": "Nuevo Suscriptor",
         "CODE": "Código",
         "NAME": "Nombre",

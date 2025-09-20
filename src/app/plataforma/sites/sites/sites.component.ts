@@ -32,7 +32,6 @@ export class SitesComponent implements OnInit {
     //#region VARIABLES
     registrosSub?: Subscription;
     registros: PTLSitiosAPModel[] = [];
-    nombreFiltro: PTLSitiosAPModel[] = [];
     registrosFiltrado: PTLSitiosAPModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
