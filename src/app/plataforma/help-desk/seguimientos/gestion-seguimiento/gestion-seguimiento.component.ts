@@ -46,7 +46,7 @@ export class GestionSeguimientoComponent {
     private registrosService: PTLSeguimientosRqService,
     private requerimientoService: PTLRequerimientosTkService,
     private tiposEstados: PTLTiposEstadosService,
-    private estados: PTLEstadosService,
+    private estadosService: PTLEstadosService,
     private translate: TranslateService,
     private languageService: LanguageService,
     private BreadCrumb: BreadcrumbComponent
@@ -83,7 +83,7 @@ export class GestionSeguimientoComponent {
   }
 
   consultarEstado() {
-    this.estados
+    this.estadosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {

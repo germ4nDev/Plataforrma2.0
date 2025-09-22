@@ -39,7 +39,6 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
     //#endregion VARIABLES
   constructor(
     private router: Router,
-    private BreadCrumb: BreadcrumbComponent,
     private translate: TranslateService,
     private enlacesService: PTLEnlacesSTService,
     private navigationService: NavigationService
@@ -64,7 +63,7 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
               enlace.nomEstado = enlace.estadoEnlace== true ? 'Activa' : 'Inactiva';
             });
             this.registros = resp.enlaces;
-            this.registrosFiltrado = this.registros;
+            this.registrosFiltrado = resp.enlaces;
             console.log('Todos los enlaces', this.registros);
             return;
           }
@@ -121,8 +120,8 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
         if (!textoFiltro) {
             this.registrosFiltrado = [...this.registros];
         } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((sitio) =>
-                (sitio.nombreEnlace || '').toLowerCase().includes(textoFiltro)
+            this.registrosFiltrado = this.registrosFiltrado.filter((enlace) =>
+                (enlace.nombreEnlace || '').toLowerCase().includes(textoFiltro)
             );
             console.log('filtrados', this.registrosFiltrado);
         }

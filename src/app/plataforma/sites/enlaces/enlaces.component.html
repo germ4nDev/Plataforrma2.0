@@ -29,7 +29,7 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'SITIOS.ENLACES.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
@@ -44,12 +44,12 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-data-table
-                    [data]="registros"
+                    [data]="registrosFiltrado"
                     [columns]="['nombreEnlace', 'descripcionEnlace', 'rutaEnlace','nomEstado']"
                     [columnTitles]="[
                       'SITIOS.ENLACES.NAME' | translate,
-                      'SITIOS.ENLACES.RUTA'| translate,
                       'SITIOS.ENLACES.DESCRIPTION' | translate,
+                      'SITIOS.ENLACES.RUTA'| translate,
                       'SITIOS.ENLACES.STATUS' | translate
                     ]"
                     [idField]="'enlaceId'"

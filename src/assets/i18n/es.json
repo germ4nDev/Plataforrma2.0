@@ -226,6 +226,15 @@
             "PLACEHOLDERAPLICACION": "Seleccione una Aplicación",
             "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
         },
+        "FILTROS": {
+                "TITULO" : "Filtros Tickets",
+                "FILTRONOMBRE" : "Nombre",
+                "FILTRODECRIPCION" : "Descripción",
+                "FILTROESTADO" : "Estado",
+                "TODOS" : "Mostrar Todos",
+                "NOMBRECHOLDER" : "Nombre Ticket",
+                "DESCRIPCIONCHOLDER": "Descripción Ticket"
+        },
         "REQUERIMIENTOS": {
         "TITLE": "Administración de Requerimientos",
         "NEW": "Nuevo Requerimiento",
@@ -257,6 +266,15 @@
             "TICKET": "Ticket",
             "PLACEHOLDERTICKET": "Seleccione un Ticket",
             "REQUERIDOTICKET": "Por favor, seleccione un Ticket. Este campo es obligatorio."
+        },
+        "FILTROS": {
+            "TITULO" : "Filtros Requerimientos",
+            "FILTRONOMBRE" : "Nombre",
+            "FILTRODECRIPCION" : "Descripción",
+            "FILTROESTADO" : "Estado",
+            "TODOS" : "Mostrar Todos",
+            "NOMBRECHOLDER" : "Nombre Requerimientos",
+            "DESCRIPCIONCHOLDER": "Descripción Requerimientos"
         }
         },
         "SEGUIMIENTOS": {
@@ -293,6 +311,15 @@
                 "PLACEHOLDERESTADO": "Seleccione un Estado",
                 "REQUERIDOESTADO": "Por favor, seleccione un Estado. Este campo es obligatorio.",
                 "NOMODIFICOREQUERIMIENTO": "El registro se modificó, pero no se actualizó el estado del requerimiento."
+            },
+            "FILTROS": {
+                "TITULO" : "Filtros Seguimientos",
+                "FILTRONOMBRE" : "Nombre",
+                "FILTRODECRIPCION" : "Descripción",
+                "FILTROESTADO" : "Estado",
+                "TODOS" : "Mostrar Todos",
+                "NOMBRECHOLDER" : "Nombre Seguimientos",
+                "DESCRIPCIONCHOLDER": "Descripción Seguimientos"
             }
         }
     },
