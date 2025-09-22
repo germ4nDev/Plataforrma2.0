@@ -67,7 +67,7 @@ export class SitesComponent implements OnInit {
                             app.nomEstado = app.estadoSitio == true ? 'Activa' : 'Inactiva';
                         });
                         this.registros = resp.sitios;
-                        this.registrosFiltrado = this.registros;
+                        this.registrosFiltrado = resp.sitios;
                         console.log('Todos las sitiosAP', this.registros);
                         return;
                     }

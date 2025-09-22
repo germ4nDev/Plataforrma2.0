@@ -28,6 +28,7 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
     //#region VARIABLES
     registrosSub?: Subscription;
     registros: PTLContenidoELModel[] = [];
+    registrosFiltrado: PTLContenidoELModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
     gradientConfig;
@@ -62,6 +63,7 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
                 contenido.nomEstado = contenido.estadoContenido== true ? 'Activa' : 'Inactiva';
               });
               this.registros = resp.contenidos;
+              this.registrosFiltrado = this.registros;
               console.log('Todos los contenidos', this.registros);
               return;
             }
@@ -111,6 +113,42 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  onFiltroNombreChangeClick(evento: any) {
+        console.log('filtrar el NOMBRE ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((contenido) =>
+                (contenido.nombreContenido || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroDescripcionChangeClick(evento: any) {
+        console.log('filtrar el descripcion ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
+                (app.descripcionContenido || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroEstadoChangeClick(evento: any) {
+        console.log('filtrar el estado ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            const estado = evento.target.value == 'true' ? true : false;
+            this.registrosFiltrado = this.registros.filter(x => x.estadoContenido == estado);
+        }
+    }
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
