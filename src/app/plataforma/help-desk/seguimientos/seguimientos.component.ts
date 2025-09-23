@@ -60,6 +60,7 @@ export class SeguimientosComponent implements OnInit {
   }
 
   ngOnDestroy(): void {}
+
   consultarRegistros() {
     this.registrosSub = this.seguimientosService
       .getRegistros()
@@ -139,8 +140,8 @@ export class SeguimientosComponent implements OnInit {
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((sitio) =>
-        (sitio.nombreSeguimiento || '').toLowerCase().includes(textoFiltro)
+      this.registrosFiltrado = this.registrosFiltrado.filter((seguimiento) =>
+        (seguimiento.nombreSeguimiento || '').toLowerCase().includes(textoFiltro)
       );
       console.log('filtrados', this.registrosFiltrado);
     }
@@ -152,8 +153,8 @@ export class SeguimientosComponent implements OnInit {
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
-        (app.descripcionSeguimiento || '').toLowerCase().includes(textoFiltro)
+      this.registrosFiltrado = this.registrosFiltrado.filter((seguimiento) =>
+        (seguimiento.descripcionSeguimiento || '').toLowerCase().includes(textoFiltro)
       );
       console.log('filtrados', this.registrosFiltrado);
     }
@@ -165,8 +166,6 @@ export class SeguimientosComponent implements OnInit {
         this.registrosFiltrado = this.registros;
     } else {
         this.registrosFiltrado = this.registros.filter(x => x.estadoSeguimiento == evento.target.value);
-        console.log('registrosFiltrado', this.registrosFiltrado);
-
     }
   }
 

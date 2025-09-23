@@ -136,8 +136,8 @@ export class TicketsComponent implements OnInit{
         if (!textoFiltro) {
             this.registrosFiltrado = [...this.registros];
         } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
-                (app.descripcionTicket || '').toLowerCase().includes(textoFiltro)
+            this.registrosFiltrado = this.registrosFiltrado.filter((ticket) =>
+                (ticket.descripcionTicket || '').toLowerCase().includes(textoFiltro)
             );
             console.log('filtrados', this.registrosFiltrado);
         }

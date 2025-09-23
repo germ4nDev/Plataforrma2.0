@@ -99,8 +99,6 @@ export class SitesComponent implements OnInit {
     }
 
     OnEliminarRegistroClick(id: any) {
-        console.log('id eliminar', id.id);
-
         Swal.fire({
             title: this.translate.instant('SITIOS.ELIMINARTITULO'),
             text: this.translate.instant('SITIOS.ELIMINARTEXTO'),
@@ -109,11 +107,12 @@ export class SitesComponent implements OnInit {
             confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
             cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
         }).then((result) => {
+            console.log('Eliminado', id);
             if (result.isConfirmed) {
                 this.sitiosService.deleteEliminarRegistro(id.id).subscribe({
                     next: (resp: any) => {
                         Swal.fire(this.translate.instant('SITIOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-                        this.registros = this.registros.filter((s) => s.sitioId !== id.id);
+                        this.consultarSitios();
                     },
                     error: (err: any) => {
                         Swal.fire('Error', this.translate.instant('SITIOS.ELIMINARERROR'), 'error');

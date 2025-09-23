@@ -32,7 +32,7 @@
                         <small>{{ 'TICKETS.SEGUIMIENTOS.FILTROS.FILTROESTADO' | translate }}</small>
                         <select class="form-control form-input" style="cursor: pointer;"
                             (change)="onFiltroEstadoChangeClick($event)">
-                            <option value="todos">{{ 'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERESTADO' | translate }}</option>
+                            <option value="todos">{{ 'TICKETS.SEGUIMIENTOS.FILTROS.ESTADOSEGUIMIENTO' | translate }}</option>
                             <option [value]="estado.siglaEstado" *ngFor="let estado of estadosFiltrados">{{ estado.nombreEstado }}</option>
                         </select>
                     </div>
@@ -49,7 +49,7 @@
                     [columns]="['nombreSeguimiento', 'descripcionSeguimiento', 'nomEstado']"
                     [columnTitles]="[
                       'TICKETS.SEGUIMIENTOS.NOMBRESEGUIMIENTO' | translate,
-                      'TICKETS.SEGUIMIENTOS.DESCRICIONSEGUIMIENTO'| translate,
+                      'TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO'| translate,
                       'TICKETS.SEGUIMIENTOS.ESTADOSEGUIMIENTO' | translate
                     ]"
                     [idField]="'seguimientoId'"

@@ -29,6 +29,7 @@ export class ServidoresComponent implements OnInit, AfterViewInit {
   //#region VARIABLES
   registrosSub?: Subscription;
   registros: PTLServidorModel[] = [];
+  registrosFiltrado: PTLServidorModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   gradientConfig;
@@ -71,6 +72,7 @@ export class ServidoresComponent implements OnInit, AfterViewInit {
               servidor.nomEstado = servidor.estadoServidor == true ? 'Activo' : 'Inactivo';
             });
             this.registros = resp.servidores;
+            this.registrosFiltrado = resp.servidores;
             console.log('Todos las servidores', this.registros);
             return;
           }
@@ -114,6 +116,43 @@ export class ServidoresComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  onFiltroNombreChangeClick(evento: any) {
+        console.log('filtrar el NOMBRE ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((server) =>
+                (server.nombreServidor || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroDescripcionChangeClick(evento: any) {
+        console.log('filtrar el descripcion ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((server) =>
+                (server.descripcionServidor || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroEstadoChangeClick(evento: any) {
+        console.log('filtrar el estado ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            const estado = evento.target.value == 'true' ? true : false;
+            this.registrosFiltrado = this.registros.filter(x => x.estadoServidor == estado);
+        }
+    }
+
   toggleNav(): void {
     this.toggleSidebar.emit();
   }

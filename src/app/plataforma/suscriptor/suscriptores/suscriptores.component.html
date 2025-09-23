@@ -1,124 +1,3 @@
-<!-- <div class="row">
-    <div class="col-sm-12">
-        <div class="card card-header-sticky">
-            <div class="card-header">
-                <h4>{{ 'SUSCRIPTORES.TITLE' | translate }}</h4>
-                <hr />
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <app-breadcrumb></app-breadcrumb>
-                    </div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'SUSCRIPTORES.NEW' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table [dtOptions]="dtColumnSearchingOptions" datatable class="table row-border">
-                        <thead>
-                            <tr>
-                                <th>{{ 'SUSCRIPTORES.CODE' | translate }}</th>
-                                <th>{{ 'SUSCRIPTORES.NAME' | translate }}</th>
-                                <th>{{ 'SUSCRIPTORES.IDENTIFICATION' | translate }}</th>
-                                <th>{{ 'SUSCRIPTORES.DESCRIPTION' | translate }}</th>
-                                <th>{{ 'SUSCRIPTORES.STATUS' | translate }}</th>
-                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let reg of suscriptores">
-                                <td>
-                                    {{ reg.codigoSuscriptor }}
-                                </td>
-                                <td>
-                                    {{ reg.nombreSuscriptor }}
-                                </td>
-                                <td>
-                                    {{ reg.identificacion }}
-                                </td>
-                                <td>
-                                    {{ reg.descripcionSuscriptor }}
-                                </td>
-                                <td>
-                                    {{ reg.nomEstado?? '' }}
-                                </td>
-                                <td style="text-align: center; width: 10%">
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-primary d-inline-flex btnEdit"
-                                            (click)="OnEditarRegistroClick(reg.suscriptorId?? 0)"
-                                            title="{{ 'SUSCRIPTORES.UPDATE' | translate }}">
-                                            <i class="feather icon-edit"></i>
-                                        </button>
-                                        <button type="button"
-                                            class="btn btn-icon btn-outline-danger d-inline-flex btnDelet"
-                                            (click)="OnEliminarRegistroClick(reg.suscriptorId?? 0, reg.nombreSuscriptor?? '')"
-                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                            title="{{ 'SUSCRIPTORES.DELETE' | translate }}">
-                                            <i class="feather icon-trash-2"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>
-                                    <input #codigoSuscriptor
-                                        (keyup)="filtrarColumna(0, codigoSuscriptor.value)"
-                                        type="text"
-                                        placeholder="{{ 'SUSCRIPTORES.FILTER_CODE' | translate }}"
-                                        name="filtro-codigo"
-                                        class="form-control" />
-                                </th>
-                                <th>
-                                    <input #nombreSuscriptor
-                                        (keyup)="filtrarColumna(0, nombreSuscriptor.value)"
-                                        type="text"
-                                        placeholder="{{ 'SUSCRIPTORES.FILTER_NAME' | translate }}"
-                                        name="filtro-nombre"
-                                        class="form-control" />
-                                </th>
-                                <th>
-                                    <input #identificacon
-                                        (keyup)="filtrarColumna(1, identificacon.value)"
-                                        type="text"
-                                        placeholder="{{ 'SUSCRIPTORES.FILTER_IDENTIFICATION' | translate }}"
-                                        name="filtro-identificacion"
-                                        class="form-control" />
-                                </th>
-                                <th>
-                                    <input #descripcionSuscriptor
-                                        (keyup)="filtrarColumna(1, descripcionSuscriptor.value)"
-                                        type="text"
-                                        placeholder="{{ 'SUSCRIPTORES.FILTER_DESCRIPTION' | translate }}"
-                                        name="filtro-descripcion"
-                                        class="form-control" />
-                                </th>
-                                <th>
-                                    <input #estadoSuscriptor
-                                        (keyup)="filtrarColumna(2, estadoSuscriptor.value)"
-                                        type="text"
-                                        placeholder="{{ 'SUSCRIPTORES.FILTRO_STATUS' | translate }}"
-                                        name="filtro-estado"
-                                        class="form-control" />
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
     <aside class="aside-left">
@@ -136,40 +15,28 @@
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
-                <!-- <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'SUSCRIPTORES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
-                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
-                                {{ app.codigoAplicacion }}
-                            </option>
-                        </select>
+                        <small>{{ 'SUSCRIPTORES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'SUSCRIPTORES.FILTROS.NOMBRECHOLDER' | translate }}" />
+
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
-                                {{ app.nombreAplicacion }}
-                            </option>
-                        </select>
+                        <small>{{ 'SUSCRIPTORES.FILTROS.FILTROIDENTIFICACION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'SUSCRIPTORES.FILTROS.IDENTIFICACIONHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                        <small>{{ 'SUSCRIPTORES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
                         </select>
                     </div>
-                </div> -->
+                </div>
             </ng-container>
         </div>
     </aside>
@@ -178,7 +45,7 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-data-table
-                    [data]="registros"
+                    [data]="registrosFiltrado"
                     [columns]="['codigoSuscriptor', 'nombreSuscriptor', 'identificacion', 'descripcionSuscriptor', 'nomEstado']"
                     [columnTitles]="[
                       'SUSCRIPTORES.CODE' | translate,

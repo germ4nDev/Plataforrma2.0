@@ -14,6 +14,7 @@ import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-c
 import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { GradientConfig } from 'src/app/app-config';
+import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 
 @Component({
     selector: 'app-requerimientos',
@@ -35,12 +36,15 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
     hasFiltersSlot: boolean = false;
     menuItems: NavigationItem[] = [];
     activeTab: 'menu' | 'filters' | 'main' = 'menu';
+    tipoEstado: string = "";
+    estadosFiltrados: any[] = [];
     //#endregion VARIABLES
     constructor(
         private router: Router,
         private translate: TranslateService,
         private navigationService: NavigationService,
-        private requerimientosService: PTLRequerimientosTkService
+        private requerimientosService: PTLRequerimientosTkService,
+        private estadosService: PTLEstadosService
     ) {
         this.gradientConfig = GradientConfig;
     }
@@ -49,6 +53,7 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
         this.menuItems = this.navigationService.getNavigationItems(appCode);
         this.hasFiltersSlot = true;
         this.consultarRegistros();
+        this.consultarEstado();
     }
 
     consultarRegistros() {
@@ -76,6 +81,23 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
                 })
             )
             .subscribe();
+    }
+    consultarEstado() {
+    this.estadosService
+        .getRegistros()
+        .pipe(
+        tap((resp: any) => {
+            if (resp.ok) {
+            this.estadosFiltrados = resp.estados;
+            console.log('Estados filtrados:', this.estadosFiltrados);
+            }
+        }),
+        catchError((err) => {
+            console.error('Error al consultar estados:', err);
+            return of(null);
+        })
+        )
+        .subscribe();
     }
 
     ngAfterViewInit(): void {
@@ -123,8 +145,8 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
         if (!textoFiltro) {
             this.registrosFiltrado = [...this.registros];
         } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((sitio) =>
-                (sitio.nombreRequerimiento || '').toLowerCase().includes(textoFiltro)
+            this.registrosFiltrado = this.registrosFiltrado.filter((requerimiento) =>
+                (requerimiento.nombreRequerimiento || '').toLowerCase().includes(textoFiltro)
             );
             console.log('filtrados', this.registrosFiltrado);
         }
@@ -136,21 +158,20 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
         if (!textoFiltro) {
             this.registrosFiltrado = [...this.registros];
         } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
-                (app.descripcionRequerimiento || '').toLowerCase().includes(textoFiltro)
+            this.registrosFiltrado = this.registrosFiltrado.filter((requerimiento) =>
+                (requerimiento.descripcionRequerimiento || '').toLowerCase().includes(textoFiltro)
             );
             console.log('filtrados', this.registrosFiltrado);
         }
     }
 
     onFiltroEstadoChangeClick(evento: any) {
-        // console.log('filtrar el estado ', evento.target.value);
-        // if (evento.target.value == 'todos') {
-        //     this.registrosFiltrado = this.registros;
-        // } else {
-        //     const estado = evento.target.value == 'true' ? true : false;
-        //     this.registrosFiltrado = this.registros.filter(x => x.estadoRequerimiento == estado);
-        // }
+        console.log('filtrar el estado ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            this.registrosFiltrado = this.registros.filter(x => x.estadoRequerimiento == evento.target.value);
+        }
     }
 
     toggleNav(): void {
