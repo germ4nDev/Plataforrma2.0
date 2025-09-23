@@ -30,6 +30,7 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit {
     //#region VARIABLES
     registrosSub?: Subscription;
     registros: PTLSuscriptorModel[] = [];
+    registrosFiltrado: PTLSuscriptorModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
     gradientConfig;
@@ -65,10 +66,11 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.registros.forEach((regs: any) => {
+            resp.suscriptor.forEach((regs: any) => {
               regs.nomEstado = regs.estadoSuscriptor == true ? 'Activo' : 'Inactivo';
             });
-            this.registros = resp.registros;
+            this.registros = resp.suscriptor;
+            this.registrosFiltrado = resp.suscriptor
             console.log('Todos los Suscriptores', this.registros);
             return;
           }
@@ -112,6 +114,43 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  onFiltroNombreChangeClick(evento: any) {
+        console.log('filtrar el NOMBRE ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
+                (suscriptor.nombreSuscriptor || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroIdentificacionChangeClick(evento: any) {
+        console.log('filtrar el descripcion ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
+                (suscriptor.identificacion || 0)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroEstadoChangeClick(evento: any) {
+        console.log('filtrar el estado ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            const estado = evento.target.value == 'true' ? true : false;
+            this.registrosFiltrado = this.registros.filter(x => x.estadoSuscriptor == estado);
+        }
+    }
+
     toggleNav(): void {
     this.toggleSidebar.emit();
   }

@@ -83,7 +83,7 @@ export class GestionConexionComponent {
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
-        // console.log('me llena el Id', registroId);
+        console.log('me llena el Id', registroId);
         this.modoEdicion = true;
         this.registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {

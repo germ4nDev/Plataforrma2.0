@@ -133,8 +133,8 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
         if (!textoFiltro) {
             this.registrosFiltrado = [...this.registros];
         } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
-                (app.descripcionEnlace || '').toLowerCase().includes(textoFiltro)
+            this.registrosFiltrado = this.registrosFiltrado.filter((enlace) =>
+                (enlace.descripcionEnlace || '').toLowerCase().includes(textoFiltro)
             );
             console.log('filtrados', this.registrosFiltrado);
         }

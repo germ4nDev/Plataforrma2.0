@@ -274,7 +274,8 @@
             "FILTROESTADO" : "Estado",
             "TODOS" : "Mostrar Todos",
             "NOMBRECHOLDER" : "Nombre Requerimientos",
-            "DESCRIPCIONCHOLDER": "Descripción Requerimientos"
+            "DESCRIPCIONCHOLDER": "Descripción Requerimientos",
+            "ESTADOREQUERIMIENTO" : "Estado Requerimiento"
         }
         },
         "SEGUIMIENTOS": {
@@ -319,7 +320,8 @@
                 "FILTROESTADO" : "Estado",
                 "TODOS" : "Mostrar Todos",
                 "NOMBRECHOLDER" : "Nombre Seguimientos",
-                "DESCRIPCIONCHOLDER": "Descripción Seguimientos"
+                "DESCRIPCIONCHOLDER": "Descripción Seguimientos",
+                "ESTADOSEGUIMIENTO" : "Estado Seguimiento"
             }
         }
     },
@@ -383,7 +385,20 @@
             "REQUERIDOBDPORT": "Por favor, ingrese un Port. Este campo es obligatorio."
 
         },
-            "SERVIDORES": {
+        "FILTROS": {
+            "TITULO" : "Filtros Conexiones",
+            "FILTRONOMBRE" : "Nombre Aplicación",
+            "FILTRONOMBRESUSCRIP" : "Nombre Suscriptor",
+            "FILTRONOMBRESERVE" : "Nombre servidor",
+            "FILTRONOMBREBD" : "Nombre Base de Datos",
+            "FILTROESTADO" : "Estado Conexión",
+            "TODOS" : "Mostrar Todos",
+            "NOMBREHOLDER" : "Nombre Conexión",
+            "NOMBRESUSCRIPHOLDER" : "Nombre Suscriptor",
+            "NOMBRESERVEHOLDER" : "Nombre Servidor",
+            "NOMBREBDHOLDER" : "Nombre Base de Datos"
+        },
+        "SERVIDORES": {
             "TITLE": "Administración de Servidores",
             "NEW": "Nuevo Servidor",
             "UPDATE": "Modificar Servidor",
@@ -416,6 +431,15 @@
                 "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
                 "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
                 "STATUS": "Estado Servidor"
+            },
+            "FILTROS": {
+                "TITULO" : "Filtros Servidores",
+                "FILTRONOMBRE" : "Nombre",
+                "FILTRODECRIPCION" : "Descripción",
+                "FILTROESTADO" : "Estado",
+                "TODOS" : "Mostrar Todos",
+                "NOMBRECHOLDER" : "Nombre Servidor",
+                "DESCRIPCIONCHOLDER": "Descripción Servidor"
             }
         }
     },
@@ -448,6 +472,15 @@
             "REQUERIDOIDENTIFICATION": "Por favor, Ingrese la Identificación. Este campo es obligatorio.",
             "PLACEHOLDERDESCRIPCION": "Descripcion del Suscriptor",
             "REQUERIDODESCRIPCION": "Por favor, ingrese una descripcion. Este campo es obligatorio."
+        },
+        "FILTROS": {
+            "TITULO" : "Filtros Suscriptores",
+            "FILTRONOMBRE" : "Nombre",
+            "FILTROIDENTIFICACION" : "Identificación",
+            "FILTROESTADO" : "Estado",
+            "TODOS" : "Mostrar Todos",
+            "NOMBRECHOLDER" : "Nombre Suscriptor",
+            "IDENTIFICACIONHOLDER": "Identificación Suscriptor"
         }
     },
     "LOGIN": {

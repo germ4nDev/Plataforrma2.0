@@ -63,7 +63,7 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
                 contenido.nomEstado = contenido.estadoContenido== true ? 'Activa' : 'Inactiva';
               });
               this.registros = resp.contenidos;
-              this.registrosFiltrado = this.registros;
+              this.registrosFiltrado = resp.contenidos;
               console.log('Todos los contenidos', this.registros);
               return;
             }
@@ -100,10 +100,11 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log('Eliminar', id);
         this.contenidoService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SITIOS.CONTENIDOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.contenidoId !== id.id);
+            this.consultarRegistros();
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('SITIOS.CONTENIDOS.ELIMINARERROR'), 'error');
@@ -133,8 +134,8 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
         if (!textoFiltro) {
             this.registrosFiltrado = [...this.registros];
         } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
-                (app.descripcionContenido || '').toLowerCase().includes(textoFiltro)
+            this.registrosFiltrado = this.registrosFiltrado.filter((contenido) =>
+                (contenido.descripcionContenido || '').toLowerCase().includes(textoFiltro)
             );
             console.log('filtrados', this.registrosFiltrado);
         }
