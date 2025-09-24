@@ -975,3 +975,8 @@ body.gradient-dark {
 .btn-animacion:hover i {
     transform: translateX(-5px);
 }
+
+#datatable-component td {
+    white-space: normal;
+    word-wrap: break-word;
+}

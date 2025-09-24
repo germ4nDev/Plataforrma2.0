@@ -18,7 +18,7 @@ import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexi
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
-import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-conexciones',
@@ -29,10 +29,12 @@ import { DatatableComponent } from "src/app/theme/shared/components/data-table/d
 })
 export class ConexionesComponent implements OnInit, AfterViewInit {
   @ViewChild(DataTableDirective, { static: false })
-  @Output() toggleSidebar = new EventEmitter<void>();
+  @Output()
+  toggleSidebar = new EventEmitter<void>();
   //#region VARIABLES
   registrosSub?: Subscription;
   registros: PTLConexionBDModel[] = [];
+  registrosFiltrado: PTLConexionBDModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   gradientConfig;
@@ -56,8 +58,7 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
     this.gradientConfig = GradientConfig;
   }
 
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
 
   ngOnInit() {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
@@ -67,8 +68,7 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
     this.consultarRegistros();
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
   consultarRegistros() {
     this.consultarAplicaciones();
@@ -86,6 +86,7 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
               conexion.nomEstado = conexion.estadoConexion == true ? 'Activo' : 'Inactivo';
             });
             this.registros = resp.conexiones;
+            this.registrosFiltrado = resp.conexiones;
             console.log('Todos las conexiones', this.registros);
             return;
           }
@@ -167,6 +168,61 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  onFiltroNombreApliChangeClick(evento: any) {
+    console.log('filtrar el NOMBRE ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((aplicacion) => (aplicacion.nombreAplicacion || '').toLowerCase().includes(textoFiltro));
+      console.log('filtrados', this.registrosFiltrado);
+    }
+  }
+
+  onFiltroNombreSuscripChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) => (suscriptor.nombreSuscriptor || '').toLowerCase().includes(textoFiltro));
+      console.log('filtrados', this.registrosFiltrado);
+    }
+  }
+
+  onFiltroNombreServeChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((server) => (server.nombreServidor || '').toLowerCase().includes(textoFiltro));
+      console.log('filtrados', this.registrosFiltrado);
+    }
+  }
+
+  onFiltroNombreBDChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((bd) => (bd.BDNombre || '').toLowerCase().includes(textoFiltro));
+      console.log('filtrados', this.registrosFiltrado);
+    }
+  }
+
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = this.registros;
+    } else {
+      const estado = evento.target.value == 'true' ? true : false;
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoConexion == estado);
+    }
+  }
+
   toggleNav(): void {
     this.toggleSidebar.emit();
   }

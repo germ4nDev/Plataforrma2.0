@@ -30,7 +30,7 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'SITIOS.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
@@ -46,13 +46,16 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nombreSitio', 'descripcionSitio', 'urlSitio', 'puertoSitio', 'nomEstado']"
+                    [columns]="['nombreSitio', 'urlSitio', 'puertoSitio', 'nomEstado']"
                     [columnTitles]="[
                       'SITIOS.NAME' | translate,
-                      'SITIOS.DESCRIPTION'| translate,
                       'SITIOS.URL' | translate,
                       'SITIOS.SITESPORT' | translate,
                       'SITIOS.STATUS' | translate
+                    ]"
+                    [detailsColumns]="['descripcionSitio']"
+                    [detailTitles]="[
+                      'SITIOS.DESCRIPTION'| translate
                     ]"
                     [idField]="'sitioId'"
                     [tableTitle]="'SITIOS.TITLE' | translate"
@@ -62,6 +65,7 @@
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
+                    [showDetail]="true"
                     [newButtonLabel]="'SITIOS.GESTION.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"

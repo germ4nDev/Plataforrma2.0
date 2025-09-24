@@ -87,7 +87,7 @@
             "TITLE": "Create/Update an Site",
             "NEW": "New Site",
             "CREATE": "Create Site",
-            "PLACEHOLDERNAME": "Site name",
+            "PLACEHOLDERNAME": "Site Name",
             "REQUERIDONAME": "This field is required.",
             "PLACEHOLDERURL": "Site URL",
             "REQUERIDOURL": "This field is required.",
@@ -105,8 +105,8 @@
             "FILTRODECRIPCION" : "Descripction",
             "FILTROESTADO" : "Status",
             "TODOS" : "Show All",
-            "NOMBRECHOLDER" : "Name Site",
-            "DESCRIPCIONCHOLDER": "aplication Descripction"
+            "NOMBRECHOLDER" : "Site Name",
+            "DESCRIPCIONCHOLDER": "Site Descripction"
         },
         "ENLACES": {
             "TITLE": "Links Administration",
@@ -224,6 +224,15 @@
             "PLACEHOLDERAPLICACION": "Select an Application",
             "REQUERIDOAPLICACION": "This field is required."
         },
+        "FILTROS": {
+            "TITULO" : "Ticket Filters",
+            "FILTRONOMBRE" : "Name",
+            "FILTRODECRIPCION" : "Descripction",
+            "FILTROESTADO" : "Status",
+            "TODOS" : "Show All",
+            "NOMBRECHOLDER" : "Ticket Name",
+            "DESCRIPCIONCHOLDER": "Ticket Descripction"
+        },
         "REQUERIMIENTOS": {
             "TITLE": "Requirements Administration",
             "NEW": "New Requirement",
@@ -255,8 +264,18 @@
                 "TICKET": "Ticket",
                 "PLACEHOLDERTICKET": "Select a Ticket",
                 "REQUERIDOTICKET": "This field is required."
+            },
+            "FILTROS": {
+                "TITULO" : "Requirement Filters",
+                "FILTRONOMBRE" : "Name",
+                "FILTRODECRIPCION" : "Descripction",
+                "FILTROESTADO" : "Status",
+                "TODOS" : "Show All",
+                "NOMBRECHOLDER" : "Requirement Name",
+                "DESCRIPCIONCHOLDER": "Requirement Descripction",
+                "ESTADOREQUERIMIENTO" : "Requirement Status"
             }
-        },
+            },
             "SEGUIMIENTOS": {
             "TITLE": "Follow-up Administration",
             "NEW": "New Follow-up",
@@ -291,6 +310,16 @@
                 "PLACEHOLDERESTADO": "Select a Status",
                 "REQUERIDOESTADO": "This field is required.",
                 "NOMODIFICOREQUERIMIENTO": "The record was updated, but the requirement status was not changed."
+            },
+            "FILTROS": {
+                "TITULO" : "Follow-up Filters",
+                "FILTRONOMBRE" : "Name",
+                "FILTRODECRIPCION" : "Descripction",
+                "FILTROESTADO" : "Status",
+                "TODOS" : "Show All",
+                "NOMBRECHOLDER" : "Follow-up Name",
+                "DESCRIPCIONCHOLDER": "Follow-up Descripction",
+                "ESTADOSEGUIMIENTO" : "Follow-up Status"
             }
         }
     },
@@ -353,7 +382,20 @@
             "PLACEHOLDERBDPORT": "Enter the Database Port",
             "REQUERIDOBDPORT": "This field is required."
         },
-            "SERVIDORES": {
+        "FILTROS": {
+            "TITULO" : "Connection Filters",
+            "FILTRONOMBRE" : "Aplication Name",
+            "FILTRONOMBRESUSCRIP" : "Subscriber Name",
+            "FILTRONOMBRESERVE" : "Server Name",
+            "FILTRONOMBREBD" : "Database Name",
+            "FILTROESTADO" : "Conection Status",
+            "TODOS" : "Show All",
+            "NOMBREHOLDER" : "Conection Name",
+            "NOMBRESUSCRIPHOLDER" : "Subscriber Name",
+            "NOMBRESERVEHOLDER" : "Server Name",
+            "NOMBREBDHOLDER" : "Database Name"
+        },
+        "SERVIDORES": {
             "TITLE": "Server Administration",
             "NEW": "New Server",
             "UPDATE": "Edit Server",
@@ -386,11 +428,20 @@
                 "REQUERIDONAME": "This field is required.",
                 "REQUERIDODESCRIPCION": "This field is required.",
                 "STATUS": "Server Status"
+            },
+            "FILTROS": {
+                "TITULO" : "Server Filters",
+                "FILTRONOMBRE" : "Name",
+                "FILTRODECRIPCION" : "Descripction",
+                "FILTROESTADO" : "Status",
+                "TODOS" : "Show All",
+                "NOMBRECHOLDER" : "Server Name",
+                "DESCRIPCIONCHOLDER": "Server Descripction"
             }
         }
     },
     "SUSCRIPTORES": {
-        "TITLE": "Subscribers",
+        "TITLE": "Subscribers Administration",
         "NEW": "New Subscriber",
         "CODE": "Code",
         "NAME": "Name",
@@ -418,6 +469,15 @@
             "REQUERIDOIDENTIFICATION": "This field is required.",
             "PLACEHOLDERDESCRIPCION": "Subscriber Description",
             "REQUERIDODESCRIPCION": "This field is required."
+        },
+        "FILTROS": {
+            "TITULO" : "Subscriber Filters",
+            "FILTRONOMBRE" : "Name",
+            "FILTROIDENTIFICACION" : "Identification",
+            "FILTROESTADO" : "Status",
+            "TODOS" : "Show All",
+            "NOMBRECHOLDER" : "Subscriber Name",
+            "IDENTIFICACIONHOLDER": "Subscriber Identification"
         }
     },
     "LOGIN": {

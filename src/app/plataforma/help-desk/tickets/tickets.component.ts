@@ -23,11 +23,12 @@ import { GradientConfig } from 'src/app/app-config';
     templateUrl: './tickets.component.html',
     styleUrl: './tickets.component.scss'
 })
-export class TicketsComponent implements OnInit, AfterViewInit {
+export class TicketsComponent implements OnInit{
     @Output() toggleSidebar = new EventEmitter<void>();
 
     //#region VARIABLES
     registros: PTLTicketAPModel[] = [];
+    registrosFiltrado: PTLTicketAPModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
     registrosSub?: Subscription;
     tituloPagina: string = '';
@@ -47,46 +48,15 @@ export class TicketsComponent implements OnInit, AfterViewInit {
     ) {
         this.gradientConfig = GradientConfig;
     }
-
-    ngAfterViewInit(): void {
-        // this.BreadCrumb.setBreadcrumb();
-        // this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        //     dtInstance.columns().every(function () {
-        //         const that = this;
-        //         $('input', this.header()).on('keyup change', function () {
-        //             const valor = $(this).val() as string;
-        //             if (that.search() !== valor) {
-        //                 that.search(valor).draw();
-        //             }
-        //         });
-        //     });
-        // });
-    }
+    // ngAfterViewInit(): void {
+    //     throw new Error('Method not implemented.');
+    // }
 
     ngOnInit() {
         const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
         this.menuItems = this.navigationService.getNavigationItems(appCode);
         this.hasFiltersSlot = true;
         this.consultarRegistros();
-
-        // this.languageService.currentLang$.subscribe((lang) => {
-        //     this.translate.use(lang);
-        //     this.translate
-        //         .get(['TICKETS.NOMBRETICKET', 'TICKETS.DESCRIPCIONTICKET', 'TICKETS.ESTADOTICKET'])
-        //         .subscribe((translations) => {
-        //             this.tituloPagina = translations['TICKETS.TITLE'];
-        //             this.dtColumnSearchingOptions = {
-        //                 responsive: true,
-        //                 columns: [
-        //                     { title: translations['TICKETS.NOMBRETICKET'], data: 'nombreTicket' },
-        //                     { title: translations['TICKETS.DESCRIPCIONTICKET'], data: 'descripcionTicket' },
-        //                     { title: translations['TICKETS.ESTADOTICKET'], data: 'estadoTicket' },
-        //                     { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-        //                 ]
-        //             };
-        //             this.consultarRegistros();
-        //         });
-        // });
     }
 
     ngOnDestroy(): void {
@@ -102,6 +72,7 @@ export class TicketsComponent implements OnInit, AfterViewInit {
                             role.nomEstado = role.estadoTicket == true ? 'Activo' : 'Inactivo';
                         });
                         this.registros = resp.tickets;
+                        this.registrosFiltrado = this.registros;
                         console.log('Todos las tickets', this.registros);
                         return;
                     }
@@ -144,6 +115,42 @@ export class TicketsComponent implements OnInit, AfterViewInit {
                 });
             }
         });
+    }
+
+    onFiltroNombreChangeClick(evento: any) {
+        console.log('filtrar el NOMBRE ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((ticket) =>
+                (ticket.nombreTicket || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroDescripcionChangeClick(evento: any) {
+        console.log('filtrar el descripcion ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((ticket) =>
+                (ticket.descripcionTicket || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroEstadoChangeClick(evento: any) {
+        console.log('filtrar el estado ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            const estado = evento.target.value == 'true' ? true : false;
+            this.registrosFiltrado = this.registros.filter(x => x.estadoTicket == estado);
+        }
     }
 
     toggleNav(): void {

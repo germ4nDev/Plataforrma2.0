@@ -15,40 +15,38 @@
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
-                <!-- <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'CONEXIONES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
-                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
-                                {{ app.codigoAplicacion }}
-                            </option>
-                        </select>
+                        <small>{{ 'CONEXIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreApliChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'CONEXIONES.FILTROS.NOMBREHOLDER' | translate }}" />
+
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
-                                {{ app.nombreAplicacion }}
-                            </option>
-                        </select>
+                        <small>{{ 'CONEXIONES.FILTROS.FILTRONOMBRESUSCRIP' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreSuscripChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'CONEXIONES.FILTROS.NOMBRESUSCRIPHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                        <small>{{ 'CONEXIONES.FILTROS.FILTRONOMBRESERVE' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreServeChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'CONEXIONES.FILTROS.NOMBRESERVEHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                        <small>{{ 'CONEXIONES.FILTROS.FILTRONOMBREBD' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreBDChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'CONEXIONES.FILTROS.NOMBREBDHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'CONEXIONES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
                         </select>
                     </div>
-                </div> -->
+                </div>
             </ng-container>
         </div>
     </aside>
@@ -57,7 +55,7 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-data-table
-                    [data]="registros"
+                    [data]="registrosFiltrado"
                     [columns]="['nombreAplicacion', 'nombreSuscriptor', 'nombreServidor', 'BDNombre', 'nomEstado']"
                     [columnTitles]="[
                       'CONEXIONES.NOMBREAPLICACION' | translate,

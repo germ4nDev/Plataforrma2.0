@@ -15,40 +15,28 @@
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
-                <!-- <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'APLICACIONES.FILTROS.TITULO' | translate }}</h6>
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'CONEXIONES.SERVIDORES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTROCODIGO' | translate }}</small>
-                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
-                                {{ app.codigoAplicacion }}
-                            </option>
-                        </select>
+                        <small>{{ 'CONEXIONES.SERVIDORES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'CONEXIONES.SERVIDORES.FILTROS.NOMBRECHOLDER' | translate }}" />
+
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="app.nombreAplicacion" *ngFor="let app of aplicaciones">
-                                {{ app.nombreAplicacion }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'CONEXIONES.SERVIDORES.FILTROS.FILTRODECRIPCION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'CONEXIONES.SERVIDORES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                        <small>{{ 'CONEXIONES.SERVIDORES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
                         </select>
                     </div>
-                </div> -->
+                </div>
             </ng-container>
         </div>
     </aside>
@@ -57,7 +45,7 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <app-data-table
-                    [data]="registros"
+                    [data]="registrosFiltrado"
                     [columns]="['nombreServidor', 'descripcionServidor', 'rutaServidor', 'nomEstado']"
                     [columnTitles]="[
                       'CONEXIONES.SERVIDORES.NOMBRESERVIDOR' | translate,

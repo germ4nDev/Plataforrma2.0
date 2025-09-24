@@ -28,6 +28,7 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
     //#region VARIABLES
     registrosSub?: Subscription;
     registros: PTLContenidoELModel[] = [];
+    registrosFiltrado: PTLContenidoELModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
     gradientConfig;
@@ -62,6 +63,7 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
                 contenido.nomEstado = contenido.estadoContenido== true ? 'Activa' : 'Inactiva';
               });
               this.registros = resp.contenidos;
+              this.registrosFiltrado = resp.contenidos;
               console.log('Todos los contenidos', this.registros);
               return;
             }
@@ -98,10 +100,11 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log('Eliminar', id);
         this.contenidoService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SITIOS.CONTENIDOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.contenidoId !== id.id);
+            this.consultarRegistros();
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('SITIOS.CONTENIDOS.ELIMINARERROR'), 'error');
@@ -111,6 +114,42 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  onFiltroNombreChangeClick(evento: any) {
+        console.log('filtrar el NOMBRE ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((contenido) =>
+                (contenido.nombreContenido || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroDescripcionChangeClick(evento: any) {
+        console.log('filtrar el descripcion ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((contenido) =>
+                (contenido.descripcionContenido || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroEstadoChangeClick(evento: any) {
+        console.log('filtrar el estado ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            const estado = evento.target.value == 'true' ? true : false;
+            this.registrosFiltrado = this.registros.filter(x => x.estadoContenido == estado);
+        }
+    }
   toggleNav(): void {
     this.toggleSidebar.emit();
   }

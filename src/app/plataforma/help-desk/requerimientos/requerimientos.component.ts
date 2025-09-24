@@ -2,12 +2,10 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DataTablesModule, DataTableDirective } from 'angular-datatables';
-import { log } from 'console';
-import { Subscription, Subject, tap, catchError, of } from 'rxjs';
+import { DataTablesModule} from 'angular-datatables';
+import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService, NavigationService } from 'src/app/theme/shared/service';
+import { NavigationService } from 'src/app/theme/shared/service';
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
@@ -16,6 +14,7 @@ import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-c
 import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { GradientConfig } from 'src/app/app-config';
+import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 
 @Component({
     selector: 'app-requerimientos',
@@ -30,25 +29,22 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
     //#region VARIABLES
     registrosSub?: Subscription;
     registros: PTLRequerimientoTKModel[] = [];
+    registrosFiltrado: PTLRequerimientoTKModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
     gradientConfig;
     hasFiltersSlot: boolean = false;
     menuItems: NavigationItem[] = [];
     activeTab: 'menu' | 'filters' | 'main' = 'menu';
-    //   [x: string]: any;
-    //   @ViewChild(DataTableDirective, { static: false })
-    //   datatableElement!: DataTableDirective;
-    //   dtColumnSearchingOptions: DataTables.Settings = {};
-    //   dtTrigger: Subject<any> = new Subject<any>();
+    tipoEstado: string = "";
+    estadosFiltrados: any[] = [];
     //#endregion VARIABLES
     constructor(
         private router: Router,
         private translate: TranslateService,
         private navigationService: NavigationService,
         private requerimientosService: PTLRequerimientosTkService,
-        private languageService: LanguageService,
-        private BreadCrumb: BreadcrumbComponent
+        private estadosService: PTLEstadosService
     ) {
         this.gradientConfig = GradientConfig;
     }
@@ -57,24 +53,7 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
         this.menuItems = this.navigationService.getNavigationItems(appCode);
         this.hasFiltersSlot = true;
         this.consultarRegistros();
-        // this.languageService.currentLang$.subscribe((lang) => {
-        //   this.translate.use(lang);
-        //   this.translate
-        //     .get(['TICKETS.REQUERIMIENTOS.NOMBREREQUERIMIENTO', 'TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO', 'TICKETS.REQUERIMIENTOS.ESTADOREQUERIMIENTO'])
-        //     .subscribe((translations) => {
-        //       this.tituloPagina = translations['REQUERIMIENTOS.TITLE'];
-        //       this.dtColumnSearchingOptions = {
-        //         responsive: true,
-        //         columns: [
-        //           { title: translations['TICKETS.REQUERIMIENTOS.NOMBREREQUERIMIENTO'], data: 'nombreRequerimiento' },
-        //           { title: translations['TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO'], data: 'descripcionRequerimiento' },
-        //           { title: translations['TICKETS.REQUERIMIENTOS.ESTADOREQUERIMIENTO'], data: 'estadoRequerimiento' },
-        //           { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-        //         ]
-        //       };
-        //       this.consultarRegistros();
-        //     });
-        // });
+        this.consultarEstado();
     }
 
     consultarRegistros() {
@@ -90,6 +69,7 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
                             Requerimiento.nomEstado = Requerimiento.estadoRequerimiento;
                         });
                         this.registros = resp.requerimientos;
+                        this.registrosFiltrado = this.registros;
                         console.log('Todos las Requerimientos', this.registros);
                         // this.dtTrigger.next(null);
                         return;
@@ -102,31 +82,30 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
             )
             .subscribe();
     }
+    consultarEstado() {
+    this.estadosService
+        .getRegistros()
+        .pipe(
+        tap((resp: any) => {
+            if (resp.ok) {
+            this.estadosFiltrados = resp.estados;
+            console.log('Estados filtrados:', this.estadosFiltrados);
+            }
+        }),
+        catchError((err) => {
+            console.error('Error al consultar estados:', err);
+            return of(null);
+        })
+        )
+        .subscribe();
+    }
 
     ngAfterViewInit(): void {
-        // this.BreadCrumb.setBreadcrumb();
-        // this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        //   dtInstance.columns().every(function () {
-        //     const that = this;
-        //     $('input', this.header()).on('keyup change', function () {
-        //       const valor = $(this).val() as string;
-        //       if (that.search() !== valor) {
-        //         that.search(valor).draw();
-        //       }
-        //     });
-        //   });
-        // });
     }
 
     ngOnDestroy(): void {
         // this.dtTrigger.unsubscribe();
     }
-
-    //   filtrarColumna(columna: number, valor: string) {
-    //     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-    //       dtInstance.column(columna).search(valor).draw();
-    //     });
-    //   }
 
     OnNuevoRegistroClick() {
         this.router.navigate(['help-desk/gestion-requerimiento/']);
@@ -158,6 +137,41 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
                 });
             }
         });
+    }
+
+    onFiltroNombreChangeClick(evento: any) {
+        console.log('filtrar el NOMBRE ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((requerimiento) =>
+                (requerimiento.nombreRequerimiento || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroDescripcionChangeClick(evento: any) {
+        console.log('filtrar el descripcion ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((requerimiento) =>
+                (requerimiento.descripcionRequerimiento || '').toLowerCase().includes(textoFiltro)
+            );
+            console.log('filtrados', this.registrosFiltrado);
+        }
+    }
+
+    onFiltroEstadoChangeClick(evento: any) {
+        console.log('filtrar el estado ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            this.registrosFiltrado = this.registros.filter(x => x.estadoRequerimiento == evento.target.value);
+        }
     }
 
     toggleNav(): void {

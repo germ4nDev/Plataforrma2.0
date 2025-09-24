@@ -17,7 +17,9 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 export class DatatableComponent implements OnInit, OnChanges {
     @Input() data: any[] = [];
     @Input() columns: string[] = [];
+    @Input() detailsColumns: string[] = [];
     @Input() columnTitles: string[] = [];
+    @Input() detailTitles: string[] = [];
     @Input() exportLabel: string = 'Exportar';
     @Input() newButtonLabel: string = 'Nueva Aplicación';
     @Input() showAvatar: boolean = false;
@@ -29,6 +31,7 @@ export class DatatableComponent implements OnInit, OnChanges {
     @Input() showViewButton: boolean = false;
     @Input() showEditButton: boolean = false;
     @Input() showDeleteButton: boolean = false;
+    @Input() showDetail: boolean = false;
     @Input() buttonsClass: string = 'btn btn-primary';
 
     @Output() viewRecord = new EventEmitter<void>();
@@ -45,12 +48,13 @@ export class DatatableComponent implements OnInit, OnChanges {
 
     public sortByColumn: string | null = null;
     public sortDirection: 'asc' | 'desc' = 'asc';
+    public registroId: number = 0;
 
     constructor(
     ) { }
 
     ngOnInit(): void {
-        console.log('entrar aqui');
+        console.log('entrar aqui',this.data);
         // Aquí puedes dejar lógica que se ejecuta solo una vez si es necesario.
     }
 
@@ -85,6 +89,12 @@ export class DatatableComponent implements OnInit, OnChanges {
         }
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         this.paginatedData = this.filteredData.slice(startIndex, startIndex + this.itemsPerPage);
+        console.log('paginatedata', this.paginatedData);
+        console.log('detailtitulos', this.detailTitles);
+        console.log('detailvalues', this.detailsColumns);
+        console.log('colums', this.columns);
+
+
     }
 
     onPageChange(page: number): void {
@@ -163,5 +173,9 @@ export class DatatableComponent implements OnInit, OnChanges {
 
     onExcelExport(): void {
         this.newRecord.emit();
+    }
+
+    toggleDetails(row: any): void {
+        this.registroId = this.registroId === row[this.idField] ? null : row[this.idField];
     }
 }
