@@ -20,7 +20,9 @@
             "SHOW": "Mostrar Todas",
             "PROFILE": "Perfil",
             "MESSAGES": "Mis Mensajes",
-            "LOCK": "Bloquear Pantalla"
+            "LOCK": "Bloquear Pantalla",
+            "NAVBARCOLOR": "Colr Encabezado",
+            "THEME": "Tema"
         },
         "FILTROTODOS": "Mostrar Todos",
         "INSERTAR": "El registro se insertó correctamente",

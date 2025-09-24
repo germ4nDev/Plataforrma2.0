@@ -45,6 +45,7 @@ export class NavRightComponent implements DoCheck, OnInit {
   friendId!: number;
   gradientConfig = GradientConfig;
   isDarkTheme: boolean = false;
+  iconoTema: string = '';
   navbarColor: string = '';
   currentLanguage: string = 'es';
   colorPalette: any[] = [
@@ -61,6 +62,8 @@ export class NavRightComponent implements DoCheck, OnInit {
     private languageService: LanguageService
   ) {
     console.log('abriendo navbar-right', this.colorPalette);
+    console.log('isDarkTheme', this.isDarkTheme);
+    this.iconoTema = this.isDarkTheme ? 'fas fa-sun' : 'fas fa-moon';
   }
 
   ngOnInit(): void {
@@ -77,6 +80,8 @@ export class NavRightComponent implements DoCheck, OnInit {
 
   toggleTheme(): void {
     this.themeService.toggleDarkTheme();
+    console.log('isDarkTheme', this.isDarkTheme);
+    this.iconoTema = this.isDarkTheme ? 'fas fa-sun' : 'fas fa-moon';
   }
 
   onNavbarColorChange(i: number): void {
