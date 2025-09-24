@@ -19,7 +19,9 @@
             "SHOW": "Show All",
             "PROFILE": "Profile",
             "MESSAGES": "My Messages",
-            "LOCK": "Lock Screen"
+            "LOCK": "Lock Screen",
+            "NAVBARCOLOR": "Select Navbar Color",
+            "THEME": "Theme"
         },
         "FILTROTODOS": "Show All",
         "INSERTAR": "The record was successfully created",

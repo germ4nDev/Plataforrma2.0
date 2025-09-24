@@ -41,59 +41,6 @@
             </tr>
         </thead>
 
-        <!-- <tbody>
-            <tr *ngFor="let row of paginatedData">
-                <td *ngFor="let col of columns">
-                    <ng-container *ngIf="col === 'fotoUsuario' && showAvatar; else defaultCell">
-                        <img [src]="'assets/images/user/' + row[col]" [alt]="'Avatar de ' + row['nombreUsuario']"
-                            class="avatar-table">
-                    </ng-container>
-
-                    <ng-template #defaultCell>
-                        {{ row[col] }}
-                    </ng-template>
-                </td>
-
-                <td *ngIf="columns.includes('usuario')">{{ row['usuario'] }}</td>
-
-                <td *ngIf="columns.includes('aplicaciones')">
-                    <span *ngFor="let app of row['aplicaciones']">
-                        {{ app }}<br>
-                    </span>
-                </td>
-
-                <td *ngIf="columns.includes('suites')">
-                    <span *ngFor="let suite of row['suites']">
-                        {{ suite }}<br>
-                    </span>
-                </td>
-
-                <td *ngIf="columns.includes('roles')">
-                    <span *ngFor="let rol of row['roles']">
-                        {{ rol }}<br>
-                    </span>
-                </td>
-
-                <td *ngIf="columns.includes('estado')">{{ row['estado'] }}</td>
-
-                <td *ngIf="showActions">
-                    <button *ngIf="showViewButton" class="btn btn-sm btn-outline-primary me-1" (click)="onView(row)">
-                        <i class="feather icon-edit"></i>
-                    </button>
-                    <button *ngIf="showEditButton" class="btn btn-sm btn-outline-primary me-1" (click)="onEdit(row)">
-                        <i class="feather icon-edit"></i>
-                    </button>
-                    <button *ngIf="showDeleteButton" class="btn btn-sm btn-outline-danger" (click)="onDelete(row)">
-                        <i class="feather icon-trash"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr *ngIf="paginatedData.length === 0">
-                <td [attr.colspan]="columns.length + (showActions ? 1 : 0)" class="text-center">No data available in
-                    table</td>
-            </tr>
-        </tbody> -->
-
         <tbody *ngFor="let row of paginatedData; let i = index">
             <tr>
                 <td style="width: 10px;" *ngIf="showDetail">
@@ -105,7 +52,6 @@
                         <img [src]="'assets/images/user/' + row[col]" [alt]="'Avatar de ' + row['nombreUsuario']"
                             class="avatar-table">
                     </ng-container>
-
                     <ng-template #checkNested>
                         <ng-container
                             *ngIf="col === 'aplicaciones' || col === 'suites' || col === 'roles'; else defaultCell">
@@ -114,12 +60,10 @@
                             </span>
                         </ng-container>
                     </ng-template>
-
                     <ng-template #defaultCell>
                         {{ row[col] }}
                     </ng-template>
                 </td>
-
                 <td style="width: 120px;" *ngIf="showActions">
                     <button *ngIf="showViewButton" class="btn btn-sm btn-outline-primary me-1" (click)="onView(row)">
                         <i class="feather icon-edit"></i>
@@ -132,35 +76,31 @@
                     </button>
                 </td>
             </tr>
-            <tr *ngIf="registroId == row[idField]">
-                <td>
-                    <table class="row-border hover table nowrap w-100">
-                        <thead>
-                            <tr>
-                                <th *ngFor="let title of detailTitles; let i = index" style="cursor: pointer">
-                                    {{ title | translate }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td *ngFor="let detailCol of detailsColumns">
-                                    <ng-template>
-                                        {{ row[detailCol] }}
-                                    </ng-template>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+            <tr *ngIf="registroId === row[idField]">
+                <td [attr.colspan]="columns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)">
+                    <div class="row" style="margin: 0 auto;"><hr>
+                        <div class="row col-md-10" *ngFor="let detailColumn of detailsColumns; let i = index" style="margin-bottom: 20px !important; margin-left: 25px !important;">
+                            <div class="col-md-2">
+                                {{ detailTitles[i] | translate | uppercase }}
+                            </div>
+                            <div class="col-md-8">
+                                {{ row[detailColumn] }}
+                            </div>
+                        </div>
+                    </div><hr>
                 </td>
             </tr>
+
             <tr *ngIf="paginatedData.length === 0">
-                <td [attr.colspan]="columns.length + (showActions ? 1 : 0)" class="text-center">No data available in table</td>
+                <td [attr.colspan]="columns.length + (showActions ? 1 : 0)" class="text-center">No data available in
+                    table</td>
             </tr>
         </tbody>
 
         <tfoot *ngIf="columns.length > 0">
             <tr>
+                <td *ngIf="showDetail"></td>
                 <td *ngFor="let column of columns; let i = index">
                     <ng-container *ngIf="column !== 'fotoUsuario'">
                         <input type="text" class="form-control" [placeholder]="columnTitles[i] | translate"
@@ -171,6 +111,8 @@
             </tr>
         </tfoot>
     </table>
+
+
 
     <div class="dt-footer d-flex justify-content-between align-items-center">
         <div>

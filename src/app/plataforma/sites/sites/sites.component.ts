@@ -80,9 +80,6 @@ export class SitesComponent implements OnInit {
             .subscribe();
     }
 
-    //   ngAfterViewInit(): void {
-    //   }
-
     getEstado(estado: boolean): string {
         return estado ? 'Activo' : 'Inactivo';
     }
