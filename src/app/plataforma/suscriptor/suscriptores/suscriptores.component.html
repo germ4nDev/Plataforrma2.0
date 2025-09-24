@@ -46,13 +46,16 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['codigoSuscriptor', 'nombreSuscriptor', 'identificacion', 'descripcionSuscriptor', 'nomEstado']"
+                    [columns]="['codigoSuscriptor', 'nombreSuscriptor', 'identificacion', 'nomEstado']"
                     [columnTitles]="[
                       'SUSCRIPTORES.CODE' | translate,
                       'SUSCRIPTORES.NAME'| translate,
                       'SUSCRIPTORES.IDENTIFICATION' | translate,
-                      'SUSCRIPTORES.DESCRIPTION' | translate,
                       'SUSCRIPTORES.STATUS' | translate
+                    ]"
+                    [detailsColumns]="['descripcionSuscriptor']"
+                    [detailTitles]="[
+                        'SUSCRIPTORES.DESCRIPTION' | translate
                     ]"
                     [idField]="'suscriptorId'"
                     [tableTitle]="'SUSCRIPTORES.TITLE' | translate"
@@ -62,6 +65,7 @@
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
+                    [showDetail]="true"
                     [newButtonLabel]="'SUSCRIPTORES.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"

@@ -46,12 +46,15 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nombreServidor', 'descripcionServidor', 'rutaServidor', 'nomEstado']"
+                    [columns]="['nombreServidor', 'rutaServidor', 'nomEstado']"
                     [columnTitles]="[
                       'CONEXIONES.SERVIDORES.NOMBRESERVIDOR' | translate,
-                      'CONEXIONES.SERVIDORES.DESCRIPCIONSERVIDOR'| translate,
                       'CONEXIONES.SERVIDORES.RUTASERVIDOR' | translate,
                       'CONEXIONES.SERVIDORES.ESTADOSERVIDOR' | translate
+                    ]"
+                    [detailsColumns]="['descripcionServidor']"
+                    [detailTitles]="[
+                      'CONEXIONES.SERVIDORES.DESCRIPCIONSERVIDOR'| translate
                     ]"
                     [idField]="'servidorId'"
                     [tableTitle]="'CONEXIONES.SERVIDORES.TITLE' | translate"
@@ -61,6 +64,7 @@
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
+                    [showDetail]="true"
                     [newButtonLabel]="'CONEXIONES.SERVIDORES.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"
