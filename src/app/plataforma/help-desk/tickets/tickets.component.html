@@ -46,11 +46,14 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nombreTicket', 'descripcionTicket', 'nomEstado']"
+                    [columns]="['nombreTicket','nomEstado']"
                     [columnTitles]="[
                       'TICKETS.NOMBRETICKET' | translate,
-                      'TICKETS.DESCRIPCIONTICKET'| translate,
                       'TICKETS.ESTADOTICKET' | translate
+                    ]"
+                    [detailsColumns]="['descripcionTicket']"
+                    [detailTitles]="[
+                       'TICKETS.DESCRIPCIONTICKET'| translate
                     ]"
                     [idField]="'ticketId'"
                     [tableTitle]="'TICKETS.TITLE' | translate"
@@ -60,6 +63,7 @@
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
+                    [showDetail]="true"
                     [newButtonLabel]="'TICKETS.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"

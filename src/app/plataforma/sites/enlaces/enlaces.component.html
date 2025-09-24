@@ -45,12 +45,15 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nombreEnlace', 'descripcionEnlace', 'rutaEnlace','nomEstado']"
+                    [columns]="['nombreEnlace','rutaEnlace','nomEstado']"
                     [columnTitles]="[
                       'SITIOS.ENLACES.NAME' | translate,
-                      'SITIOS.ENLACES.DESCRIPTION' | translate,
                       'SITIOS.ENLACES.RUTA'| translate,
                       'SITIOS.ENLACES.STATUS' | translate
+                    ]"
+                    [detailsColumns]="['descripcionEnlace']"
+                    [detailTitles]="[
+                      'SITIOS.ENLACES.DESCRIPTION'| translate
                     ]"
                     [idField]="'enlaceId'"
                     [tableTitle]="'SITIOS.ENLACES.TITLE' | translate"
@@ -60,6 +63,7 @@
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
+                    [showDetail]="true"
                     [newButtonLabel]="'SITIOS.ENLACES.GESTION.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"
