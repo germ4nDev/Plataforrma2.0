@@ -57,22 +57,20 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.BreadCrumb.setBreadcrumb();
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
-        });
-      });
-    });
+    // this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
+    //   dtInstance.columns().every(function () {
+    //     $('input', this.header()).on('keyup change', function () {
+    //       const valor = $(this).val() as string;
+    //       if (that.search() !== valor) {
+    //         that.search(valor).draw();
+    //       }
+    //     });
+    //   });
+    // });
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this.navigationService.getNavigationItems();
     console.log('elementos menu componente', this.menuItems);
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);

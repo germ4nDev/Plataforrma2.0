@@ -1,14 +1,98 @@
-import { Injectable } from '@angular/core';
+/* eslint-disable @angular-eslint/contextual-lifecycle */
+import { Injectable, OnInit } from '@angular/core';
 import { NavigationItem } from '../../layout/admin/navigation/navigation';
+import { PtlAplicacionesService } from './ptlaplicaciones.service';
+import { PtlSuitesAPService } from './ptlsuites-ap.service';
+import { PtlmodulosApService } from './ptlmodulos-ap.service';
+import { Subscription, tap, catchError, of } from 'rxjs';
+import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
+import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
+import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NavigationService {
-  constructor() {}
+export class NavigationService implements OnInit {
+  aplicaciones: PTLAplicacionModel[] = [];
+  suites: PTLSuiteAPModel[] = [];
+  suitesApp: PTLSuiteAPModel[] = [];
+  modulos: PTLModuloAP[] = [];
+  modulosSu: PTLModuloAP[] = [];
+  aplicacionesSub?: Subscription;
+  suitesSub?: Subscription;
+  modulosSub?: Subscription;
+  aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
+  suite: PTLSuiteAPModel = new PTLSuiteAPModel();
+  modulo: PTLModuloAP = new PTLModuloAP();
 
-  getNavigationItems(appCode: string): NavigationItem[] {
-    switch (appCode) {
+  constructor(
+    private _aplicacionesService: PtlAplicacionesService,
+    private _suitesService: PtlSuitesAPService,
+    private _modulosService: PtlmodulosApService,
+    private _localStorageService: LocalStorageService
+  ) {}
+
+  ngOnInit() {
+    this.consultarAplicacines();
+    this.consultarSuites();
+    this.consultarModulos();
+  }
+
+  consultarAplicacines() {
+    this.aplicacionesSub = this._aplicacionesService
+      .getAplicaciones()
+      .pipe(
+        tap((resp) => {
+          if (resp.ok) {
+            this.aplicaciones = resp.aplicaciones;
+          }
+        }),
+        catchError((err) => {
+          console.error(err);
+          return of([]);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarSuites(): void {
+    this.suitesSub = this._suitesService
+      .geSuitesAP()
+      .pipe(
+        tap((resp) => {
+          if (resp.ok) {
+            this.suites = resp.suites;
+          }
+        }),
+        catchError((err) => {
+          console.error(err);
+          return of([]);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarModulos(): void {
+    this.modulosSub = this._modulosService
+      .getRegistros()
+      .pipe(
+        tap((resp) => {
+          if (resp.ok) {
+            this.modulos = resp.modulos;
+          }
+        }),
+        catchError((err) => {
+          console.error(err);
+          return of([]);
+        })
+      )
+      .subscribe();
+  }
+
+  getNavigationItems(): NavigationItem[] {
+    this.aplicacion = this._localStorageService.getAplicaicionLocalStorage();
+    switch (this.aplicacion.codigoAplicacion) {
       case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
         console.log('menu plataforma', this.getPlataformaItems());
         return this.getPlataformaItems();
@@ -21,6 +105,31 @@ export class NavigationService {
   }
 
   private getPlataformaItems(): NavigationItem[] {
+    this.suitesApp = this.suites.filter(x => x.codigoAplicacion == this.aplicacion.codigoAplicacion);
+    // let suiteMenu = [];
+    // if (this.suitesApp.length > 0) {
+    //     this.suitesApp.forEach(su => {
+    //         this.modulosSu = this.modulos.filter(x => x.codigoSuite == su.codigoSuite);
+    //         const modChildren = [];
+    //         if (this.modulosSu.length > 0) {
+    //              this.modulosSu.forEach(modu => {
+
+    //             });
+    //         }
+    //         const objSu = {
+    //             id: su.codigoSuite,
+    //             title: su.nombreSuite,
+    //             type: 'group',
+    //             icon: 'feather icon-monitor',
+    //             children: [
+
+    //             ]
+    //         }
+    //     });
+    // }
+
+
+
     return [
       {
         id: 'e1a8fa99-15db-479b-a0a4-9c2be72273b5',

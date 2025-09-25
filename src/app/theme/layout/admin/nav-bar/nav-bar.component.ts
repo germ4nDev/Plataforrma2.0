@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 import { NavRightComponent } from './nav-right/nav-right.component';
-import { NavSearchComponent } from './nav-left/nav-search/nav-search.component';
 import { ThemeService } from 'src/app/theme/shared/service/theme.service';
 
 @Component({

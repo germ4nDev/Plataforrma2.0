@@ -64,6 +64,18 @@ export class PtlAplicacionesService {
     return this.http.post(url, aplicacion);
   }
 
+getAplicacionByCode(code: string) {
+    const url = `${base_url}/aplicaciones/code/${code}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('data de las aplicaciones', resp.aplicaciones);
+        return {
+          ok: true,
+          aplicacion: resp.aplicacion
+        };
+      })
+    );
+  }
   actualizarAplicacion(aplicacion: PTLAplicacionModel) {
     const url = `${base_url}/aplicaciones/${aplicacion.aplicacionId}`;
     return this.http.put(url, aplicacion).pipe(

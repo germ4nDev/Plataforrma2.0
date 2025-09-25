@@ -32,16 +32,16 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 })
 export class ModulosComponent implements OnInit{
   @Output() toggleSidebar = new EventEmitter<void>();
-  suites: PTLSuiteAPModel[] = [];
   aplicaciones: PTLAplicacionModel[] = [];
+  suites: PTLSuiteAPModel[] = [];
   registros: PTLModuloAP[] = [];
+  aplicacionesSub?: Subscription;
+  suitesSub?: Subscription;
+  registrosSub?: Subscription;
   registrosFiltrado: PTLModuloAP[] = [];
   moduloTituloExcel: string = '';
   filtroPersonalizado: string = '';
   hasFiltersSlot: boolean = false;
-  suitesSub?: Subscription;
-  aplicacionesSub?: Subscription;
-  registrosSub?: Subscription;
   gradientConfig;
   lang = localStorage.getItem('lang');
   menuItems: NavigationItem[] = [];

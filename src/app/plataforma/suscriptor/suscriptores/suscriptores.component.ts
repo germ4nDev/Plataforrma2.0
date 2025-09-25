@@ -47,8 +47,7 @@ export class SuscriptoresComponent implements OnInit {
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this.navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.consultarRegistros();
   }
