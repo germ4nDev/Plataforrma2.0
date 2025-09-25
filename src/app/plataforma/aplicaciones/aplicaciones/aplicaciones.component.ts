@@ -30,6 +30,7 @@ export class AplicacionesComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   aplicaciones: PTLAplicacionModel[] = [];
   aplicacionesFiltrado: PTLAplicacionModel[] = [];
+  moduloTituloExcel: string = '';
   filtroPersonalizado: string = '';
   hasFiltersSlot: boolean = false;
   registrosSub?: Subscription;
@@ -51,6 +52,7 @@ export class AplicacionesComponent implements OnInit {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.hasFiltersSlot = true;
+    this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Aplicaciones' : 'List of Aplications';
     this.consultarAplicaciones();
   }
 
@@ -155,6 +157,8 @@ export class AplicacionesComponent implements OnInit {
       }
     });
   }
+
+
 
   toggleNav(): void {
     this.toggleSidebar.emit();
