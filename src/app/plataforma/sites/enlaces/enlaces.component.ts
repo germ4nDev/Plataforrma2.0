@@ -1,14 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataTableDirective, DataTablesModule } from 'angular-datatables';
+import { DataTablesModule } from 'angular-datatables';
 import Swal from 'sweetalert2';
 
-import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { catchError, of, Subject, Subscription, tap } from 'rxjs';
+import { catchError, of, Subscription, tap } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -24,7 +24,7 @@ import { DatatableComponent } from "src/app/theme/shared/components/data-table/d
   templateUrl: './enlaces.component.html',
   styleUrls: ['./enlaces.component.scss']
 })
-export class EnlacesComponent implements OnInit, AfterViewInit {
+export class EnlacesComponent implements OnInit {
     @Output() toggleSidebar = new EventEmitter<void>();
     //#region VARIABLES
     registrosSub?: Subscription;
@@ -74,12 +74,6 @@ export class EnlacesComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe();
-  }
-
-  ngAfterViewInit(): void {
-  }
-
-  ngOnDestroy(): void {
   }
 
   OnNuevoRegistroClick() {

@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
@@ -58,8 +59,6 @@ export class SeguimientosComponent implements OnInit {
     this.consultarRegistros();
     this.consultarEstado();
   }
-
-  ngOnDestroy(): void {}
 
   consultarRegistros() {
     this.registrosSub = this.seguimientosService

@@ -1,12 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DataTablesModule, DataTableDirective } from 'angular-datatables';
-import { Subscription, Subject, tap, catchError, of } from 'rxjs';
+import { DataTablesModule } from 'angular-datatables';
+import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService } from 'src/app/theme/shared/service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
@@ -25,7 +24,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
   templateUrl: './suscriptores.component.html',
   styleUrl: './suscriptores.component.scss'
 })
-export class SuscriptoresComponent implements OnInit, AfterViewInit {
+export class SuscriptoresComponent implements OnInit {
     @Output() toggleSidebar = new EventEmitter<void>();
     //#region VARIABLES
     registrosSub?: Subscription;
@@ -47,17 +46,11 @@ export class SuscriptoresComponent implements OnInit, AfterViewInit {
         this.gradientConfig = GradientConfig;
   }
 
-  ngAfterViewInit(): void {
-  }
-
   ngOnInit() {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.hasFiltersSlot = true;
     this.consultarRegistros();
-  }
-
-  OnDestroy(): void {
   }
 
   consultarRegistros() {

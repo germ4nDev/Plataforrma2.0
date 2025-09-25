@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule} from 'angular-datatables';
@@ -23,7 +24,7 @@ import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.servi
     templateUrl: './requerimientos.component.html',
     styleUrl: './requerimientos.component.scss'
 })
-export class RequerimientosComponent implements OnInit, AfterViewInit {
+export class RequerimientosComponent implements OnInit {
     @Output() toggleSidebar = new EventEmitter<void>();
 
     //#region VARIABLES
@@ -98,13 +99,6 @@ export class RequerimientosComponent implements OnInit, AfterViewInit {
         })
         )
         .subscribe();
-    }
-
-    ngAfterViewInit(): void {
-    }
-
-    ngOnDestroy(): void {
-        // this.dtTrigger.unsubscribe();
     }
 
     OnNuevoRegistroClick() {
