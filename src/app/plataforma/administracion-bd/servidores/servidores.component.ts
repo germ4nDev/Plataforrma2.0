@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
-import { Subscription, Subject, tap, catchError, of } from 'rxjs';
+import { Subscription, tap, catchError, of } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -23,7 +24,7 @@ import { DatatableComponent } from "src/app/theme/shared/components/data-table/d
   templateUrl: './servidores.component.html',
   styleUrl: './servidores.component.scss'
 })
-export class ServidoresComponent implements OnInit, AfterViewInit {
+export class ServidoresComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
   @Output()toggleSidebar = new EventEmitter<void>();
   //#region VARIABLES
@@ -48,18 +49,12 @@ export class ServidoresComponent implements OnInit, AfterViewInit {
     this.gradientConfig = GradientConfig;
   }
 
-  ngAfterViewInit(): void {
-  }
-
   ngOnInit() {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     console.log('elementos menu componente', this.menuItems);
     this.hasFiltersSlot = true;
     this.consultarRegistros();
-  }
-
-  ngOnDestroy(): void {
   }
 
   consultarRegistros() {

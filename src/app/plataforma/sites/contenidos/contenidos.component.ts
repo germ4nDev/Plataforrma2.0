@@ -1,10 +1,10 @@
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DataTablesModule, DataTableDirective } from 'angular-datatables';
-import { catchError, of, Subject, Subscription, tap } from 'rxjs';
+import { DataTablesModule } from 'angular-datatables';
+import { catchError, of, Subscription, tap } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -14,7 +14,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenidos-el.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
-import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-contenidos',
@@ -23,27 +23,27 @@ import { DatatableComponent } from "src/app/theme/shared/components/data-table/d
   templateUrl: './contenidos.component.html',
   styleUrls: ['./contenidos.component.scss']
 })
-export class ContenidosComponent implements OnInit, AfterViewInit {
-    @Output() toggleSidebar = new EventEmitter<void>();
-    //#region VARIABLES
-    registrosSub?: Subscription;
-    registros: PTLContenidoELModel[] = [];
-    registrosFiltrado: PTLContenidoELModel[] = [];
-    lang: string = localStorage.getItem('lang') || '';
-    tituloPagina: string = '';
-    gradientConfig;
-    hasFiltersSlot: boolean = false;
-    menuItems: NavigationItem[] = [];
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
-    //#endregion VARIABLES
+export class ContenidosComponent implements OnInit {
+  @Output() toggleSidebar = new EventEmitter<void>();
+  //#region VARIABLES
+  registrosSub?: Subscription;
+  registros: PTLContenidoELModel[] = [];
+  registrosFiltrado: PTLContenidoELModel[] = [];
+  lang: string = localStorage.getItem('lang') || '';
+  tituloPagina: string = '';
+  gradientConfig;
+  hasFiltersSlot: boolean = false;
+  menuItems: NavigationItem[] = [];
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  //#endregion VARIABLES
   constructor(
     private router: Router,
     private translate: TranslateService,
     private contenidoService: PTLContenidosELService,
     private navigationService: NavigationService
-    ) {
-      this.gradientConfig = GradientConfig;
-    }
+  ) {
+    this.gradientConfig = GradientConfig;
+  }
 
   ngOnInit() {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
@@ -54,32 +54,26 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
   }
 
   consultarRegistros() {
-      this.registrosSub = this.contenidoService
-        .getRegistros()
-        .pipe(
-          tap((resp: any) => {
-            if (resp.ok) {
-              resp.contenidos.forEach((contenido: any) => {
-                contenido.nomEstado = contenido.estadoContenido== true ? 'Activa' : 'Inactiva';
-              });
-              this.registros = resp.contenidos;
-              this.registrosFiltrado = resp.contenidos;
-              console.log('Todos los contenidos', this.registros);
-              return;
-            }
-          }),
-          catchError((err) => {
-            console.log('Ha ocurrido un error', err);
-            return of(null);
-          })
-        )
-        .subscribe();
-    }
-
-  ngAfterViewInit(): void {
-  }
-
-  ngOnDestroy(): void {
+    this.registrosSub = this.contenidoService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            resp.contenidos.forEach((contenido: any) => {
+              contenido.nomEstado = contenido.estadoContenido == true ? 'Activa' : 'Inactiva';
+            });
+            this.registros = resp.contenidos;
+            this.registrosFiltrado = resp.contenidos;
+            console.log('Todos los contenidos', this.registros);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   OnNuevoRegistroClick() {
@@ -116,42 +110,41 @@ export class ContenidosComponent implements OnInit, AfterViewInit {
   }
 
   onFiltroNombreChangeClick(evento: any) {
-        console.log('filtrar el NOMBRE ', evento.target.value);
-        const textoFiltro = evento.target.value.toLowerCase();
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros];
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((contenido) =>
-                (contenido.nombreContenido || '').toLowerCase().includes(textoFiltro)
-            );
-            console.log('filtrados', this.registrosFiltrado);
-        }
+    console.log('filtrar el NOMBRE ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((contenido) =>
+        (contenido.nombreContenido || '').toLowerCase().includes(textoFiltro)
+      );
+      console.log('filtrados', this.registrosFiltrado);
     }
+  }
 
-    onFiltroDescripcionChangeClick(evento: any) {
-        console.log('filtrar el descripcion ', evento.target.value);
-        const textoFiltro = evento.target.value.toLowerCase();
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros];
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((contenido) =>
-                (contenido.descripcionContenido || '').toLowerCase().includes(textoFiltro)
-            );
-            console.log('filtrados', this.registrosFiltrado);
-        }
+  onFiltroDescripcionChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((contenido) =>
+        (contenido.descripcionContenido || '').toLowerCase().includes(textoFiltro)
+      );
+      console.log('filtrados', this.registrosFiltrado);
     }
+  }
 
-    onFiltroEstadoChangeClick(evento: any) {
-        console.log('filtrar el estado ', evento.target.value);
-        if (evento.target.value == 'todos') {
-            this.registrosFiltrado = this.registros;
-        } else {
-            const estado = evento.target.value == 'true' ? true : false;
-            this.registrosFiltrado = this.registros.filter(x => x.estadoContenido == estado);
-        }
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = this.registros;
+    } else {
+      const estado = evento.target.value == 'true' ? true : false;
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoContenido == estado);
     }
+  }
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
 }
-
