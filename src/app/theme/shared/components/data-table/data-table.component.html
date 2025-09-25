@@ -80,7 +80,7 @@
             <tr *ngIf="registroId === row[idField]">
                 <td [attr.colspan]="columns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)">
                     <div class="row" style="margin: 0 auto;"><hr>
-                        <div class="row col-md-10" *ngFor="let detailColumn of detailsColumns; let i = index" style="margin-bottom: 20px !important; margin-left: 25px !important;">
+                        <div class="row col-md-10" *ngFor="let detailColumn of detailColumns; let i = index" style="margin-bottom: 20px !important; margin-left: 25px !important;">
                             <div class="col-md-2">
                                 {{ detailTitles[i] | translate | uppercase }}
                             </div>

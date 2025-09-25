@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
@@ -6,6 +7,7 @@ import { PTLPaquetesSCModel } from '../_helpers/models/PTLPaquetesSC.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 
 const base_url = environment.apiUrl;
+
 @Injectable({
   providedIn: 'root'
 })

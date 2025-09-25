@@ -4,6 +4,6 @@ export class PTLPaqueteAP {
         public aplicacionId : number,
         public nombrePaquete : string,
         public descripcionPaquete : string,
-        public estadoPaquete : number
+        public estadoPaquete : boolean
    ) {}
 }
