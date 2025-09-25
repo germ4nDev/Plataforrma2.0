@@ -2,6 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import * as XLSX from 'xlsx';
 
 // Añade OnChanges y SimpleChanges a las importaciones
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
@@ -17,7 +18,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 export class DatatableComponent implements OnInit, OnChanges {
     @Input() data: any[] = [];
     @Input() columns: string[] = [];
-    @Input() detailsColumns: string[] = [];
+    @Input() detailColumns: string[] = [];
     @Input() columnTitles: string[] = [];
     @Input() detailTitles: string[] = [];
     @Input() exportLabel: string = 'Exportar';
@@ -54,8 +55,7 @@ export class DatatableComponent implements OnInit, OnChanges {
     ) { }
 
     ngOnInit(): void {
-        console.log('entrar aqui',this.data);
-        // Aquí puedes dejar lógica que se ejecuta solo una vez si es necesario.
+        console.log('entrar aqui', this.data);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -66,7 +66,6 @@ export class DatatableComponent implements OnInit, OnChanges {
     }
 
     applyFiltersAndPagination(): void {
-        console.log('array que recibo', this.data);
         let tempFilteredData = this.data.filter((row) => {
             for (const key of Object.keys(this.filterValues)) {
                 const filterValue = this.filterValues[key].toLowerCase();
@@ -89,12 +88,6 @@ export class DatatableComponent implements OnInit, OnChanges {
         }
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         this.paginatedData = this.filteredData.slice(startIndex, startIndex + this.itemsPerPage);
-        console.log('paginatedata', this.paginatedData);
-        console.log('detailtitulos', this.detailTitles);
-        console.log('detailvalues', this.detailsColumns);
-        console.log('colums', this.columns);
-
-
     }
 
     onPageChange(page: number): void {
@@ -172,7 +165,15 @@ export class DatatableComponent implements OnInit, OnChanges {
     }
 
     onExcelExport(): void {
-        this.newRecord.emit();
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
+            this.filteredData
+        );
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, this.tableTitle);
+        const hoy = new Date();
+        const timestamp = hoy.getTime();
+        const bookName = this.tableTitle + '_' + timestamp + '.xlsx';
+        XLSX.writeFile(wb, bookName);
     }
 
     toggleDetails(row: any): void {

@@ -47,26 +47,26 @@
                 <app-data-table
                     [data]="registrosFiltrado"
                     [columns]="['nombreSitio', 'urlSitio', 'puertoSitio', 'nomEstado']"
+                    [idField]="'sitioId'"
+                    [tableTitle]="'SITIOS.TITLE' | translate"
                     [columnTitles]="[
                       'SITIOS.NAME' | translate,
                       'SITIOS.URL' | translate,
                       'SITIOS.SITESPORT' | translate,
                       'SITIOS.STATUS' | translate
                     ]"
-                    [detailsColumns]="['nombreSitio', 'descripcionSitio']"
+                    [detailColumns]="['nombreSitio', 'descripcionSitio']"
                     [detailTitles]="[
                       'SITIOS.NAME' | translate,
                       'SITIOS.DESCRIPTION'| translate
                     ]"
-                    [idField]="'sitioId'"
-                    [tableTitle]="'SITIOS.TITLE' | translate"
-                    [showAvatar]="false"
+                    [showDetail]="true"
                     [showActions]="true"
+                    [showAvatar]="false"
                     [showNewButton]="true"
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
-                    [showDetail]="true"
                     [newButtonLabel]="'SITIOS.GESTION.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"

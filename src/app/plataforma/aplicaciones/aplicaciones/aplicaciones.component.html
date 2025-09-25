@@ -59,14 +59,17 @@
                 <app-data-table
                     [data]="aplicacionesFiltrado"
                     [columns]="['codigoAplicacion', 'nombreAplicacion', 'descripcionAplicacion', 'nomEstado']"
+                    [idField]="'aplicacionId'"
+                    [tableTitle]="'APLICACIONES.TITLE' | translate"
                     [columnTitles]="[
                       'APLICACIONES.CODE' | translate,
                       'APLICACIONES.NAME' | translate,
                       'APLICACIONES.DESCRIPTION' | translate,
                       'APLICACIONES.STATUS' | translate
                     ]"
-                    [idField]="'aplicacionId'"
-                    [tableTitle]="'APLICACIONES.TITLE' | translate"
+                    [detailColumns]="[]"
+                    [detailTitles]="[]"
+                    [showDetail]="false"
                     [showAvatar]="false"
                     [showActions]="true"
                     [showNewButton]="true"
