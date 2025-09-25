@@ -46,12 +46,15 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nombreContenido', 'descripcionContenido', 'contenido', 'nomEstado']"
+                    [columns]="['nombreContenido','contenido', 'nomEstado']"
                     [columnTitles]="[
                       'SITIOS.CONTENIDOS.NAME' | translate,
-                      'SITIOS.CONTENIDOS.DESCRIPTION'| translate,
                       'SITIOS.CONTENIDOS.CONTENIDO' | translate,
                       'SITIOS.CONTENIDOS.STATUS' | translate
+                    ]"
+                    [detailsColumns]="['descripcionContenido']"
+                    [detailTitles]="[
+                      'SITIOS.CONTENIDOS.DESCRIPTION'| translate
                     ]"
                     [idField]="'contenidoId'"
                     [tableTitle]="'SITIOS.CONTENIDOS.TITLE' | translate"
@@ -61,6 +64,7 @@
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
+                    [showDetail]="true"
                     [newButtonLabel]="'SITIOS.CONTENIDOS.GESTION.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"
