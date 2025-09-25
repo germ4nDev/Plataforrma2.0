@@ -10,16 +10,16 @@ import { catchError, tap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
-import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
 import Swal from 'sweetalert2';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { PTLVersionAP } from 'src/app/theme/shared/_helpers/models/PTLVersionAP.model';
+import { PtlversionesApService } from 'src/app/theme/shared/service/ptlversiones-ap.service';
 
 @Component({
   selector: 'app-versiones',
@@ -30,9 +30,9 @@ import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaci
 })
 export class VersionesComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
-  registros: PTLSuiteAPModel[] = [];
   aplicaciones: PTLAplicacionModel[] = [];
-  registrosFiltrado: PTLSuiteAPModel[] = [];
+  registros: PTLVersionAP[] = [];
+  registrosFiltrado: PTLVersionAP[] = [];
   moduloTituloExcel: string = '';
   filtroPersonalizado: string = '';
   hasFiltersSlot: boolean = false;
@@ -47,7 +47,7 @@ export class VersionesComponent implements OnInit {
     private router: Router,
     private navigationService: NavigationService,
     private aplicacionesService: PtlAplicacionesService,
-    private registrosService: PtlSuitesAPService,
+    private registrosService: PtlversionesApService,
     private translate: TranslateService
   ) {
     this.gradientConfig = GradientConfig;
@@ -58,7 +58,6 @@ export class VersionesComponent implements OnInit {
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
-    this.consultarSuitees();
     this.consultarAplicacines();
   }
 
@@ -69,6 +68,7 @@ export class VersionesComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             this.aplicaciones = resp.aplicaciones;
+            this.consultarRegistros();
           }
         }),
         catchError((err) => {
@@ -79,14 +79,15 @@ export class VersionesComponent implements OnInit {
       .subscribe();
   }
 
-  consultarSuitees(): void {
+  consultarRegistros(): void {
     this.registrosSub = this.registrosService
-      .geSuitesAP()
+      .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.registros.forEach((app: any) => {
-              app.nomEstado = app.estadoSuite ? 'Activo' : 'Inactivo';
+            resp.registros.forEach((reg: any) => {
+              reg.nomEstado = reg.estadoVersion ? 'Activo' : 'Inactivo';
+              reg.nomAplicacion = this.aplicaciones.filter((x) => x.aplicacionId == reg.aplicacionId)[0] || '';
             });
             this.registros = resp.registros;
             this.registrosFiltrado = resp.registros;
@@ -110,16 +111,7 @@ export class VersionesComponent implements OnInit {
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoAplicacion = evento.target.value));
-    }
-  }
-
-  onFiltroCodigoChangeClick(evento: any) {
-    console.log('filtrar el codigo ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoSuite = evento.target.value));
+      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.aplicacionId = evento.target.value));
     }
   }
 
@@ -128,7 +120,7 @@ export class VersionesComponent implements OnInit {
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.nombreSuite = evento.target.value));
+      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.nombreVersion = evento.target.value));
     }
   }
 
@@ -138,7 +130,7 @@ export class VersionesComponent implements OnInit {
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionSuite || '').toLowerCase().includes(textoFiltro));
+      this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionVersion || '').toLowerCase().includes(textoFiltro));
       console.log('filtrados', this.registrosFiltrado);
     }
   }
@@ -151,33 +143,33 @@ export class VersionesComponent implements OnInit {
     } else {
       const estado = evento.target.value == 'true' ? true : false;
       console.log('Suitees', this.registrosFiltrado);
-      this.registrosFiltrado = this.registros.filter((x) => x.estadoSuite == estado);
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoVersion == estado);
     }
   }
 
   OnNuevoRegistroClick(): void {
-    this.router.navigate(['registros/gestion-aplicacion']);
+    this.router.navigate(['versiones/gestion-version']);
   }
 
   OnEditarRegistroClick(id: number): void {
-    this.router.navigate(['registros/gestion-aplicacion'], { queryParams: { aplicacionId: id } });
+    this.router.navigate(['versiones/gestion-version'], { queryParams: { aplicacionId: id } });
   }
 
   OnEliminarRegistroClick(id: number): void {
-    const nombreApp = this.registrosFiltrado.filter((x) => x.suiteId == id)[0];
+    const nombreApp = this.registrosFiltrado.filter((x) => x.versionId == id)[0];
     Swal.fire({
       title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreSuite}".`,
+      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreVersion}".`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.registrosService.eliminarSuiteAP(id).subscribe({
+        this.registrosService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((a) => a.suiteId !== id);
+            this.registros = this.registros.filter((a) => a.versionId !== id);
             this.registrosFiltrado = [...this.registros];
           },
           error: () => {

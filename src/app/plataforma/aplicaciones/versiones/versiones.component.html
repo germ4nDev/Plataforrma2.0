@@ -16,42 +16,33 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'SUITES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'VERSIONES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
                         <small>{{ 'MODULOS.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
                         <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="reg.codigoaplicacion" *ngFor="let reg of aplicaciones">
+                            <option [value]="reg.aplicacionId" *ngFor="let reg of aplicaciones">
                                 {{ reg.nombreAplicacion }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'SUITES.FILTROS.FILTROCODIGO' | translate }}</small>
-                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="reg.codigoSuite" *ngFor="let reg of registros">
-                                {{ reg.codigoSuite }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'SUITES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'VERSIONES.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="app.nombreSuite" *ngFor="let app of suitees">
-                                {{ app.nombreSuite }}
+                            <option [value]="app.nombreVersion" *ngFor="let app of registros">
+                                {{ app.nombreVersion }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'SUITES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'VERSIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'SUITES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'VERSIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'SUITES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'VERSIONES.FILTROS.FILTROESTADO' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
@@ -68,16 +59,16 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['codigoSuite', 'nombreSuite', 'descripcionSuite', 'nomEstado']"
-                    [idField]="'suiteId'"
-                    [tableTitle]="'SUITES.TITLE' | translate"
+                    [columns]="['nomAplicacion', 'nombreVersion', 'descripcionVersion', 'nomEstado']"
+                    [idField]="'versionId'"
+                    [tableTitle]="'VERSIONES.TITLE' | translate"
                     [columnTitles]="[
-                      'SUITES.CODE' | translate,
-                      'SUITES.NAME' | translate,
-                      'SUITES.DESCRIPTION' | translate,
-                      'SUITES.STATUS' | translate
+                      'VERSIONES.CODE' | translate,
+                      'VERSIONES.NAME' | translate,
+                      'VERSIONES.DESCRIPTION' | translate,
+                      'VERSIONES.STATUS' | translate
                     ]"
-                    [detailsColumns]="[]"
+                    [detailColumns]="[]"
                     [detailTitles]="[]"
                     [showDetail]="false"
                     [showAvatar]="false"
@@ -86,7 +77,7 @@
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
-                    [newButtonLabel]="'SUITES.NEW' | translate"
+                    [newButtonLabel]="'VERSIONES.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)"

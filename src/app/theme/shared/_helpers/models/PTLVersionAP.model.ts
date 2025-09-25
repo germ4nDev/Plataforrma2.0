@@ -1,6 +1,6 @@
 export class PTLVersionAP {
     constructor (
-        public versionesId : number,
+        public versionId : number,
         public aplicacionId : number,
         public nombreVersion : string,
         public descripcionVersion : string,

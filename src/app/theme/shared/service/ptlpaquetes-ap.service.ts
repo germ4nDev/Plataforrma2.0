@@ -3,15 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLVersionAP } from '../_helpers/models/PTLVersionAP.model';
 
 const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
-export class PtlversionesApService {
+export class PTLPaquetesAplicacionesService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
@@ -30,58 +30,58 @@ export class PtlversionesApService {
   }
 
   getRegistros() {
-    const url = `${base_url}/versiones-ap`;
+    const url = `${base_url}/modulos-ap`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de versiones', resp);
+        console.log('servicio de modulo', resp);
         return {
           ok: true,
-          versiones: resp.versiones
+          modulos: resp.modulos
         };
       })
     );
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/versiones-ap/${id}`;
+    const url = `${base_url}/modulos-ap/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('data de la version', resp);
+        console.log('data de modulo', resp);
         return {
           ok: true,
-          version: resp.version
+          modulo: resp.modulo
         };
       })
     );
   }
 
-  postCrearRegistro(verison: PTLVersionAP) {
-    const url = `${base_url}/versiones-ap`;
-    return this.http.post(url, verison);
+  postCrearRegistro(modulo: PTLModuloAP) {
+    const url = `${base_url}/modulos-ap`;
+    return this.http.post(url, modulo);
   }
 
-  putModificarRegistro(version: PTLVersionAP) {
-    const url = `${base_url}/versiones-ap/${version.versionId}`;
-    return this.http.put(url, version).pipe(
+  putModificarRegistro(modulo: PTLModuloAP) {
+    const url = `${base_url}/modulos-ap/${modulo.ModuloId}`;
+    return this.http.put(url, modulo).pipe(
       map((resp: any) => {
-        console.log('data de version modificacda', resp);
+        console.log('data de modulo modificacda', resp);
         return {
           ok: true,
-          version: resp.version
+          modulo: resp.modulo
         };
       })
     );
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/versiones-ap/${_id}`;
+    const url = `${base_url}/modulos-ap/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        console.log('data de version eliminado', resp);
+        console.log('data de modulo eliminado', resp);
         return {
           ok: true,
-          version: resp.version
+          modulo: resp.modulo
         };
       })
     );

@@ -18,7 +18,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
 export class DatatableComponent implements OnInit, OnChanges {
     @Input() data: any[] = [];
     @Input() columns: string[] = [];
-    @Input() detailsColumns: string[] = [];
+    @Input() detailColumns: string[] = [];
     @Input() columnTitles: string[] = [];
     @Input() detailTitles: string[] = [];
     @Input() exportLabel: string = 'Exportar';

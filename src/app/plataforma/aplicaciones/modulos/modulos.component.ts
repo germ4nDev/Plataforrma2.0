@@ -192,11 +192,11 @@ export class ModulosComponent implements OnInit{
   }
 
   OnNuevoRegistroClick(): void {
-    this.router.navigate(['registros/gestion-aplicacion']);
+    this.router.navigate(['modulos/gestion-modulo']);
   }
 
   OnEditarRegistroClick(id: number): void {
-    this.router.navigate(['registros/gestion-aplicacion'], { queryParams: { aplicacionId: id } });
+    this.router.navigate(['modulos/gestion-modulo'], { queryParams: { aplicacionId: id } });
   }
 
   OnEliminarRegistroClick(id: number): void {

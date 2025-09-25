@@ -156,11 +156,11 @@ export class SuitesComponent implements OnInit {
   }
 
   OnNuevoRegistroClick(): void {
-    this.router.navigate(['registros/gestion-aplicacion']);
+    this.router.navigate(['suites/gestion-suite']);
   }
 
   OnEditarRegistroClick(id: number): void {
-    this.router.navigate(['registros/gestion-aplicacion'], { queryParams: { aplicacionId: id } });
+    this.router.navigate(['suites/gestion-suite'], { queryParams: { aplicacionId: id } });
   }
 
   OnEliminarRegistroClick(id: number): void {
