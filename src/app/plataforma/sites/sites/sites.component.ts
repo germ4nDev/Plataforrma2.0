@@ -19,6 +19,8 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 
 @Component({
     selector: 'app-sites',
@@ -33,6 +35,8 @@ export class SitesComponent implements OnInit {
     registrosSub?: Subscription;
     registros: PTLSitiosAPModel[] = [];
     registrosFiltrado: PTLSitiosAPModel[] = [];
+    aplicaciones: PTLAplicacionModel[] = [];
+    aplicacionesSub?: Subscription;
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
     gradientConfig;
@@ -45,6 +49,7 @@ export class SitesComponent implements OnInit {
         private sitiosService: PTLSitiosAPService,
         private translate: TranslateService,
         private navigationService: NavigationService,
+        private aplicacionesService: PtlAplicacionesService
     ) {
         this.gradientConfig = GradientConfig;
     }
@@ -53,6 +58,7 @@ export class SitesComponent implements OnInit {
         const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
         this.menuItems = this.navigationService.getNavigationItems(appCode);
         this.hasFiltersSlot = true;
+        this.consultarAplicaciones();
         this.consultarSitios();
         console.log('elementos menu componente', this.menuItems);
     }
@@ -65,10 +71,11 @@ export class SitesComponent implements OnInit {
                     if (resp.ok) {
                         resp.sitios.forEach((app: any) => {
                             app.nomEstado = app.estadoSitio == true ? 'Activa' : 'Inactiva';
+                            app.nomAplicacion = this.aplicaciones.filter(x => x.aplicacionId == app.aplicacionId)[0].nombreAplicacion || '';
                         });
                         this.registros = resp.sitios;
                         this.registrosFiltrado = resp.sitios;
-                        console.log('Todos las sitiosAP', this.registros);
+                        console.log('Todos los sitios', this.registrosFiltrado);
                         return;
                     }
                 }),
@@ -79,10 +86,22 @@ export class SitesComponent implements OnInit {
             )
             .subscribe();
     }
-
-    getEstado(estado: boolean): string {
-        return estado ? 'Activo' : 'Inactivo';
-    }
+    consultarAplicaciones() {
+        this.aplicacionesSub = this.aplicacionesService
+          .getAplicaciones()
+          .pipe(
+            tap((resp: any) => {
+              if (resp.ok) {
+                this.aplicaciones = resp.aplicaciones;
+              }
+            }),
+            catchError((err) => {
+              console.error(err);
+              return of([]);
+            })
+          )
+          .subscribe();
+      }
 
     //   ngOnDestroy(): void {
     //   }

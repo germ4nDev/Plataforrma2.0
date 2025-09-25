@@ -6,6 +6,7 @@ export class PTLSeguimientoRQModel {
     public descripcionSeguimiento?: string,
     public estadoSeguimiento?: string,
     public estadoRequerimiento?: string,
-    public nomEstado?: string
+    public nomEstado?: string,
+    public nomRequerimiento?: string
   ) {}
 }

@@ -16,6 +16,8 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
+import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
+import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
 
 @Component({
   selector: 'app-enlaces',
@@ -30,6 +32,8 @@ export class EnlacesComponent implements OnInit {
     registrosSub?: Subscription;
     registros: PTLEnlaceSTModel[] = [];
     registrosFiltrado: PTLEnlaceSTModel[] = [];
+    sitios : PTLSitiosAPModel[] = [];
+    sitiosSub?: Subscription;
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
     gradientConfig;
@@ -41,7 +45,8 @@ export class EnlacesComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private enlacesService: PTLEnlacesSTService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private sitiosService: PTLSitiosAPService
     ) {
       this.gradientConfig = GradientConfig;
     }
@@ -50,6 +55,7 @@ export class EnlacesComponent implements OnInit {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.hasFiltersSlot = true;
+    this.consultarSitios();
     this.consultarRegistros();
   }
 
@@ -61,6 +67,7 @@ export class EnlacesComponent implements OnInit {
           if (resp.ok) {
             resp.enlaces.forEach((enlace: any) => {
               enlace.nomEstado = enlace.estadoEnlace== true ? 'Activa' : 'Inactiva';
+              enlace.nomSitio = this.sitios.filter(x => x.sitioId == enlace.sitioId)[0].nombreSitio || '';
             });
             this.registros = resp.enlaces;
             this.registrosFiltrado = resp.enlaces;
@@ -75,6 +82,25 @@ export class EnlacesComponent implements OnInit {
       )
       .subscribe();
   }
+
+    consultarSitios() {
+        this.sitiosSub = this.sitiosService
+        .getRegistros()
+        .pipe(
+            tap((resp: any) => {
+            if (resp.ok) {
+                this.sitios = resp.sitios;
+                console.log('Todos las sitios', this.sitios);
+                return;
+            }
+            }),
+            catchError((err) => {
+            console.log('Ha ocurrido un error', err);
+            return of(null);
+            })
+        )
+        .subscribe();
+    }
 
   OnNuevoRegistroClick() {
     this.router.navigate(['/sites/gestion-enlace']);
