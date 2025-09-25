@@ -6,6 +6,7 @@ export class PTLTicketAPModel {
         public descripcionTicket? : string,
         public estadoTicket? : boolean,
         public usuarioSenderId? : number,
-        public nomEstado? : string
+        public nomEstado? : string,
+        public nomAplicacion? : string
     ) {}
 }

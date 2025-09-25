@@ -16,6 +16,8 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { GradientConfig } from 'src/app/app-config';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
+import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
+import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
 
 @Component({
   selector: 'app-seguimientos',
@@ -31,6 +33,7 @@ export class SeguimientosComponent implements OnInit {
   registrosSub?: Subscription;
   registros: PTLSeguimientoRQModel[] = [];
   registrosFiltrado: PTLSeguimientoRQModel[] = [];
+  requerimientos: PTLRequerimientoTKModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
 
@@ -47,7 +50,9 @@ export class SeguimientosComponent implements OnInit {
     private translate: TranslateService,
     private navigationService: NavigationService,
     private seguimientosService: PTLSeguimientosRqService,
-    private estadosService: PTLEstadosService
+    private estadosService: PTLEstadosService,
+    private requerimientoService: PTLRequerimientosTkService
+
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -56,6 +61,7 @@ export class SeguimientosComponent implements OnInit {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.hasFiltersSlot = true;
+    this.consultarRequerimientos();
     this.consultarRegistros();
     this.consultarEstado();
   }
@@ -68,10 +74,31 @@ export class SeguimientosComponent implements OnInit {
           if (resp.ok) {
             resp.seguimientos.forEach((seguimiento: any) => {
               seguimiento.nomEstado = seguimiento.estadoSeguimiento;
+              seguimiento.nomRequerimiento = this.requerimientos.filter(x => x.requerimientoId == seguimiento.requerimientoId)[0].nombreRequerimiento || '';
+
             });
             this.registros = resp.seguimientos;
             this.registrosFiltrado = resp.seguimientos;
             console.log('Todos las seguimientos', this.registrosFiltrado);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarRequerimientos() {
+    this.registrosSub = this.requerimientoService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            console.log('requerimiento', resp);
+            this.requerimientos = resp.requerimientos;
             return;
           }
         }),

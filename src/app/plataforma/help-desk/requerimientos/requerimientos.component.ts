@@ -16,6 +16,8 @@ import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { GradientConfig } from 'src/app/app-config';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
+import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
+import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
 
 @Component({
     selector: 'app-requerimientos',
@@ -31,6 +33,7 @@ export class RequerimientosComponent implements OnInit {
     registrosSub?: Subscription;
     registros: PTLRequerimientoTKModel[] = [];
     registrosFiltrado: PTLRequerimientoTKModel[] = [];
+    ticket: PTLTicketAPModel[] = [];
     lang: string = localStorage.getItem('lang') || '';
     tituloPagina: string = '';
     gradientConfig;
@@ -45,7 +48,8 @@ export class RequerimientosComponent implements OnInit {
         private translate: TranslateService,
         private navigationService: NavigationService,
         private requerimientosService: PTLRequerimientosTkService,
-        private estadosService: PTLEstadosService
+        private estadosService: PTLEstadosService,
+        private tickesService: PTLTicketsService,
     ) {
         this.gradientConfig = GradientConfig;
     }
@@ -53,6 +57,7 @@ export class RequerimientosComponent implements OnInit {
         const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
         this.menuItems = this.navigationService.getNavigationItems(appCode);
         this.hasFiltersSlot = true;
+        this.consultarTickets();
         this.consultarRegistros();
         this.consultarEstado();
     }
@@ -68,6 +73,7 @@ export class RequerimientosComponent implements OnInit {
                     if (resp.ok) {
                         resp.requerimientos.forEach((Requerimiento: any) => {
                             Requerimiento.nomEstado = Requerimiento.estadoRequerimiento;
+                            Requerimiento.nomTicket = this.ticket.filter(x => x.ticketId == Requerimiento.ticketId)[0].nombreTicket || '';
                         });
                         this.registros = resp.requerimientos;
                         this.registrosFiltrado = this.registros;
@@ -83,6 +89,25 @@ export class RequerimientosComponent implements OnInit {
             )
             .subscribe();
     }
+
+      consultarTickets() {
+        this.registrosSub = this.tickesService
+            .getRegistros()
+            .pipe(
+            tap((resp: any) => {
+                if (resp.ok) {
+                this.ticket = resp.tickets;
+                return;
+                }
+            }),
+            catchError((err) => {
+                console.log('Ha ocurrido un error', err);
+                return of(null);
+            })
+            )
+            .subscribe();
+        }
+
     consultarEstado() {
     this.estadosService
         .getRegistros()
