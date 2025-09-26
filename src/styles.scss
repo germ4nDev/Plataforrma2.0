@@ -653,9 +653,11 @@ body.dark-theme {
 }
 
 .nav-tabs-custom button.active {
-  background-color: var(--aside-tab-bg);
+  background-color: var(--app-navbar-color);
+//   background-color: var(--aside-tab-bg);
   border-bottom: 2px solid var(--aside-tab-active);
-  color: var(--aside-tab-active);
+//   color: var(--aside-tab-active);
+  color: black;
 }
 }
 
@@ -796,7 +798,8 @@ body {
 }
 
 .nav-tabs-custom button.active {
-  background-color: var(--aside-tab-bg);
+  background-color: var(--app-navbar-color);
+//   background-color: var(--aside-tab-bg);
   border-bottom: 2px solid var(--aside-tab-active);
   color: var(--aside-tab-active);
 }
