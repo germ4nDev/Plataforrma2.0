@@ -68,6 +68,12 @@ export class EnlacesComponent implements OnInit {
             resp.enlaces.forEach((enlace: any) => {
               enlace.nomEstado = enlace.estadoEnlace== true ? 'Activa' : 'Inactiva';
               enlace.nomSitio = this.sitios.filter(x => x.sitioId == enlace.sitioId)[0].nombreSitio || '';
+                // const existeSitio = this.sitios.filter(x => x.sitioId === enlace.sitioId)[0];
+                // if (existeSitio) {
+                //     enlace.nomSitio = existeSitio.nombreSitio;
+                // } else {
+                //     enlace.nomSitio = '';
+                // }
             });
             this.registros = resp.enlaces;
             this.registrosFiltrado = resp.enlaces;

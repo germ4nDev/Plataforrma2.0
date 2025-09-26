@@ -616,21 +616,47 @@ body.dark-theme {
     color: var(--app-texto-color) !important;
   }
 
-  .nav-tabs-custom button {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-weight: 600;
-    color: var(--text-color);
-  }
+//   .nav-tabs-custom button {
+//     flex: 1;
+//     padding: 10px;
+//     border: none;
+//     background: transparent;
+//     cursor: pointer;
+//     font-weight: 600;
+//     color: var(--text-color);
+//   }
 
-  .nav-tabs-custom button.active {
-    background-color: var(--aside-tab-bg);
-    border-bottom: 2px solid var(--aside-tab-active);
-    color: var(--aside-tab-active);
-  }
+//   .nav-tabs-custom button.active {
+//     background-color: var(--aside-tab-bg);
+//     border-bottom: 2px solid var(--aside-tab-active);
+//     color: var(--aside-tab-active);
+//   }
+
+.nav-tabs-custom button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-color);
+  transition: all 0.6s ease;
+}
+
+.nav-tabs-custom button:hover {
+  background-color: var(--app-navbar-color);
+  color: var(--app-texto-color);
+}
+
+.nav-tabs-custom button:active {
+  transform: scale(0.95);
+}
+
+.nav-tabs-custom button.active {
+  background-color: var(--aside-tab-bg);
+  border-bottom: 2px solid var(--aside-tab-active);
+  color: var(--aside-tab-active);
+}
 }
 
 html,
@@ -726,9 +752,30 @@ body {
   margin-top: -1rem !important;
 }
 
+// .nav-tabs-custom {
+//   display: flex;
+//   border-bottom: 1px solid var(--aside-border);
+// }
+
+// .nav-tabs-custom button {
+//   flex: 1;
+//   padding: 10px;
+//   border: none;
+//   background: transparent;
+//   cursor: pointer;
+//   font-weight: 600;
+//   color: var(--text-color);
+// }
+
+// .nav-tabs-custom button.active {
+//   background-color: var(--aside-tab-bg);
+//   border-bottom: 2px solid var(--aside-tab-active);
+//   color: var(--aside-tab-active);
+// }
+
 .nav-tabs-custom {
   display: flex;
-  border-bottom: 1px solid var(--aside-border);
+  border-bottom: 1px solid #495057;
 }
 
 .nav-tabs-custom button {
@@ -738,7 +785,14 @@ body {
   background: transparent;
   cursor: pointer;
   font-weight: 600;
-  color: var(--text-color);
+  color: #8a8f94;
+  transition: all 0.6s ease;
+}
+
+.nav-tabs-custom button:hover {
+  background-color: var(--app-navbar-color);
+  color: var(--app-texto-color);
+  cursor: pointer;
 }
 
 .nav-tabs-custom button.active {

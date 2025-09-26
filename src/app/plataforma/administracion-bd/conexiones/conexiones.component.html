@@ -56,15 +56,21 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nombreAplicacion', 'nombreSuscriptor', 'nombreServidor', 'BDNombre', 'nomEstado']"
+                    [columns]="['nombreConexion', 'nomEstado']"
                     [columnTitles]="[
+                      'CONEXIONES.NOMBRECONEXION' | translate,
+                      'CONEXIONES.ESTADOCONEXION' | translate
+                    ]"
+                    [detailColumns]="['nombreAplicacion', 'nombreSuscriptor', 'nombreServidor', 'BDNombre', 'descripcionConexion']"
+                    [detailTitles]="[
                       'CONEXIONES.NOMBREAPLICACION' | translate,
                       'CONEXIONES.NOMBRESUSCRIPTOR'| translate,
                       'CONEXIONES.NOMBRESERVIDOR' | translate,
                       'CONEXIONES.NOMBREBD' | translate,
-                      'CONEXIONES.ESTADOCONEXION' | translate
+                      'CONEXIONES.DESCRIPCIONCONEXION' | translate,
                     ]"
                     [idField]="'conexionId'"
+                    [showDetail]="true"
                     [tableTitle]="'CONEXIONES.TITLE' | translate"
                     [showAvatar]="false"
                     [showActions]="true"
