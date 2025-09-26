@@ -3,7 +3,7 @@ import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } fro
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
-import { Subscription, Subject, tap, catchError, of } from 'rxjs';
+import { Subscription, tap, catchError, of } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -11,8 +11,7 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService, PtlAplicacionesService } from 'src/app/theme/shared/service';
+import { PtlAplicacionesService } from 'src/app/theme/shared/service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
@@ -52,7 +51,6 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
     private conexionService: PTLConexionesBDSTService,
     private aplicacionesService: PtlAplicacionesService,
     private suscriptoresService: PTLSuscriptoresService,
-    private BreadCrumb: BreadcrumbComponent,
     private navigationService: NavigationService
   ) {
     this.gradientConfig = GradientConfig;
