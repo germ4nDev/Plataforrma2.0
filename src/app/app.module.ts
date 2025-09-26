@@ -15,7 +15,6 @@ import { NavBarComponent } from './theme/layout/admin/nav-bar/nav-bar.component'
 import { NavigationComponent } from './theme/layout/admin/navigation/navigation.component';
 import { NavLeftComponent } from './theme/layout/admin/nav-bar/nav-left/nav-left.component';
 import { NavRightComponent } from './theme/layout/admin/nav-bar/nav-right/nav-right.component';
-import { NavSearchComponent } from './theme/layout/admin/nav-bar/nav-left/nav-search/nav-search.component';
 import { ChatMsgComponent } from './theme/layout/admin/nav-bar/nav-right/chat-msg/chat-msg.component';
 import { ChatUserListComponent } from './theme/layout/admin/nav-bar/nav-right/chat-user-list/chat-user-list.component';
 import { FriendComponent } from './theme/layout/admin/nav-bar/nav-right/chat-user-list/friend/friend.component';
@@ -36,11 +35,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    GuestComponent,
-    NavigationComponent
-  ],
+  declarations: [AppComponent, GuestComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -59,6 +54,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NavContentComponent,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    NavigationComponent,
     HttpClientModule,
     TranslateModule.forRoot({
       defaultLanguage: 'es',
@@ -78,7 +74,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ChatUserListComponent,
     ConfigurationComponent,
     FriendComponent
-],
+  ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }

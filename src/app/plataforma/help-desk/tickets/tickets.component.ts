@@ -6,10 +6,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService, NavigationService, PtlAplicacionesService } from 'src/app/theme/shared/service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -17,6 +14,8 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { GradientConfig } from 'src/app/app-config';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import Swal from 'sweetalert2';
+import { NavigationService, PtlAplicacionesService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-tickets',
@@ -45,34 +44,29 @@ export class TicketsComponent implements OnInit {
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private ticketsService: PTLTicketsService,
-    private navigationService: NavigationService,
-    private aplicacionesService: PtlAplicacionesService
-
+    private _navigationService: NavigationService,
+    private _ticketsService: PTLTicketsService,
+    private _aplicacionesService: PtlAplicacionesService
   ) {
     this.gradientConfig = GradientConfig;
   }
-  // ngAfterViewInit(): void {
-  //     throw new Error('Method not implemented.');
-  // }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.consultarAplicaciones();
     this.consultarRegistros();
   }
 
   consultarRegistros() {
-    this.registrosSub = this.ticketsService
+    this.registrosSub = this._ticketsService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
             resp.tickets.forEach((ticket: any) => {
               ticket.nomEstado = ticket.estadoTicket == true ? 'Activo' : 'Inactivo';
-              ticket.nomAplicacion = this.aplicaciones.filter(x => x.aplicacionId == ticket.aplicacionId)[0].nombreAplicacion || '';
+              ticket.nomAplicacion = this.aplicaciones.filter((x) => x.aplicacionId == ticket.aplicacionId)[0].nombreAplicacion || '';
             });
             this.registros = resp.tickets;
             this.registrosFiltrado = this.registros;
@@ -88,22 +82,22 @@ export class TicketsComponent implements OnInit {
       .subscribe();
   }
 
-    consultarAplicaciones() {
-        this.aplicacionesSub = this.aplicacionesService
-            .getAplicaciones()
-            .pipe(
-            tap((resp: any) => {
-                if (resp.ok) {
-                this.aplicaciones = resp.aplicaciones;
-                }
-            }),
-            catchError((err) => {
-                console.error(err);
-                return of([]);
-            })
-            )
-            .subscribe();
-        }
+  consultarAplicaciones() {
+    this.aplicacionesSub = this._aplicacionesService
+      .getAplicaciones()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.aplicaciones = resp.aplicaciones;
+          }
+        }),
+        catchError((err) => {
+          console.error(err);
+          return of([]);
+        })
+      )
+      .subscribe();
+  }
 
   OnNuevoRegistroClick() {
     this.router.navigate(['help-desk/gestion-ticket']);
@@ -123,7 +117,7 @@ export class TicketsComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.ticketsService.deleteEliminarRegistro(id.id).subscribe({
+        this._ticketsService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('TICKETS.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.ticketId !== id.id);

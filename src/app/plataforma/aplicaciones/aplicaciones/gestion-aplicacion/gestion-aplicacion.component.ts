@@ -1,24 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataTablesModule } from 'angular-datatables';
 import { GradientConfig } from 'src/app/app-config';
-import { Location, LocationStrategy } from '@angular/common';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLAplicacionModel } from '../../../../theme/shared/_helpers/models/PTLAplicacion.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service';
 import { v4 as uuidv4 } from 'uuid';
-import Swal from 'sweetalert2';
 import { TranslateModule } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
-import { LayoutComponent } from 'src/app/theme/shared/components/layout/layout.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestion-aplicacion',
@@ -44,41 +40,24 @@ export class GestionAplicacionComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location,
-    private navigationService: NavigationService,
-    private locationStrategy: LocationStrategy,
-    private aplicacionesService: PtlAplicacionesService,
-    private BreadCrumb: BreadcrumbComponent
+   private _navigationService: NavigationService,
+    private _aplicacionesService: PtlAplicacionesService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
-    let current_url = this.location.path();
-    const baseHref = this.locationStrategy.getBaseHref();
-    // if (baseHref) {
-    //   current_url = baseHref + this.location.path();
-    // }
-    // this.windowWidth = window.innerWidth;
-    // if (
-    //   current_url === baseHref + '/layout/collapse-menu' ||
-    //   current_url === baseHref + '/layout/box' ||
-    //   (this.windowWidth >= 992 && this.windowWidth <= 1024)
-    // ) {
-    //   GradientConfig.isCollapse_menu = true;
-    // }
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.route.queryParams.subscribe((params) => {
       const aplicacionId = params['aplicacionId'];
       if (aplicacionId) {
         console.log('me llena el Id', aplicacionId);
         this.modoEdicion = true;
-        this.aplicacionesService.getAplicacionById(aplicacionId).subscribe({
+        this._aplicacionesService.getAplicacionById(aplicacionId).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.aplicacion;
             this.codeAplicacion = resp.aplicacion.codigoAplicacion;
@@ -102,7 +81,7 @@ export class GestionAplicacionComponent implements OnInit {
     }
     if (this.modoEdicion) {
       console.log('1.0 modificar app', this.FormRegistro);
-      this.aplicacionesService.actualizarAplicacion(this.FormRegistro).subscribe({
+      this._aplicacionesService.actualizarAplicacion(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', 'la Aplicación se modificó correctamente', 'success');
@@ -117,7 +96,7 @@ export class GestionAplicacionComponent implements OnInit {
         }
       });
     } else {
-      this.aplicacionesService.crearAplicacion(this.FormRegistro).subscribe({
+      this._aplicacionesService.crearAplicacion(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', 'La Aplicación se insertó correctamente', 'success');

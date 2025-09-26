@@ -7,6 +7,8 @@ import { NavContentComponent } from './nav-content/nav-content.component';
 
 @Component({
   selector: 'app-navigation',
+    standalone: true,
+    imports: [CommonModule, NavContentComponent],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
@@ -24,8 +26,7 @@ export class NavigationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.navigationItems = this.navigationService.getNavigationItems(appCode);
+    this.navigationItems = this.navigationService.getNavigationItems();
     console.log('navigationItems', this.navigationItems);
 
   }

@@ -20,6 +20,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import Swal from 'sweetalert2';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 
 @Component({
   selector: 'app-registros',
@@ -44,26 +45,30 @@ export class SuitesComponent implements OnInit {
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   constructor(
-    private router: Router,
-    private navigationService: NavigationService,
-    private aplicacionesService: PtlAplicacionesService,
-    private registrosService: PtlSuitesAPService,
-    private translate: TranslateService
+    private _router: Router,
+    private _navigationService: NavigationService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _registrosService: PtlSuitesAPService,
+    private _localstorageService: LocalStorageService,
+    private _translate: TranslateService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit(): void {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
-    this.consultarSuitees();
     this.consultarAplicacines();
+    this.consultarSuitees();
+  }
+
+  getLanguageUrl() {
+    return this._localstorageService.getLanguageUrl();
   }
 
   consultarAplicacines() {
-    this.aplicacionesSub = this.aplicacionesService
+    this.aplicacionesSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -80,16 +85,17 @@ export class SuitesComponent implements OnInit {
   }
 
   consultarSuitees(): void {
-    this.registrosSub = this.registrosService
+    this.registrosSub = this._registrosService
       .geSuitesAP()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.registros.forEach((app: any) => {
-              app.nomEstado = app.estadoSuite ? 'Activo' : 'Inactivo';
+            resp.suites.forEach((reg: any) => {
+              reg.nomEstado = reg.estadoSuite ? 'Activo' : 'Inactivo';
+              reg.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion;
             });
-            this.registros = resp.registros;
-            this.registrosFiltrado = resp.registros;
+            this.registros = resp.suites;
+            this.registrosFiltrado = resp.suites;
           }
         }),
         catchError((err) => {
@@ -100,10 +106,7 @@ export class SuitesComponent implements OnInit {
       .subscribe();
   }
 
-  getLanguageUrl(): string {
-    const lang = localStorage.getItem('lang') || 'en';
-    return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`;
-  }
+
 
   onFiltroCodigoAplicacionChangeClick(evento: any) {
     console.log('filtrar el codigo ', evento.target.value);
@@ -156,32 +159,32 @@ export class SuitesComponent implements OnInit {
   }
 
   OnNuevoRegistroClick(): void {
-    this.router.navigate(['suites/gestion-suite']);
+    this._router.navigate(['suites/gestion-suite']);
   }
 
   OnEditarRegistroClick(id: number): void {
-    this.router.navigate(['suites/gestion-suite'], { queryParams: { aplicacionId: id } });
+    this._router.navigate(['suites/gestion-suite'], { queryParams: { aplicacionId: id } });
   }
 
   OnEliminarRegistroClick(id: number): void {
     const nombreApp = this.registrosFiltrado.filter((x) => x.suiteId == id)[0];
     Swal.fire({
-      title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreSuite}".`,
+      title: this._translate.instant('APLICACIONES.ELIMINARTITULO'),
+      text: this._translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreSuite}".`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+      confirmButtonText: this._translate.instant('PLATAFORMA.DELETE'),
+      cancelButtonText: this._translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.registrosService.eliminarSuiteAP(id).subscribe({
+        this._registrosService.eliminarSuiteAP(id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            Swal.fire(this._translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((a) => a.suiteId !== id);
             this.registrosFiltrado = [...this.registros];
           },
           error: () => {
-            Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
+            Swal.fire('Error', this._translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
           }
         });
       }

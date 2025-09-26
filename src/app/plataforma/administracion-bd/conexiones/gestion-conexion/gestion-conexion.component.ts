@@ -1,4 +1,6 @@
-import { CommonModule, LocationStrategy, Location } from '@angular/common';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -7,8 +9,7 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
 import { PTLPaquetesSCModel } from 'src/app/theme/shared/_helpers/models/PTLPaquetesSC.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { PtlAplicacionesService, LanguageService } from 'src/app/theme/shared/service';
+import { PtlAplicacionesService } from 'src/app/theme/shared/service';
 import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service';
 import { PTLPaquetesSCService } from 'src/app/theme/shared/service/ptlpaquetes-sc.service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
@@ -50,47 +51,37 @@ export class GestionConexionComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private registrosService: PTLConexionesBDSTService,
-    private aplicacionesService: PtlAplicacionesService,
-    private suscriptoresService: PTLSuscriptoresService,
-    private paquetesService: PTLPaquetesSCService,
     private translate: TranslateService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent,
-    private layoutInitializer: LayoutInitializerService,
-    private locationStrategy: LocationStrategy,
-    private location: Location,
-    private navigationService: NavigationService
+    private _registrosService: PTLConexionesBDSTService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _paquetesService: PTLPaquetesSCService,
+    private _layoutInitializer: LayoutInitializerService,
+    private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true
     this.gradientConfig = GradientConfig;
-    let current_url = this.location.path();
-    const baseHref = this.locationStrategy.getBaseHref();
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
   }
 
   ngOnInit() {
-    this.BreadCrumb.setBreadcrumb();
     this.consultarAplicaciones();
     this.consultarSuscriptores();
     this.consultarPaquetes();
-    this.layoutInitializer.applyLayout();
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this._layoutInitializer.applyLayout();
+    this.menuItems = this._navigationService.getNavigationItems();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
         console.log('me llena el Id', registroId);
         this.modoEdicion = true;
-        this.registrosService.getRegistroById(registroId).subscribe({
+        this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
             const app = this.aplicaciones.filter(x => x.aplicacionId == resp.aplicacionId)[0];
             const susc = this.suscriptores.filter(x => x.suscriptorId == resp.suscriptorId)[0];
-            const paque = this.paquetes.filter(x => x.suscriptorPaqueteId == resp.suscriptorPaqueteId)[0];
             resp.nombreAplicacion = app.nombreAplicacion;
             resp.nombreSuscriptor = susc.nombreSuscriptor;
             // resp.nombrePaquete = paque.nombrePaquetes;
@@ -110,7 +101,7 @@ export class GestionConexionComponent {
   }
 
   consultarAplicaciones() {
-    this.registrosSub = this.aplicacionesService
+    this.registrosSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -129,7 +120,7 @@ export class GestionConexionComponent {
   }
 
   consultarSuscriptores() {
-    this.registrosSub = this.suscriptoresService
+    this.registrosSub = this._suscriptoresService
       .getSuscriptores()
       .pipe(
         tap((resp: any) => {
@@ -148,7 +139,7 @@ export class GestionConexionComponent {
   }
 
     consultarPaquetes() {
-    this.registrosSub = this.paquetesService
+    this.registrosSub = this._paquetesService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -201,7 +192,7 @@ export class GestionConexionComponent {
     }
     if (this.modoEdicion) {
       // console.log('1.0 modificar usuario', this.FormRegistro);
-      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+      this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
@@ -217,7 +208,7 @@ export class GestionConexionComponent {
       });
     } else {
       // console.log('formregistro', this.FormRegistro);
-      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');

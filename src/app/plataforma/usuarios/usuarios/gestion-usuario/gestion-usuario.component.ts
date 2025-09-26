@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataTablesModule } from 'angular-datatables';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -56,8 +56,7 @@ export class GestionUsuarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this.navigationService.getNavigationItems();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {

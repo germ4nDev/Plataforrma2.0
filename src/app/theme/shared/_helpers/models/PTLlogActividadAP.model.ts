@@ -1,9 +1,12 @@
 export class PTLLogActividadAP {
     constructor (
-        public logId : number,
-        public aplicacionId : number,
-        public fechaLog : Date,
-        public descripcionLog : string,
-        public codigoError : number
+        public logId? : number,
+        public codigoAplicacin? : string,
+        public codigoSuite? : string,
+        public codigoModulo? : string,
+        public fechaLog? : Date,
+        public descripcionLg? : string,
+        public codigoErrr? : number,
+        public usuarioId?: number
     ) {}
 }

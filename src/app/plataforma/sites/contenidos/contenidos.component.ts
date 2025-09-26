@@ -13,10 +13,10 @@ import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLCon
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenidos-el.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-contenidos',
@@ -40,19 +40,19 @@ export class ContenidosComponent implements OnInit {
   menuItems: NavigationItem[] = [];
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   //#endregion VARIABLES
+
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private contenidoService: PTLContenidosELService,
-    private navigationService: NavigationService,
-    private enlacesService: PTLEnlacesSTService,
+    private _contenidoService: PTLContenidosELService,
+    private _navigationService: NavigationService,
+    private _enlacesService: PTLEnlacesSTService,
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.consultarEnlaces();
     this.consultarRegistros();
@@ -60,7 +60,7 @@ export class ContenidosComponent implements OnInit {
   }
 
   consultarRegistros() {
-    this.registrosSub = this.contenidoService
+    this.registrosSub = this._contenidoService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -84,7 +84,7 @@ export class ContenidosComponent implements OnInit {
   }
 
   consultarEnlaces() {
-    this.enlaceSub = this.enlacesService
+    this.enlaceSub = this._enlacesService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -121,7 +121,7 @@ export class ContenidosComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         console.log('Eliminar', id);
-        this.contenidoService.deleteEliminarRegistro(id.id).subscribe({
+        this._contenidoService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SITIOS.CONTENIDOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.consultarRegistros();

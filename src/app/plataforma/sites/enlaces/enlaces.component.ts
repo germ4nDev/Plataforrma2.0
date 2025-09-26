@@ -44,23 +44,22 @@ export class EnlacesComponent implements OnInit {
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private enlacesService: PTLEnlacesSTService,
-    private navigationService: NavigationService,
-    private sitiosService: PTLSitiosAPService
+    private _enlacesService: PTLEnlacesSTService,
+    private _navigationService: NavigationService,
+    private _sitiosService: PTLSitiosAPService
     ) {
       this.gradientConfig = GradientConfig;
     }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.consultarSitios();
     this.consultarRegistros();
   }
 
   consultarRegistros() {
-    this.registrosSub = this.enlacesService
+    this.registrosSub = this._enlacesService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -68,12 +67,6 @@ export class EnlacesComponent implements OnInit {
             resp.enlaces.forEach((enlace: any) => {
               enlace.nomEstado = enlace.estadoEnlace== true ? 'Activa' : 'Inactiva';
               enlace.nomSitio = this.sitios.filter(x => x.sitioId == enlace.sitioId)[0].nombreSitio || '';
-                // const existeSitio = this.sitios.filter(x => x.sitioId === enlace.sitioId)[0];
-                // if (existeSitio) {
-                //     enlace.nomSitio = existeSitio.nombreSitio;
-                // } else {
-                //     enlace.nomSitio = '';
-                // }
             });
             this.registros = resp.enlaces;
             this.registrosFiltrado = resp.enlaces;
@@ -90,7 +83,7 @@ export class EnlacesComponent implements OnInit {
   }
 
     consultarSitios() {
-        this.sitiosSub = this.sitiosService
+        this.sitiosSub = this._sitiosService
         .getRegistros()
         .pipe(
             tap((resp: any) => {
@@ -126,7 +119,7 @@ export class EnlacesComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.enlacesService.deleteEliminarRegistro(id.id).subscribe({
+        this._enlacesService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SITIOS.ENLACES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.enlaceId !== id.id);

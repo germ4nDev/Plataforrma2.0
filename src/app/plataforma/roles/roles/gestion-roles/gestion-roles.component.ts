@@ -1,16 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLRoleAPModel } from '../../../../theme/shared/_helpers/models/PTLRoleAP.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { PTLRolesAPService } from 'src/app/theme/shared/service/ptlroles-ap.service';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
-import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
-import { v4 as uuidv4 } from 'uuid';
-import Swal from 'sweetalert2';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { catchError, of, Subscription, tap } from 'rxjs';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
@@ -18,6 +15,8 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { v4 as uuidv4 } from 'uuid';
+import Swal from 'sweetalert2';
 //#endregion IMPORTS
 
 @Component({
@@ -44,20 +43,16 @@ export class GestionRolesComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private navigationService: NavigationService,
-    private registrosService: PTLRolesAPService,
-    private aplicacionesService: PtlAplicacionesService,
-    private suitesService: PtlSuitesAPService,
-    private translate: TranslateService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private _navigationService: NavigationService,
+    private _registrosService: PTLRolesAPService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _suitesService: PtlSuitesAPService
   ) {
     this.isSubmit = false;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.consultarAplicaciones();
     this.consultarSuites();
     this.route.queryParams.subscribe((params) => {
@@ -65,7 +60,7 @@ export class GestionRolesComponent implements OnInit {
       if (registroId) {
         // console.log('me llena el Id', registroId);
         this.modoEdicion = true;
-        this.registrosService.getRegistroById(registroId).subscribe({
+        this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
             this.suitesApp = this.suites.filter((x) => x.aplicacionId == resp.role.aplicacionId);
@@ -85,7 +80,7 @@ export class GestionRolesComponent implements OnInit {
   }
 
   consultarAplicaciones() {
-    this.registrosSub = this.aplicacionesService
+    this.registrosSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -104,7 +99,7 @@ export class GestionRolesComponent implements OnInit {
   }
 
   consultarSuites() {
-    this.suitesSub = this.suitesService
+    this.suitesSub = this._suitesService
       .geSuitesAP()
       .pipe(
         tap((resp: any) => {
@@ -148,7 +143,7 @@ export class GestionRolesComponent implements OnInit {
     }
     if (this.modoEdicion) {
       // console.log('1.0 modificar usuario', this.FormRegistro);
-      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+      this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', 'El registro se modificó correctamente', 'success');
@@ -164,7 +159,7 @@ export class GestionRolesComponent implements OnInit {
       });
     } else {
       // console.log('formregistro', this.FormRegistro);
-      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', 'El registro se insertó correctamente', 'success');

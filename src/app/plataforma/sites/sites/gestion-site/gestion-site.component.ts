@@ -1,10 +1,9 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { CommonModule, LocationStrategy, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ActivatedRoute, Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
@@ -17,6 +16,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestion-site',
@@ -43,35 +43,30 @@ export class GestionSiteComponent implements OnInit {
   // constructor
   constructor(
     private router: Router,
-    private registrosService: PTLSitiosAPService,
-    private aplicacionesService: PtlAplicacionesService,
     private route: ActivatedRoute,
     private translate: TranslateService,
-    private layoutInitializer: LayoutInitializerService,
-    private locationStrategy: LocationStrategy,
-    private location: Location,
-    private navigationService: NavigationService
+    private _registrosService: PTLSitiosAPService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _layoutInitializer: LayoutInitializerService,
+    private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true
     this.gradientConfig = GradientConfig;
-    let current_url = this.location.path();
-    const baseHref = this.locationStrategy.getBaseHref();
 
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.consultarAplicaciones();
-    this.layoutInitializer.applyLayout();
+    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
         this.modoEdicion = true;
-        this.registrosService.getRegistroById(registroId).subscribe({
+        this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.sitio;
             console.log('respuesta componente', this.FormRegistro);
@@ -87,7 +82,7 @@ export class GestionSiteComponent implements OnInit {
   }
 
   consultarAplicaciones() {
-    this.aplicacionesSub = this.aplicacionesService
+    this.aplicacionesSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -119,7 +114,7 @@ export class GestionSiteComponent implements OnInit {
       return;
     }
     if (this.modoEdicion) {
-      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+      this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
@@ -134,7 +129,7 @@ export class GestionSiteComponent implements OnInit {
         }
       });
     } else {
-      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');

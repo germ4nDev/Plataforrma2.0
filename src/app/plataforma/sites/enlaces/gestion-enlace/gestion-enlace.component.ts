@@ -1,15 +1,11 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { CommonModule, LocationStrategy, Location } from '@angular/common';
-
-// project import
+import { CommonModule, } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-
-// third party
 import { ActivatedRoute, Router } from '@angular/router';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
-import Swal from 'sweetalert2';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 import { catchError, of, Subscription, tap } from 'rxjs';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service';
@@ -20,6 +16,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestion-enlace',
@@ -28,7 +25,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
   templateUrl: './gestion-enlace.component.html',
   styleUrl: './gestion-enlace.component.scss'
 })
-export class GestionEnlaceComponent {
+export class GestionEnlaceComponent implements OnInit {
   // private props
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLEnlaceSTModel = new PTLEnlaceSTModel();
@@ -48,35 +45,28 @@ export class GestionEnlaceComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private BreadCrumb: BreadcrumbComponent,
-    private registrosService: PTLEnlacesSTService,
-    private sitiosService: PTLSitiosAPService,
     private translate: TranslateService,
-    private layoutInitializer: LayoutInitializerService,
-    private locationStrategy: LocationStrategy,
-    private location: Location,
-    private navigationService: NavigationService
+    private _navigationService: NavigationService,
+    private _registrosService: PTLEnlacesSTService,
+    private _sitiosService: PTLSitiosAPService,
+    private _layoutInitializer: LayoutInitializerService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true
     this.gradientConfig = GradientConfig;
-    let current_url = this.location.path();
-    const baseHref = this.locationStrategy.getBaseHref();
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.consultarSitios();
-    this.layoutInitializer.applyLayout();
+    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
         this.modoEdicion = true;
-        this.registrosService.getRegistroById(registroId).subscribe({
+        this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.enlace;
             console.log('respuesta componente', this.FormRegistro);
@@ -92,7 +82,7 @@ export class GestionEnlaceComponent {
   }
 
   consultarSitios() {
-      this.sitiosSub = this.sitiosService
+      this.sitiosSub = this._sitiosService
         .getRegistros()
         .pipe(
           tap((resp: any) => {
@@ -126,7 +116,7 @@ export class GestionEnlaceComponent {
     if (this.modoEdicion) {
         console.log('Datos a enviar (FormRegistro):', this.FormRegistro);
 
-      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+      this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
@@ -141,7 +131,7 @@ export class GestionEnlaceComponent {
         }
       });
     } else {
-      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');

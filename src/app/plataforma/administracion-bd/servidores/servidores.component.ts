@@ -10,12 +10,11 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLServidorModel } from 'src/app/theme/shared/_helpers/models/PTLServidor.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
 import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-servidores',
@@ -39,26 +38,25 @@ export class ServidoresComponent implements OnInit {
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   datatableElement!: DataTableDirective;
   //#endregion VARIABLES
+
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private servidorService: PTLServidorService,
-    private BreadCrumb: BreadcrumbComponent,
-    private navigationService: NavigationService
+    private _servidorService: PTLServidorService,
+    private _navigationService: NavigationService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     console.log('elementos menu componente', this.menuItems);
     this.hasFiltersSlot = true;
     this.consultarRegistros();
   }
 
   consultarRegistros() {
-    this.registrosSub = this.servidorService
+    this.registrosSub = this._servidorService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -98,7 +96,7 @@ export class ServidoresComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.servidorService.deleteEliminarRegistro(id.id).subscribe({
+        this._servidorService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('CONEXIONES.SERVIDORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.servidorId !== id.id);

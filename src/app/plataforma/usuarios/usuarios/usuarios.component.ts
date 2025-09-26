@@ -1,24 +1,24 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { catchError, Subject, tap } from 'rxjs';
-import { of, Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { of, Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 //#endregion IMPORTS
 
 @Component({
@@ -28,7 +28,7 @@ import { DatatableComponent } from 'src/app/theme/shared/components/data-table/d
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.scss'
 })
-export class UsuariosComponent implements OnInit, AfterViewInit {
+export class UsuariosComponent implements OnInit {
   //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
@@ -48,31 +48,14 @@ export class UsuariosComponent implements OnInit, AfterViewInit {
 
   constructor(
     private router: Router,
+    private translate: TranslateService,
     private navigationService: NavigationService,
     private usuariosService: PTLUsuariosService,
-    private translate: TranslateService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private languageService: LanguageService
   ) {}
 
-  ngAfterViewInit(): void {
-    this.BreadCrumb.setBreadcrumb();
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
-        });
-      });
-    });
-  }
-
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this.navigationService.getNavigationItems();
     console.log('elementos menu componente', this.menuItems);
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);

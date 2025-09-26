@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { CommonModule, LocationStrategy, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { ActivatedRoute, Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenidos-el.service';
 import { PTLContenidoELModel } from 'src/app/theme/shared/_helpers/models/PTLContenidoEL.model';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
@@ -16,6 +15,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-geston-contenido',
@@ -42,34 +42,29 @@ export class GestonContenidoComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private registrosService: PTLContenidosELService,
-    private enlacesService: PTLEnlacesSTService,
-    private layoutInitializer: LayoutInitializerService,
-    private locationStrategy: LocationStrategy,
-    private location: Location,
-    private navigationService: NavigationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _registrosService: PTLContenidosELService,
+    private _enlacesService: PTLEnlacesSTService,
+        private _navigationService: NavigationService,
+    private _layoutInitializer: LayoutInitializerService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
-    let current_url = this.location.path();
-    const baseHref = this.locationStrategy.getBaseHref();
 
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.consultarEnlaces();
-    this.layoutInitializer.applyLayout();
+    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
         this.modoEdicion = true;
-        this.registrosService.getRegistroById(registroId).subscribe({
+        this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.contenido;
             console.log('respuesta componente', this.FormRegistro);
@@ -85,7 +80,7 @@ export class GestonContenidoComponent implements OnInit {
   }
 
   consultarEnlaces() {
-    this.enlaceSub = this.enlacesService
+    this.enlaceSub = this._enlacesService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -119,7 +114,7 @@ export class GestonContenidoComponent implements OnInit {
     }
 
     if (this.modoEdicion) {
-      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+      this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
@@ -134,7 +129,7 @@ export class GestonContenidoComponent implements OnInit {
         }
       });
     } else {
-      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');

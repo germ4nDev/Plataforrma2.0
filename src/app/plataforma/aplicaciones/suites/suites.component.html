@@ -27,8 +27,8 @@
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'SUITES.FILTROS.FILTROCODIGO' | translate }}</small>
-                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
+                        <small>{{ 'SUITES.FILTROS.FILTROSUITE' | translate }}</small>
+                        <select (change)="onFiltroSuiteChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="reg.codigoSuite" *ngFor="let reg of registros">
                                 {{ reg.codigoSuite }}
@@ -39,7 +39,7 @@
                         <small>{{ 'SUITES.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="app.nombreSuite" *ngFor="let app of suitees">
+                            <option [value]="app.codigoSuite" *ngFor="let app of regitstros">
                                 {{ app.nombreSuite }}
                             </option>
                         </select>
@@ -68,18 +68,18 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['codigoSuite', 'nombreSuite', 'descripcionSuite', 'nomEstado']"
+                    [columns]="['codigoSuite', 'nombreSuite', 'nomAplicacion', 'nomEstado']"
                     [idField]="'suiteId'"
                     [tableTitle]="'SUITES.TITLE' | translate"
                     [columnTitles]="[
                       'SUITES.CODE' | translate,
                       'SUITES.NAME' | translate,
-                      'SUITES.DESCRIPTION' | translate,
+                      'SUITES.APLICACION' | translate,
                       'SUITES.STATUS' | translate
                     ]"
-                    [detailColumns]="[]"
-                    [detailTitles]="[]"
-                    [showDetail]="false"
+                    [detailColumns]="['descripcionSuite']"
+                    [detailTitles]="['SUITES.DESCRIPTION' | translate]"
+                    [showDetail]="true"
                     [showAvatar]="false"
                     [showActions]="true"
                     [showNewButton]="true"

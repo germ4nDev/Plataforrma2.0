@@ -1,9 +1,12 @@
 export class PTLLogTransaccionAP {
     constructor (
-        public logId : number,
-        public aplicacionId : number,
-        public fecha : number,
-        public descripcionLog : Date,
-        public codigo : Date
+        public logId? : number,
+        public codigoAplicacin? : string,
+        public codigoSuite? : string,
+        public codigoModulo? : string,
+        public fechaLog? : Date,
+        public descripcionLg? : string,
+        public codigoErrr? : number,
+        public usuarioId?: number
    ) {}
 }

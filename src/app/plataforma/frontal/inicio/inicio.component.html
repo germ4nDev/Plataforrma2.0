@@ -7,7 +7,9 @@
         <div class="row">
           <div class="col-md-6">
             <form action="">
-              <button type="submit" class="btn btn-primary mb-2" (click)="ingresarPlataforma()">Submit</button>
+                <div *ngFor="let app of aplicaciones">
+                    <button type="submit" class="btn btn-primary mb-2" (click)="ingresarPlataforma(app)">Submit</button>
+                </div>
             </form>
           </div>
         </div>
