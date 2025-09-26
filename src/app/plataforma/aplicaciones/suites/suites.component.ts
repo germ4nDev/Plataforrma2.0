@@ -56,8 +56,7 @@ export class SuitesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this._navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
     this.consultarAplicacines();

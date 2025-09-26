@@ -1,18 +1,18 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { v4 as uuidv4 } from 'uuid';
-import Swal from 'sweetalert2';
 import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
 import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { v4 as uuidv4 } from 'uuid';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestion-suscriptor',
@@ -38,22 +38,21 @@ export class GestionSuscriptorComponent {
   // constructor
   constructor(
     private router: Router,
-    private suscriptoresService: PTLSuscriptoresService,
     private route: ActivatedRoute,
-    private BreadCrumb: BreadcrumbComponent,
-    private navigationService: NavigationService
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
   }
 
   ngOnInit() {
-    this.menuItems = this.navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.getNavigationItems();
     this.route.queryParams.subscribe((params) => {
       const id = params['regId'];
       console.log('me llena el Id', id);
       if (id) {
         this.modoEdicion = true;
-        this.suscriptoresService.getSuscriptorById(id).subscribe({
+        this._suscriptoresService.getSuscriptorById(id).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.suscriptor;
             console.log('respuesta componente', this.FormRegistro);
@@ -75,7 +74,7 @@ export class GestionSuscriptorComponent {
       return;
     }
     if (this.modoEdicion) {
-      this.suscriptoresService.actualizarSuscriptor(this.FormRegistro).subscribe({
+      this._suscriptoresService.actualizarSuscriptor(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', 'El suscriptor se modificó correctamente', 'success');
@@ -90,7 +89,7 @@ export class GestionSuscriptorComponent {
         }
       });
     } else {
-      this.suscriptoresService.crearSuscriptor(this.FormRegistro).subscribe({
+      this._suscriptoresService.crearSuscriptor(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', 'El suscriptor se insertó correctamente', 'success');

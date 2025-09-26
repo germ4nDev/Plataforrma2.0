@@ -1,26 +1,25 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of } from 'rxjs';
-import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService, NavigationService } from 'src/app/theme/shared/service';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
-import { PTLTiposEstadosService } from 'src/app/theme/shared/service/ptltipos-estados.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
-import { v4 as uuidv4 } from 'uuid';
 import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
 import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { NavigationService } from 'src/app/theme/shared/service';
+import { v4 as uuidv4 } from 'uuid';
+import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'tickets-gestion-requerimiento',
+  selector: 'app-gestion-requerimiento',
   standalone: true,
   imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-requerimiento.component.html',
@@ -42,21 +41,17 @@ export class GestionRequerimientoComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private navigationService: NavigationService,
-    private registrosService: PTLRequerimientosTkService,
-    private tickesService: PTLTicketsService,
-    private tiposEstados: PTLTiposEstadosService,
-    private estados: PTLEstadosService,
     private translate: TranslateService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private _navigationService: NavigationService,
+    private _registrosService: PTLRequerimientosTkService,
+    private _tickesService: PTLTicketsService,
+    private _estadosService: PTLEstadosService
   ) {
     this.isSubmit = false;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.consultarTickets();
     this.consultarEstado();
     this.route.queryParams.subscribe((params) => {
@@ -64,7 +59,7 @@ export class GestionRequerimientoComponent {
       if (registroId) {
         console.log('me llena el Id', registroId);
         this.modoEdicion = true;
-        this.registrosService.getRegistroById(registroId).subscribe({
+        this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
             this.FormRegistro = resp.requerimiento;
@@ -86,7 +81,7 @@ export class GestionRequerimientoComponent {
     });
   }
   consultarEstado() {
-    this.estados
+    this._estadosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -113,7 +108,7 @@ export class GestionRequerimientoComponent {
   }
 
   consultarTickets() {
-    this.registrosSub = this.tickesService
+    this.registrosSub = this._tickesService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -144,7 +139,7 @@ export class GestionRequerimientoComponent {
 
     if (this.modoEdicion) {
       // console.log('1.0 modificar usuario', this.FormRegistro);
-      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+      this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
@@ -160,7 +155,7 @@ export class GestionRequerimientoComponent {
       });
     } else {
       //   console.log('formregistro', this.FormRegistro);
-      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');

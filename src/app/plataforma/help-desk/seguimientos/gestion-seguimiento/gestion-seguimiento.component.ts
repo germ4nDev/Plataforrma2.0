@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -5,18 +7,16 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { PTLSeguimientoRQModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoRQ.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService, NavigationService } from 'src/app/theme/shared/service';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
 import { PTLSeguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
-import { PTLTiposEstadosService } from 'src/app/theme/shared/service/ptltipos-estados.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
-import { v4 as uuidv4 } from 'uuid';
 import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
 import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { v4 as uuidv4 } from 'uuid';
+import Swal from 'sweetalert2';
+import { NavigationService } from 'src/app/theme/shared/service';
 
 
 @Component({
@@ -42,20 +42,17 @@ export class GestionSeguimientoComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private navigationService: NavigationService,
-    private registrosService: PTLSeguimientosRqService,
-    private requerimientoService: PTLRequerimientosTkService,
-    private tiposEstados: PTLTiposEstadosService,
-    private estadosService: PTLEstadosService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _registrosService: PTLSeguimientosRqService,
+    private _requerimientoService: PTLRequerimientosTkService,
+    private _estadosService: PTLEstadosService
   ) {
     this.isSubmit = false;
   }
 
   ngOnInit() {
-    // this.BreadCrumb.setBreadcrumb();
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.consultarRequerimientos();
     this.consultarEstado();
     this.route.queryParams.subscribe((params) => {
@@ -63,7 +60,7 @@ export class GestionSeguimientoComponent {
       if (registroId) {
         // console.log('me llena el Id', registroId);
         this.modoEdicion = true;
-        this.registrosService.getRegistroById(registroId).subscribe({
+        this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
             this.FormRegistro = resp.seguimiento;
@@ -81,7 +78,7 @@ export class GestionSeguimientoComponent {
   }
 
   consultarEstado() {
-    this.estadosService
+    this._estadosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -108,7 +105,7 @@ export class GestionSeguimientoComponent {
   }
 
   consultarRequerimientos() {
-    this.registrosSub = this.requerimientoService
+    this.registrosSub = this._requerimientoService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -139,7 +136,7 @@ export class GestionSeguimientoComponent {
     }
 
     if (this.modoEdicion) {
-      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+      this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         // next: (resp: any) => {
         //   if (resp.ok) {
         //     Swal.fire('', 'El registro se modificó correctamente', 'success');
@@ -154,7 +151,7 @@ export class GestionSeguimientoComponent {
         // }
         next: (resp: any) => {
           if (resp.ok) {
-            this.requerimientoService
+            this._requerimientoService
               .putModificarEstadoRequerimiento(this.FormRegistro.requerimientoId!, this.FormRegistro.estadoRequerimiento!)
               .subscribe({
                 next: () => {
@@ -178,7 +175,7 @@ export class GestionSeguimientoComponent {
       });
     } else {
       //   console.log('formregistro', this.FormRegistro);
-      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');

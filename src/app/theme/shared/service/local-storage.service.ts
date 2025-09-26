@@ -15,14 +15,13 @@ export class LocalStorageService {
   public lang: string = 'en';
 
   constructor() {
-    this.usuario = JSON.parse(localStorage.getItem('currentUser') || '');
-    this.aplicacion = JSON.parse(localStorage.getItem('aplicacion') || '');
-    this.suite = JSON.parse(localStorage.getItem('suite') || '');
-    this.modulo = JSON.parse(localStorage.getItem('modulo') || '');
+    // this.usuario = JSON.parse(localStorage.getItem('currentUser') || '');
+    // this.aplicacion = localStorage.getItem('aplicacion') ? JSON.parse(localStorage.getItem('aplicacion')) : new PTLAplicacionModel()
+    // this.suite = JSON.parse(localStorage.getItem('suite') || '');
+    // this.modulo = JSON.parse(localStorage.getItem('modulo') || '');
   }
 
   // #region SETTERS
-
   setUsuarioLocalStorage(usu: PTLUsuarioModel) {
     localStorage.setItem('currrentUser', JSON.stringify(usu));
     this.usuario = usu;

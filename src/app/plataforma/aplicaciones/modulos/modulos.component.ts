@@ -32,10 +32,10 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 })
 export class ModulosComponent implements OnInit{
   @Output() toggleSidebar = new EventEmitter<void>();
+  aplicacionesSub?: Subscription;
   aplicaciones: PTLAplicacionModel[] = [];
   suites: PTLSuiteAPModel[] = [];
   registros: PTLModuloAP[] = [];
-  aplicacionesSub?: Subscription;
   suitesSub?: Subscription;
   registrosSub?: Subscription;
   registrosFiltrado: PTLModuloAP[] = [];
@@ -49,18 +49,17 @@ export class ModulosComponent implements OnInit{
 
   constructor(
     private router: Router,
-    private navigationService: NavigationService,
-    private aplicacionesService: PtlAplicacionesService,
-    private suitesService: PtlSuitesAPService,
-    private registrosService: PtlmodulosApService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _suitesService: PtlSuitesAPService,
+    private _registrosService: PtlmodulosApService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit(): void {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
     this.consultarAplicacines();
@@ -69,7 +68,7 @@ export class ModulosComponent implements OnInit{
   }
 
   consultarAplicacines() {
-    this.aplicacionesSub = this.aplicacionesService
+    this.aplicacionesSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -86,7 +85,7 @@ export class ModulosComponent implements OnInit{
   }
 
   consultarSuites(codApp?: string): void {
-    this.suitesSub = this.suitesService
+    this.suitesSub = this._suitesService
       .geSuitesAP()
       .pipe(
         tap((resp: any) => {
@@ -107,7 +106,7 @@ export class ModulosComponent implements OnInit{
   }
 
   consultarRegistros(codSuite?: string): void {
-    this.registrosSub = this.registrosService
+    this.registrosSub = this._registrosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -210,7 +209,7 @@ export class ModulosComponent implements OnInit{
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.registrosService.deleteEliminarRegistro(id).subscribe({
+        this._registrosService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((a) => a.ModuloId !== id);

@@ -45,24 +45,23 @@ export class PaquetesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private navigationService: NavigationService,
-    private aplicacionesService: PtlAplicacionesService,
-    private registrosService: PTLPaquetesAplicacionesService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _registrosService: PTLPaquetesAplicacionesService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit(): void {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
     this.consultarAplicacines();
   }
 
   consultarAplicacines() {
-    this.aplicacionesSub = this.aplicacionesService
+    this.aplicacionesSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -80,7 +79,7 @@ export class PaquetesComponent implements OnInit {
   }
 
   consultarRegistros(): void {
-    this.registrosSub = this.registrosService
+    this.registrosSub = this._registrosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -166,7 +165,7 @@ export class PaquetesComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.registrosService.deleteEliminarRegistro(id).subscribe({
+        this._registrosService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((a) => a.paqueteId !== id);

@@ -4,6 +4,7 @@ export class PTLModuloAP {
         public codigoAplicacion?: string,
         public codigoSuite?: string,
         public codigoModulo?: string,
+        public codigoPadre?: string,
         public nombreModulo?: string,
         public descripcionModulo?: string,
         public rutaModulo?: string,

@@ -9,13 +9,12 @@ import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSusc
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
-import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
-import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { GradientConfig } from 'src/app/app-config';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-
 
 @Component({
   selector: 'app-suscriptores',
@@ -25,35 +24,36 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
   styleUrl: './suscriptores.component.scss'
 })
 export class SuscriptoresComponent implements OnInit {
-    @Output() toggleSidebar = new EventEmitter<void>();
-    //#region VARIABLES
-    registrosSub?: Subscription;
-    registros: PTLSuscriptorModel[] = [];
-    registrosFiltrado: PTLSuscriptorModel[] = [];
-    lang: string = localStorage.getItem('lang') || '';
-    tituloPagina: string = '';
-    gradientConfig;
-    hasFiltersSlot: boolean = false;
-    menuItems: NavigationItem[] = [];
-    activeTab: 'menu' | 'filters' | 'main' = 'menu';
-    //#endregion VARIABLES
+  @Output() toggleSidebar = new EventEmitter<void>();
+  //#region VARIABLES
+  registrosSub?: Subscription;
+  registros: PTLSuscriptorModel[] = [];
+  registrosFiltrado: PTLSuscriptorModel[] = [];
+  lang: string = localStorage.getItem('lang') || '';
+  tituloPagina: string = '';
+  gradientConfig;
+  hasFiltersSlot: boolean = false;
+  menuItems: NavigationItem[] = [];
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  //#endregion VARIABLES
+
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private suscriptoresService: PTLSuscriptoresService,
-    private navigationService: NavigationService
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _navigationService: NavigationService
   ) {
-        this.gradientConfig = GradientConfig;
+    this.gradientConfig = GradientConfig;
   }
 
   ngOnInit() {
-    this.menuItems = this.navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.consultarRegistros();
   }
 
   consultarRegistros() {
-    this.registrosSub = this.suscriptoresService
+    this.registrosSub = this._suscriptoresService
       .getSuscriptores()
       .pipe(
         tap((resp: any) => {
@@ -62,7 +62,7 @@ export class SuscriptoresComponent implements OnInit {
               regs.nomEstado = regs.estadoSuscriptor == true ? 'Activo' : 'Inactivo';
             });
             this.registros = resp.suscriptor;
-            this.registrosFiltrado = resp.suscriptor
+            this.registrosFiltrado = resp.suscriptor;
             console.log('Todos los Suscriptores', this.registros);
             return;
           }
@@ -93,7 +93,7 @@ export class SuscriptoresComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.suscriptoresService.eliminarSuscripctor(id.id).subscribe({
+        this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.suscriptorId !== id.id);
@@ -108,42 +108,40 @@ export class SuscriptoresComponent implements OnInit {
   }
 
   onFiltroNombreChangeClick(evento: any) {
-        console.log('filtrar el NOMBRE ', evento.target.value);
-        const textoFiltro = evento.target.value.toLowerCase();
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros];
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
-                (suscriptor.nombreSuscriptor || '').toLowerCase().includes(textoFiltro)
-            );
-            console.log('filtrados', this.registrosFiltrado);
-        }
+    console.log('filtrar el NOMBRE ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
+        (suscriptor.nombreSuscriptor || '').toLowerCase().includes(textoFiltro)
+      );
+      console.log('filtrados', this.registrosFiltrado);
     }
+  }
 
-    onFiltroIdentificacionChangeClick(evento: any) {
-        console.log('filtrar el descripcion ', evento.target.value);
-        const textoFiltro = evento.target.value.toLowerCase();
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros];
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
-                (suscriptor.identificacion || 0)
-            );
-            console.log('filtrados', this.registrosFiltrado);
-        }
+  onFiltroIdentificacionChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) => suscriptor.identificacion || 0);
+      console.log('filtrados', this.registrosFiltrado);
     }
+  }
 
-    onFiltroEstadoChangeClick(evento: any) {
-        console.log('filtrar el estado ', evento.target.value);
-        if (evento.target.value == 'todos') {
-            this.registrosFiltrado = this.registros;
-        } else {
-            const estado = evento.target.value == 'true' ? true : false;
-            this.registrosFiltrado = this.registros.filter(x => x.estadoSuscriptor == estado);
-        }
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = this.registros;
+    } else {
+      const estado = evento.target.value == 'true' ? true : false;
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoSuscriptor == estado);
     }
+  }
 
-    toggleNav(): void {
+  toggleNav(): void {
     this.toggleSidebar.emit();
   }
 }

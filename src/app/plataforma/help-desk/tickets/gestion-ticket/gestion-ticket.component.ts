@@ -1,19 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { PtlAplicacionesService, LanguageService, NavigationService } from 'src/app/theme/shared/service';
+import { PtlAplicacionesService, NavigationService } from 'src/app/theme/shared/service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
-import { v4 as uuidv4 } from 'uuid';
 import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
 import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
+import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
+import { v4 as uuidv4 } from 'uuid';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-gestion-ticket',
@@ -36,19 +37,16 @@ export class GestionTicketComponent {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        private navigationService: NavigationService,
-        private registrosService: PTLTicketsService,
-        private aplicacionesService: PtlAplicacionesService,
         private translate: TranslateService,
-        private languageService: LanguageService,
-        private BreadCrumb: BreadcrumbComponent
+        private _navigationService: NavigationService,
+        private registrosService: PTLTicketsService,
+        private aplicacionesService: PtlAplicacionesService
     ) {
         this.isSubmit = false;
     }
 
     ngOnInit() {
-        const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-        this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
         this.consultarTickets();
         this.route.queryParams.subscribe((params) => {
             const registroId = params['regId'];

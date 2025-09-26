@@ -54,20 +54,19 @@ export class LogActividadesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private navigationService: NavigationService,
-    private aplicacionesService: PtlAplicacionesService,
-    private suitesService: PtlSuitesAPService,
-    private modulosService: PtlmodulosApService,
-    private usuariosService: PTLUsuariosService,
-    private registrosService: PtllogActividadesService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _suitesService: PtlSuitesAPService,
+    private _modulosService: PtlmodulosApService,
+    private _usuariosService: PTLUsuariosService,
+    private _registrosService: PtllogActividadesService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit(): void {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
     this.consultarUsuarios();
@@ -76,7 +75,7 @@ export class LogActividadesComponent implements OnInit {
   }
 
   consultarAplicacines() {
-    this.aplicacionesSub = this.aplicacionesService
+    this.aplicacionesSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -94,7 +93,7 @@ export class LogActividadesComponent implements OnInit {
   }
 
   consultarSuites(codApp?: string): void {
-    this.suitesSub = this.suitesService
+    this.suitesSub = this._suitesService
       .geSuitesAP()
       .pipe(
         tap((resp: any) => {
@@ -116,7 +115,7 @@ export class LogActividadesComponent implements OnInit {
   }
 
   consultarUsuarios(): void {
-    this.suitesSub = this.usuariosService
+    this.suitesSub = this._usuariosService
       .getUsuarios()
       .pipe(
         tap((resp: any) => {
@@ -133,7 +132,7 @@ export class LogActividadesComponent implements OnInit {
   }
 
   consultarModulos(codSui?: string): void {
-    this.modulosSub = this.modulosService
+    this.modulosSub = this._modulosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -154,7 +153,7 @@ export class LogActividadesComponent implements OnInit {
   }
 
   consultarRegistros(codSuite?: string): void {
-    this.registrosSub = this.registrosService
+    this.registrosSub = this._registrosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -247,7 +246,7 @@ export class LogActividadesComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.registrosService.deleteEliminarRegistro(id).subscribe({
+        this._registrosService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((a) => a.logId !== id);

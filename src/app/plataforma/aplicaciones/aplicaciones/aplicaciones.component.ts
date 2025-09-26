@@ -41,23 +41,22 @@ export class AplicacionesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private navigationService: NavigationService,
-    private aplicacionesService: PtlAplicacionesService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private _navigationService: NavigationService,
+    private _aplicacionesService: PtlAplicacionesService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit(): void {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Aplicaciones' : 'List of Aplications';
     this.consultarAplicaciones();
   }
 
   consultarAplicaciones(): void {
-    this.registrosSub = this.aplicacionesService
+    this.registrosSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -144,7 +143,7 @@ export class AplicacionesComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this.aplicacionesService.eliminarAplicacion(id).subscribe({
+        this._aplicacionesService.eliminarAplicacion(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.aplicaciones = this.aplicaciones.filter((a) => a.aplicacionId !== id);

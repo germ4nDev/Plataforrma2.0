@@ -1,4 +1,6 @@
-import { CommonModule, LocationStrategy, Location } from '@angular/common';
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -8,7 +10,6 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLServidorModel } from 'src/app/theme/shared/_helpers/models/PTLServidor.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.service';
@@ -40,34 +41,27 @@ export class GestionServidorComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private registrosService: PTLServidorService,
     private translate: TranslateService,
-    private BreadCrumb: BreadcrumbComponent,
-    private layoutInitializer: LayoutInitializerService,
-    private locationStrategy: LocationStrategy,
-    private location: Location,
-    private navigationService: NavigationService
+    private _registrosService: PTLServidorService,
+    private _layoutInitializer: LayoutInitializerService,
+    private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true
     this.gradientConfig = GradientConfig;
-    let current_url = this.location.path();
-    const baseHref = this.locationStrategy.getBaseHref();
 
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
-    this.layoutInitializer.applyLayout();
+    this.menuItems = this._navigationService.getNavigationItems();
+    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
-        // console.log('me llena el Id', registroId);
         this.modoEdicion = true;
-        this.registrosService.getRegistroById(registroId).subscribe({
+        this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
             this.FormRegistro = resp.servidor;
@@ -78,9 +72,7 @@ export class GestionServidorComponent {
           }
         });
       } else {
-        // console.log('no llena el Id', registroId);
         this.modoEdicion = false;
-        // this.FormRegistro.codigoAplicacion = uuidv4();
       }
     });
   }
@@ -92,7 +84,7 @@ export class GestionServidorComponent {
     }
     if (this.modoEdicion) {
       // console.log('1.0 modificar usuario', this.FormRegistro);
-      this.registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+      this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
@@ -108,7 +100,7 @@ export class GestionServidorComponent {
       });
     } else {
       // console.log('formregistro', this.FormRegistro);
-      this.registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');

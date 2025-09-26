@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Angular import
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { catchError, first, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 import { of, Subscription } from 'rxjs';

@@ -1,28 +1,27 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTableDirective, DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BreadcrumbComponent } from '../../../theme/shared/components/breadcrumb/breadcrumb.component';
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { PTLRolesAPService } from 'src/app/theme/shared/service/ptlroles-ap.service';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { catchError, Subject, tap } from 'rxjs';
-import { of, Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { of, Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 //#endregion IMPORTS
 
 @Component({
@@ -32,7 +31,7 @@ import { DatatableComponent } from 'src/app/theme/shared/components/data-table/d
   templateUrl: './roles.component.html',
   styleUrl: './roles.component.scss'
 })
-export class RolesComponent implements OnInit, AfterViewInit {
+export class RolesComponent implements OnInit {
   //#region VARIABLES
   [x: string]: any;
   @ViewChild(DataTableDirective, { static: false })
@@ -60,32 +59,16 @@ export class RolesComponent implements OnInit, AfterViewInit {
     private router: Router,
     private rolesAPService: PTLRolesAPService,
     private translate: TranslateService,
-    private navigationService: NavigationService,
-    private aplicacionesService: PtlAplicacionesService,
-    private suitesService: PtlSuitesAPService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private _navigationService: NavigationService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _suitesService: PtlSuitesAPService,
+    private _languageService: LanguageService
   ) {}
 
-  ngAfterViewInit(): void {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        const that = this;
-        $('input', this.header()).on('keyup change', function () {
-          const valor = $(this).val() as string;
-          if (that.search() !== valor) {
-            that.search(valor).draw();
-          }
-        });
-      });
-    });
-  }
-
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.consultarRegistros();
-    this.languageService.currentLang$.subscribe((lang) => {
+    this._languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);
       this.translate
         .get(['ROLES.NOMBREAPLICACION', 'ROLES.NOMBRESUITE', 'ROLES.NOMBREROLE', 'ROLES.DESCRIPCIONROLE', 'ROLES.ESTADOROLE'])
@@ -111,7 +94,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
   }
 
   consultarAplicaciones() {
-    this.registrosSub = this.aplicacionesService
+    this.registrosSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -130,7 +113,7 @@ export class RolesComponent implements OnInit, AfterViewInit {
   }
 
   consultarSuites() {
-    this.suitesSub = this.suitesService
+    this.suitesSub = this._suitesService
       .geSuitesAP()
       .pipe(
         tap((resp: any) => {

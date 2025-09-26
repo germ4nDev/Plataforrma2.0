@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule, DataTableDirective } from 'angular-datatables';
 import { Subscription, tap, catchError, of } from 'rxjs';
@@ -26,7 +27,7 @@ import { DatatableComponent } from 'src/app/theme/shared/components/data-table/d
   templateUrl: './conexiones.component.html',
   styleUrl: './conexiones.component.scss'
 })
-export class ConexionesComponent implements OnInit, AfterViewInit {
+export class ConexionesComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
   @Output()
   toggleSidebar = new EventEmitter<void>();
@@ -48,30 +49,25 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private conexionService: PTLConexionesBDSTService,
-    private aplicacionesService: PtlAplicacionesService,
-    private suscriptoresService: PTLSuscriptoresService,
-    private navigationService: NavigationService
+    private _conexionService: PTLConexionesBDSTService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _navigationService: NavigationService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
-  ngAfterViewInit(): void {}
-
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     console.log('elementos menu componente', this.menuItems);
     this.hasFiltersSlot = true;
     this.consultarRegistros();
   }
 
-  ngOnDestroy(): void {}
-
   consultarRegistros() {
     this.consultarAplicaciones();
     this.consultarSuscriptores();
-    this.registrosSub = this.conexionService
+    this.registrosSub = this._conexionService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -98,7 +94,7 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
   }
 
   consultarAplicaciones() {
-    this.registrosSub = this.aplicacionesService
+    this.registrosSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
@@ -117,7 +113,7 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
   }
 
   consultarSuscriptores() {
-    this.registrosSub = this.suscriptoresService
+    this.registrosSub = this._suscriptoresService
       .getSuscriptores()
       .pipe(
         tap((resp: any) => {
@@ -153,7 +149,7 @@ export class ConexionesComponent implements OnInit, AfterViewInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.conexionService.deleteEliminarRegistro(id.id).subscribe({
+        this._conexionService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('CONEXIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.conexionId !== id.id);

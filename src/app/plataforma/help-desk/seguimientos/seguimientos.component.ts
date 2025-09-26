@@ -9,7 +9,6 @@ import { PTLSeguimientoRQModel } from 'src/app/theme/shared/_helpers/models/PTLS
 import { NavigationService } from 'src/app/theme/shared/service';
 import { PTLSeguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -18,6 +17,7 @@ import { GradientConfig } from 'src/app/app-config';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-seguimientos',
@@ -48,18 +48,17 @@ export class SeguimientosComponent implements OnInit {
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private navigationService: NavigationService,
-    private seguimientosService: PTLSeguimientosRqService,
-    private estadosService: PTLEstadosService,
-    private requerimientoService: PTLRequerimientosTkService
+    private _navigationService: NavigationService,
+    private _seguimientosService: PTLSeguimientosRqService,
+    private _estadosService: PTLEstadosService,
+    private _requerimientoService: PTLRequerimientosTkService
 
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.consultarRequerimientos();
     this.consultarRegistros();
@@ -67,7 +66,7 @@ export class SeguimientosComponent implements OnInit {
   }
 
   consultarRegistros() {
-    this.registrosSub = this.seguimientosService
+    this.registrosSub = this._seguimientosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -92,7 +91,7 @@ export class SeguimientosComponent implements OnInit {
   }
 
   consultarRequerimientos() {
-    this.registrosSub = this.requerimientoService
+    this.registrosSub = this._requerimientoService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -111,7 +110,7 @@ export class SeguimientosComponent implements OnInit {
   }
 
   consultarEstado() {
-    this.estadosService
+    this._estadosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
@@ -146,7 +145,7 @@ export class SeguimientosComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.seguimientosService.deleteEliminarRegistro(id.id).subscribe({
+        this._seguimientosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SEGUIMIENTOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.seguimientoId !== id.id);

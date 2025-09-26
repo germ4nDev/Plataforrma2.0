@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -8,13 +10,10 @@ import { PTLRoleAPModel } from '../../../../theme/shared/_helpers/models/PTLRole
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLUsuarioRoleAP } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
-import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { v4 as uuidv4 } from 'uuid';
-import Swal from 'sweetalert2';
 import {
   PTLRolesAPService,
-  LanguageService,
   PtlAplicacionesService,
   PtlusuariosRolesApService,
   PTLUsuariosService
@@ -25,6 +24,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+// import Swal from 'sweetalert2';
 //#endregion IMPORTS
 
 @Component({
@@ -64,15 +64,12 @@ export class GestionRolesUsuarioComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private navigationService: NavigationService,
-    private registrosService: PtlusuariosRolesApService,
-    private aplicacionesService: PtlAplicacionesService,
-    private usuariosService: PTLUsuariosService,
-    private suitesService: PtlSuitesAPService,
-    private rolesAPService: PTLRolesAPService,
-    private translate: TranslateService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private _navigationService: NavigationService,
+    private _registrosService: PtlusuariosRolesApService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _usuariosService: PTLUsuariosService,
+    private _suitesService: PtlSuitesAPService,
+    private _rolesAPService: PTLRolesAPService
   ) {
     this.isSubmit = false;
     this.route.queryParams.subscribe((params) => {
@@ -94,8 +91,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
-    this.menuItems = this.navigationService.getNavigationItems(appCode);
+    this.menuItems = this._navigationService.getNavigationItems();
     this.getOnInitPage();
   }
 
@@ -120,7 +116,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
   private async consultarRegistroById(id: number) {
     try {
       const resp = await firstValueFrom(
-        this.registrosService.getRegistroById(id).pipe(
+        this._registrosService.getRegistroById(id).pipe(
           tap((resp: any) => {
             this.FormRegistro = resp.role;
             console.log('Todos los rolesUsuarios', this.rolesUsuarios);
@@ -141,7 +137,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
   private async consultarUsuariosRoles(): Promise<boolean> {
     try {
       const resp = await firstValueFrom(
-        this.registrosService.getRegistros().pipe(
+        this._registrosService.getRegistros().pipe(
           tap((resp: any) => {
             if (resp.ok) {
               this.rolesUsuarios = resp.usuariosRoles;
@@ -164,7 +160,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
   private async consultarUsuarios() {
     try {
       const resp = await firstValueFrom(
-        this.usuariosService.getUsuarios().pipe(
+        this._usuariosService.getUsuarios().pipe(
           tap((resp: any) => {
             if (resp.ok) {
               this.usuarios = resp.usuarios;
@@ -187,7 +183,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
   private async consultarUsuarioById(id: number) {
     try {
       const resp = await firstValueFrom(
-        this.usuariosService.getUsuarioById(id).pipe(
+        this._usuariosService.getUsuarioById(id).pipe(
           tap((resp: any) => {
             if (resp.ok) {
               this.usuario = resp.usuario;
@@ -210,7 +206,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
   private async consultarAplicaciones() {
     try {
       const resp = await firstValueFrom(
-        this.aplicacionesService.getAplicaciones().pipe(
+        this._aplicacionesService.getAplicaciones().pipe(
           tap((resp: any) => {
             if (resp.ok) {
               this.aplicaciones = resp.aplicaciones;
@@ -233,7 +229,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
   private async consultarSuites() {
     try {
       const resp = await firstValueFrom(
-        this.suitesService.geSuitesAP().pipe(
+        this._suitesService.geSuitesAP().pipe(
           tap((resp: any) => {
             if (resp.ok) {
               this.suites = resp.suites;
@@ -256,7 +252,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
     try {
       this.rolesAplicacion = [];
       const resp = await firstValueFrom(
-        this.rolesAPService.getRegistros().pipe(
+        this._rolesAPService.getRegistros().pipe(
           tap((resp: any) => {
             if (resp.ok) {
               const rolesApp = resp.roles.filter((x: { suiteId: number }) => x.suiteId == suiteId);
@@ -334,7 +330,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
     if (!form.valid) {
       return;
     }
-    this.registrosService
+    this._registrosService
       .deleteTodosRolesByAppIsSuiteId(this.usuario.usuarioId ?? 0, this.aplicacion.aplicacionId ?? 0, this.suite.suiteId ?? 0)
       .subscribe((elm) => {
         if (this.rolesSeleccionados.length > 0) {
@@ -346,7 +342,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
               roleId: role.roleId,
               estadoUsuarioRole: true
             };
-            this.registrosService.postCrearRegistro(newRole).subscribe({
+            this._registrosService.postCrearRegistro(newRole).subscribe({
               next: (resp: any) => {
                 if (resp.ok) {
                   console.log('El role fue creado para el usuario');

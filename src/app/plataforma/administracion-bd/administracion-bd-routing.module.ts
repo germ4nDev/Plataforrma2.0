@@ -11,10 +11,6 @@ const routes: Routes = [
         loadComponent: () => import('./conexiones/gestion-conexion/gestion-conexion.component').then(m => m.GestionConexionComponent)
       },
       {
-        path: 'log-actividades',
-        loadComponent: () => import('./log-actividades/log-actividades.component').then(m => m.LogActividadesComponent)
-      },
-      {
         path: 'scripts',
         loadComponent: () => import('./scripts/scripts.component').then(m => m.ScriptsComponent)
       },
