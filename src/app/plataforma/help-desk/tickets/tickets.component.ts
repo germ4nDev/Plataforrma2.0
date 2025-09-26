@@ -7,7 +7,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { BreadcrumbComponent } from 'src/app/theme/shared/components/breadcrumb/breadcrumb.component';
-import { LanguageService, NavigationService } from 'src/app/theme/shared/service';
+import { LanguageService, NavigationService, PtlAplicacionesService } from 'src/app/theme/shared/service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
@@ -16,6 +16,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { GradientConfig } from 'src/app/app-config';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 
 @Component({
   selector: 'app-tickets',
@@ -30,6 +31,8 @@ export class TicketsComponent implements OnInit {
   //#region VARIABLES
   registros: PTLTicketAPModel[] = [];
   registrosFiltrado: PTLTicketAPModel[] = [];
+  aplicaciones: PTLAplicacionModel[] = [];
+  aplicacionesSub?: Subscription;
   lang: string = localStorage.getItem('lang') || '';
   registrosSub?: Subscription;
   tituloPagina: string = '';
@@ -44,8 +47,8 @@ export class TicketsComponent implements OnInit {
     private translate: TranslateService,
     private ticketsService: PTLTicketsService,
     private navigationService: NavigationService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private aplicacionesService: PtlAplicacionesService
+
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -57,6 +60,7 @@ export class TicketsComponent implements OnInit {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.hasFiltersSlot = true;
+    this.consultarAplicaciones();
     this.consultarRegistros();
   }
 
@@ -66,8 +70,9 @@ export class TicketsComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.tickets.forEach((role: any) => {
-              role.nomEstado = role.estadoTicket == true ? 'Activo' : 'Inactivo';
+            resp.tickets.forEach((ticket: any) => {
+              ticket.nomEstado = ticket.estadoTicket == true ? 'Activo' : 'Inactivo';
+              ticket.nomAplicacion = this.aplicaciones.filter(x => x.aplicacionId == ticket.aplicacionId)[0].nombreAplicacion || '';
             });
             this.registros = resp.tickets;
             this.registrosFiltrado = this.registros;
@@ -82,6 +87,23 @@ export class TicketsComponent implements OnInit {
       )
       .subscribe();
   }
+
+    consultarAplicaciones() {
+        this.aplicacionesSub = this.aplicacionesService
+            .getAplicaciones()
+            .pipe(
+            tap((resp: any) => {
+                if (resp.ok) {
+                this.aplicaciones = resp.aplicaciones;
+                }
+            }),
+            catchError((err) => {
+                console.error(err);
+                return of([]);
+            })
+            )
+            .subscribe();
+        }
 
   OnNuevoRegistroClick() {
     this.router.navigate(['help-desk/gestion-ticket']);

@@ -47,9 +47,7 @@ export class GestionSeguimientoComponent {
     private requerimientoService: PTLRequerimientosTkService,
     private tiposEstados: PTLTiposEstadosService,
     private estadosService: PTLEstadosService,
-    private translate: TranslateService,
-    private languageService: LanguageService,
-    private BreadCrumb: BreadcrumbComponent
+    private translate: TranslateService
   ) {
     this.isSubmit = false;
   }

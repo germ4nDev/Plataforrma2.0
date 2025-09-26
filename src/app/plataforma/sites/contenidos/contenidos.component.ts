@@ -15,6 +15,8 @@ import { PTLContenidosELService } from 'src/app/theme/shared/service/ptlcontenid
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
+import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 
 @Component({
   selector: 'app-contenidos',
@@ -29,6 +31,8 @@ export class ContenidosComponent implements OnInit {
   registrosSub?: Subscription;
   registros: PTLContenidoELModel[] = [];
   registrosFiltrado: PTLContenidoELModel[] = [];
+  enlaceSub?: Subscription;
+  enlaces: PTLEnlaceSTModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   gradientConfig;
@@ -40,7 +44,8 @@ export class ContenidosComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private contenidoService: PTLContenidosELService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private enlacesService: PTLEnlacesSTService,
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -49,6 +54,7 @@ export class ContenidosComponent implements OnInit {
     const appCode = localStorage.getItem('aplicacionId') || 'plataforma';
     this.menuItems = this.navigationService.getNavigationItems(appCode);
     this.hasFiltersSlot = true;
+    this.consultarEnlaces();
     this.consultarRegistros();
     console.log('elementos menu componente', this.menuItems);
   }
@@ -61,10 +67,30 @@ export class ContenidosComponent implements OnInit {
           if (resp.ok) {
             resp.contenidos.forEach((contenido: any) => {
               contenido.nomEstado = contenido.estadoContenido == true ? 'Activa' : 'Inactiva';
+              contenido.nomEnlace = this.enlaces.filter(x => x.enlaceId == contenido.enlaceId)[0].nombreEnlace || '';
             });
             this.registros = resp.contenidos;
             this.registrosFiltrado = resp.contenidos;
             console.log('Todos los contenidos', this.registros);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarEnlaces() {
+    this.enlaceSub = this.enlacesService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.enlaces = resp.enlaces;
+            console.log('Todos los enlaces', this.enlaces);
             return;
           }
         }),

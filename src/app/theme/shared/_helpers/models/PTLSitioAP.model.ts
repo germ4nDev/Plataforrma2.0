@@ -7,6 +7,7 @@ export class PTLSitiosAPModel {
         public urlSitio? : string,
         public puertoSitio? : number,
         public estadoSitio? : boolean,
-        public nomEstado? : string
+        public nomEstado? : string,
+        public nomAplicacion? : string
    ) {}
 }

@@ -6,6 +6,7 @@ export class PTLEnlaceSTModel {
     public descripcionEnlace?: string,
     public rutaEnlace?: string,
     public estadoEnlace?: boolean,
-    public nomEstado?: string
+    public nomEstado?: string,
+    public nomSitio? : string
   ) {}
 }
