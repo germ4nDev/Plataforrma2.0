@@ -1,31 +1,101 @@
-<div class="row">
-    <div class="col-sm-12">
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
         <div class="card">
-            <div class="card-header">
-                <h5>Column Searching</h5>
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions"
-                        class="table table-striped row-border table-hover">
-                        <tfoot>
-                            <tr>
-                                <th><input type="text" placeholder="Search Name" name="search-name"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Position" name="search-position"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Office" name="search-office"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Age" name="search-age"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Satrt Date" name="search-date"
-                                        class="form-control" /></th>
-                                <th><input type="text" placeholder="Search Salary" name="search-salary"
-                                        class="form-control" /></th>
-                            </tr>
-                        </tfoot>
-                    </table>
+
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title">{{ 'LOGACTIVIDADES.FILTROS.TITULO' | translate }}</h6>
+                    <div class="filtro">
+                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
+                        <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="reg.codigoaplicacion" *ngFor="let reg of aplicaciones">
+                                {{ reg.nombreAplicacion }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
+                        <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="reg.codigosuite" *ngFor="let reg of suites">
+                                {{ reg.nombreSuite }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="reg.nombreModulo" *ngFor="let reg of registros">
+                                {{ reg.nombreModulo }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'LOGACTIVIDADES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
+                    </div>
                 </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <app-data-table
+                    [data]="registrosFiltrado"
+                    [columns]="['fechaLog','nomAplicacion', 'nomSuite', 'nomModulo', 'codigoErrr', 'nomEstado']"
+                    [idField]="'logId'"
+                    [tableTitle]="'LOGACTIVIDADES.TITLE' | translate"
+                    [columnTitles]="[
+                      'LOGACTIVIDADES.FECHA' | translate,
+                      'LOGACTIVIDADES.APLICACION' | translate,
+                      'LOGACTIVIDADES.SUITE' | translate,
+                      'LOGACTIVIDADES.MODULO' | translate,
+                      'LOGACTIVIDADES.CODIGO' | translate,
+                      'LOGACTIVIDADES.STATUS' | translate
+                    ]"
+                    [detailColumns]="['descripcionModulo', 'nomUsuario']"
+                    [detailTitles]="[
+                      'LOGACTIVIDADES.DESCRIPTION' | translate,
+                      'LOGACTIVIDADES.USUARIO' | translate
+                    ]"
+                    [showDetail]="true"
+                    [showAvatar]="false"
+                    [showActions]="false"
+                    [showNewButton]="false"
+                    [showViewButton]="false"
+                    [showEditButton]="false"
+                    [showDeleteButton]="false"
+                    [newButtonLabel]="'LOGACTIVIDADES.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
             </div>
         </div>
     </div>

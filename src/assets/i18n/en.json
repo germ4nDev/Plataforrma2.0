@@ -1,5 +1,6 @@
 {
     "PLATAFORMA": {
+        "TEXTO_HOME": "Welcome to plataforma 2.0",
         "OPTIONS": "Options",
         "CANCEL": "Cancel",
         "CHARGING": "Loading ...",
@@ -21,7 +22,9 @@
             "MESSAGES": "My Messages",
             "LOCK": "Lock Screen",
             "NAVBARCOLOR": "Select Navbar Color",
-            "THEME": "Theme"
+            "THEME_DARK": "Dark Theme",
+            "THEME_LIGHT": "Light Theme",
+            "CLOSE_SESSION": "Close Session"
         },
         "FILTROTODOS": "Show All",
         "INSERTAR": "The record was successfully created",

@@ -1,5 +1,6 @@
 {
     "PLATAFORMA": {
+        "TEXTO_HOME": "Bienvenidos a la plataforma 2.0",
         "OPTIONS": "Opciones",
         "CANCEL": "Cancelar",
         "DELETE": "Eliminar",
@@ -22,7 +23,9 @@
             "MESSAGES": "Mis Mensajes",
             "LOCK": "Bloquear Pantalla",
             "NAVBARCOLOR": "Colr Encabezado",
-            "THEME": "Tema"
+            "THEME_DARK": "Tema Oscuro",
+            "THEME_LIGHT": "Tema Claro",
+            "CLOSE_SESSION": "Cerrar Sesión"
         },
         "FILTROTODOS": "Mostrar Todos",
         "INSERTAR": "El registro se insertó correctamente",

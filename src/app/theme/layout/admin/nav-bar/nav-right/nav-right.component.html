@@ -74,14 +74,6 @@
             <app-language-selector></app-language-selector>
         </li>
 
-        <!-- <li>
-
-        </li>
-
-        <li>
-
-        </li> -->
-
         <li>
             <div class="dropdown drp-user" ngbDropdown placement="auto">
                 <a href="javascript:" ngbDropdownToggle>
@@ -101,8 +93,7 @@
                                 'PLATAFORMA.NAVBAR.LOCK' | translate }}</a></li>
                         <li>
                             <a href="javascript:" class="dropdown-item" (click)="toggleTheme()">
-                                <i class="{{ iconoTema }} icon-lg icon-style"></i>{{ 'PLATAFORMA.NAVBAR.THEME' |
-                                translate }}
+                                <i class="{{ iconoTema }} icon-lg icon-style"></i>{{ themeTextKey | translate }}
                             </a>
                         </li>
                         <li>
@@ -128,7 +119,7 @@
                         <hr>
                         <li><a href="javascript:" class="dud-logout" title="Logout" (click)="logout()">
                                 <i class="feather icon-log-out"></i>{{
-                                'PLATAFORMA.NAVBAR.CLOSESESSION' | translate }}</a></li>
+                                'PLATAFORMA.NAVBAR.CLOSE_SESSION' | translate }}</a></li>
                     </ul>
                 </div>
             </div>

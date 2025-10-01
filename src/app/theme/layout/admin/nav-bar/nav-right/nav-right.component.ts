@@ -42,19 +42,20 @@ import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario
   ]
 })
 export class NavRightComponent implements DoCheck, OnInit {
-  usuario: PTLUsuarioModel = new PTLUsuarioModel();
-  visibleUserList: boolean = false;
-  chatMessage: boolean = false;
-  friendId!: number;
-  gradientConfig = GradientConfig;
-  isDarkTheme: boolean = false;
-  themeSettings: any;
-  iconoTema: string = '';
-  avatarUsuario: string = '';
-  nombreUsuario: string = '';
-  navbarColor: string = '';
-  currentLanguage: string = 'es';
-  colorPalette: any[] = [
+  public usuario: PTLUsuarioModel = new PTLUsuarioModel();
+  public visibleUserList: boolean = false;
+  public chatMessage: boolean = false;
+  public friendId!: number;
+  public gradientConfig = GradientConfig;
+  public isDarkTheme: boolean = false;
+  public themeSettings: any;
+  public iconoTema: string = '';
+  public avatarUsuario: string = '';
+  public nombreUsuario: string = '';
+  public navbarColor: string = '';
+  public currentLanguage: string = 'es';
+  public themeTextKey: string = 'PLATAFORMA.NAVBAR.CHANGE_TO_DARK';
+  public colorPalette: any[] = [
     { color: '#66b5ff', iconos: '#000', texto: '#000' },
     { color: '#2c3e50', iconos: '#fff', texto: '#fff' },
     { color: '#c0392b', iconos: '#fff', texto: '#fff' },
@@ -69,17 +70,15 @@ export class NavRightComponent implements DoCheck, OnInit {
     private _uploadService: UploadFilesService,
     private languageService: LanguageService
   ) {
-    console.log('abriendo navbar-right', this.colorPalette);
     console.log('isDarkTheme', this.isDarkTheme);
     this.isDarkTheme = this.themeService.isDarkThemeEnabled();
     this.iconoTema = this.isDarkTheme ? 'icon feather icon-sun' : 'icon feather icon-moon';
+    this.themeTextKey = this.isDarkTheme ? 'PLATAFORMA.NAVBAR.THEME_LIGHT' : 'PLATAFORMA.NAVBAR.THEME_DARK';
   }
 
   ngOnInit(): void {
     this.usuario = this._localstorageService.getUsuarioLocalStorage();
-    console.log('usuario logueado', this.usuario);
     this.avatarUsuario = this._uploadService.getFilePath('usuarios', this.usuario.fotoUsuario || '');
-    console.log('avatar del usuario', this.avatarUsuario);
     this.nombreUsuario = this.usuario.nombreUsuario || '';
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
@@ -96,15 +95,12 @@ export class NavRightComponent implements DoCheck, OnInit {
     this.themeService.toggleDarkTheme();
     this.isDarkTheme = !this.isDarkTheme;
     const settings = this._localstorageService.getThemeSettings();
-    console.log('theme settings', settings);
     this.iconoTema = settings.isDarkTheme ? 'icon feather icon-sun' : 'icon feather icon-moon';
-    console.log('icono tema', this.iconoTema);
-    console.log('isDarkTheme (nuevo estado):', this.isDarkTheme);
-}
+    this.themeTextKey = settings.isDarkTheme ? 'PLATAFORMA.NAVBAR.THEME_LIGHT' : 'PLATAFORMA.NAVBAR.THEME_DARK';
+  }
 
   onNavbarColorChange(i: number): void {
     const color = this.colorPalette[i];
-    console.log('palette color', color);
     this.themeService.setNavbarColor(color.color);
     this.themeService.setIconosColor(color.iconos);
     this.themeService.setTextoColor(color.texto);

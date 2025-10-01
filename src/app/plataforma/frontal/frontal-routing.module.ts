@@ -21,6 +21,14 @@ const routes: Routes = [
         {
             path: 'gestion-inicio',
             loadComponent: () => import('./inicio/gestion-inicio/gestion-inicio.component').then(m => m.GestionInicioComponent)
+        },
+        {
+            path: 'gestion-home',
+            loadComponent: () => import('./home/gestion-home/gestion-home.component').then(m => m.GestionHomeComponent)
+        },
+        {
+            path: 'gestion-launcher',
+            loadComponent: () => import('./launcher/gestion-launcher/gestion-launcher.component').then(m => m.GestionLauncherComponent)
         }
     ]
   }

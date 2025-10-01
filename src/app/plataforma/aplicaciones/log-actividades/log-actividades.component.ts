@@ -21,7 +21,6 @@ import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtllogActividadesService } from 'src/app/theme/shared/service/ptllog-actividades.service';
 import { PTLLogActividadAP } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
-import Swal from 'sweetalert2';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 
@@ -229,35 +228,15 @@ export class LogActividadesComponent implements OnInit {
   }
 
   OnNuevoRegistroClick(): void {
-    this.router.navigate(['modulos/gestion-modulo']);
+    console.log('evento no disponible');
   }
 
   OnEditarRegistroClick(id: number): void {
-    this.router.navigate(['modulos/gestion-modulo'], { queryParams: { aplicacionId: id } });
+    console.log('evento no disponible', id);
   }
 
   OnEliminarRegistroClick(id: number): void {
-    Swal.fire({
-      title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO'),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this._registrosService.deleteEliminarRegistro(id).subscribe({
-          next: (resp: any) => {
-            Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((a) => a.logId !== id);
-            this.registrosFiltrado = [...this.registros];
-          },
-          error: () => {
-            Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
-          }
-        });
-      }
-    });
+    console.log('evento no disponible', id);
   }
 
   toggleNav(): void {

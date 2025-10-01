@@ -159,7 +159,7 @@ export class SuitesComponent implements OnInit {
   }
 
   OnNuevoRegistroClick(): void {
-    this._router.navigate(['suites/gestion-suite']);
+    this._router.navigate(['suites/gestion-suite/gestion-suite']);
   }
 
   OnEditarRegistroClick(id: number): void {

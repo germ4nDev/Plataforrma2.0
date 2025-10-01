@@ -1,7 +1,7 @@
 export class PTLSuiteAPModel {
     constructor (
         public suiteId? : number,
-        public codigoAplicacion? : number,
+        public codigoAplicacion? : string,
         public codigoSuite? : string,
         public nombreSuite? : string,
         public descripcionSuite? : string,

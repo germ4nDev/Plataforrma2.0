@@ -32,6 +32,7 @@ import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaci
 
 export class HomeComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
+  textoBienvenida = '';
   //#region VARIABLES
   registrosSub?: Subscription;
   registros: PTLSitiosAPModel[] = [];
