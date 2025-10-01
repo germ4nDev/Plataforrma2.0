@@ -23,13 +23,14 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 
 @Component({
-  selector: 'app-sites',
+  selector: 'app-home',
   standalone: true,
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
-  templateUrl: './sites.component.html',
-  styleUrl: './sites.component.scss'
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss'
 })
-export class SitesComponent implements OnInit {
+
+export class HomeComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   //#region VARIABLES
   registrosSub?: Subscription;
@@ -44,6 +45,7 @@ export class SitesComponent implements OnInit {
   menuItems: NavigationItem[] = [];
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   //#endregion VARIABLES
+
   constructor(
     private router: Router,
     private translate: TranslateService,
@@ -56,6 +58,7 @@ export class SitesComponent implements OnInit {
 
   ngOnInit() {
     this.menuItems = this._navigationService.getNavigationItems();
+
     this.hasFiltersSlot = true;
     this.consultarAplicaciones();
     this.consultarSitios();
@@ -171,4 +174,5 @@ export class SitesComponent implements OnInit {
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
+
 }

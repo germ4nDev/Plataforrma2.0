@@ -7,6 +7,7 @@ export class PTLSuiteAPModel {
         public descripcionSuite? : string,
         public nomEstado? : string,
         public nomAplicacion? : string,
+        public rutaInicio? : string,
         public estadoSuite? : boolean
    ) {}
 }

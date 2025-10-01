@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/contextual-lifecycle */
 import { Injectable, OnInit } from '@angular/core';
 import { NavigationItem } from '../../layout/admin/navigation/navigation';
@@ -19,12 +20,14 @@ export class NavigationService implements OnInit {
   suitesApp: PTLSuiteAPModel[] = [];
   modulos: PTLModuloAP[] = [];
   modulosSu: PTLModuloAP[] = [];
+  modulosSu2: PTLModuloAP[] = [];
   aplicacionesSub?: Subscription;
   suitesSub?: Subscription;
   modulosSub?: Subscription;
   aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
   suite: PTLSuiteAPModel = new PTLSuiteAPModel();
   modulo: PTLModuloAP = new PTLModuloAP();
+  modulo2: PTLModuloAP = new PTLModuloAP();
 
   constructor(
     private _aplicacionesService: PtlAplicacionesService,
@@ -92,9 +95,10 @@ export class NavigationService implements OnInit {
 
   getNavigationItems(): NavigationItem[] {
     this.aplicacion = this._localStorageService.getAplicaicionLocalStorage();
+    console.log('datos de la aplicacion', this.aplicacion);
     switch (this.aplicacion.codigoAplicacion) {
       case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
-        console.log('menu plataforma', this.getPlataformaItems());
+        console.log('menu plataforma', this.getAplicacionSuiteItems());
         return this.getPlataformaItems();
       case 'helpdesk':
         return this.getHelpDeskItems();
@@ -105,31 +109,7 @@ export class NavigationService implements OnInit {
   }
 
   private getPlataformaItems(): NavigationItem[] {
-    this.suitesApp = this.suites.filter(x => x.codigoAplicacion == this.aplicacion.codigoAplicacion);
-    // let suiteMenu = [];
-    // if (this.suitesApp.length > 0) {
-    //     this.suitesApp.forEach(su => {
-    //         this.modulosSu = this.modulos.filter(x => x.codigoSuite == su.codigoSuite);
-    //         const modChildren = [];
-    //         if (this.modulosSu.length > 0) {
-    //              this.modulosSu.forEach(modu => {
-
-    //             });
-    //         }
-    //         const objSu = {
-    //             id: su.codigoSuite,
-    //             title: su.nombreSuite,
-    //             type: 'group',
-    //             icon: 'feather icon-monitor',
-    //             children: [
-
-    //             ]
-    //         }
-    //     });
-    // }
-
-
-
+    this.suitesApp = this.suites.filter((x) => x.codigoAplicacion == this.aplicacion.codigoAplicacion);
     return [
       {
         id: 'e1a8fa99-15db-479b-a0a4-9c2be72273b5',
@@ -484,6 +464,63 @@ export class NavigationService implements OnInit {
     ];
   }
 
+  private getAplicacionSuiteItems(): NavigationItem[] {
+    this.suite = this._localStorageService.getSuiteLocalStorage();
+    console.log('suite a consultar', this.suite); //ok
+
+    this.modulosSu2 = this.modulos.filter((x) => x.codigoSuite === this.suite.codigoSuite);
+    console.log('modulos de la suite', this.modulosSu);
+    if (this.modulosSu2.length === 0) {
+      return [];
+    }
+
+    const modulosPadreRaiz = this.modulosSu2.filter((x) => x.codigoPadre === '0');
+    const hijosDelNodoSuite = this.buildMenuItems(modulosPadreRaiz, this.modulosSu2);
+
+    const nodoSuite: NavigationItem = {
+      id: this.suite.codigoSuite || '',
+      title: this.suite.nombreSuite || '',
+      type: 'group',
+      icon: 'feather icon-monitor',
+      children: hijosDelNodoSuite
+    };
+
+    return [nodoSuite];
+  }
+
+  private consultarNodosHijos(codModulo: string, modulos: PTLModuloAP[]) {
+    const hijos = modulos.filter((x) => x.codigoPadre == codModulo);
+    return hijos;
+  }
+
+  private buildMenuItems(modulosPadre: PTLModuloAP[], todosLosModulos: PTLModuloAP[]): NavigationItem[] {
+    const menuItems: NavigationItem[] = [];
+
+    modulosPadre.forEach((modulo: any) => {
+      const childrenNodes = this.consultarNodosHijos(modulo.codigoModulo, todosLosModulos);
+
+      const hasChildren = childrenNodes.length > 0;
+      const type: 'collapse' | 'item' = hasChildren ? 'collapse' : 'item';
+      const url = !hasChildren ? modulo.rutaModulo : undefined; // Solo los 'item' tienen URL
+
+      const item: NavigationItem = {
+        id: modulo.codigoModulo,
+        title: modulo.nombreModulo,
+        type: type,
+        url: url,
+        icon: 'feather icon-menu'
+      };
+
+      if (hasChildren) {
+        item.children = this.buildMenuItems(childrenNodes, todosLosModulos);
+      }
+
+      menuItems.push(item);
+    });
+
+    return menuItems;
+  }
+
   private getHelpDeskItems(): NavigationItem[] {
     return [
       {
@@ -510,3 +547,4 @@ export class NavigationService implements OnInit {
     ];
   }
 }
+

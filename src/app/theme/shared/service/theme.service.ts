@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
 
 interface ThemeSettings {
   isDarkTheme: boolean;
@@ -24,7 +25,7 @@ export class ThemeService {
   iconosColor$ = this.iconosColor.asObservable();
   textoColor$ = this.textoColor.asObservable();
 
-  constructor(rendererFactory: RendererFactory2) {
+  constructor(rendererFactory: RendererFactory2, private _loclaStorageService: LocalStorageService) {
     console.log('ThemeService: Constructor se ha ejecutado.');
     this.renderer = rendererFactory.createRenderer(null, null);
     this.navbarColor$.subscribe((color) => {
@@ -47,7 +48,7 @@ export class ThemeService {
   }
 
   private loadThemeSettings(): void {
-    const savedSettings = localStorage.getItem('app-theme-settings');
+    const savedSettings = this._loclaStorageService.getThemeSettings();
     if (savedSettings) {
       try {
         const settings: ThemeSettings = JSON.parse(savedSettings);
@@ -69,7 +70,7 @@ export class ThemeService {
       iconosColor: this.iconosColor.value
     };
     console.log('save settings', settings);
-    localStorage.setItem('app-theme-settings', JSON.stringify(settings));
+    this._loclaStorageService.setThemeSettingsLocalStorage(settings);
   }
 
   setNavbarColor(color: any): void {
@@ -88,6 +89,11 @@ export class ThemeService {
     console.log('ThemeService: setTextoColor se ha llamado con el color:', color);
     this.textoColor.next(color);
     this.saveThemeSettings();
+  }
+
+  public isDarkThemeEnabled(): boolean {
+    // Simplemente devuelve el estado mantenido por el servicio.
+    return this.isDarkTheme.value;
   }
 
   toggleDarkTheme(): void {

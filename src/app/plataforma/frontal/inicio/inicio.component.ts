@@ -65,14 +65,15 @@ export class InicioComponent implements OnInit {
     console.log('ingresar a', app);
 
     this._localStorage.setAplicacionLocalStorage(app);
-    this._suitesService.geSuitesAP().subscribe((resp) => {
-      const suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == app.codigoAplicacion);
-      if (suites.length < 2) {
-        this._localStorage.setSuiteLocalStorage(suites[0]);
-        this.router.navigate(['/aplicaciones/aplicaciones']);
-      } else {
-        this.router.navigate(['/frontal/inicio-suites']);
-      }
-    });
+        this.router.navigate(['/frontal/launcher']);
+    // this._suitesService.geSuitesAP().subscribe((resp) => {
+    //   const suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == app.codigoAplicacion);
+    //   if (suites.length < 2) {
+    //     this._localStorage.setSuiteLocalStorage(suites[0]);
+    //     this.router.navigate(['/aplicaciones/aplicaciones']);
+    //   } else {
+    //     this.router.navigate(['/frontal/inicio-suites']);
+    //   }
+    // });
   }
 }

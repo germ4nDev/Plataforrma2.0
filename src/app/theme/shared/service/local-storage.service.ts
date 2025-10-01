@@ -1,18 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
 import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
 import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
 
+interface ThemeSettings {
+  isDarkTheme: boolean;
+  navbarColor: string;
+  iconosColor: string;
+  textoColor: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
-  public usuario: PTLUsuarioModel = new PTLUsuarioModel();
-  public aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
-  public suite: PTLSuiteAPModel = new PTLSuiteAPModel();
-  public modulo: PTLModuloAP = new PTLModuloAP();
+  public usuario: any;
+  public currentUser: any;
+  public aplicacion: any;
+  public suite: any;
+  public modulo: any;
   public lang: string = 'en';
+  public themeSettings: any;
 
   constructor() {
     // this.usuario = JSON.parse(localStorage.getItem('currentUser') || '');
@@ -22,24 +32,29 @@ export class LocalStorageService {
   }
 
   // #region SETTERS
-  setUsuarioLocalStorage(usu: PTLUsuarioModel) {
-    localStorage.setItem('currrentUser', JSON.stringify(usu));
-    this.usuario = usu;
+  setUsuarioLocalStorage(user: PTLUsuarioModel) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.usuario = user;
   }
 
   setAplicacionLocalStorage(aplicacion: PTLAplicacionModel) {
     localStorage.setItem('aplicacion', JSON.stringify(aplicacion));
-    this.aplicacion = aplicacion
+    this.aplicacion = aplicacion;
   }
 
   setSuiteLocalStorage(suite: PTLSuiteAPModel) {
     localStorage.setItem('suite', JSON.stringify(suite));
-    this.suite = suite
+    this.suite = suite;
   }
 
   setModuloLocalStorage(modulo: PTLModuloAP) {
     localStorage.setItem('modulo', JSON.stringify(modulo));
-    this.modulo = modulo
+    this.modulo = modulo;
+  }
+
+  setThemeSettingsLocalStorage(settings: ThemeSettings) {
+    localStorage.setItem('app-theme-settings', JSON.stringify(settings));
+    this.themeSettings = settings;
   }
 
   setLanguage(lang: string) {
@@ -47,28 +62,42 @@ export class LocalStorageService {
     this.lang = lang;
   }
 
+  setLogOut() {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('aplicacion');
+    localStorage.removeItem('suite');
+    localStorage.removeItem('app-theme-settings');
+  }
   // #endregion SETTERS
 
   // #region GETTERS
-
-  getUsuarioLocalStorage(): PTLUsuarioModel {
-    return this.usuario;
+  getUsuarioLocalStorage() {
+    this.usuario = JSON.parse(localStorage.getItem('currentUser') || '');
+    return this.usuario.usuario;
   }
 
-  getAplicaicionLocalStorage(): PTLUsuarioModel {
+  getAplicaicionLocalStorage(): PTLAplicacionModel {
+    this.aplicacion = JSON.parse(localStorage.getItem('aplicacion') || '');
     return this.aplicacion;
   }
 
   getSuiteLocalStorage(): PTLSuiteAPModel {
+    this.suite = JSON.parse(localStorage.getItem('suite') || '');
     return this.suite;
   }
 
   getModuloLocalStorage(): PTLModuloAP {
+    this.modulo = JSON.parse(localStorage.getItem('modulo') || '');
     return this.modulo;
   }
 
   getLanguage(): string {
     return this.lang;
+  }
+
+  getThemeSettings() {
+    this.themeSettings = this.modulo = JSON.parse(localStorage.getItem('app-theme-settings') || '');
+    return this.themeSettings;
   }
 
   getLanguageUrl() {

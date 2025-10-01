@@ -7,11 +7,13 @@ import { GradientConfig } from 'src/app/app-config';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
-import { AuthenticationService, LanguageService } from 'src/app/theme/shared/service';
+import { AuthenticationService, LanguageService, UploadFilesService } from 'src/app/theme/shared/service';
 import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 import { ChatMsgComponent } from './chat-msg/chat-msg.component';
 import { ThemeService } from 'src/app/theme/shared/service/theme.service';
 import { FormsModule } from '@angular/forms';
+import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
+import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 
 @Component({
   selector: 'app-nav-right',
@@ -40,12 +42,16 @@ import { FormsModule } from '@angular/forms';
   ]
 })
 export class NavRightComponent implements DoCheck, OnInit {
+  usuario: PTLUsuarioModel = new PTLUsuarioModel();
   visibleUserList: boolean = false;
   chatMessage: boolean = false;
   friendId!: number;
   gradientConfig = GradientConfig;
   isDarkTheme: boolean = false;
+  themeSettings: any;
   iconoTema: string = '';
+  avatarUsuario: string = '';
+  nombreUsuario: string = '';
   navbarColor: string = '';
   currentLanguage: string = 'es';
   colorPalette: any[] = [
@@ -59,14 +65,22 @@ export class NavRightComponent implements DoCheck, OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private themeService: ThemeService,
+    private _localstorageService: LocalStorageService,
+    private _uploadService: UploadFilesService,
     private languageService: LanguageService
   ) {
     console.log('abriendo navbar-right', this.colorPalette);
     console.log('isDarkTheme', this.isDarkTheme);
-    this.iconoTema = this.isDarkTheme ? 'fas fa-sun' : 'fas fa-moon';
+    this.isDarkTheme = this.themeService.isDarkThemeEnabled();
+    this.iconoTema = this.isDarkTheme ? 'icon feather icon-sun' : 'icon feather icon-moon';
   }
 
   ngOnInit(): void {
+    this.usuario = this._localstorageService.getUsuarioLocalStorage();
+    console.log('usuario logueado', this.usuario);
+    this.avatarUsuario = this._uploadService.getFilePath('usuarios', this.usuario.fotoUsuario || '');
+    console.log('avatar del usuario', this.avatarUsuario);
+    this.nombreUsuario = this.usuario.nombreUsuario || '';
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
     });
@@ -80,9 +94,13 @@ export class NavRightComponent implements DoCheck, OnInit {
 
   toggleTheme(): void {
     this.themeService.toggleDarkTheme();
-    console.log('isDarkTheme', this.isDarkTheme);
-    this.iconoTema = this.isDarkTheme ? 'fas fa-sun' : 'fas fa-moon';
-  }
+    this.isDarkTheme = !this.isDarkTheme;
+    const settings = this._localstorageService.getThemeSettings();
+    console.log('theme settings', settings);
+    this.iconoTema = settings.isDarkTheme ? 'icon feather icon-sun' : 'icon feather icon-moon';
+    console.log('icono tema', this.iconoTema);
+    console.log('isDarkTheme (nuevo estado):', this.isDarkTheme);
+}
 
   onNavbarColorChange(i: number): void {
     const color = this.colorPalette[i];

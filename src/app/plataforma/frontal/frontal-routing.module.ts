@@ -11,6 +11,14 @@ const routes: Routes = [
             loadComponent: () => import('./inicio/inicio.component').then(m => m.InicioComponent)
         },
         {
+            path: 'launcher',
+            loadComponent: () => import('./launcher/launcher.component').then(m => m.LauncherComponent)
+        },
+        {
+            path: 'home',
+            loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
+        },
+        {
             path: 'gestion-inicio',
             loadComponent: () => import('./inicio/gestion-inicio/gestion-inicio.component').then(m => m.GestionInicioComponent)
         }

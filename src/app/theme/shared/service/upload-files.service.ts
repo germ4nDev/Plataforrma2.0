@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpEventType, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -15,11 +16,17 @@ export class UploadFilesService {
   uploadUserPhoto(file: File, objUload: any): Observable<string> {
     const formData = new FormData();
     formData.append('foto', file);
-    return this.http.post<{ ok: boolean, path: string }>(`${this.baseUrl}/upload-photo`, formData, objUload)
+    return this.http.post<{ ok: boolean, path: string }>(`${this.baseUrl}/upload`, formData, objUload)
       .pipe(
         map((res: any) => res.path),
         catchError(this.handleError)
       );
+  }
+
+  getFilePath(type: string, fileName: string) {
+    const pathUrl = `${this.baseUrl}/upload/${type}/${fileName}`;
+    console.log('path de la imagen', pathUrl);
+    return pathUrl;
   }
 
   private handleError(error: HttpErrorResponse) {
