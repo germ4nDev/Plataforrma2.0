@@ -25,7 +25,10 @@ export class ThemeService {
   iconosColor$ = this.iconosColor.asObservable();
   textoColor$ = this.textoColor.asObservable();
 
-  constructor(rendererFactory: RendererFactory2, private _loclaStorageService: LocalStorageService) {
+  constructor(
+    rendererFactory: RendererFactory2,
+    private _loclaStorageService: LocalStorageService
+  ) {
     console.log('ThemeService: Constructor se ha ejecutado.');
     this.renderer = rendererFactory.createRenderer(null, null);
     this.navbarColor$.subscribe((color) => {
@@ -51,11 +54,10 @@ export class ThemeService {
     const savedSettings = this._loclaStorageService.getThemeSettings();
     if (savedSettings) {
       try {
-        const settings: ThemeSettings = JSON.parse(savedSettings);
-        this.isDarkTheme.next(settings.isDarkTheme);
-        this.navbarColor.next(settings.navbarColor);
-        this.iconosColor.next(settings.iconosColor);
-        this.textoColor.next(settings.textoColor);
+        this.isDarkTheme.next(savedSettings.isDarkTheme);
+        this.navbarColor.next(savedSettings.navbarColor);
+        this.iconosColor.next(savedSettings.iconosColor);
+        this.textoColor.next(savedSettings.textoColor);
       } catch (e) {
         console.error('Error al cargar la configuración del tema desde localStorage', e);
       }

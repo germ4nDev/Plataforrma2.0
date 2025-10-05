@@ -62,8 +62,8 @@ export class ModulosComponent implements OnInit{
     this.menuItems = this._navigationService.getNavigationItems();
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
-    this.consultarAplicacines();
-    this.consultarSuites();
+    // this.consultarAplicacines();
+    // this.consultarSuites();
     this.consultarRegistros();
   }
 
@@ -111,15 +111,15 @@ export class ModulosComponent implements OnInit{
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.registros.forEach((app: any) => {
-              app.nomEstado = app.estadoSuite ? 'Activo' : 'Inactivo';
+            resp.modulos.forEach((mod: any) => {
+              mod.nomEstado = mod.estadoModulo ? 'Activo' : 'Inactivo';
             });
             if (codSuite) {
-                this.registros = resp.registros.filter((x: { codigosuite: string; }) => x.codigosuite == codSuite);
-                this.registrosFiltrado = resp.registros.filter((x: { codigosuite: string; }) => x.codigosuite == codSuite);
+                this.registros = resp.modulos.filter((x: { codigosuite: string; }) => x.codigosuite == codSuite);
+                this.registrosFiltrado = resp.modulos.filter((x: { codigosuite: string; }) => x.codigosuite == codSuite);
             } else {
-                this.registros = resp.registros;
-                this.registrosFiltrado = resp.registros;
+                this.registros = resp.modulos;
+                this.registrosFiltrado = resp.modulos;
             }
           }
         }),
@@ -191,32 +191,30 @@ export class ModulosComponent implements OnInit{
   }
 
   OnNuevoRegistroClick(): void {
-    this.router.navigate(['modulos/gestion-modulo']);
+    this.router.navigate(['aplicaciones/gestion-modulo']);
   }
 
   OnEditarRegistroClick(id: number): void {
-    this.router.navigate(['modulos/gestion-modulo'], { queryParams: { aplicacionId: id } });
+    this.router.navigate(['aplicaciones/gestion-modulo'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number): void {
-    const nombreReg = this.registrosFiltrado.filter((x) => x.ModuloId == id)[0];
+  OnEliminarRegistroClick(id: any): void {
     Swal.fire({
-      title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreReg.nombreModulo}".`,
+      title: this.translate.instant('MODULOS.ELIMINARTITULO'),
+      text: this.translate.instant('MODULOS.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this._registrosService.deleteEliminarRegistro(id).subscribe({
+        this._registrosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((a) => a.ModuloId !== id);
-            this.registrosFiltrado = [...this.registros];
+            Swal.fire(this.translate.instant('MODULOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.consultarRegistros();
           },
           error: () => {
-            Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
+            Swal.fire('Error', this.translate.instant('MODULOS.ELIMINARERROR'), 'error');
           }
         });
       }

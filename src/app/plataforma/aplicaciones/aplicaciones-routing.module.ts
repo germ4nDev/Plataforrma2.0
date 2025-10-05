@@ -1,7 +1,6 @@
 // Angular Import
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutComponent } from 'src/app/theme/shared/components/layout/layout.component';
 
 const routes: Routes = [
   {

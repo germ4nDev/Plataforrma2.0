@@ -58,6 +58,8 @@ export class PtlSuitesAPService {
   }
 
   crearSuiteAP(suite: PTLSuiteAPModel) {
+    console.log('nueva suite', suite);
+
     const url = `${base_url}/suites`;
     return this.http.post(url, suite);
   }

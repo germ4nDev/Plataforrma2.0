@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLVersionAP } from '../_helpers/models/PTLVersionAP.model';
 
 const base_url = environment.apiUrl;
 
@@ -30,7 +29,7 @@ export class PtlversionesApService {
   }
 
   getRegistros() {
-    const url = `${base_url}/versiones-ap`;
+    const url = `${base_url}/versiones`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
@@ -44,7 +43,7 @@ export class PtlversionesApService {
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/versiones-ap/${id}`;
+    const url = `${base_url}/versiones/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de la version', resp);
@@ -56,13 +55,13 @@ export class PtlversionesApService {
     );
   }
 
-  postCrearRegistro(verison: PTLVersionAP) {
-    const url = `${base_url}/versiones-ap`;
+  postCrearRegistro(verison: any) {
+    const url = `${base_url}/versiones`;
     return this.http.post(url, verison);
   }
 
-  putModificarRegistro(version: PTLVersionAP) {
-    const url = `${base_url}/versiones-ap/${version.versionId}`;
+  putModificarRegistro(version: any) {
+    const url = `${base_url}/versiones/${version.versionId}`;
     return this.http.put(url, version).pipe(
       map((resp: any) => {
         console.log('data de version modificacda', resp);
@@ -75,7 +74,7 @@ export class PtlversionesApService {
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/versiones-ap/${_id}`;
+    const url = `${base_url}/versiones/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de version eliminado', resp);

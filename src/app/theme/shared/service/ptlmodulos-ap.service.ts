@@ -31,7 +31,7 @@ export class PtlmodulosApService {
   }
 
   getRegistros() {
-    const url = `${base_url}/modulos-ap`;
+    const url = `${base_url}/modulos`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
@@ -45,7 +45,7 @@ export class PtlmodulosApService {
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/modulos-ap/${id}`;
+    const url = `${base_url}/modulos/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de modulo', resp);
@@ -58,12 +58,12 @@ export class PtlmodulosApService {
   }
 
   postCrearRegistro(modulo: PTLModuloAP) {
-    const url = `${base_url}/modulos-ap`;
+    const url = `${base_url}/modulos`;
     return this.http.post(url, modulo);
   }
 
-  putModificarRegistro(modulo: PTLModuloAP) {
-    const url = `${base_url}/modulos-ap/${modulo.ModuloId}`;
+  putModificarRegistro(modulo: PTLModuloAP, moduloId: number) {
+    const url = `${base_url}/modulos/${moduloId}`;
     return this.http.put(url, modulo).pipe(
       map((resp: any) => {
         console.log('data de modulo modificacda', resp);
@@ -76,7 +76,7 @@ export class PtlmodulosApService {
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/modulos-ap/${_id}`;
+    const url = `${base_url}/modulos/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de modulo eliminado', resp);

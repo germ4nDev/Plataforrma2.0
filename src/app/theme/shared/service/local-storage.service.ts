@@ -66,7 +66,6 @@ export class LocalStorageService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('aplicacion');
     localStorage.removeItem('suite');
-    localStorage.removeItem('app-theme-settings');
   }
   // #endregion SETTERS
 
@@ -96,7 +95,17 @@ export class LocalStorageService {
   }
 
   getThemeSettings() {
-    this.themeSettings = this.modulo = JSON.parse(localStorage.getItem('app-theme-settings') || '');
+    if (localStorage.getItem('app-theme-settings')) {
+      this.themeSettings = JSON.parse(localStorage.getItem('app-theme-settings') || '');
+    } else {
+      const settings: ThemeSettings = {
+        isDarkTheme: false,
+        navbarColor: '#2c3e50',
+        iconosColor: '#fff',
+        textoColor: '#fff'
+      };
+      this.themeSettings = settings;
+    }
     return this.themeSettings;
   }
 

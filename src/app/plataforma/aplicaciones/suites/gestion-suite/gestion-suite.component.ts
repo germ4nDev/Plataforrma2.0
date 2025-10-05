@@ -36,6 +36,7 @@ export class GestionSuiteComponent implements OnInit {
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
   windowWidth: number = 0;
+  registroId: number = 0;
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;
@@ -57,32 +58,32 @@ export class GestionSuiteComponent implements OnInit {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
-  }
-
-  ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
-    this.consultarAplicaciones();
-    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
-      const registroId = params['regId'];
-      if (registroId) {
+      this.registroId = params['regId'];
+      if (this.registroId) {
         this.modoEdicion = true;
-        this._registrosService.getSuiteAPById(registroId).subscribe({
+        this._registrosService.getSuiteAPById(this.registroId).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.suite;
-            console.log('respuesta componente', this.FormRegistro);
           },
           error: () => {
             Swal.fire('Error', 'No se pudo obtener la suite por, ', 'error');
           }
         });
       } else {
+        this.FormRegistro.codigoSuite =  uuidv4();
         this.modoEdicion = false;
       }
     });
+  }
+
+  ngOnInit() {
+    this.menuItems = this._navigationService.getNavigationItems();
+    this.consultarAplicaciones();
+    this._layoutInitializer.applyLayout();
+
   }
 
   consultarAplicaciones() {
@@ -120,7 +121,7 @@ export class GestionSuiteComponent implements OnInit {
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
-            this.router.navigate(['/suites/gestion-suite']);
+            this.router.navigate(['/aplicaciones/suites']);
           } else {
             Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
           }
@@ -137,7 +138,7 @@ export class GestionSuiteComponent implements OnInit {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
             form.resetForm();
             this.isSubmit = false;
-            this.router.navigate(['/suites/suites']);
+            this.router.navigate(['/aplicaciones/suites']);
           }
         },
         error: (err: any) => {
@@ -149,7 +150,7 @@ export class GestionSuiteComponent implements OnInit {
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/suites/suites']);
+    this.router.navigate(['/aplicaciones/suites']);
   }
 
   toggleNav(): void {

@@ -20,6 +20,7 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { PTLVersionAP } from 'src/app/theme/shared/_helpers/models/PTLVersionAP.model';
 import { PtlversionesApService } from 'src/app/theme/shared/service/ptlversiones-ap.service';
+import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 
 @Component({
   selector: 'app-versiones',
@@ -48,6 +49,7 @@ export class VersionesComponent implements OnInit {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _aplicacionesService: PtlAplicacionesService,
+    private _localStorageService: LocalStorageService,
     private _registrosService: PtlversionesApService
   ) {
     this.gradientConfig = GradientConfig;
@@ -84,12 +86,18 @@ export class VersionesComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.registros.forEach((reg: any) => {
+            resp.versiones.forEach((reg: any) => {
               reg.nomEstado = reg.estadoVersion ? 'Activo' : 'Inactivo';
-              reg.nomAplicacion = this.aplicaciones.filter((x) => x.aplicacionId == reg.aplicacionId)[0] || '';
+              const app = this.aplicaciones.filter((x) => x.codigoAplicacion == reg.codigoAplicacion)[0] || '';
+              reg.nomAplicacion = app.nombreAplicacion;
+              const fechaVersion = new Date(reg.fechaVersion);
+              const year = fechaVersion.getUTCFullYear(); // Obtiene el año UTC
+              const month = fechaVersion.getUTCMonth() + 1; // Obtiene el mes UTC (0-indexado) + 1
+              const day = fechaVersion.getUTCDate();
+              reg.fechaVersion = year + '-' + month + '-' + day;
             });
-            this.registros = resp.registros;
-            this.registrosFiltrado = resp.registros;
+            this.registros = resp.versiones;
+            this.registrosFiltrado = resp.versiones;
           }
         }),
         catchError((err) => {
@@ -101,8 +109,7 @@ export class VersionesComponent implements OnInit {
   }
 
   getLanguageUrl(): string {
-    const lang = localStorage.getItem('lang') || 'en';
-    return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`;
+    return this._localStorageService.getLanguageUrl();
   }
 
   onFiltroCodigoAplicacionChangeClick(evento: any) {
@@ -110,7 +117,7 @@ export class VersionesComponent implements OnInit {
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.aplicacionId = evento.target.value));
+      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoAplicacion = evento.target.value));
     }
   }
 
@@ -147,32 +154,32 @@ export class VersionesComponent implements OnInit {
   }
 
   OnNuevoRegistroClick(): void {
-    this.router.navigate(['versiones/gestion-version']);
+    this.router.navigate(['aplicaciones/gestion-version']);
   }
 
   OnEditarRegistroClick(id: number): void {
-    this.router.navigate(['versiones/gestion-version'], { queryParams: { aplicacionId: id } });
+    console.log('regId', id);
+    this.router.navigate(['aplicaciones/gestion-version'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number): void {
-    const nombreApp = this.registrosFiltrado.filter((x) => x.versionId == id)[0];
+  OnEliminarRegistroClick(id: any): void {
     Swal.fire({
-      title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreVersion}".`,
+      title: this.translate.instant('VERSIONES.ELIMINARTITULO'),
+      text: this.translate.instant('VERSIONES.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this._registrosService.deleteEliminarRegistro(id).subscribe({
+        this._registrosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((a) => a.versionId !== id);
+            Swal.fire(this.translate.instant('VERSIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.registros = this.registros.filter((a) => a.versionId !== id.id);
             this.registrosFiltrado = [...this.registros];
           },
           error: () => {
-            Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
+            Swal.fire('Error', this.translate.instant('VERSIONES.ELIMINARERROR'), 'error');
           }
         });
       }

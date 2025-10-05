@@ -18,7 +18,7 @@
                 <div class="p-3 filtros-scroll-wrapper">
                     <h6 class="filtros-title">{{ 'VERSIONES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'MODULOS.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
+                        <small>{{ 'VERSIONES.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
                         <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="reg.aplicacionId" *ngFor="let reg of aplicaciones">
@@ -31,7 +31,7 @@
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="app.nombreVersion" *ngFor="let app of registros">
-                                {{ app.nombreVersion }}
+                                {{ version.nombreVersion }}
                             </option>
                         </select>
                     </div>
@@ -59,18 +59,23 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nomAplicacion', 'nombreVersion', 'descripcionVersion', 'nomEstado']"
+                    [columns]="['nomAplicacion', 'fechaVersion', 'codigoVersion', 'nomEstado']"
                     [idField]="'versionId'"
                     [tableTitle]="'VERSIONES.TITLE' | translate"
                     [columnTitles]="[
-                      'VERSIONES.CODE' | translate,
-                      'VERSIONES.NAME' | translate,
-                      'VERSIONES.DESCRIPTION' | translate,
+                      'VERSIONES.APLICACION' | translate,
+                      'VERSIONES.FECHA' | translate,
+                      'VERSIONES.CODIGO' | translate,
                       'VERSIONES.STATUS' | translate
                     ]"
-                    [detailColumns]="[]"
-                    [detailTitles]="[]"
-                    [showDetail]="false"
+                    [detailColumns]="[
+                        'nombreVersion', 'descripcionVersion'
+                    ]"
+                    [detailTitles]="[
+                        'VERSIONES.NAME' | translate,
+                        'VERSIONES.DESCRIPTION' | translate
+                    ]"
+                    [showDetail]="true"
                     [showAvatar]="false"
                     [showActions]="true"
                     [showNewButton]="true"

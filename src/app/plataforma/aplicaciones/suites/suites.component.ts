@@ -106,8 +106,6 @@ export class SuitesComponent implements OnInit {
       .subscribe();
   }
 
-
-
   onFiltroCodigoAplicacionChangeClick(evento: any) {
     console.log('filtrar el codigo ', evento.target.value);
     if (evento.target.value == 'todos') {
@@ -159,32 +157,31 @@ export class SuitesComponent implements OnInit {
   }
 
   OnNuevoRegistroClick(): void {
-    this._router.navigate(['suites/gestion-suite/gestion-suite']);
+    this._router.navigate(['aplicaciones/gestion-suite']);
   }
 
   OnEditarRegistroClick(id: number): void {
-    this._router.navigate(['suites/gestion-suite'], { queryParams: { aplicacionId: id } });
+    this._router.navigate(['aplicaciones/gestion-suite'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number): void {
-    const nombreApp = this.registrosFiltrado.filter((x) => x.suiteId == id)[0];
+  OnEliminarRegistroClick(id: any): void {
     Swal.fire({
-      title: this._translate.instant('APLICACIONES.ELIMINARTITULO'),
-      text: this._translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreSuite}".`,
+      title: this._translate.instant('SUITES.ELIMINARTITULO'),
+      text: this._translate.instant('SUITES.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this._translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this._translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this._registrosService.eliminarSuiteAP(id).subscribe({
+        this._registrosService.eliminarSuiteAP(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this._translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((a) => a.suiteId !== id);
+            Swal.fire(this._translate.instant('SUITES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.registros = this.registros.filter((a) => a.suiteId !== id.id);
             this.registrosFiltrado = [...this.registros];
           },
           error: () => {
-            Swal.fire('Error', this._translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
+            Swal.fire('Error', this._translate.instant('SUITES.ELIMINARERROR'), 'error');
           }
         });
       }

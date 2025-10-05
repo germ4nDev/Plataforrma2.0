@@ -74,7 +74,7 @@
     "ngx-color-picker": "^16.0.0",
     "ngx-editor": "^16.0.1",
     "ngx-mask": "^17.0.4",
-    "ngx-quill": "^22.0.0",
+    "ngx-quill": "^22.1.2",
     "ngx-scrollbar": "^13.0.1",
     "ngx-slider-v2": "^17.0.0",
     "ngx-toastr": "^18.0.0",
