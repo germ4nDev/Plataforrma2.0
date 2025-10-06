@@ -35,15 +35,13 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit {
       ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ header: [1, 2, false] }],
-      ['link', 'image']
+      ['link', 'image'],
+      [{ align: [] }]
     ]
   };
 
   configBasica = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ list: 'ordered' }, { list: 'bullet' }]
-    ]
+    toolbar: [['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], [{ align: [] }]]
   };
 
   configCompleta = {

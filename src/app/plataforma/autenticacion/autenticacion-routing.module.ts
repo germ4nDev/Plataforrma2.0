@@ -10,10 +10,6 @@ const routes: Routes = [
             loadComponent: () => import('./login/login.component').then(m => m.LoginComponent)
         },
         {
-            path: 'perfil',
-            loadComponent: () => import('./perfil/perfil.component').then(m => m.PerfilComponent)
-        },
-        {
             path: 'perfil-configuracion',
             loadComponent: () => import('./perfil-configuracion/perfil-configuracion.component').then(m => m.PerfilConfiguracionComponent)
         },

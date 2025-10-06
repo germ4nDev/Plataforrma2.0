@@ -18,6 +18,10 @@ const routes: Routes = [
             path: 'home',
             loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
         },
+                {
+            path: 'perfil',
+            loadComponent: () => import('./perfil/perfil.component').then(m => m.PerfilComponent)
+        },
         {
             path: 'gestion-inicio',
             loadComponent: () => import('./inicio/gestion-inicio/gestion-inicio.component').then(m => m.GestionInicioComponent)

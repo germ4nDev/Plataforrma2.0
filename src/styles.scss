@@ -136,6 +136,24 @@ File: style.css
     color: #999999 !important;
 }
 
+.avatar-panel {
+    width: 100px !important;
+    height: 100px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.nombre-user-panel {
+    text-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+body {
+    --panel-bg: #fff;
+    --panel-text: #333;
+    --panel-user-bg: #dadada;
+    --panel-hover-bg: #dadada;
+    --panel-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --color-fin-gradiente: #ffffff;
+}
 
 // ====================================================================
 // REGLAS FINALES DEL TEMA OSCURO - ESTO DEBE SER LO ÚLTIMO EN EL ARCHIVO
@@ -149,6 +167,12 @@ body.dark-theme {
     --radio-border-color: #ccc;
     --radio-fill-color: #007bff;
     --radio-fill-shadow: rgba(0, 123, 255, 0.5);
+    --panel-bg: #1e1e2d;
+    --panel-text: #fff;
+    --panel-user-bg: #363636;
+    --panel-hover-bg: #363636;
+    --panel-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    --color-fin-gradiente: #000000;
 
     /* *************************************************************** */
     /* * ESTILOS GLOBALES DE QUILL EDITOR (TEMA OSCURO) */
@@ -369,25 +393,24 @@ body.dark-theme {
         background: transparent;
         cursor: pointer;
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--app-texto-color) !important;
         transition: all 0.6s ease;
     }
 
     .nav-tabs-custom button:hover {
         background-color: var(--app-navbar-color);
-        color: var(--app-texto-color);
+        color: var(--app-texto-color) !important;
     }
 
     .nav-tabs-custom button:active {
         transform: scale(0.95) !important;
+        color: var(--app-texto-color) !important;
     }
 
     .nav-tabs-custom button.active {
         background-color: var(--app-navbar-color);
-        //   background-color: var(--aside-tab-bg);
         border-bottom: 2px solid var(--aside-tab-active);
-        //   color: var(--aside-tab-active);
-        color: black;
+        color: var(--app-texto-color) !important;
     }
 }
 
@@ -510,7 +533,7 @@ body {
     background-color: var(--app-navbar-color);
     //   background-color: var(--aside-tab-bg);
     border-bottom: 2px solid var(--aside-tab-active);
-    color: var(--aside-tab-active);
+    color: var(--app-texto-color) !important;
 }
 
 .table {
@@ -740,4 +763,77 @@ body.gradient-dark {
 #datatable-component td {
     white-space: normal;
     word-wrap: break-word;
+}
+
+// ==============================================
+// 1. Panel Principal del Perfil
+// ==============================================
+.profile-notification {
+    background-color: var(--panel-bg);
+    color: var(--panel-text);
+    box-shadow: var(--panel-shadow);
+    border-radius: 12px;
+    min-width: 250px;
+    padding: 1rem;
+    margin-top: 10px;
+
+    .pro-head {
+        margin: 0px !important;
+        padding: 16px !important;
+        background-image: linear-gradient(to bottom,
+            var(--app-navbar-color),
+            var(--color-fin-gradiente)
+        );
+
+        span {
+            display: block;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--app-texto-color);
+        }
+
+        .dud-logout {
+            color: var(--panel-text);
+
+            &:hover {
+                color: #dc3545;
+            }
+        }
+    }
+
+    .pro-body {
+        list-style: none;
+        padding: 12px !important;
+
+        li {
+            a {
+                color: var(--panel-text);
+
+                &:hover {
+                    background-color: var(--panel-hover-bg);
+                }
+            }
+        }
+    }
+}
+
+
+// ==============================================
+// 2. Dropdown General (Si se usa)
+// ==============================================
+.dropdown-menu {
+    background-color: var(--panel-bg);
+    color: var(--panel-text);
+    border: 1px solid var(--panel-hover-bg);
+    padding: 0px 0px 0px 0px !important;
+    box-shadow: 0 4px 8px var(--panel-shadow);
+    z-index: 1050;
+
+    .dropdown-item {
+        color: var(--panel-text);
+
+        &:hover {
+            background-color: var(--panel-hover-bg);
+        }
+    }
 }

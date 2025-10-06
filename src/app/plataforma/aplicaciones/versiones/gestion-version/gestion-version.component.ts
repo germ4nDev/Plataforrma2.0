@@ -259,7 +259,7 @@ export class GestionVersionComponent implements OnInit {
     estadoVersion: true
   };
 
-  tipoEditorDescripcion = 'completa';
+  tipoEditorTexto = 'basica';
   menuItems: NavigationItem[] = [];
   gradientConfig: any;
   navCollapsed: boolean = false;
@@ -288,7 +288,6 @@ export class GestionVersionComponent implements OnInit {
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
 
-    // Lógica de carga de datos al inicializar la ruta
     this.route.queryParams.subscribe((params) => {
       this.registroId = params['regId'];
       if (this.registroId) {
@@ -298,7 +297,6 @@ export class GestionVersionComponent implements OnInit {
             const version = resp.version;
             console.log('version', resp.version);
 
-            // Reconstrucción de NgbDateStruct
             const fechaVersion = new Date(version.fechaVersion);
             const year = fechaVersion.getUTCFullYear();
             const month = fechaVersion.getUTCMonth() + 1;
@@ -309,11 +307,8 @@ export class GestionVersionComponent implements OnInit {
               day: day
             };
 
-            // Copiar todas las propiedades y asignar la fecha estructurada
             this.FormRegistro = { ...version };
             this.FormRegistro.fecha = dateStruct;
-
-            // Asegurar que descripcionVersion sea string (importante para el editor)
             this.FormRegistro.descripcionVersion = version.descripcionVersion || '';
             console.log('formRegisto', this.FormRegistro);
           },
@@ -334,22 +329,11 @@ export class GestionVersionComponent implements OnInit {
     this._layoutInitializer.applyLayout();
   }
 
-  /**
-   * Manejador de evento cuando el contenido del editor de texto cambia.
-   * Asigna el nuevo contenido HTML a la propiedad del modelo (Output del hijo),
-   * utilizando el nombre de función esperado en el template HTML.
-   * @param nuevoContenido El contenido HTML actualizado del editor.
-   */
   actualizarDescripcionVersion(nuevoContenido: string): void {
-    // Asignación explícita del valor del Output al modelo del componente padre.
-    // Nota: El two-way binding ya lo hace, pero se mantiene para lógica explícita o debugging.
     this.FormRegistro.descripcionVersion = nuevoContenido;
     console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionVersion);
-
-    // 2. Ejecutar validación personalizada o lógica de negocio
-    if (this.validationForm && this.isSubmit) {
-       // Si el submit falló antes, puedes revalidar o manejar el estado aquí
-    }
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   consultarAplicaciones() {
@@ -373,38 +357,27 @@ export class GestionVersionComponent implements OnInit {
 
   onAplicacionchangeClick(event: any) {
     const value = event.target.value;
-    // Buscamos la aplicación solo para lógica adicional o logs.
     const app = this.aplicaciones.find((x) => x.codigoAplicacion == value);
     if (app) {
-      // Nota: Si el HTML usa [(ngModel)] en el <select>, esta línea es redundante,
-      // pero se mantiene para lógica de negocio si es necesario
       this.FormRegistro.codigoAplicacion = app.codigoAplicacion || '';
     }
   }
 
   onDateChange(): void {
-    // Hook de cambio de fecha. El modelo FormRegistro.fecha ya está actualizado.
     console.log('Fecha NgbDateStruct seleccionada:', this.FormRegistro.fecha);
   }
 
   btnGestionarRegistroClick(form: NgForm) { // Tipado a NgForm
     this.isSubmit = true;
-
-    // --- VALIDACIÓN MANUAL PARA EL EDITOR (se mantiene) ---
-    // Esta es necesaria porque el editor de texto no se integra con NgModel de forma nativa
     const descripcionValida = this.FormRegistro.descripcionVersion && this.FormRegistro.descripcionVersion.trim() !== '';
     if (!descripcionValida) {
       Swal.fire('Atención', this.translate.instant('VERSIONES.GESTION.REQUERIDODESCRIPCION'), 'warning');
       return;
     }
-    // ------------------------------------------------
-
     if (!form.valid) {
-      // Si hay otros errores de formulario (input, select), detenemos el proceso
       return;
     }
 
-    // Convertir NgbDateStruct a Date antes de enviar
     if (this.FormRegistro.fecha) {
       const { year, month, day } = this.FormRegistro.fecha;
       const fecha = new Date(year, month - 1, day);

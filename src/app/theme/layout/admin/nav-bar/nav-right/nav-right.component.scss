@@ -10,21 +10,21 @@
 }
 
 .dropdown-menu {
-  background-color: #1e1e2d;
-  color: #fff;
+//   background-color: #1e1e2d;
+//   color: #fff;
   border: none;
   border-radius: 0.5rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   z-index: 1050;
   position: absolute;
 
-  .dropdown-item {
-    color: #fff;
+//   .dropdown-item {
+//     // color: #fff;
 
-    &:hover {
-      background-color: #2c2c3d;
-    }
-  }
+//     // &:hover {
+//     //   background-color: #2c2c3d;
+//     // }
+//   }
 }
 
 .badge {
@@ -37,8 +37,8 @@
 }
 
 .profile-notification {
-  background-color: #1e1e2d;
-  color: #fff;
+//   background-color: #1e1e2d;
+//   color: #fff;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
   min-width: 250px;
@@ -63,14 +63,14 @@
       display: block;
       font-weight: 600;
       font-size: 16px;
-      color: #fff;
+    //   color: #fff;
     }
 
     .dud-logout {
       position: absolute;
       top: 0;
       right: 0;
-      color: #fff;
+    //   color: #fff;
       font-size: 1.2rem;
 
       &:hover {
@@ -89,7 +89,7 @@
         align-items: center;
         gap: 10px;
         padding: 10px;
-        color: #fff;
+        // color: #fff;
         font-size: 14px;
         border-radius: 8px;
         transition: background 0.3s;
@@ -98,17 +98,17 @@
           font-size: 16px;
         }
 
-        &:hover {
-          background-color: #2a2a3d;
-        }
+        // &:hover {
+        //   background-color: #dadadb;
+        // }
       }
     }
   }
 }
 
 .notification {
-  background-color: #1e1e2d;
-  color: #fff;
+//   background-color: #1e1e2d;
+//   color: #fff;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
   min-width: 300px;
@@ -130,7 +130,7 @@
 
     a {
       font-size: 12px;
-      color: #0dcaf0;
+    //   color: #0dcaf0;
 
       &:hover {
         text-decoration: underline;
@@ -168,17 +168,17 @@
           p {
             margin: 0;
             font-size: 13px;
-            color: #e1e1e1;
+            // color: #e1e1e1;
 
             strong {
               display: block;
-              color: #fff;
+            //   color: #fff;
               font-weight: 600;
             }
 
             .n-time {
               font-size: 11px;
-              color: #999;
+            //   color: #999;
             }
           }
         }
@@ -189,7 +189,7 @@
       p {
         font-size: 11px;
         font-weight: bold;
-        color: #aaa;
+        // color: #aaa;
         margin: 0.5rem 0;
       }
     }
@@ -201,7 +201,7 @@
 
     a {
       font-size: 12px;
-      color: #0dcaf0;
+    //   color: #0dcaf0;
 
       &:hover {
         text-decoration: underline;
@@ -234,7 +234,7 @@
 }
 
 // Opcional: Estilo para la caja de color seleccionada
-.color-box.selected {
-  border: 2px solid #fff; // Un borde blanco para destacar la selección
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-}
+// .color-box.selected {
+//   border: 2px solid #fff; // Un borde blanco para destacar la selección
+//   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+// }

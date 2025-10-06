@@ -127,7 +127,7 @@
                                     name="descripcionVersion" [ngClass]="{'is-invalid': !descripcionVersion.valid && (descripcionVersion.dirty || descripcionVersion.touched || isSubmit)
                                     }" #descripcionVersion="ngModel" required [(ngModel)]="FormRegistro.descripcionVersion" rows="5"></app-text-editor> -->
                                 <app-text-editor
-                                    [toolbarType]="tipoEditorDescripcion"
+                                    [toolbarType]="tipoEditorTexto"
                                     [(contentHtml)]="FormRegistro.descripcionVersion"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)"
                                     name="descripcionVersion"

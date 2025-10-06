@@ -59,6 +59,24 @@ export class AuthenticationService {
     );
   }
 
+   verificarClaveActual(username: string, password: string) {
+    return this.http.post(`${environment.apiUrl}/auth/compare`, { username, password }).pipe(
+      tap((user) => {
+        if (!user) {
+          throw new Error('Usuario no válido');
+        }
+        return {
+          ok: true,
+          usuario: user
+        };
+      }),
+      catchError((error: HttpErrorResponse) => {
+        const errorMessage = error.error?.msg || 'Error en la autenticación';
+        return throwError(() => errorMessage);
+      })
+    );
+  }
+
   private setSession(user: PTLUsuarioModel): void {
     this._localstorageService.setUsuarioLocalStorage(user);
     this.currentUserSubject.next(user);

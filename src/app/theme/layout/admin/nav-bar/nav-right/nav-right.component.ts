@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { GradientConfig } from 'src/app/app-config';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -64,10 +64,12 @@ export class NavRightComponent implements DoCheck, OnInit {
   ];
 
   constructor(
+    private router: Router,
     private authenticationService: AuthenticationService,
     private themeService: ThemeService,
     private _localstorageService: LocalStorageService,
     private _uploadService: UploadFilesService,
+    private _themeService: ThemeService,
     private languageService: LanguageService
   ) {
     console.log('isDarkTheme', this.isDarkTheme);
@@ -114,6 +116,12 @@ export class NavRightComponent implements DoCheck, OnInit {
   onChatToggle(friendID: any) {
     this.friendId = friendID;
     this.chatMessage = !this.chatMessage;
+  }
+
+  perfilUsuario() {
+    const user = this._localstorageService.getUsuarioLocalStorage();
+    console.log('ver perfil del usuario', user.usuarioId);
+    this.router.navigate(['frontal/perfil'], { queryParams: { regId: user.usuarioId } });
   }
 
   ngDoCheck() {

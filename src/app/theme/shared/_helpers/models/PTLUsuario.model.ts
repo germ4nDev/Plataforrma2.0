@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export class PTLUsuarioModel {
     constructor (
         public usuarioId?: number,
@@ -11,6 +12,7 @@ export class PTLUsuarioModel {
         public serviceToken?: string,
         public estadoUsuario?: boolean,
         public nomEstado?: string,
+        public claveActual?: string,
         public aplicaciones?: any
    ) {}
 }

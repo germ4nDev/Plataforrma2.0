@@ -25,6 +25,14 @@ export class ThemeService {
   iconosColor$ = this.iconosColor.asObservable();
   textoColor$ = this.textoColor.asObservable();
 
+  public colorPalette: any[] = [
+    { color: '#66b5ff', iconos: '#000', texto: '#000' },
+    { color: '#2c3e50', iconos: '#fff', texto: '#fff' },
+    { color: '#c0392b', iconos: '#fff', texto: '#fff' },
+    { color: '#27ae60', iconos: '#fff', texto: '#fff' },
+    { color: '#f39c12', iconos: '#000', texto: '#000' }
+  ];
+
   constructor(
     rendererFactory: RendererFactory2,
     private _loclaStorageService: LocalStorageService
@@ -94,7 +102,6 @@ export class ThemeService {
   }
 
   public isDarkThemeEnabled(): boolean {
-    // Simplemente devuelve el estado mantenido por el servicio.
     return this.isDarkTheme.value;
   }
 
