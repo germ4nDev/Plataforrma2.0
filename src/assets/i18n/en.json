@@ -11,6 +11,10 @@
         "FILTERS": "Filters",
         "REQUIRED": "Field Required",
         "EXCEL":"Download Excel file",
+        "PASSWORDSERROR": "Password and confirm password are difenrent",
+        "UPDATEUSERSUCCESS": "User data updated successfully",
+        "UPDATEUSERERROR": "User data update Error",
+        "UPLOADPHOTOERROR": "upload image error",
         "NAVBAR": {
             "NOTIFICACIONES": "Notifications",
             "READ": "Mark as Read",

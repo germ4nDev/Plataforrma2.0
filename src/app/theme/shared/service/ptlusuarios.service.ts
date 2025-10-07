@@ -75,6 +75,32 @@ export class PTLUsuariosService {
     );
   }
 
+  actualizarUsuarioDatos(usuario: PTLUsuarioModel) {
+    const url = `${base_url}/usuarios/datos/${usuario.usuarioId}`;
+    return this.http.put(url, usuario).pipe(
+      map((resp: any) => {
+        console.log('data de usuario modificacda', resp);
+        return {
+          ok: true,
+          usuario: resp.usuario
+        };
+      })
+    );
+  }
+
+  actualizarUsuarioClave(usuario: PTLUsuarioModel) {
+    const url = `${base_url}/usuarios/clave/${usuario.usuarioId}`;
+    return this.http.put(url, usuario).pipe(
+      map((resp: any) => {
+        console.log('data de usuario modificacda', resp);
+        return {
+          ok: true,
+          usuario: resp.usuario
+        };
+      })
+    );
+  }
+
   eliminarUsuairo(_id: number) {
     const url = `${base_url}/usuarios/${_id}`;
     return this.http.delete(url).pipe(

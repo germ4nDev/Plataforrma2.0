@@ -103,6 +103,30 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
+                                <label class="form-label">{{ 'USUARIOS.GESTION.CLAVEACTUAL' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="claveActual" (ngModelChange)="validarClaveActual($event)"
+                                    placeholder="{{ 'USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    #claveActual="ngModel" required [(ngModel)]="FormRegistro.claveActual" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'USUARIOS.GESTION.CLAVENEW' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="claveNew" [disabled]="isClaveActual"
+                                    placeholder="{{ 'USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    #claveNew="ngModel" required [(ngModel)]="FormRegistro.claveNew" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'USUARIOS.GESTION.CLAVECONFIRM' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="claveConfirm" [disabled]="isClaveActual"
+                                    placeholder="{{ 'USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    #claveConfirm="ngModel" required [(ngModel)]="FormRegistro.claveConfirm" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.GESTION.DESCRIPTION' | translate }}</label>
                                 <textarea class="form-control form-input"
                                     placeholder="{{ 'USUARIOS.GESTION.DESCRIPTIONHOLDER' | translate }}"

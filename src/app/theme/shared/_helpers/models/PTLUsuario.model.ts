@@ -13,6 +13,8 @@ export class PTLUsuarioModel {
         public estadoUsuario?: boolean,
         public nomEstado?: string,
         public claveActual?: string,
+        public claveNew?: string,
+        public claveConfirm?: string,
         public aplicaciones?: any
    ) {}
 }

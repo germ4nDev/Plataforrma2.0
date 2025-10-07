@@ -12,6 +12,10 @@
         "FILTERS": "Filtros",
         "REQUIRED": "Campp Requerido",
         "EXCEL": "Descargar Excel",
+        "PASSWORDSERROR": "La clave y la confirmación no coinciden",
+        "UPDATEUSERSUCCESS": "El Usuario se modificó correctamente",
+        "UPDATEUSERERROR": "No se pudo actualizar el Usuairo",
+        "UPLOADPHOTOERROR": "Error al subir la imagen",
         "NAVBAR": {
             "NOTIFICACIONES": "Notificaciones",
             "READ": "Marcar como Leído",

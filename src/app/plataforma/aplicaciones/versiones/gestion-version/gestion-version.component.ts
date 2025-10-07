@@ -259,7 +259,7 @@ export class GestionVersionComponent implements OnInit {
     estadoVersion: true
   };
 
-  tipoEditorTexto = 'basica';
+  tipoEditorTexto = 'standard';
   menuItems: NavigationItem[] = [];
   gradientConfig: any;
   navCollapsed: boolean = false;

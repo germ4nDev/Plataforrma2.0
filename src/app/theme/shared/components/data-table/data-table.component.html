@@ -24,94 +24,94 @@
             </button>
         </div>
     </div>
+    <div class="content-g67">
+        <div class="tableFixHead">
+            <table id="datatable-component" class="row-border hover table nowrap w-100">
+                <thead>
+                    <tr>
+                        <th *ngIf="showDetail"></th>
+                        <th *ngFor="let title of columnTitles; let i = index" (click)="onSort(columns[i])"
+                            style="cursor: pointer">
+                            {{ title | translate }}
+                            <ng-container *ngIf="sortByColumn === columns[i]">
+                                <i class="fas fa-arrow-up" *ngIf="sortDirection === 'asc'"></i>
+                                <i class="fas fa-arrow-down" *ngIf="sortDirection === 'desc'"></i>
+                            </ng-container>
+                        </th>
+                        <th *ngIf="showActions">{{ 'PLATAFORMA.DATATABLE.ACTIONS' | translate }}</th>
+                    </tr>
+                </thead>
 
-    <table id="datatable-component" class="row-border hover table nowrap w-100">
-        <thead>
-            <tr>
-                <th *ngIf="showDetail"></th>
-                <th *ngFor="let title of columnTitles; let i = index" (click)="onSort(columns[i])"
-                    style="cursor: pointer">
-                    {{ title | translate }}
-                    <ng-container *ngIf="sortByColumn === columns[i]">
-                        <i class="fas fa-arrow-up" *ngIf="sortDirection === 'asc'"></i>
-                        <i class="fas fa-arrow-down" *ngIf="sortDirection === 'desc'"></i>
-                    </ng-container>
-                </th>
-                <th *ngIf="showActions">{{ 'PLATAFORMA.DATATABLE.ACTIONS' | translate }}</th>
-            </tr>
-        </thead>
+                <tbody *ngFor="let row of paginatedData; let i = index">
+                    <tr>
+                        <td style="width: 10px;" *ngIf="showDetail">
+                            <i class="{{ registroId === row[idField] ? 'fas fa-chevron-down' : 'fas fa-chevron-right' }}"
+                                (click)="toggleDetails(row)" style="cursor: pointer;"></i>
+                        </td>
+                        <td *ngFor="let col of columns">
+                            <ng-container *ngIf="col === 'fotoUsuario' && showAvatar; else checkNested">
+                                <img [src]="'assets/images/user/' + row[col]" [alt]="'Avatar de ' + row['nombreUsuario']"
+                                    class="avatar-table">
+                            </ng-container>
+                            <ng-template #checkNested>
+                                <ng-container
+                                    *ngIf="col === 'aplicaciones' || col === 'suites' || col === 'roles'; else defaultCell">
+                                    <span *ngFor="let item of row[col]">
+                                        {{ item }}<br>
+                                    </span>
+                                </ng-container>
+                            </ng-template>
+                            <ng-template #defaultCell>
+                                {{ row[col] }}
+                            </ng-template>
+                        </td>
+                        <td style="width: 120px; text-align: center;" *ngIf="showActions">
+                            <button *ngIf="showViewButton" class="btn btn-sm btn-outline-primary me-1" (click)="onView(row)">
+                                <i class="feather icon-edit"></i>
+                            </button>
+                            <button *ngIf="showEditButton" class="btn btn-sm btn-outline-primary me-1" (click)="onEdit(row)">
+                                <i class="feather icon-edit"></i>
+                            </button>
+                            <button *ngIf="showDeleteButton" class="btn btn-sm btn-outline-danger" (click)="onDelete(row)">
+                                <i class="feather icon-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
 
-        <tbody *ngFor="let row of paginatedData; let i = index">
-            <tr>
-                <td style="width: 10px;" *ngIf="showDetail">
-                    <i class="{{ registroId === row[idField] ? 'fas fa-chevron-down' : 'fas fa-chevron-right' }}"
-                        (click)="toggleDetails(row)" style="cursor: pointer;"></i>
-                </td>
-                <td *ngFor="let col of columns">
-                    <ng-container *ngIf="col === 'fotoUsuario' && showAvatar; else checkNested">
-                        <img [src]="'assets/images/user/' + row[col]" [alt]="'Avatar de ' + row['nombreUsuario']"
-                            class="avatar-table">
-                    </ng-container>
-                    <ng-template #checkNested>
-                        <ng-container
-                            *ngIf="col === 'aplicaciones' || col === 'suites' || col === 'roles'; else defaultCell">
-                            <span *ngFor="let item of row[col]">
-                                {{ item }}<br>
-                            </span>
-                        </ng-container>
-                    </ng-template>
-                    <ng-template #defaultCell>
-                        {{ row[col] }}
-                    </ng-template>
-                </td>
-                <td style="width: 120px;" *ngIf="showActions">
-                    <button *ngIf="showViewButton" class="btn btn-sm btn-outline-primary me-1" (click)="onView(row)">
-                        <i class="feather icon-edit"></i>
-                    </button>
-                    <button *ngIf="showEditButton" class="btn btn-sm btn-outline-primary me-1" (click)="onEdit(row)">
-                        <i class="feather icon-edit"></i>
-                    </button>
-                    <button *ngIf="showDeleteButton" class="btn btn-sm btn-outline-danger" (click)="onDelete(row)">
-                        <i class="feather icon-trash"></i>
-                    </button>
-                </td>
-            </tr>
+                    <tr *ngIf="registroId === row[idField]">
+                        <td [attr.colspan]="columns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)">
+                            <div class="row" style="margin: 0 auto;"><hr>
+                                <div class="row col-md-12" *ngFor="let detailColumn of detailColumns; let i = index" style="margin-bottom: 20px !important; margin-left: 25px !important;">
+                                    <div class="col-md-3">
+                                        {{ detailTitles[i] | translate | uppercase }}
+                                    </div>
+                                    <div [innerHTML]="row[detailColumn]" class="col-md-9"></div>
+                                </div>
+                            </div><hr>
+                        </td>
+                    </tr>
 
-            <tr *ngIf="registroId === row[idField]">
-                <td [attr.colspan]="columns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)">
-                    <div class="row" style="margin: 0 auto;"><hr>
-                        <div class="row col-md-12" *ngFor="let detailColumn of detailColumns; let i = index" style="margin-bottom: 20px !important; margin-left: 25px !important;">
-                            <div class="col-md-3">
-                                {{ detailTitles[i] | translate | uppercase }}
-                            </div>
-                            <div [innerHTML]="row[detailColumn]" class="col-md-9"></div>
-                        </div>
-                    </div><hr>
-                </td>
-            </tr>
+                    <tr *ngIf="paginatedData.length === 0">
+                        <td [attr.colspan]="columns.length + (showActions ? 1 : 0)" class="text-center">No data available in
+                            table</td>
+                    </tr>
+                </tbody>
 
-            <tr *ngIf="paginatedData.length === 0">
-                <td [attr.colspan]="columns.length + (showActions ? 1 : 0)" class="text-center">No data available in
-                    table</td>
-            </tr>
-        </tbody>
-
-        <tfoot *ngIf="columns.length > 0">
-            <tr>
-                <td *ngIf="showDetail"></td>
-                <td *ngFor="let column of columns; let i = index">
-                    <ng-container *ngIf="column !== 'fotoUsuario'">
-                        <input type="text" class="form-control" [placeholder]="columnTitles[i] | translate"
-                            (keyup)="onFilter(column, $event)" />
-                    </ng-container>
-                </td>
-                <td *ngIf="showActions"></td>
-            </tr>
-        </tfoot>
-    </table>
-
-
-
+                <tfoot *ngIf="columns.length > 0">
+                    <tr>
+                        <td *ngIf="showDetail"></td>
+                        <td *ngFor="let column of columns; let i = index">
+                            <ng-container *ngIf="column !== 'fotoUsuario'">
+                                <input type="text" class="form-control" [placeholder]="columnTitles[i] | translate"
+                                    (keyup)="onFilter(column, $event)" />
+                            </ng-container>
+                        </td>
+                        <td *ngIf="showActions"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div><br>
     <div class="dt-footer d-flex justify-content-between align-items-center">
         <div>
             {{ 'PLATAFORMA.DATATABLE.SHOWING' | translate }} {{ (currentPage - 1) * itemsPerPage + 1 }}
