@@ -59,7 +59,7 @@ export class AuthenticationService {
     );
   }
 
-   verificarClaveActual(username: string, password: string) {
+  verificarClaveActual(username: string, password: string) {
     return this.http.post(`${environment.apiUrl}/auth/compare`, { username, password }).pipe(
       tap((user) => {
         if (!user) {
@@ -86,5 +86,14 @@ export class AuthenticationService {
     this._localstorageService.setLogOut();
     this.currentUserSubject.next(null);
     this.router.navigate(['/autenticacion/login']);
+  }
+
+  getAccessToken() {
+    const token = '';
+    return token;
+  }
+  refreshToken() {}
+  saveTokens(tokenm: string, refreshToken: string) {
+    console.log('tokens', tokenm, refreshToken);
   }
 }

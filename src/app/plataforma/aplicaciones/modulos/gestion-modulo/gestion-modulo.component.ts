@@ -21,11 +21,12 @@ import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { PtlmodulosApService } from 'src/app/theme/shared/service/ptlmodulos-ap.service';
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
   selector: 'app-gestion-modulo',
   standalone: true,
-  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent,TextEditorComponent],
   templateUrl: './gestion-modulo.component.html',
   styleUrl: './gestion-modulo.component.scss'
 })
@@ -49,6 +50,7 @@ export class GestionModuloComponent implements OnInit {
   suites: PTLSuiteAPModel[] = [];
   modulosPadre: PTLModuloAP[] = [];
   codigoModulo = uuidv4();
+  tipoEditorTexto = 'basica';
 
   // constructor
   constructor(
@@ -171,6 +173,13 @@ export class GestionModuloComponent implements OnInit {
     const suite = this.suites.filter((x) => x.codigoAplicacion == value)[0];
     this.FormRegistro.codigoSuite = suite.codigoSuite || '';
     this.consultarMLodulos(this.FormRegistro.codigoSuite);
+  }
+
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionModulo = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionModulo);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarRegistroClick(form: any) {

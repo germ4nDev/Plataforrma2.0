@@ -511,6 +511,8 @@
         "CHANGE_PASS_T": "Cambiar",
         "RESET_PASS_Q": "Resetear la contraseña",
         "RESET_PASS_T": "Resetear",
+        "UNLOCKSCREENTITLE": "Desbloquear",
+        "UNLOCKSCREEN": "Desbloquear",
         "SOCIAL_NETWORKS": "Redes Sociales"
     },
     "USUARIOS": {

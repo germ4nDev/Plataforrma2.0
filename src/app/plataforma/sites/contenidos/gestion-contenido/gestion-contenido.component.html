@@ -80,10 +80,17 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SITIOS.CONTENIDOS.CONTENIDO' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="contenido"
-                                    placeholder="{{ 'SITIOS.CONTENIDOS.GESTION.PLACEHOLDERCONTENIDO' | translate }}"
-                                    [ngClass]="{'is-invalid': !contenido.valid && (contenido.dirty || contenido.touched || isSubmit) }"
-                                    #contenido="ngModel" required [(ngModel)]="FormRegistro.contenido" />
+                                <app-text-editor
+                                    [toolbarType]="tipoEditorTextoContenido"
+                                    [(contentHtml)]="FormRegistro.contenido"
+                                    (contentHtmlChange)="actualizarContenido($event)"
+                                    name="contenido"
+                                    [(ngModel)]="FormRegistro.contenido"
+                                    [ngClass]="{'is-invalid': !contenido.valid && (contenido.dirty || contenido.touched || isSubmit)}"
+                                    #contenido="ngModel"
+                                    required
+                                    rows="5">
+                                </app-text-editor>
                                 <label *ngIf="!contenido.valid && (contenido.dirty || contenido.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SITIOS.CONTENIDOS.GESTION.REQUERIDOCONTENIDO' | translate }}
@@ -112,13 +119,17 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SITIOS.CONTENIDOS.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control form-input"
-                                    placeholder="{{ 'SITIOS.CONTENIDOS.GESTION.PLACEHOLDERDESCRIPCION' | translate }}"
+                                <app-text-editor
+                                    [toolbarType]="tipoEditorTexto"
+                                    [(contentHtml)]="FormRegistro.descripcionContenido"
+                                    (contentHtmlChange)="actualizarDescripcionContenido($event)"
                                     name="descripcionContenido"
+                                    [(ngModel)]="FormRegistro.descripcionContenido"
                                     [ngClass]="{'is-invalid': !descripcionContenido.valid && (descripcionContenido.dirty || descripcionContenido.touched || isSubmit)}"
-                                    #descripcionContenido="ngModel" required
-                                    [(ngModel)]="FormRegistro.descripcionContenido" rows="5">
-                                </textarea>
+                                    #descripcionContenido="ngModel"
+                                    required
+                                    rows="5">
+                                </app-text-editor>
                                 <label
                                     *ngIf="!descripcionContenido.valid && (descripcionContenido.dirty || descripcionContenido.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">

@@ -128,13 +128,17 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.GESTION.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control form-input"
-                                    placeholder="{{ 'USUARIOS.GESTION.DESCRIPTIONHOLDER' | translate }}"
-                                    name="descripcionAplicacion"
+                                <app-text-editor
+                                    [toolbarType]="tipoEditorTexto"
+                                    [(contentHtml)]="FormRegistro.descripcionUsuario"
+                                    (contentHtmlChange)="actualizarDescripcionRegistro($event)"
+                                    name="descripcionUsuario"
+                                    [(ngModel)]="FormRegistro.descripcionUsuario"
                                     [ngClass]="{'is-invalid': !descripcionUsuario.valid && (descripcionUsuario.dirty || descripcionUsuario.touched || isSubmit)}"
-                                    #descripcionUsuario="ngModel" required [(ngModel)]="FormRegistro.descripcionUsuario"
+                                    #descripcionUsuario="ngModel"
+                                    required
                                     rows="5">
-                                </textarea>
+                                </app-text-editor>
                                 <label
                                     *ngIf="!descripcionUsuario.valid && (descripcionUsuario.dirty || descripcionUsuario.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">

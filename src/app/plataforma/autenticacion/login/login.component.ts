@@ -2,8 +2,7 @@
 // Angular import
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { Router, ActivatedRoute } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute} from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { catchError, tap } from 'rxjs/operators';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -16,7 +15,7 @@ import Swal from 'sweetalert2';
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, RouterModule, SharedModule, TranslateModule, LanguageSelectorComponent],
+    imports: [CommonModule, RouterModule, LanguageSelectorComponent, SharedModule, TranslateModule],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
 })

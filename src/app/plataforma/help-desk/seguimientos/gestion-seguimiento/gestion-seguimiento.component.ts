@@ -17,12 +17,12 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { NavigationService } from 'src/app/theme/shared/service';
-
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
   selector: 'app-gestion-seguimiento',
   standalone: true,
-  imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-seguimiento.component.html',
   styleUrl: './gestion-seguimiento.component.scss'
 })
@@ -38,6 +38,7 @@ export class GestionSeguimientoComponent {
   codeRegistro = uuidv4();
   tipoEstado: number = 1;
   estadosFiltrados: any[] = [];
+  tipoEditorTexto = 'basica';
 
   constructor(
     private router: Router,
@@ -127,6 +128,13 @@ export class GestionSeguimientoComponent {
     const value = event.target.value;
     const requerimiento = this.requerimientos.filter((x) => x.requerimientoId == value)[0];
     this.FormRegistro.requerimientoId = requerimiento.requerimientoId;
+  }
+
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionSeguimiento = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionSeguimiento);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarRegistroClick(form: any) {

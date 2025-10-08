@@ -1,0 +1,93 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { map } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { PTLTiposValoresModel } from '../_helpers/models/PTLTiposValores.model';
+
+const base_url = environment.apiUrl;
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PtltiposValoresService {
+  user: PTLUsuarioModel = new PTLUsuarioModel();
+
+  constructor(private http: HttpClient) {}
+
+  get token(): string {
+    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
+    return this.user.serviceToken || '';
+  }
+
+  get headers() {
+    return {
+      headers: {
+        'x-token': this.token
+      }
+    };
+  }
+
+  getRegistros() {
+    const url = `${base_url}/tipos-valores`;
+    return this.http.get(url)
+    .pipe(
+      map((resp: any) => {
+        console.log('servicio de tipoValor', resp);
+        return {
+          ok: true,
+          tiposValores: resp.tiposValores
+        };
+      })
+    );
+  }
+
+  getRegistroById(id: number) {
+    const url = `${base_url}/tipos-valores/${id}`;
+    return this.http.get(url)
+    .pipe(
+      map((resp: any) => {
+        console.log('data de tipoValor', resp);
+        return {
+          ok: true,
+          tipoValor: resp.tipoValor
+        };
+      })
+    );
+  }
+
+  postCrearRegistro(tipoValor: PTLTiposValoresModel) {
+    const url = `${base_url}/tipos-valores`;
+    return this.http.post(url, tipoValor);
+  }
+
+  putModificarRegistro(tipoValor: PTLTiposValoresModel) {
+    const url = `${base_url}/tipos-valores/${tipoValor.tipoValorId}`;
+    return this.http.put(url, tipoValor)
+    .pipe(
+      map((resp: any) => {
+        console.log('data de tipoValor modificacda', resp);
+        return {
+          ok: true,
+          tipoValor: resp.tipoValor
+        };
+      })
+    );
+  }
+
+  deleteEliminarRegistro(_id: number) {
+    const url = `${base_url}/tipos-valores/${_id}`;
+    return this.http.delete(url)
+    .pipe(
+      map((resp: any) => {
+        console.log('data de tipoValor eliminado', resp);
+        return {
+          ok: true,
+          tipoValor: resp.tipoValor
+        };
+      })
+    );
+  }
+
+}

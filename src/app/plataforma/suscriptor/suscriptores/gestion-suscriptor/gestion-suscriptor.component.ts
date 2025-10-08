@@ -7,22 +7,23 @@ import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
-import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
   selector: 'app-gestion-suscriptor',
   standalone: true,
-  imports: [CommonModule, SharedModule, NarikCustomValidatorsModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, NarikCustomValidatorsModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-suscriptor.component.html',
   styleUrl: './gestion-suscriptor.component.scss'
 })
 export class GestionSuscriptorComponent {
- // private props
+  // private props
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLSuscriptorModel = new PTLSuscriptorModel();
   menuItems: NavigationItem[] = [];
@@ -34,6 +35,7 @@ export class GestionSuscriptorComponent {
   isSubmit: boolean;
   modoEdicion: boolean = false;
   cosigoSusucriptor = uuidv4();
+  tipoEditorTexto = 'basica';
 
   // constructor
   constructor(
@@ -66,6 +68,13 @@ export class GestionSuscriptorComponent {
         this.FormRegistro.codigoSuscriptor = uuidv4();
       }
     });
+  }
+
+  actualizarDescripcionSuscriptor(nuevoContenido: string): void {
+    this.FormRegistro.descripcionSuscriptor = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionSuscriptor);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnInsertEditSucriptor(form: any) {
@@ -109,7 +118,8 @@ export class GestionSuscriptorComponent {
   btnRegresarClick() {
     this.router.navigate(['/suscriptor/suscriptores']);
   }
-    toggleNav(): void {
+
+  toggleNav(): void {
     this.toggleSidebar.emit();
   }
 }

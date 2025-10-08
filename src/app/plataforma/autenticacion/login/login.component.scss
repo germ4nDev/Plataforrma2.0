@@ -10,3 +10,10 @@ form .password-show {
     top: 0px;
     right: 25px;
   }
+
+  .navbar-transparent {
+    background-color: transparent !important; /* Asegura la transparencia */
+    border-bottom: none; /* Opcional: Remueve cualquier línea divisoria */
+    transition: background-color 0.5s ease; /* Transición suave al cambiar de color */
+    box-shadow: none !important; /* Asegura que no tenga sombra inicial */
+}

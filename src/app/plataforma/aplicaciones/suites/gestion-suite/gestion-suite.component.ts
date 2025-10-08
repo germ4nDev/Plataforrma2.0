@@ -19,11 +19,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
   selector: 'app-gestion-suite',
   standalone: true,
-  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-suite.component.html',
   styleUrl: './gestion-suite.component.scss'
 })
@@ -43,6 +44,7 @@ export class GestionSuiteComponent implements OnInit {
   aplicacionesSub?: Subscription;
   aplicaciones: PTLAplicacionModel[] = [];
   codigosuite = uuidv4();
+  tipoEditorTexto = 'basica';
 
   // constructor
   constructor(
@@ -83,7 +85,6 @@ export class GestionSuiteComponent implements OnInit {
     this.menuItems = this._navigationService.getNavigationItems();
     this.consultarAplicaciones();
     this._layoutInitializer.applyLayout();
-
   }
 
   consultarAplicaciones() {
@@ -109,6 +110,13 @@ export class GestionSuiteComponent implements OnInit {
     const value = event.target.value;
     const app = this.aplicaciones.filter((x) => x.codigoAplicacion == value)[0];
     this.FormRegistro.codigoAplicacion = app.codigoAplicacion || '';
+  }
+
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionSuite = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionSuite);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarRegistroClick(form: any) {

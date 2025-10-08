@@ -17,11 +17,12 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import Swal from 'sweetalert2';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
   selector: 'app-gestion-site',
   standalone: true,
-  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-site.component.html',
   styleUrl: './gestion-site.component.scss'
 })
@@ -39,6 +40,7 @@ export class GestionSiteComponent implements OnInit {
   modoEdicion: boolean = false;
   aplicacionesSub?: Subscription;
   aplicaciones: PTLAplicacionModel[] = [];
+  tipoEditorTexto = 'basica';
 
   // constructor
   constructor(
@@ -106,6 +108,13 @@ export class GestionSiteComponent implements OnInit {
     console.log('Código de aplicación seleccionado:', value);
     console.log('data aplicación seleccionado:', app);
     this.FormRegistro.aplicacionId = app.aplicacionId;
+  }
+
+  actualizarDescripcionSite(nuevoContenido: string): void {
+    this.FormRegistro.descripcionSitio = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionSitio);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarRegistroClick(form: any) {

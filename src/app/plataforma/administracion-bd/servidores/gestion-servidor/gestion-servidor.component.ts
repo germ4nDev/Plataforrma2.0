@@ -14,13 +14,14 @@ import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-in
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-gestion-servidor',
   standalone: true,
-  imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-servidor.component.html',
   styleUrl: './gestion-servidor.component.scss'
 })
@@ -37,6 +38,7 @@ export class GestionServidorComponent {
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
+  tipoEditorTexto = 'basica';
 
   constructor(
     private router: Router,
@@ -47,7 +49,7 @@ export class GestionServidorComponent {
     private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
-    GradientConfig.header_fixed_layout = true
+    GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
 
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
@@ -75,6 +77,13 @@ export class GestionServidorComponent {
         this.modoEdicion = false;
       }
     });
+  }
+
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionServidor = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionServidor);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarRegistroClick(form: any) {
@@ -121,7 +130,7 @@ export class GestionServidorComponent {
     this.router.navigate(['/administracion-bd/servidores/']);
   }
 
-   toggleNav(): void {
+  toggleNav(): void {
     this.toggleSidebar.emit();
   }
 }

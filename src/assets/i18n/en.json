@@ -508,6 +508,8 @@
         "CHANGE_PASS_T": "Change",
         "RESET_PASS_Q": "Reset password",
         "RESET_PASS_T": "Reset",
+        "UNLOCKSCREENTITLE": "Unlock Screen",
+        "UNLOCKSCREEN": "Unlock Screen",
         "SOCIAL_NETWORKS": "Social Networks"
     },
     "USUARIOS": {

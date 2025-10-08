@@ -75,13 +75,17 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'APLICACIONES.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control form-input"
-                                    placeholder="{{ 'APLICACIONES.DESCRIPTIONHOLDER' | translate }}"
+                                <app-text-editor
+                                    [toolbarType]="tipoEditorTexto"
+                                    [(contentHtml)]="FormRegistro.descripcionAplicacion"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)"
                                     name="descripcionAplicacion"
+                                    [(ngModel)]="FormRegistro.descripcionAplicacion"
                                     [ngClass]="{'is-invalid': !descripcionAplicacion.valid && (descripcionAplicacion.dirty || descripcionAplicacion.touched || isSubmit)}"
-                                    #descripcionAplicacion="ngModel" required
-                                    [(ngModel)]="FormRegistro.descripcionAplicacion" rows="5">
-                                </textarea>
+                                    #descripcionAplicacion="ngModel"
+                                    required
+                                    rows="5">
+                                </app-text-editor>
                                 <label
                                     *ngIf="!descripcionAplicacion.valid && (descripcionAplicacion.dirty || descripcionAplicacion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">

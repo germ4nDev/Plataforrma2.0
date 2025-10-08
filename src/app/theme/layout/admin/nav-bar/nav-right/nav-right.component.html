@@ -1,6 +1,14 @@
 <div class="navbar d-flex justify-content-between align-items-center px-3 py-2">
     <ul class="navbar-nav d-flex align-items-center gap-3 flex-row ms-auto">
         <li>
+            <i class="icon feather icon-grid icon-lg icon-style" title="Aplicaciones" (click)="homeScreen()" style="cursor: pointer;"></i>
+        </li>
+
+        <li>
+            <i class="icon feather icon-home icon-lg icon-style" title="HomeSuite" (click)="suiteScreen()" style="cursor: pointer;"></i>
+        </li>
+
+        <li>
             <div class="dropdown" ngbDropdown placement="auto">
                 <a ngbDropdownToggle href="javascript:">
                     <i class="icon feather icon-bell icon-lg icon-style" title="Notification"></i>
@@ -37,7 +45,7 @@
                                     alt="Generic placeholder image" />
                                 <div class="media-body">
                                     <p><strong>Joseph William</strong><span class="n-time text-muted"><i
-                                                data-feather="clock"></i>30 min</span></p>
+                                        data-feather="clock"></i>30 min</span></p>
                                     <p>Purchase New Theme and make payment</p>
                                 </div>
                             </div>
@@ -91,7 +99,7 @@
                                 'PLATAFORMA.NAVBAR.PROFILE' | translate }}</a></li>
                         <li><a href="javascript:" class="dropdown-item"><i class="feather icon-mail"></i> {{
                                 'PLATAFORMA.NAVBAR.MESSAGES' | translate }}</a></li>
-                        <li><a href="javascript:" class="dropdown-item"><i class="feather icon-lock"></i> {{
+                        <li><a href="javascript:" class="dropdown-item" (click)="lockscreen()"><i class="feather icon-lock"></i> {{
                                 'PLATAFORMA.NAVBAR.LOCK' | translate }}</a></li>
                         <li>
                             <a href="javascript:" class="dropdown-item" (click)="toggleTheme()">

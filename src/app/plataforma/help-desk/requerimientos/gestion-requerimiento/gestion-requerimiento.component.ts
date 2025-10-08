@@ -17,11 +17,12 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { NavigationService } from 'src/app/theme/shared/service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
   selector: 'app-gestion-requerimiento',
   standalone: true,
-  imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-requerimiento.component.html',
   styleUrl: './gestion-requerimiento.component.scss'
 })
@@ -37,6 +38,7 @@ export class GestionRequerimientoComponent {
   codeRegistro = uuidv4();
   tipoEstado: number = 1;
   estadosFiltrados: any[] = [];
+  tipoEditorTexto = 'basica';
 
   constructor(
     private router: Router,
@@ -80,6 +82,7 @@ export class GestionRequerimientoComponent {
       }
     });
   }
+
   consultarEstado() {
     this._estadosService
       .getRegistros()
@@ -129,6 +132,13 @@ export class GestionRequerimientoComponent {
     const value = event.target.value;
     const ticket = this.ticket.filter((x) => x.ticketId == value)[0];
     this.FormRegistro.ticketId = ticket.ticketId;
+  }
+
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionRequerimiento = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionRequerimiento);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarRegistroClick(form: any) {

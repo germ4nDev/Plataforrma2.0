@@ -14,19 +14,20 @@ import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexi
 import { PTLPaquetesSCService } from 'src/app/theme/shared/service/ptlpaquetes-sc.service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
-import { v4 as uuidv4 } from 'uuid';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
+import Swal from 'sweetalert2';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-gestion-conexion',
   standalone: true,
-  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-conexion.component.html',
   styleUrl: './gestion-conexion.component.scss'
 })
@@ -47,6 +48,7 @@ export class GestionConexionComponent {
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
+  tipoEditorTexto = 'basica';
 
   constructor(
     private router: Router,
@@ -160,11 +162,8 @@ export class GestionConexionComponent {
   onAplicacionchangeClick(event: any) {
     const value = event.target.value;
     const app = this.aplicaciones.filter((x) => x.aplicacionId == value)[0];
-    // console.log('Código de aplicación seleccionado:', value);
-    // console.log('data aplicación seleccionado:', app);
     this.FormRegistro.aplicacionId = app.aplicacionId;
     this.FormRegistro.aplicacionId = value;
-    // this.suscriptorsApp = this.suscriptors.filter(x => x.aplicacionId == app.aplicacionId);
   }
 
   onSuscriptorChangeClick(event: any) {
@@ -183,6 +182,13 @@ export class GestionConexionComponent {
     // console.log('data paquete seleccionado:', paquete);
     this.FormRegistro.paqueteId = paquete.suscriptorPaqueteId;
     this.FormRegistro.paqueteId = value;
+  }
+
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionConexion = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionConexion);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarRegistroClick(form: any) {

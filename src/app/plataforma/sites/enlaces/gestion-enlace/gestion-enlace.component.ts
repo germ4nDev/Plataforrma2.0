@@ -17,11 +17,12 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import Swal from 'sweetalert2';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
   selector: 'app-gestion-enlace',
   standalone: true,
-  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-enlace.component.html',
   styleUrl: './gestion-enlace.component.scss'
 })
@@ -40,6 +41,7 @@ export class GestionEnlaceComponent implements OnInit {
   modoEdicion: boolean = false;
   sitiosSub?: Subscription;
   sitios: PTLSitiosAPModel[] = [];
+  tipoEditorTexto = 'basica';
 
   // constructor
   constructor(
@@ -106,6 +108,13 @@ export class GestionEnlaceComponent implements OnInit {
     console.log('Id del sitio seleccionado:', value);
     console.log('datal sitio seleccionado:', sitio);
     this.FormRegistro.sitioId = sitio.sitioId;
+  }
+
+  actualizarDescripcionEnlace(nuevoContenido: string): void {
+    this.FormRegistro.descripcionEnlace = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionEnlace);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarRegistroClick(form: any) {

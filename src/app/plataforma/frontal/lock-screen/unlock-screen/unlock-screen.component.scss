@@ -1,0 +1,25 @@
+
+
+.login-register {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
+    float: none;
+    position: absolute;
+    //   background-image: url(https://koral360.dymsites.co/assets/images/background/login-register.jpeg);
+    //   background-size: cover;
+    //   background-repeat: no-repeat;
+    //   background-position: center center;
+    // height: 100%;
+    // width: 100%;
+    // position: fixed;
+}
+
+.navbar-transparent {
+    background-color: transparent !important; /* Asegura la transparencia */
+    border-bottom: none; /* Opcional: Remueve cualquier línea divisoria */
+    transition: background-color 0.5s ease; /* Transición suave al cambiar de color */
+    box-shadow: none !important; /* Asegura que no tenga sombra inicial */
+}
+

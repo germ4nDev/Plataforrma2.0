@@ -16,11 +16,12 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import Swal from 'sweetalert2';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
   selector: 'app-geston-contenido',
   standalone: true,
-  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-contenido.component.html',
   styleUrl: './gestion-contenido.component.scss'
 })
@@ -32,6 +33,8 @@ export class GestonContenidoComponent implements OnInit {
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
   windowWidth: number = 0;
+  tipoEditorTextoContenido = 'standard';
+  tipoEditorTexto = 'basica';
 
   form: undefined;
   isSubmit: boolean;
@@ -144,6 +147,20 @@ export class GestonContenidoComponent implements OnInit {
         }
       });
     }
+  }
+
+  actualizarContenido(nuevoContenido: string): void {
+    this.FormRegistro.contenido = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.contenido);
+    // if (this.validationForm && this.isSubmit) {
+    // }
+  }
+
+  actualizarDescripcionContenido(nuevoContenido: string): void {
+    this.FormRegistro.descripcionContenido = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionContenido);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnRegresarClick() {

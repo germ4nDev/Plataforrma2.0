@@ -76,12 +76,17 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'TICKETS.REQUERIMIENTOS.GESTION.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control form-input"
-                                    placeholder="{{ 'TICKETS.REQUERIMIENTOS.GESTION.DESCRIPTIONHOLDER' | translate }}"
-                                    name="descripcionRequerimiento" [ngClass]="{
-                                    'is-invalid': !descripcionRequerimiento.valid && (descripcionRequerimiento.dirty || descripcionRequerimiento.touched || isSubmit)}"
-                                    #descripcionRequerimiento="ngModel" required [(ngModel)]="FormRegistro.descripcionRequerimiento" rows="5">
-                                </textarea>
+                                <app-text-editor
+                                    [toolbarType]="tipoEditorTexto"
+                                    [(contentHtml)]="FormRegistro.descripcionRequerimiento"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)"
+                                    name="descripcionRequerimiento"
+                                    [(ngModel)]="FormRegistro.descripcionRequerimiento"
+                                    [ngClass]="{'is-invalid': !descripcionRequerimiento.valid && (descripcionRequerimiento.dirty || descripcionRequerimiento.touched || isSubmit)}"
+                                    #descripcionRequerimiento="ngModel"
+                                    required
+                                    rows="5">
+                                </app-text-editor>
                                 <label
                                     *ngIf="!descripcionRequerimiento.valid && (descripcionRequerimiento.dirty || descripcionRequerimiento.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">

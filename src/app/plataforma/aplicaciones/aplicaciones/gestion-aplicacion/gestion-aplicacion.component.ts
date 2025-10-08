@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 
 // project import
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLAplicacionModel } from '../../../../theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service';
@@ -19,7 +20,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-gestion-aplicacion',
   standalone: true,
-  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-aplicacion.component.html',
   styleUrl: './gestion-aplicacion.component.scss'
 })
@@ -36,6 +37,7 @@ export class GestionAplicacionComponent implements OnInit {
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
   codeAplicacion = uuidv4();
+  tipoEditorTexto = 'basica';
 
   constructor(
     private router: Router,
@@ -72,6 +74,13 @@ export class GestionAplicacionComponent implements OnInit {
         this.FormRegistro.codigoAplicacion = uuidv4();
       }
     });
+  }
+
+  actualizarDescripcionVersion(nuevoContenido: string): void {
+    this.FormRegistro.descripcionAplicacion = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionAplicacion);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarAplicacionClick(form: any) {

@@ -128,14 +128,17 @@
                             <div class="form-group">
                                 <label class="form-label">
                                     {{ 'CONEXIONES.GESTION.DESCRIPCION' | translate }}</label>
-                                <textarea class="form-control form-input"
-                                    placeholder="{{ 'CONEXIONES.GESTION.PLACEHOLDERDESCRIPCION' | translate }}"
+                                <app-text-editor
+                                    [toolbarType]="tipoEditorTexto"
+                                    [(contentHtml)]="FormRegistro.descripcionConexion"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)"
                                     name="descripcionConexion"
-                                    [ngClass]="{
-                                    'is-invalid': !descripcionConexion.valid && (descripcionConexion.dirty || descripcionConexion.touched || isSubmit)}"
-                                    #descripcionConexion="ngModel" required
-                                    [(ngModel)]="FormRegistro.descripcionConexion" rows="5">
-                                </textarea>
+                                    [(ngModel)]="FormRegistro.descripcionConexion"
+                                    [ngClass]="{'is-invalid': !descripcionConexion.valid && (descripcionConexion.dirty || descripcionConexion.touched || isSubmit)}"
+                                    #descripcionConexion="ngModel"
+                                    required
+                                    rows="5">
+                                </app-text-editor>
                                 <label
                                     *ngIf="!descripcionConexion.valid && (descripcionConexion.dirty || descripcionConexion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">

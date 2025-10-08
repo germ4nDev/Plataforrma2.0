@@ -41,7 +41,6 @@
                         <th *ngIf="showActions">{{ 'PLATAFORMA.DATATABLE.ACTIONS' | translate }}</th>
                     </tr>
                 </thead>
-
                 <tbody *ngFor="let row of paginatedData; let i = index">
                     <tr>
                         <td style="width: 10px;" *ngIf="showDetail">
@@ -77,7 +76,6 @@
                             </button>
                         </td>
                     </tr>
-
                     <tr *ngIf="registroId === row[idField]">
                         <td [attr.colspan]="columns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)">
                             <div class="row" style="margin: 0 auto;"><hr>
@@ -90,7 +88,6 @@
                             </div><hr>
                         </td>
                     </tr>
-
                     <tr *ngIf="paginatedData.length === 0">
                         <td [attr.colspan]="columns.length + (showActions ? 1 : 0)" class="text-center">No data available in
                             table</td>

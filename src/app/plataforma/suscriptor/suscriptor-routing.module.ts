@@ -36,10 +36,6 @@ const routes: Routes = [
       {
         path: 'gestion-usuario-suscriptor',
         loadComponent: () => import('./usuarios-suscriptor/gestion-usuario-suscrptor/gestion-usuario-suscrptor.component').then(m => m.GestionUsuarioSuscrptorComponent)
-      },
-      {
-        path: 'gestion-usuario-suscriptor',
-        loadComponent: () => import('./usuarios-suscriptor/gestiop-claves/gestiop-claves.component').then(m => m.GestiopClavesComponent)
       }
     ]
   }

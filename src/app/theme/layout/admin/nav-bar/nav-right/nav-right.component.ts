@@ -129,6 +129,18 @@ export class NavRightComponent implements DoCheck, OnInit {
     this.gradientConfig.isRtlLayout = isRtl;
   }
 
+  lockscreen() {
+    this.router.navigate(['/frontal/lock-screen']);
+  }
+
+  homeScreen() {
+    this.router.navigate(['/frontal/inicio']);
+  }
+
+  suiteScreen() {
+    this.router.navigate(['/frontal/launcher']);
+  }
+
   logout() {
     this.authenticationService.logout();
   }

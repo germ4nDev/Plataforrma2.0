@@ -112,13 +112,17 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SITIOS.ENLACES.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control form-input"
-                                    placeholder="{{ 'SITIOS.ENLACES.GESTION.PLACEHOLDERDESCRIPCION' | translate }}"
+                                <app-text-editor
+                                    [toolbarType]="tipoEditorTexto"
+                                    [(contentHtml)]="FormRegistro.descripcionEnlace"
+                                    (contentHtmlChange)="actualizarDescripcionEnlace($event)"
                                     name="descripcionEnlace"
+                                    [(ngModel)]="FormRegistro.descripcionEnlace"
                                     [ngClass]="{'is-invalid': !descripcionEnlace.valid && (descripcionEnlace.dirty || descripcionEnlace.touched || isSubmit)}"
-                                    #descripcionEnlace="ngModel" required [(ngModel)]="FormRegistro.descripcionEnlace"
+                                    #descripcionEnlace="ngModel"
+                                    required
                                     rows="5">
-                                </textarea>
+                                </app-text-editor>
                                 <label
                                     *ngIf="!descripcionEnlace.valid && (descripcionEnlace.dirty || descripcionEnlace.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">

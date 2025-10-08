@@ -16,11 +16,12 @@ import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.servic
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
   selector: 'app-gestion-usuario',
   standalone: true,
-  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent],
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
   templateUrl: './gestion-usuario.component.html',
   styleUrl: './gestion-usuario.component.scss'
 })
@@ -40,6 +41,7 @@ export class GestionUsuarioComponent implements OnInit {
   selectedFileUrl: string | null = null;
   isClaveActual: boolean = true;
   claveActual: string = '';
+  tipoEditorTexto = 'basica';
 
   constructor(
     private router: Router,
@@ -128,6 +130,13 @@ export class GestionUsuarioComponent implements OnInit {
         this.isClaveActual = true;
       }
     });
+  }
+
+  actualizarDescripcionRegistro(nuevoContenido: string): void {
+    this.FormRegistro.descripcionUsuario = nuevoContenido;
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionUsuario);
+    // if (this.validationForm && this.isSubmit) {
+    // }
   }
 
   btnGestionarAplicacionClick(form: any) {
