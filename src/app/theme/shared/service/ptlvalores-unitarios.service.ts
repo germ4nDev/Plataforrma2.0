@@ -60,8 +60,8 @@ export class PtlvaloresUnitariosService {
     return this.http.post(url, valorUnitario);
   }
 
-  putModificarRegistro(valorUnitario: any) {
-    const url = `${base_url}/valores-unitarios/${valorUnitario.valorUnitarioId}`;
+  putModificarRegistro(valorUnitario: any, valorUnitarioId: number) {
+    const url = `${base_url}/valores-unitarios/${valorUnitarioId}`;
     return this.http.put(url, valorUnitario).pipe(
       map((resp: any) => {
         console.log('data de valorUnitario modificacda', resp);

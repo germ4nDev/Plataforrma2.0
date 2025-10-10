@@ -108,8 +108,11 @@ export class UnlockScreenComponent implements OnInit {
                     });
                     return;
                 }
-                console.log('Login exitoso:', resp);
-                this.router.navigate(['/frontal/home']);
+                console.log('unlock exitoso:', resp);
+                const lockedUrl = sessionStorage.getItem('locked_url');
+                sessionStorage.removeItem('locked_url');
+                const navigateTo = lockedUrl || '/frontal/home';
+                this.router.navigateByUrl(navigateTo);
             }),
             catchError((err) => {
                 this.loading = false;

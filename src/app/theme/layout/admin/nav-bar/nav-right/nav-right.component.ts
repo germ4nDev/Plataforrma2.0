@@ -130,6 +130,9 @@ export class NavRightComponent implements DoCheck, OnInit {
   }
 
   lockscreen() {
+    const currentUrl = this.router.url;
+    console.log('ruta actual de navegacion', currentUrl);
+    sessionStorage.setItem('locked_url', currentUrl);
     this.router.navigate(['/frontal/lock-screen']);
   }
 
