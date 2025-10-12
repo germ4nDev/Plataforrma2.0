@@ -13,7 +13,7 @@ import { PTLRolesAPService } from 'src/app/theme/shared/service/ptlroles-ap.serv
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { catchError, Subject, tap } from 'rxjs';
+import { catchError, Observable, Subject, tap } from 'rxjs';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -43,7 +43,7 @@ export class RolesComponent implements OnInit {
   toggleSidebar = new EventEmitter<void>();
 
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   registrosSub?: Subscription;
   suitesSub?: Subscription;
   suites: any[] = [];
@@ -66,7 +66,8 @@ export class RolesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.consultarRegistros();
     this._languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);

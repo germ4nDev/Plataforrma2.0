@@ -17,6 +17,7 @@ import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-usuario',
@@ -30,7 +31,7 @@ export class GestionUsuarioComponent implements OnInit {
   FormRegistro: PTLUsuarioModel = new PTLUsuarioModel();
   form: undefined;
   isSubmit: boolean = false;
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
   selectedFile: File | null = null;
@@ -58,7 +59,8 @@ export class GestionUsuarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {

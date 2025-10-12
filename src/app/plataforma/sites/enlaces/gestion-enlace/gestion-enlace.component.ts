@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
-import { catchError, of, Subscription, tap } from 'rxjs';
+import { catchError, Observable, of, Subscription, tap } from 'rxjs';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GradientConfig } from 'src/app/app-config';
@@ -30,7 +30,7 @@ export class GestionEnlaceComponent implements OnInit {
   // private props
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLEnlaceSTModel = new PTLEnlaceSTModel();
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
@@ -61,7 +61,8 @@ export class GestionEnlaceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.consultarSitios();
     this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {

@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Component, Input } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 import { NavigationItem } from '../../../../../shared/_helpers/models/Navigation.model';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-nav-item',

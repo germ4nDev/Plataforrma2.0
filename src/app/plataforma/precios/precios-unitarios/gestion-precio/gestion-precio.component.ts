@@ -4,7 +4,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, of, Subscription, tap } from 'rxjs';
+import { catchError, Observable, of, Subscription, tap } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -33,7 +33,7 @@ export class GestionPrecioComponent implements OnInit {
   // private props
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLValoresUnitarios = new PTLValoresUnitarios();
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
@@ -89,7 +89,8 @@ export class GestionPrecioComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.consultarTiposValor();
     this._layoutInitializer.applyLayout();
   }

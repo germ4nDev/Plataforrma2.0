@@ -4,7 +4,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
-import { Subscription, tap, catchError, of } from 'rxjs';
+import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLSeguimientoRQModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoRQ.model';
 import { NavigationService } from 'src/app/theme/shared/service';
 import { PTLSeguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
@@ -39,7 +39,7 @@ export class SeguimientosComponent implements OnInit {
 
   gradientConfig;
   hasFiltersSlot: boolean = false;
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   estadosFiltrados: any[] = [];
   tipoEstado: string = '';
@@ -58,7 +58,8 @@ export class SeguimientosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.consultarRequerimientos();
     this.consultarRegistros();

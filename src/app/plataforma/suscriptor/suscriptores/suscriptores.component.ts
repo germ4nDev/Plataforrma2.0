@@ -4,7 +4,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
-import { Subscription, tap, catchError, of } from 'rxjs';
+import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -33,7 +33,7 @@ export class SuscriptoresComponent implements OnInit {
   tituloPagina: string = '';
   gradientConfig;
   hasFiltersSlot: boolean = false;
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   //#endregion VARIABLES
 
@@ -47,7 +47,8 @@ export class SuscriptoresComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.consultarRegistros();
   }

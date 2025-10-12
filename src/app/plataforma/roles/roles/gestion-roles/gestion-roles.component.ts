@@ -9,7 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { PTLRolesAPService } from 'src/app/theme/shared/service/ptlroles-ap.service';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { catchError, of, Subscription, tap } from 'rxjs';
+import { catchError, Observable, of, Subscription, tap } from 'rxjs';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -28,7 +28,7 @@ import Swal from 'sweetalert2';
 })
 export class GestionRolesComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   FormRegistro: PTLRoleAPModel = new PTLRoleAPModel();
   aplicaciones: PTLAplicacionModel[] = [];
   registrosSub?: Subscription;
@@ -52,7 +52,8 @@ export class GestionRolesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.consultarAplicaciones();
     this.consultarSuites();
     this.route.queryParams.subscribe((params) => {

@@ -9,7 +9,7 @@
             </div>
 
             <ng-container>
-                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$"></app-nav-content>
             </ng-container>
         </div>
     </aside>
@@ -23,6 +23,11 @@
                         <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'VERSIONES.UPDATE' | translate }}</h4>
                     </div>
                     <div class="d-flex">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnRegresarClick()">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
                         <button *ngIf="!modoEdicion" type="button"
                             class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
@@ -34,11 +39,6 @@
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'VERSIONES.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                            (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
                 </div>

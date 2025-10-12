@@ -14,6 +14,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-suscriptor',
@@ -26,7 +27,7 @@ export class GestionSuscriptorComponent {
   // private props
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLSuscriptorModel = new PTLSuscriptorModel();
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
@@ -48,7 +49,8 @@ export class GestionSuscriptorComponent {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.route.queryParams.subscribe((params) => {
       const id = params['regId'];
       console.log('me llena el Id', id);

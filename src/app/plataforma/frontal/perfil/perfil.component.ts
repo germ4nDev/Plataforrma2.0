@@ -20,6 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-perfil',
@@ -33,7 +34,7 @@ export class PerfilComponent implements OnInit {
   FormRegistro: PTLUsuarioModel = new PTLUsuarioModel();
   form: undefined;
   isSubmit: boolean = false;
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
   selectedFile: File | null = null;
@@ -62,7 +63,8 @@ export class PerfilComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {

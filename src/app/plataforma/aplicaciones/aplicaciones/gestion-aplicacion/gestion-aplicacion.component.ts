@@ -16,6 +16,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import Swal from 'sweetalert2';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-aplicacion',
@@ -27,7 +28,7 @@ import Swal from 'sweetalert2';
 export class GestionAplicacionComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLAplicacionModel = new PTLAplicacionModel();
-  menuItems: NavigationItem[] = [];
+  menuItems$!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
@@ -53,7 +54,8 @@ export class GestionAplicacionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
     this.route.queryParams.subscribe((params) => {
       const aplicacionId = params['aplicacionId'];
       if (aplicacionId) {

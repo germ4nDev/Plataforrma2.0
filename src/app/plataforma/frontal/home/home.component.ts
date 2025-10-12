@@ -5,7 +5,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
-import { catchError, of, Subscription, tap } from 'rxjs';
+import { catchError, Observable, of, Subscription, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
@@ -43,7 +43,8 @@ export class HomeComponent implements OnInit {
   tituloPagina: string = '';
   gradientConfig;
   hasFiltersSlot: boolean = false;
-  menuItems: NavigationItem[] = [];
+  menuItems$!: Observable<NavigationItem[]>;
+  private menuSubscription: Subscription = new Subscription();
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   //#endregion VARIABLES
 
@@ -58,12 +59,19 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    // this.menuSubscription = this.menuItems$.subscribe(items => {
+    //   // Este console.log se ejecutará CADA VEZ que el servicio emita nuevos datos.
+    //   console.log('✅ Datos del menú recibidos:', items);
 
+    //   if (items && items.length > 0) {
+    //     console.log('Primer elemento del menú (Suite/Group):', items[0]);
+    //   }
+    // });
     this.hasFiltersSlot = true;
     this.consultarAplicaciones();
     this.consultarSitios();
-    console.log('elementos menu componente', this.menuItems);
   }
 
   consultarSitios() {

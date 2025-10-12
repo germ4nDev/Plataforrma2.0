@@ -5,7 +5,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Subscription, of } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
@@ -48,7 +48,7 @@ export class LogActividadesComponent implements OnInit {
   registrosSub?: Subscription;
   gradientConfig;
   lang = localStorage.getItem('lang');
-  menuItems: NavigationItem[] = [];
+  menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   constructor(
@@ -65,7 +65,8 @@ export class LogActividadesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
     this.consultarUsuarios();

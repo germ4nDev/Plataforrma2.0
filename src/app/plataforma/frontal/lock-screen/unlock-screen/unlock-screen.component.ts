@@ -44,7 +44,7 @@ export class UnlockScreenComponent implements OnInit {
     ) {
         // redirect to home if already logged in
         if (this.authenticationService.currentUserValue) {
-            const usuario = _localStorageService.getUsuarioLocalStorage();
+            const usuario = this._localStorageService.getUsuarioLocalStorage();
             this.usernameValue = usuario.userNameUsuario;
             //    this.router.navigate(['/dashboard/analytics']);
         }
@@ -60,13 +60,11 @@ export class UnlockScreenComponent implements OnInit {
         const password = document.querySelector('#password');
 
         togglePassword?.addEventListener('click', () => {
-            // toggle the type attribute
             const type = password?.getAttribute('type') === 'password' ? 'text' : 'password';
             password?.setAttribute('type', type);
             this.classList.toggle('icon-eye-off');
         });
 
-        // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
     }
 

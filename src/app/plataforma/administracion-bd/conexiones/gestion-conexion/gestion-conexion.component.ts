@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Subscription, tap, catchError, of } from 'rxjs';
+import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
 import { PTLPaquetesSCModel } from 'src/app/theme/shared/_helpers/models/PTLPaquetesSC.model';
@@ -34,7 +34,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class GestionConexionComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLConexionBDModel = new PTLConexionBDModel();
-  menuItems: NavigationItem[] = [];
+  menuItems$!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
@@ -69,11 +69,12 @@ export class GestionConexionComponent {
   }
 
   ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
     this.consultarAplicaciones();
     this.consultarSuscriptores();
     this.consultarPaquetes();
     this._layoutInitializer.applyLayout();
-    this.menuItems = this._navigationService.getNavigationItems();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {

@@ -11,7 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
-import { catchError, Subject, tap } from 'rxjs';
+import { catchError, Observable, Subject, tap } from 'rxjs';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
@@ -36,7 +36,7 @@ export class UsuariosComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   registrosSub?: Subscription;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
 
   dtColumnSearchingOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
@@ -49,13 +49,14 @@ export class UsuariosComponent implements OnInit {
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private navigationService: NavigationService,
+    private _navigationService: NavigationService,
     private usuariosService: PTLUsuariosService,
     private languageService: LanguageService
   ) {}
 
   ngOnInit() {
-    this.menuItems = this.navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     console.log('elementos menu componente', this.menuItems);
     this.languageService.currentLang$.subscribe((lang) => {
       this.translate.use(lang);

@@ -14,6 +14,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import Swal from 'sweetalert2';
 import { PTLTiposValoresModel } from 'src/app/theme/shared/_helpers/models/PTLTiposValores.model';
 import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-tipo',
@@ -25,7 +26,7 @@ import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-va
 export class GestionTipoComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLTiposValoresModel = new PTLTiposValoresModel();
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
@@ -69,7 +70,8 @@ export class GestionTipoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {

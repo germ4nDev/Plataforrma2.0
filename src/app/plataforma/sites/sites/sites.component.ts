@@ -5,7 +5,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
-import { catchError, of, Subscription, tap } from 'rxjs';
+import { catchError, Observable, of, Subscription, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
@@ -41,9 +41,10 @@ export class SitesComponent implements OnInit {
   tituloPagina: string = '';
   gradientConfig;
   hasFiltersSlot: boolean = false;
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   //#endregion VARIABLES
+
   constructor(
     private router: Router,
     private translate: TranslateService,
@@ -55,7 +56,8 @@ export class SitesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.consultarAplicaciones();
     this.consultarSitios();

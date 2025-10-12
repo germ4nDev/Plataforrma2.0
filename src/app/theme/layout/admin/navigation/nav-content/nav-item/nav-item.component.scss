@@ -1,34 +1,36 @@
-// .pcoded-micon {
-//   margin-right: 8px;
-// }
+    .pcoded-submenu {
+      display: none;
+      padding-left: 1rem;
+      list-style: none;
+      direction: ltr; /* fuerza la dirección correcta */
+    }
 
-// .pcoded-mtext {
-//   flex: 1;
-// }
+    .pcoded-hasmenu.pcoded-trigger > .pcoded-submenu {
+      display: block;
+    }
 
-// .pcoded-badge {
-//   float: right;
-//   margin-left: auto;
-// }
+    .nav-link {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* Asegura que el icono y texto estén alineados a la izquierda */
+      text-align: left;
+      width: 100%;
+    }
 
-// .nav-link {
-//   display: flex;
-//   align-items: center;
-//   padding: 10px 16px;
-//   width: 100%;
-//   text-decoration: none;
-// }
+    .pcoded-micon {
+      margin-right: 8px;
+    }
 
-// .nav-link:hover {
-//     font-weight: bold;
-// }
+    .pcoded-mtext {
+      flex-grow: 1;
+    }
 
-// .nav li,
-// .pcoded-inner-navbar li {
-//   display: block;
-//   width: 100%;
-// }
-.nav-item {
-  display: inline-flex;
-  align-items: center;
-}
+    .pcoded-badge {
+      margin-left: auto;
+    }
+
+    li.nav-item {
+      width: 100%;
+    }
+

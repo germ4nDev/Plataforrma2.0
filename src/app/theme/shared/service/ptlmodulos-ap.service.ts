@@ -35,7 +35,7 @@ export class PtlmodulosApService {
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de modulo', resp);
+        // console.log('servicio de modulo', resp);
         return {
           ok: true,
           modulos: resp.modulos
@@ -48,7 +48,7 @@ export class PtlmodulosApService {
     const url = `${base_url}/modulos/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('data de modulo', resp);
+        // console.log('data de modulo', resp);
         return {
           ok: true,
           modulo: resp.modulo
@@ -66,7 +66,7 @@ export class PtlmodulosApService {
     const url = `${base_url}/modulos/${moduloId}`;
     return this.http.put(url, modulo).pipe(
       map((resp: any) => {
-        console.log('data de modulo modificacda', resp);
+        // console.log('data de modulo modificacda', resp);
         return {
           ok: true,
           modulo: resp.modulo
@@ -79,7 +79,7 @@ export class PtlmodulosApService {
     const url = `${base_url}/modulos/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        console.log('data de modulo eliminado', resp);
+        // console.log('data de modulo eliminado', resp);
         return {
           ok: true,
           modulo: resp.modulo

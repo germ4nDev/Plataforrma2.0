@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription, tap, catchError, of } from 'rxjs';
+import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService, NavigationService } from 'src/app/theme/shared/service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
@@ -26,7 +26,7 @@ import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor
 })
 export class GestionTicketComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   FormRegistro: PTLTicketAPModel = new PTLTicketAPModel();
   aplicaciones: PTLAplicacionModel[] = [];
   registrosSub?: Subscription;
@@ -48,7 +48,8 @@ export class GestionTicketComponent {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.consultarTickets();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];

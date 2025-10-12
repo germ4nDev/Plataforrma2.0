@@ -4,7 +4,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
-import { Subscription, tap, catchError, of } from 'rxjs';
+import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { NavigationService } from 'src/app/theme/shared/service';
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
@@ -38,11 +38,12 @@ export class RequerimientosComponent implements OnInit {
   tituloPagina: string = '';
   gradientConfig;
   hasFiltersSlot: boolean = false;
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   tipoEstado: string = '';
   estadosFiltrados: any[] = [];
   //#endregion VARIABLES
+
   constructor(
     private router: Router,
     private translate: TranslateService,
@@ -54,7 +55,8 @@ export class RequerimientosComponent implements OnInit {
     this.gradientConfig = GradientConfig;
   }
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.consultarTickets();
     this.consultarRegistros();

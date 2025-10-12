@@ -4,7 +4,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { catchError, of, Subscription, tap, firstValueFrom } from 'rxjs';
+import { catchError, of, Subscription, tap, firstValueFrom, Observable } from 'rxjs';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLRoleAPModel } from '../../../../theme/shared/_helpers/models/PTLRoleAP.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
@@ -36,7 +36,7 @@ import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP
 })
 export class GestionRolesUsuarioComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   FormRegistro: PTLUsuarioRoleAP = new PTLUsuarioRoleAP();
   aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
   suite: PTLSuiteAPModel = new PTLSuiteAPModel();
@@ -91,7 +91,8 @@ export class GestionRolesUsuarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.getOnInitPage();
   }
 

@@ -4,7 +4,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
-import { catchError, of, Subscription, tap } from 'rxjs';
+import { catchError, Observable, of, Subscription, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -35,7 +35,7 @@ export class TiposValorComponent implements OnInit {
   tituloPagina: string = '';
   gradientConfig;
   hasFiltersSlot: boolean = false;
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   //#endregion VARIABLES
 
@@ -49,7 +49,8 @@ export class TiposValorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.consultarRegistros();
     console.log('elementos menu componente', this.menuItems);

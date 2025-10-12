@@ -4,7 +4,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { catchError, map, firstValueFrom, of, Subscription, lastValueFrom } from 'rxjs';
+import { catchError, map, firstValueFrom, of, Subscription, lastValueFrom, Observable } from 'rxjs';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -53,7 +53,7 @@ export class RolesUsuariosComponent implements OnInit {
 
   gradientConfig;
   hasFiltersSlot: boolean = false;
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   //#endregion VARIABLES
 
@@ -71,7 +71,8 @@ export class RolesUsuariosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.getOnInitPage();
     this.consultarRegistros();
     // this.languageService.currentLang$.subscribe((lang) => {

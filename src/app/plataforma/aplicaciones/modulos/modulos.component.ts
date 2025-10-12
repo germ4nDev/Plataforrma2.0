@@ -5,7 +5,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Subscription, of } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 
@@ -30,13 +30,15 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
   templateUrl: './modulos.component.html',
   styleUrl: './modulos.component.scss'
 })
-export class ModulosComponent implements OnInit{
+export class ModulosComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   aplicacionesSub?: Subscription;
   aplicaciones: PTLAplicacionModel[] = [];
   suites: PTLSuiteAPModel[] = [];
+  modulosPadre: PTLModuloAP[] = [];
   registros: PTLModuloAP[] = [];
   suitesSub?: Subscription;
+  modulosSub?: Subscription;
   registrosSub?: Subscription;
   registrosFiltrado: PTLModuloAP[] = [];
   moduloTituloExcel: string = '';
@@ -44,7 +46,7 @@ export class ModulosComponent implements OnInit{
   hasFiltersSlot: boolean = false;
   gradientConfig;
   lang = localStorage.getItem('lang');
-  menuItems: NavigationItem[] = [];
+  menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   constructor(
@@ -56,14 +58,16 @@ export class ModulosComponent implements OnInit{
     private _registrosService: PtlmodulosApService
   ) {
     this.gradientConfig = GradientConfig;
+    this.consultarAplicacines();
+    this.consultarSuites();
+    this.consultarModulosPadre();
   }
 
   ngOnInit(): void {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
-    // this.consultarAplicacines();
-    // this.consultarSuites();
     this.consultarRegistros();
   }
 
@@ -74,6 +78,7 @@ export class ModulosComponent implements OnInit{
         tap((resp: any) => {
           if (resp.ok) {
             this.aplicaciones = resp.aplicaciones;
+            // console.log('aplicaciones 1', this.aplicaciones);
           }
         }),
         catchError((err) => {
@@ -91,10 +96,29 @@ export class ModulosComponent implements OnInit{
         tap((resp: any) => {
           if (resp.ok) {
             if (codApp) {
-                this.suites = resp.suites.filter((x: { codigoAplicacion: string; }) => x.codigoAplicacion == codApp);
+              this.suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == codApp);
             } else {
-                this.suites = resp.suites;
+              this.suites = resp.suites;
             }
+            // console.log('suites 1', this.suites);
+          }
+        }),
+        catchError((err) => {
+          console.error(err);
+          return of([]);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarModulosPadre() {
+    this.modulosSub = this._registrosService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.modulosPadre = resp.modulos.filter((x: { hijos: boolean }) => x.hijos == true);
+            // console.log('modulosPadre 1', this.modulosPadre);
           }
         }),
         catchError((err) => {
@@ -113,13 +137,20 @@ export class ModulosComponent implements OnInit{
           if (resp.ok) {
             resp.modulos.forEach((mod: any) => {
               mod.nomEstado = mod.estadoModulo ? 'Activo' : 'Inactivo';
+              mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos';
+              mod.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == mod.codigoAplicacion)[0].nombreAplicacion || '';
+              mod.nomSuite = this.suites.filter((x) => x.codigoSuite == mod.codigoSuite)[0].nombreSuite || '';
+              mod.nomPadre =
+                mod.codigoPadre != '0' ? this.modulosPadre.filter((x) => x.codigoModulo == mod.codigoPadre)[0].nombreModulo : '';
+              //   // console.log('detalle modulo', mod);
             });
+            // // console.log('los modulos', resp.modulos);
             if (codSuite) {
-                this.registros = resp.modulos.filter((x: { codigosuite: string; }) => x.codigosuite == codSuite);
-                this.registrosFiltrado = resp.modulos.filter((x: { codigosuite: string; }) => x.codigosuite == codSuite);
+              this.registros = resp.modulos.filter((x: { codigosuite: string }) => x.codigosuite == codSuite);
+              this.registrosFiltrado = resp.modulos.filter((x: { codigosuite: string }) => x.codigosuite == codSuite);
             } else {
-                this.registros = resp.modulos;
-                this.registrosFiltrado = resp.modulos;
+              this.registros = resp.modulos;
+              this.registrosFiltrado = resp.modulos;
             }
           }
         }),
@@ -137,7 +168,7 @@ export class ModulosComponent implements OnInit{
   }
 
   onFiltroCodigoAplicacionChangeClick(evento: any) {
-    console.log('filtrar el codigo ', evento.target.value);
+    // console.log('filtrar el codigo ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
@@ -147,7 +178,7 @@ export class ModulosComponent implements OnInit{
   }
 
   onFiltroCodigoSuiteChangeClick(evento: any) {
-    console.log('filtrar el codigo ', evento.target.value);
+    // console.log('filtrar el codigo ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
@@ -157,7 +188,7 @@ export class ModulosComponent implements OnInit{
   }
 
   onFiltroNombreChangeClick(evento: any) {
-    console.log('filtrar el nombre ', evento.target.value);
+    // console.log('filtrar el nombre ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
@@ -166,27 +197,25 @@ export class ModulosComponent implements OnInit{
   }
 
   onFiltroDescripcionChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
+    // console.log('filtrar el descripcion ', evento.target.value);
     const textoFiltro = evento.target.value.toLowerCase();
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((app) =>
-        (app.descripcionModulo || '').toLowerCase().includes(textoFiltro)
-      );
-      console.log('filtrados', this.registrosFiltrado);
+      this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionModulo || '').toLowerCase().includes(textoFiltro));
+      // console.log('filtrados', this.registrosFiltrado);
     }
   }
 
   onFiltroEstadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
+    // console.log('filtrar el estado ', evento.target.value);
     // const estado: boolean = evento.target.value || true;
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
       const estado = evento.target.value == 'true' ? true : false;
-      console.log('Suitees', this.registrosFiltrado);
-      this.registrosFiltrado = this.registros.filter(x => x.estadoModulo == estado);
+      // console.log('Suitees', this.registrosFiltrado);
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoModulo == estado);
     }
   }
 

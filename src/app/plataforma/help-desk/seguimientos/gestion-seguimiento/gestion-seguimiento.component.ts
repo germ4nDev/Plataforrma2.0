@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription, tap, catchError, of } from 'rxjs';
+import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { PTLSeguimientoRQModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoRQ.model';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
@@ -28,7 +28,7 @@ import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor
 })
 export class GestionSeguimientoComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
-  menuItems: NavigationItem[] = [];
+  menuItems!: Observable<NavigationItem[]>;
   FormRegistro: PTLSeguimientoRQModel = new PTLSeguimientoRQModel();
   requerimientos: PTLRequerimientoTKModel[] = [];
   registrosSub?: Subscription;
@@ -53,7 +53,8 @@ export class GestionSeguimientoComponent {
   }
 
   ngOnInit() {
-    this.menuItems = this._navigationService.getNavigationItems();
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
     this.consultarRequerimientos();
     this.consultarEstado();
     this.route.queryParams.subscribe((params) => {

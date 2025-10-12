@@ -12,20 +12,14 @@ import { TodoListRemoveDirective } from './directive/todo-list-remove.directive'
 import { TodoCardCompleteDirective } from './directive/todo-card-complete.directive';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { AlertComponent } from './components/alert/alert.component';
-import { CustomTranslateLoader } from './custom-translate-loader';
 import { GalleryModule } from '@ks89/angular-modal-gallery';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { NavCollapseComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-collapse/nav-collapse.component';
-import { NavGroupComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-group/nav-group.component';
-import { NavItemComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-item/nav-item.component';
+import { TranslateModule } from '@ngx-translate/core';
 
-// third party
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { NgClickOutsideDirective } from 'ng-click-outside2';
 import 'hammerjs';
 import 'mousetrap';
 
-// bootstrap import
 import {
   NgbDropdownModule,
   NgbNavModule,
@@ -61,12 +55,6 @@ const bootstrap = [
     AlertComponent,
     bootstrap,
     NgClickOutsideDirective
-    // TranslateModule.forRoot({
-    //   loader: {
-    //     provide: TranslateLoader,
-    //     useClass: CustomTranslateLoader
-    //   }
-    // })
   ],
   exports: [
     CommonModule,

@@ -7,6 +7,7 @@ import { NavCollapseComponent } from './nav-collapse/nav-collapse.component';
 import { NavGroupComponent } from './nav-group/nav-group.component';
 import { NavItemComponent } from './nav-item/nav-item.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-nav-content',
@@ -32,20 +33,27 @@ export class NavContentComponent implements OnInit, AfterViewInit {
   contentWidth = 0;
   currentApplicationVersion = 0;
   wrapperWidth!: number;
+  menuItems$!: Observable<NavigationItem[]>;
+  private menuSubscription: Subscription = new Subscription();
 
   @ViewChild('navbarContent', { static: false }) navbarContent!: ElementRef;
   @ViewChild('navbarWrapper', { static: false }) navbarWrapper!: ElementRef;
 
   constructor(
-    private navigationService: NavigationService,
+    private _navigationService: NavigationService,
     private location: Location,
     private locationStrategy: LocationStrategy,
     private zone: NgZone
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    console.log('NavContent recibe:', this.navigationItems);
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.menuSubscription = this.menuItems$.subscribe(items => {
+      if (items && items.length > 0) {
+        console.log('Primer elemento del menú (Suite/Group):', items[0]);
+      }
+    });
     if (this.windowWidth < 992) {
       GradientConfig.layout = 'vertical';
       setTimeout(() => {

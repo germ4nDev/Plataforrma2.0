@@ -8,18 +8,18 @@ supports: https://codedscss/themes.com/submit-ticket/
 File: style.css
 =========================================================================
 =========================================================================
-  == Table of Contents==
+== Table of Contents==
 - Generic classes
--   Margin, Padding, Font class, text align, position, floating, overflow, background class, text color, display class, boarder class
+- Margin, Padding, Font class, text align, position, floating, overflow, background class, text color, display class, boarder class
 - Theme Elements
--   Accordion, Button, tabs, typography, buttons, box shadow, Lable & Badges, Alert, Pagination, Breadcumb, Cards, Collapse,
--   Carousel, Grid, Progress, Model, tooltip, popover, Datepicker, Gridstack, lightbox, notification, Nestable, pnotify, rating,
--   Rangeslider, Slider, Syntax Highlighter, Tour, Treeview, Toolbar, Session Timeout, Session idle Timeout, offline, Animation
+- Accordion, Button, tabs, typography, buttons, box shadow, Lable & Badges, Alert, Pagination, Breadcumb, Cards, Collapse,
+- Carousel, Grid, Progress, Model, tooltip, popover, Datepicker, Gridstack, lightbox, notification, Nestable, pnotify, rating,
+- Rangeslider, Slider, Syntax Highlighter, Tour, Treeview, Toolbar, Session Timeout, Session idle Timeout, offline, Animation
 - Forms
--   Forms Elements, Advance Form Control, Validation, Masking, Wizard, Picker, Select
+- Forms Elements, Advance Form Control, Validation, Masking, Wizard, Picker, Select
 - Pages
--   authentication, Maintenance, Maps, Landing page messages, task, Todo, Notes, Charts, Icons, Gallery, Editors,
--   Invoice, Full Calender, File Upload,
+- authentication, Maintenance, Maps, Landing page messages, task, Todo, Notes, Charts, Icons, Gallery, Editors,
+- Invoice, Full Calender, File Upload,
 =================================================================================
 =================================================================================== */
 // Theme Font
@@ -182,6 +182,8 @@ body {
     --scrollbar-thumb-color: #c1c1c1;
     --scrollbar-thumb-hover: #a8a8a8;
     --panel-bg: #fff;
+    --app-btn-secondary: #acb2b8;
+    --app-btn-secondary-texto: #333;
 }
 
 // ====================================================================
@@ -191,6 +193,8 @@ body.dark-theme {
     --background-color: #212529;
     --text-color: #a0a5aa;
     --border-color: #495057;
+    --app-btn-secondary: #495057;
+    --app-btn-secondary-texto: #ccc;
     --card-background: #343a40;
     --radio-border-color: #ccc;
     --radio-fill-color: #007bff;
@@ -530,6 +534,67 @@ body {
     transform: scale(0.95) !important;
 }
 
+.btn.btn-unlock {
+    background-color: var(--app-navbar-color) !important;
+    color: var(--app-texto-color) !important;
+    cursor: pointer;
+    height: 2.9em !important;
+    border: var(--app-navbar-color) !important;
+    border-radius: 11px !important;
+    transition: all 0.6s ease !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    white-space: nowrap !important;
+    margin-left: 0.5rem;
+}
+
+.btn.btn-cancel {
+    background-color: var(--app-btn-secondary) !important;
+    color: var(--app-btn-secondary-texto) !important;
+    cursor: pointer;
+    height: 2.9em !important;
+    border: var(--app-navbar-color) !important;
+    border-radius: 11px !important;
+    transition: all 0.6s ease !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    white-space: nowrap !important;
+    margin-left: 0.5rem;
+}
+
+.fab-container-bottom {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+}
+
+.fab-label {
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: var(--app-texto-color) !important;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.fab-center-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--app-navbar-color) !important;
+    color: var(--app-texto-color) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
 .card {
     background-color: var(--card-background);
     border-color: var(--border-color);
@@ -563,7 +628,7 @@ body {
 
 .nav-tabs-custom button.active {
     background-color: var(--app-navbar-color);
-    //   background-color: var(--aside-tab-bg);
+    // background-color: var(--aside-tab-bg);
     border-bottom: 2px solid var(--aside-tab-active);
     color: var(--app-texto-color) !important;
 }
@@ -588,22 +653,23 @@ body {
 
 // clases navegacion, menu lateral
 .pcoded-inner-navbar {
-  padding-left: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
+
 .nav-item {
-  width: 100%;
+    width: 100%;
 }
 
 #nav-ps-gradient-able.collapsed {
-  width: 60px !important; // o el ancho que prefieras
+    width: 60px !important; // o el ancho que prefieras
 }
 
 .navbar-content {
-  padding: 0 0.5rem;
+    padding: 0 0.5rem;
 }
 
 table,
@@ -613,10 +679,30 @@ table tr {
     border-collapse: collapse;
 }
 
-.tableFixHead          { overflow: auto; height: 100%; }
-.tableFixHead thead th { position: sticky; top: 0; z-index: 1; background-color: #fff; color: #464545; text-align: center;}
-table  { border-collapse: collapse; width: 100%; padding: 5px; }
-th, td { padding: 8px 8px 8px 8px; }
+.tableFixHead {
+    overflow: auto;
+    height: 100%;
+}
+
+.tableFixHead thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff;
+    color: #464545;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    padding: 5px;
+}
+
+th,
+td {
+    padding: 8px 8px 8px 8px;
+}
 
 .content-g67 {
     position: relative;
@@ -796,7 +882,7 @@ body.gradient-dark {
     height: 100px;
     border-radius: 50px;
     margin: 1rem;
-    //   object-fit: contain;
+    // object-fit: contain;
 }
 
 .btn-animacion {
@@ -844,9 +930,8 @@ body.gradient-dark {
         margin: 0px !important;
         padding: 16px !important;
         background-image: linear-gradient(to bottom,
-            var(--app-navbar-color),
-            var(--color-fin-gradiente)
-        );
+                var(--app-navbar-color),
+                var(--color-fin-gradiente));
 
         span {
             display: block;
@@ -899,4 +984,89 @@ body.gradient-dark {
             background-color: var(--panel-hover-bg);
         }
     }
+}
+
+/* Estilos Base para SweetAlert2 (Se aplican siempre) */
+// .swal2-custom-container {
+//     /* Define la fuente o el tamaño base si es necesario */
+// }
+
+// /* ---------------------------------------------------- */
+// /* TEMA CLARO (SWAL) */
+// /* ---------------------------------------------------- */
+// .swal2-custom-container .swal2-popup {
+//     /* Usa las variables del tema claro (por defecto) */
+//     background: var(--panel-bg, #fff);
+//     color: var(--panel-text, #333);
+//     border: 1px solid var(--scrollbar-thumb-color, #ccc);
+//     /* Borde sutil */
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+// }
+
+// .swal2-custom-container .swal2-title,
+// .swal2-custom-container .swal2-html-container {
+//     color: var(--panel-text, #333);
+// }
+
+// /* ---------------------------------------------------- */
+// /* TEMA OSCURO (SWAL) */
+// /* ---------------------------------------------------- */
+// body.dark-theme .swal2-custom-container .swal2-popup {
+//     /* Sobrescribe los colores para el modo oscuro */
+//     background: var(--panel-bg, #1e1e2d);
+//     /* Fondo oscuro */
+//     color: var(--panel-text, #fff);
+//     /* Texto blanco */
+//     border: 1px solid var(--scrollbar-thumb-color, #444);
+//     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+// }
+
+// body.dark-theme .swal2-custom-container .swal2-title,
+// body.dark-theme .swal2-custom-container .swal2-html-container {
+//     color: var(--panel-text, #fff);
+// }
+
+/* -- Contenedor para el tema CLARO -- */
+.swal2-light-theme-container {
+    /* No necesitas definir un fondo aquí, ya que el color de la alerta es blanco por defecto */
+}
+
+.swal2-light-theme-container .swal2-popup {
+    background: var(--panel-bg, #fff);
+    color: var(--panel-text, #333);
+}
+
+.swal2-light-theme-container .swal2-title,
+.swal2-light-theme-container .swal2-html-container {
+    color: var(--panel-text, #333);
+}
+
+.swal2-light-theme-container .swal2-actions button {
+    color: #fff;
+}
+
+/* -- Contenedor para el tema OSCURO -- */
+.swal2-dark-theme-container .swal2-popup {
+    background: var(--panel-bg, #1e1e2d);
+    color: var(--panel-text, #fff);
+}
+
+.swal2-dark-theme-container .swal2-title,
+.swal2-dark-theme-container .swal2-html-container {
+    color: var(--panel-text, #fff);
+}
+
+
+/* -- Estilos para los botones (opcional, si usas buttonsStyling: false) -- */
+.btn.btn-primary-light {
+    background-color: var(--app-navbar-color, #007bff);
+    color: white;
+    border: none;
+}
+
+.btn.btn-primary-dark {
+    background-color: var(--app-navbar-color, #0dcaf0);
+    /* Color de acento para el modo oscuro */
+    color: black;
+    border: none;
 }
