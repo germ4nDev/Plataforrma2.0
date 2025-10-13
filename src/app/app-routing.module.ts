@@ -59,12 +59,7 @@ const routes: Routes = [
                 path: 'roles',
                 loadChildren: () =>
                     import('./plataforma/roles/roles.module').then((module) => module.RolesModule)
-            },
-            {
-                path: 'home',
-                loadChildren: () =>
-                    import('./plataforma/home/home.module').then((module) => module.HomeModule)
-            },
+            }
         ]
     },
     {

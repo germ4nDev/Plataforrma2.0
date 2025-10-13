@@ -15,6 +15,36 @@
         "UPDATEUSERSUCCESS": "User data updated successfully",
         "UPDATEUSERERROR": "User data update Error",
         "UPLOADPHOTOERROR": "upload image error",
+
+        "APLICACIONES": {
+            "PLATAFORMA": "Plataforma"
+        },
+        "SUITES": {
+            "PLATAFORMA": "Plataforma"
+        },
+        "MODULOS": {
+            "APLICACIONES": "Aplicaciones",
+            "SUITES": "Suites",
+            "MODULOS": "Modulos",
+            "VERSIONES": "Versiones",
+            "PAQUETES": "Paquetes",
+            "LOG ACTIVIDADES": "Log Actividades",
+            "LOG EXEPCIONES": "Log Exepciones",
+            "LOG ACTUALIZACIONES": "Log Actualizaciones",
+            "ESTADISTICAS": "Estadísticas",
+
+            "AUTENTICACION": "Autenticación",
+            "LOGIN": "Login",
+            "CAMBIO_CLAVE": "Cambio Clave",
+            "RESETEAR_CLAVE": "Resetear Clave",
+            "PERFIL_USUARIO": "Perfil Usuario",
+            "CONFIGURACION_PERFIL": "Configuración Perfil",
+            "HOME": "Home",
+            "DASHBOARD": "Dashboard",
+            "EXTERNAL": "External",
+            "SITES": "Sites",
+            "USUARIOS": "Usuarios"
+        },
         "NAVBAR": {
             "NOTIFICACIONES": "Notifications",
             "READ": "Mark as Read",

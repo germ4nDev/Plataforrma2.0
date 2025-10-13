@@ -1,4 +1,559 @@
-/* eslint-disable no-case-declarations */
+// /* eslint-disable no-case-declarations */
+// // /* eslint-disable @typescript-eslint/no-explicit-any */
+// // /* eslint-disable @angular-eslint/contextual-lifecycle */
+// // import { Injectable, OnInit } from '@angular/core';
+// // import { NavigationItem } from '../../layout/admin/navigation/navigation';
+// // import { PtlAplicacionesService } from './ptlaplicaciones.service';
+// // import { PtlSuitesAPService } from './ptlsuites-ap.service';
+// // import { PtlmodulosApService } from './ptlmodulos-ap.service';
+// // import { Subscription, tap, catchError, of, Observable, BehaviorSubject } from 'rxjs';
+// // import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
+// // import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
+// // import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
+// // import { LocalStorageService } from './local-storage.service';
+
+// // @Injectable({
+// //   providedIn: 'root'
+// // })
+// // export class NavigationService implements OnInit {
+// //   aplicaciones: PTLAplicacionModel[] = [];
+// //   suites: PTLSuiteAPModel[] = [];
+// //   suitesApp: PTLSuiteAPModel[] = [];
+// //   modulos: PTLModuloAP[] = [];
+// //   modulosSu: PTLModuloAP[] = [];
+// //   modulosSu2: PTLModuloAP[] = [];
+// //   aplicacionesSub?: Subscription;
+// //   suitesSub?: Subscription;
+// //   modulosSub?: Subscription;
+// //   aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
+// //   suite: PTLSuiteAPModel = new PTLSuiteAPModel();
+// //   modulo: PTLModuloAP = new PTLModuloAP();
+// //   modulo2: PTLModuloAP = new PTLModuloAP();
+// //   private menuSubject = new BehaviorSubject<NavigationItem[]>([]);
+// //   public menuItems$: Observable<NavigationItem[]> = this.menuSubject.asObservable();
+
+// //   constructor(
+// //     private _aplicacionesService: PtlAplicacionesService,
+// //     private _suitesService: PtlSuitesAPService,
+// //     private _modulosService: PtlmodulosApService,
+// //     private _localStorageService: LocalStorageService
+// //   ) {
+// //     // this.consultarAplicacines();
+// //   }
+
+// //   ngOnInit() {
+// //     // this.consultarModulos();
+// //     this.consultarAplicacines();
+// //     this.consultarSuites();
+// //   }
+
+// //   consultarAplicacines() {
+// //     this.aplicacionesSub = this._aplicacionesService
+// //       .getAplicaciones()
+// //       .pipe(
+// //         tap((resp) => {
+// //           if (resp.ok) {
+// //             this.aplicaciones = resp.aplicaciones;
+// //           }
+// //         }),
+// //         catchError((err) => {
+// //           console.error(err);
+// //           return of([]);
+// //         })
+// //       )
+// //       .subscribe();
+// //   }
+
+// //   consultarSuites(): void {
+// //     this.suitesSub = this._suitesService
+// //       .geSuitesAP()
+// //       .pipe(
+// //         tap((resp) => {
+// //           if (resp.ok) {
+// //             this.suites = resp.suites;
+// //           }
+// //         }),
+// //         catchError((err) => {
+// //           console.error(err);
+// //           return of([]);
+// //         })
+// //       )
+// //       .subscribe();
+// //   }
+
+// //   consultarModulos(): void {
+// //     this.modulosSub = this._modulosService
+// //       .getRegistros()
+// //       .pipe(
+// //         tap((resp) => {
+// //           if (resp.ok) {
+// //             this.modulos = resp.modulos;
+// //             console.log('modulos', this.modulos);
+// //           }
+// //         }),
+// //         catchError((err) => {
+// //           console.error(err);
+// //           return of([]);
+// //         })
+// //       )
+// //       .subscribe();
+// //   }
+
+// //   getNavigationItems(): void {
+// //     this.aplicacion = this._localStorageService.getAplicaicionLocalStorage();
+// //     let menu: NavigationItem[] = [];
+// //     switch (this.aplicacion.codigoAplicacion) {
+// //       case 'ela8fa09-15db-479b-a0a4-9c2be72273b5':
+// //         this._modulosService.getRegistros().subscribe((data) => {
+// //           this.modulos = data.modulos;
+// //           console.log('modulos para el menu', this.modulos);
+
+// //           if (data.modulos.length > 0) {
+// //             menu = this.getAplicacionSuiteItems();
+// //             console.log('este es el menu', menu);
+// //             this.menuSubject.next(menu);
+// //           }
+// //         });
+// //         break;
+// //       case 'helpdesk':
+// //         menu = this.getHelpDeskItems();
+// //         this.menuSubject.next(menu);
+// //         break;
+// //       default:
+// //         this.menuSubject.next([]);
+// //         break;
+// //     }
+// //   }
+
+// //   private getPlataformaItems(): NavigationItem[] {
+// //     this.suitesApp = this.suites.filter((x) => x.codigoAplicacion == this.aplicacion.codigoAplicacion);
+// //     return [
+// //       {
+// //         id: 'e1a8fa99-15db-479b-a0a4-9c2be72273b5',
+// //         title: 'Plataforma',
+// //         type: 'group',
+// //         icon: 'feather icon-monitor',
+// //         children: [
+// //           {
+// //             id: 'autenticacion',
+// //             title: 'Autenticación',
+// //             type: 'collapse',
+// //             icon: 'feather icon-home',
+// //             children: [
+// //               {
+// //                 id: 'logn',
+// //                 title: 'Login',
+// //                 type: 'item',
+// //                 url: '/autenticacion/login'
+// //               },
+// //               {
+// //                 id: 'change-password',
+// //                 title: 'Cambio Clave',
+// //                 type: 'item',
+// //                 url: '/autenticacion/change-password'
+// //               },
+// //               {
+// //                 id: 'reset-password',
+// //                 title: 'Resetear Clave',
+// //                 type: 'item',
+// //                 url: '/autenticacion/reset-password'
+// //               },
+// //               {
+// //                 id: 'perfil',
+// //                 title: 'Perfil Usuario',
+// //                 type: 'item',
+// //                 url: '/autenticacion/perfil'
+// //               },
+// //               {
+// //                 id: 'perfil-configuracion',
+// //                 title: 'Configuración Perfil',
+// //                 type: 'item',
+// //                 url: '/autenticacion/perfil-configuracion'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'home',
+// //             title: 'Home',
+// //             type: 'collapse',
+// //             icon: 'feather icon-home',
+// //             children: [
+// //               {
+// //                 id: 'home',
+// //                 title: 'Dashboard',
+// //                 type: 'item',
+// //                 url: '/home/home'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'frontal',
+// //             title: 'External',
+// //             type: 'collapse',
+// //             icon: 'feather icon-home',
+// //             children: [
+// //               {
+// //                 id: 'inicio',
+// //                 title: 'Inicio Apps',
+// //                 type: 'item',
+// //                 url: '/frontal/inicio'
+// //               },
+// //               {
+// //                 id: 'login',
+// //                 title: 'Login',
+// //                 type: 'item',
+// //                 url: '/frontal/login'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'sites',
+// //             title: 'Sites',
+// //             type: 'collapse',
+// //             icon: 'feather icon-home',
+// //             children: [
+// //               {
+// //                 id: 'sites',
+// //                 title: 'Sites',
+// //                 type: 'item',
+// //                 url: '/sites/sites'
+// //               },
+// //               {
+// //                 id: 'enlaces',
+// //                 title: 'Enlaces',
+// //                 type: 'item',
+// //                 url: '/sites/enlaces'
+// //               },
+// //               {
+// //                 id: 'contenidos',
+// //                 title: 'Contenidos',
+// //                 type: 'item',
+// //                 url: '/sites/contenidos'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'usuarios',
+// //             title: 'Usuarios',
+// //             type: 'collapse',
+// //             icon: 'feather icon-home',
+// //             children: [
+// //               {
+// //                 id: 'usuarios',
+// //                 title: 'Usuarios',
+// //                 type: 'item',
+// //                 url: '/usuarios/usuarios'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'administracion-bd',
+// //             title: 'AdministradorBD',
+// //             type: 'collapse',
+// //             icon: 'feather icon-home',
+// //             children: [
+// //               {
+// //                 id: 'servidores',
+// //                 title: 'Servidores',
+// //                 type: 'item',
+// //                 url: '/administracion-bd/servidores'
+// //               },
+// //               {
+// //                 id: 'conexiones',
+// //                 title: 'Conexiones',
+// //                 type: 'item',
+// //                 url: '/administracion-bd/conexiones'
+// //               },
+// //               {
+// //                 id: 'scripts',
+// //                 title: 'Scripts',
+// //                 type: 'item',
+// //                 url: '/administracion-bd/scripts'
+// //               },
+// //               {
+// //                 id: 'log-actividades',
+// //                 title: 'Log Actividades',
+// //                 type: 'item',
+// //                 url: '/administracion-bd/log-actividades'
+// //               },
+// //               {
+// //                 id: 'estadisticas',
+// //                 title: 'Estadisticas',
+// //                 type: 'item',
+// //                 url: '/administracion-bd/estadisticas'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'aplicaciones',
+// //             title: 'Aplicaciones',
+// //             type: 'collapse',
+// //             icon: 'feather icon-home',
+// //             children: [
+// //               {
+// //                 id: 'aplicaciones',
+// //                 title: 'Aplicaciones',
+// //                 type: 'item',
+// //                 url: '/aplicaciones/aplicaciones'
+// //               },
+// //               {
+// //                 id: 'suites',
+// //                 title: 'Suites',
+// //                 type: 'item',
+// //                 url: '/aplicaciones/suites'
+// //               },
+// //               {
+// //                 id: 'modulos',
+// //                 title: 'Modulos',
+// //                 type: 'item',
+// //                 url: '/aplicaciones/modulos'
+// //               },
+// //               {
+// //                 id: 'versiones',
+// //                 title: 'Versiones',
+// //                 type: 'item',
+// //                 url: '/aplicaciones/versiones'
+// //               },
+// //               {
+// //                 id: 'paquetes',
+// //                 title: 'Paqauetes',
+// //                 type: 'item',
+// //                 url: '/aplicaciones/paquetes'
+// //               },
+// //               {
+// //                 id: 'log-actividades',
+// //                 title: 'Log Actividades',
+// //                 type: 'item',
+// //                 url: '/aplicaciones/log-actividades'
+// //               },
+// //               {
+// //                 id: 'log-actividades',
+// //                 title: 'LogExcepciones',
+// //                 type: 'item',
+// //                 url: '/aplicaciones/log-excepciones'
+// //               },
+// //               {
+// //                 id: 'estadisticas',
+// //                 title: 'Estadisticas',
+// //                 type: 'item',
+// //                 url: '/aplicaciones/estadisticas'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'suscriptor',
+// //             title: 'Suscriptores',
+// //             type: 'collapse',
+// //             icon: 'feather icon-home',
+// //             children: [
+// //               {
+// //                 id: 'suscriptores',
+// //                 title: 'Suscriptores',
+// //                 type: 'item',
+// //                 url: '/suscriptor/suscriptores'
+// //               },
+// //               {
+// //                 id: 'empresas',
+// //                 title: 'Empresas',
+// //                 type: 'item',
+// //                 url: '/suscriptor/empresas'
+// //               },
+// //               {
+// //                 id: 'usuarios-suscriptor',
+// //                 title: 'Usuarios',
+// //                 type: 'item',
+// //                 url: '/suscriptor/usuarios-suscriptor'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'licencias',
+// //             title: 'Licencias',
+// //             type: 'collapse',
+// //             icon: 'feather icon-monitor',
+// //             children: [
+// //               {
+// //                 id: 'licencias-afiliado',
+// //                 title: 'Licencias Afiliado',
+// //                 type: 'item',
+// //                 url: '/licencias/licencias-afiliado'
+// //               },
+// //               {
+// //                 id: 'adiciones-sustracciones',
+// //                 title: 'Adiciones/Sustracciones',
+// //                 type: 'item',
+// //                 url: '/licencias/adiciones-sustracciones'
+// //               },
+// //               {
+// //                 id: 'historial-pagos',
+// //                 title: 'Historial Pagos',
+// //                 type: 'item',
+// //                 url: '/licencias/historial-pagos'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'logs',
+// //             title: 'Logs',
+// //             type: 'collapse',
+// //             icon: 'feather icon-monitor',
+// //             children: [
+// //               {
+// //                 id: 'log-actividades',
+// //                 title: 'Log Actividades',
+// //                 type: 'item',
+// //                 url: '/logs/log-actividades'
+// //               },
+// //               {
+// //                 id: 'log-actualizaciones',
+// //                 title: 'Log Actualizaciones',
+// //                 type: 'item',
+// //                 url: '/logs/log-actualizaciones'
+// //               },
+// //               {
+// //                 id: 'log-transacciones',
+// //                 title: 'Log Transacciones',
+// //                 type: 'item',
+// //                 url: '/logs/log-transacciones'
+// //               },
+// //               {
+// //                 id: 'estadisticas',
+// //                 title: 'Estadisticas',
+// //                 type: 'item',
+// //                 url: '/logs/estadisticas'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'help-desk',
+// //             title: 'Help Desk',
+// //             type: 'collapse',
+// //             icon: 'feather icon-monitor',
+// //             children: [
+// //               {
+// //                 id: 'estadisticas',
+// //                 title: 'Estadícas',
+// //                 type: 'item',
+// //                 url: '/help-desk/estadisticas'
+// //               },
+// //               {
+// //                 id: 'requerimientos',
+// //                 title: 'Requerimientos',
+// //                 type: 'item',
+// //                 url: '/help-desk/requerimientos'
+// //               },
+// //               {
+// //                 id: 'seguimientos',
+// //                 title: 'Seguimientos',
+// //                 type: 'item',
+// //                 url: '/help-desk/seguimientos'
+// //               },
+// //               {
+// //                 id: 'tickets',
+// //                 title: 'Tickets',
+// //                 type: 'item',
+// //                 url: '/help-desk/tickets'
+// //               }
+// //             ]
+// //           },
+// //           {
+// //             id: 'roles',
+// //             title: 'Roles',
+// //             type: 'collapse',
+// //             icon: 'feather icon-monitor',
+// //             children: [
+// //               {
+// //                 id: 'roles',
+// //                 title: 'Roles',
+// //                 type: 'item',
+// //                 url: '/roles/roles'
+// //               },
+// //               {
+// //                 id: 'roles-usuarios',
+// //                 title: 'Roles Usuarios',
+// //                 type: 'item',
+// //                 url: '/roles/roles-usuarios'
+// //               }
+// //             ]
+// //           }
+// //         ]
+// //       }
+// //     ];
+// //   }
+
+// //   private getAplicacionSuiteItems(): NavigationItem[] {
+// //     this.suite = this._localStorageService.getSuiteLocalStorage();
+// //     this.modulosSu2 = this.modulos.filter((x) => x.codigoSuite === this.suite.codigoSuite);
+// //     console.log('**** modulos de la suite', this.modulosSu2);
+// //     if (this.modulosSu2.length === 0) {
+// //       return [];
+// //     }
+// //     const modulosPadreRaiz = this.modulosSu2.filter((x) => x.codigoPadre === '0');
+// //     const hijosDelNodoSuite = this.buildMenuItems(modulosPadreRaiz, this.modulosSu2);
+// //     const nodoSuite: NavigationItem = {
+// //       id: this.suite.codigoSuite || '',
+// //       title: this.suite.nombreSuite || '',
+// //       type: 'group',
+// //       icon: 'feather icon-monitor',
+// //       children: hijosDelNodoSuite
+// //     };
+// //     return [nodoSuite];
+// //   }
+
+// //   private consultarNodosHijos(codModulo: string, modulos: PTLModuloAP[]) {
+// //     const hijos = modulos.filter((x) => x.codigoPadre == codModulo);
+// //     return hijos;
+// //   }
+
+// //   private buildMenuItems(modulosPadre: PTLModuloAP[], todosLosModulos: PTLModuloAP[]): NavigationItem[] {
+// //     const menuItems: NavigationItem[] = [];
+// //     modulosPadre.forEach((modulo: any) => {
+// //       const childrenNodes = this.consultarNodosHijos(modulo.codigoModulo, todosLosModulos);
+// //       const hasChildren = modulo.hijos == true;
+// //       const type: 'collapse' | 'item' = hasChildren ? 'collapse' : 'item';
+// //       const url = !hasChildren ? modulo.rutaModulo : undefined;
+// //       const item: NavigationItem = {
+// //         id: modulo.codigoModulo,
+// //         title: modulo.nombreModulo,
+// //         type: type,
+// //         url: url,
+// //         icon: 'feather icon-menu'
+// //       };
+// //       if (hasChildren) {
+// //         item.children = this.buildMenuItems(childrenNodes, todosLosModulos);
+// //       }
+// //       menuItems.push(item);
+// //     });
+// //     return menuItems;
+// //   }
+
+// //   private getHelpDeskItems(): NavigationItem[] {
+// //     return [
+// //       {
+// //         id: 'helpdesk-group',
+// //         title: 'HELPDESK.MENU',
+// //         type: 'group',
+// //         children: [
+// //           {
+// //             id: 'tickets',
+// //             title: 'HELPDESK.TICKETS',
+// //             type: 'item',
+// //             url: '/helpdesk/tickets',
+// //             icon: 'feather icon-tag'
+// //           },
+// //           {
+// //             id: 'estadisticas',
+// //             title: 'HELPDESK.ESTADISTICAS',
+// //             type: 'item',
+// //             url: '/helpdesk/estadisticas',
+// //             icon: 'feather icon-pie-chart'
+// //           }
+// //         ]
+// //       }
+// //     ];
+// //   }
+// // }
+
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 // /* eslint-disable @angular-eslint/contextual-lifecycle */
 // import { Injectable, OnInit } from '@angular/core';
@@ -29,6 +584,7 @@
 //   suite: PTLSuiteAPModel = new PTLSuiteAPModel();
 //   modulo: PTLModuloAP = new PTLModuloAP();
 //   modulo2: PTLModuloAP = new PTLModuloAP();
+
 //   private menuSubject = new BehaviorSubject<NavigationItem[]>([]);
 //   public menuItems$: Observable<NavigationItem[]> = this.menuSubject.asObservable();
 
@@ -42,7 +598,6 @@
 //   }
 
 //   ngOnInit() {
-//     // this.consultarModulos();
 //     this.consultarAplicacines();
 //     this.consultarSuites();
 //   }
@@ -81,48 +636,77 @@
 //       .subscribe();
 //   }
 
-//   consultarModulos(): void {
-//     this.modulosSub = this._modulosService
-//       .getRegistros()
-//       .pipe(
-//         tap((resp) => {
-//           if (resp.ok) {
-//             this.modulos = resp.modulos;
-//             console.log('modulos', this.modulos);
-//           }
-//         }),
-//         catchError((err) => {
-//           console.error(err);
-//           return of([]);
-//         })
-//       )
-//       .subscribe();
-//   }
-
 //   getNavigationItems(): void {
 //     this.aplicacion = this._localStorageService.getAplicaicionLocalStorage();
-//     let menu: NavigationItem[] = [];
-//     switch (this.aplicacion.codigoAplicacion) {
-//       case 'ela8fa09-15db-479b-a0a4-9c2be72273b5':
+//     this.suite = this._localStorageService.getSuiteLocalStorage();
+//     const codigoApp = this.aplicacion.codigoAplicacion;
+//     switch (codigoApp) {
+//       case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
 //         this._modulosService.getRegistros().subscribe((data) => {
-//           this.modulos = data.modulos;
-//           console.log('modulos para el menu', this.modulos);
-
-//           if (data.modulos.length > 0) {
-//             menu = this.getAplicacionSuiteItems();
-//             console.log('este es el menu', menu);
+//           const nuevosModulos = data.modulos;
+//           if (nuevosModulos.length > 0) {
+//             const menu = this.getAplicacionSuiteItems(nuevosModulos);
 //             this.menuSubject.next(menu);
+//           } else {
+//             this.menuSubject.next([]);
 //           }
 //         });
 //         break;
 //       case 'helpdesk':
-//         menu = this.getHelpDeskItems();
-//         this.menuSubject.next(menu);
+//         const menuHelpdesk = this.getHelpDeskItems();
+//         this.menuSubject.next(menuHelpdesk);
 //         break;
 //       default:
 //         this.menuSubject.next([]);
 //         break;
 //     }
+//   }
+
+//   private getAplicacionSuiteItems(todosLosModulos: PTLModuloAP[]): NavigationItem[] {
+//     const codigoSuiteActual = this.suite.codigoSuite;
+//     const modulosDeLaSuite = todosLosModulos.filter((x) => x.codigoSuite === codigoSuiteActual);
+//     if (modulosDeLaSuite.length === 0) {
+//       return [];
+//     }
+//     const modulosPadreRaiz = modulosDeLaSuite.filter((x) => x.codigoPadre === '0');
+//     const hijosDelNodoSuite = this.buildMenuItems(modulosPadreRaiz, modulosDeLaSuite);
+//     const hijosOrdenados = this.sortMenuItems(hijosDelNodoSuite);
+//     const nodoSuite: NavigationItem = {
+//       id: this.suite.codigoSuite || '',
+//       title: `SUITES.${this.suite.nombreSuite.toUpperCase()}` || '',
+//       type: 'group',
+//       icon: 'feather icon-monitor',
+//       children: hijosOrdenados
+//     };
+//     return [nodoSuite];
+//   }
+
+//   private consultarNodosHijos(codModulo: string, modulos: PTLModuloAP[]) {
+//     const hijos = modulos.filter((x) => x.codigoPadre == codModulo);
+//     return hijos;
+//   }
+
+//   private buildMenuItems(modulosPadre: PTLModuloAP[], todosLosModulos: PTLModuloAP[]): NavigationItem[] {
+//     const menuItems: NavigationItem[] = [];
+//     modulosPadre.forEach((modulo: any) => {
+//         console.log('detalle modulo', modulo);
+//       const childrenNodes = this.consultarNodosHijos(modulo.codigoModulo, todosLosModulos);
+//       const hasChildren = modulo.hijos == true;
+//       const type: 'collapse' | 'item' = hasChildren ? 'collapse' : 'item';
+//       const item: NavigationItem = {
+//         id: modulo.codigoModulo,
+//         title: `MODULOS.${modulo.nombreModulo.toUpperCase()}`,
+//         type: type,
+//         icon: modulo.icon
+//       };
+//       if (hasChildren) {
+//         item.children = this.buildMenuItems(childrenNodes, todosLosModulos);
+//       } else {
+//         item.url = modulo.rutaModulo;
+//       }
+//       menuItems.push(item);
+//     });
+//     return menuItems;
 //   }
 
 //   private getPlataformaItems(): NavigationItem[] {
@@ -134,6 +718,7 @@
 //         type: 'group',
 //         icon: 'feather icon-monitor',
 //         children: [
+//           // ... (Resto de tu menú estático) ...
 //           {
 //             id: 'autenticacion',
 //             title: 'Autenticación',
@@ -169,20 +754,6 @@
 //                 title: 'Configuración Perfil',
 //                 type: 'item',
 //                 url: '/autenticacion/perfil-configuracion'
-//               }
-//             ]
-//           },
-//           {
-//             id: 'home',
-//             title: 'Home',
-//             type: 'collapse',
-//             icon: 'feather icon-home',
-//             children: [
-//               {
-//                 id: 'home',
-//                 title: 'Dashboard',
-//                 type: 'item',
-//                 url: '/home/home'
 //               }
 //             ]
 //           },
@@ -481,52 +1052,6 @@
 //     ];
 //   }
 
-//   private getAplicacionSuiteItems(): NavigationItem[] {
-//     this.suite = this._localStorageService.getSuiteLocalStorage();
-//     this.modulosSu2 = this.modulos.filter((x) => x.codigoSuite === this.suite.codigoSuite);
-//     console.log('**** modulos de la suite', this.modulosSu2);
-//     if (this.modulosSu2.length === 0) {
-//       return [];
-//     }
-//     const modulosPadreRaiz = this.modulosSu2.filter((x) => x.codigoPadre === '0');
-//     const hijosDelNodoSuite = this.buildMenuItems(modulosPadreRaiz, this.modulosSu2);
-//     const nodoSuite: NavigationItem = {
-//       id: this.suite.codigoSuite || '',
-//       title: this.suite.nombreSuite || '',
-//       type: 'group',
-//       icon: 'feather icon-monitor',
-//       children: hijosDelNodoSuite
-//     };
-//     return [nodoSuite];
-//   }
-
-//   private consultarNodosHijos(codModulo: string, modulos: PTLModuloAP[]) {
-//     const hijos = modulos.filter((x) => x.codigoPadre == codModulo);
-//     return hijos;
-//   }
-
-//   private buildMenuItems(modulosPadre: PTLModuloAP[], todosLosModulos: PTLModuloAP[]): NavigationItem[] {
-//     const menuItems: NavigationItem[] = [];
-//     modulosPadre.forEach((modulo: any) => {
-//       const childrenNodes = this.consultarNodosHijos(modulo.codigoModulo, todosLosModulos);
-//       const hasChildren = modulo.hijos == true;
-//       const type: 'collapse' | 'item' = hasChildren ? 'collapse' : 'item';
-//       const url = !hasChildren ? modulo.rutaModulo : undefined;
-//       const item: NavigationItem = {
-//         id: modulo.codigoModulo,
-//         title: modulo.nombreModulo,
-//         type: type,
-//         url: url,
-//         icon: 'feather icon-menu'
-//       };
-//       if (hasChildren) {
-//         item.children = this.buildMenuItems(childrenNodes, todosLosModulos);
-//       }
-//       menuItems.push(item);
-//     });
-//     return menuItems;
-//   }
-
 //   private getHelpDeskItems(): NavigationItem[] {
 //     return [
 //       {
@@ -552,6 +1077,23 @@
 //       }
 //     ];
 //   }
+
+//   private sortMenuItems(items: NavigationItem[]): NavigationItem[] {
+//     if (!items || items.length === 0) {
+//       return [];
+//     }
+//     items.sort((a, b) => {
+//       const titleA = a.title || '';
+//       const titleB = b.title || '';
+//       return titleA.localeCompare(titleB, 'es', { sensitivity: 'base' });
+//     });
+//     items.forEach((item) => {
+//       if (item.children && item.children.length > 0) {
+//         item.children = this.sortMenuItems(item.children);
+//       }
+//     });
+//     return items;
+//   }
 // }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -561,11 +1103,12 @@ import { NavigationItem } from '../../layout/admin/navigation/navigation';
 import { PtlAplicacionesService } from './ptlaplicaciones.service';
 import { PtlSuitesAPService } from './ptlsuites-ap.service';
 import { PtlmodulosApService } from './ptlmodulos-ap.service';
-import { Subscription, tap, catchError, of, Observable, BehaviorSubject } from 'rxjs';
+import { Subscription, Observable, BehaviorSubject, tap, catchError, of } from 'rxjs';
 import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
 import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
 import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
 import { LocalStorageService } from './local-storage.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -592,7 +1135,8 @@ export class NavigationService implements OnInit {
     private _aplicacionesService: PtlAplicacionesService,
     private _suitesService: PtlSuitesAPService,
     private _modulosService: PtlmodulosApService,
-    private _localStorageService: LocalStorageService
+    private _localStorageService: LocalStorageService,
+    private translate: TranslateService // 🛑 INYECCIÓN DE SERVICIO DE TRADUCCIÓN
   ) {
     // this.consultarAplicacines();
   }
@@ -601,6 +1145,720 @@ export class NavigationService implements OnInit {
     this.consultarAplicacines();
     this.consultarSuites();
   }
+
+  private getAbsoluteUrl(url: string | undefined): string | undefined {
+    if (!url) {
+      return undefined;
+    }
+    return url.startsWith('/') ? url : `/${url}`;
+  }
+
+  private createTranslationKey(base: string, name: string): string {
+    if (!name) return `${base}.DEFAULT`;
+    const safeName = name
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '_')
+      .replace(/_{2,}/g, '_');
+    return `${base}.${safeName}`;
+  }
+
+  private sortMenuItems(items: NavigationItem[]): NavigationItem[] {
+    if (!items || items.length === 0) {
+      return [];
+    }
+
+    items.sort((a, b) => {
+      const titleA = a.title || '';
+      const titleB = b.title || '';
+      return titleA.localeCompare(titleB, 'es', { sensitivity: 'base' });
+    });
+
+    items.forEach((item) => {
+      if (item.children && item.children.length > 0) {
+        item.children = this.sortMenuItems(item.children);
+      }
+    });
+
+    return items;
+  }
+
+  private consultarNodosHijos(codModulo: string, modulos: PTLModuloAP[]) {
+    const hijos = modulos.filter((x) => x.codigoPadre == codModulo);
+    return hijos;
+  }
+
+  private buildMenuItems(modulosPadre: PTLModuloAP[], todosLosModulos: PTLModuloAP[]): NavigationItem[] {
+    const menuItems: NavigationItem[] = [];
+    modulosPadre.forEach((modulo: any) => {
+      // console.log('detalle modulo', modulo);
+      const childrenNodes = this.consultarNodosHijos(modulo.codigoModulo, todosLosModulos);
+      const hasChildren = modulo.hijos == true;
+      const type: 'collapse' | 'item' = hasChildren ? 'collapse' : 'item';
+      const titleKey = this.createTranslationKey('PLATAFORMA.MODULOS', modulo.nombreModulo);
+      const item: NavigationItem = {
+        id: modulo.codigoModulo,
+        title: titleKey,
+        type: type,
+        icon: modulo.icon
+      };
+      if (hasChildren) {
+        item.children = this.buildMenuItems(childrenNodes, todosLosModulos);
+      } else {
+        item.url = this.getAbsoluteUrl(modulo.rutaModulo);
+      }
+      menuItems.push(item);
+    });
+    return menuItems;
+  }
+
+  private getAplicacionSuiteItems(todosLosModulos: PTLModuloAP[]): NavigationItem[] {
+    const codigoSuiteActual = this.suite.codigoSuite;
+    const modulosDeLaSuite = todosLosModulos.filter((x) => x.codigoSuite === codigoSuiteActual);
+    if (modulosDeLaSuite.length === 0) {
+      return [];
+    }
+    const modulosPadreRaiz = modulosDeLaSuite.filter((x) => x.codigoPadre === '0');
+    let hijosDelNodoSuite = this.buildMenuItems(modulosPadreRaiz, modulosDeLaSuite);
+
+    hijosDelNodoSuite = this.sortMenuItems(hijosDelNodoSuite);
+    let suiteTitleKey = '';
+    if (this.suite.nombreSuite != undefined) {
+      suiteTitleKey = this.createTranslationKey('PLATAFORMA.SUITES', this.suite.nombreSuite);
+    }
+
+    const nodoSuite: NavigationItem = {
+      id: this.suite.codigoSuite || '',
+      title: suiteTitleKey,
+      type: 'group',
+      icon: 'feather icon-monitor',
+      children: hijosDelNodoSuite
+    };
+    return [nodoSuite];
+  }
+
+  //   private getPlataformaItems(): NavigationItem[] {
+  //     return [
+  //       {
+  //         id: 'e1a8fa99-15db-479b-a0a4-9c2be72273b5',
+  //         title: 'PLATAFORMA.GRUPO', // Clave
+  //         type: 'group',
+  //         icon: 'feather icon-monitor',
+  //         children: [
+  //           {
+  //             id: 'autenticacion',
+  //             title: 'PLATAFORMA.AUTENTICACION', // Clave
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'logn',
+  //                 title: 'PLATAFORMA.LOGIN', // Clave
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/autenticacion/login')
+  //               },
+  //               {
+  //                 id: 'change-password',
+  //                 title: 'PLATAFORMA.CAMBIO_CLAVE', // Clave
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/autenticacion/change-password')
+  //               },
+  //               {
+  //                 id: 'reset-password',
+  //                 title: 'PLATAFORMA.RESETEAR_CLAVE', // Clave
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/autenticacion/reset-password')
+  //               },
+  //               {
+  //                 id: 'perfil',
+  //                 title: 'PLATAFORMA.PERFIL_USUARIO', // Clave
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/autenticacion/perfil')
+  //               },
+  //               {
+  //                 id: 'perfil-configuracion',
+  //                 title: 'PLATAFORMA.CONFIGURACION_PERFIL', // Clave
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/autenticacion/perfil-configuracion')
+  //               }
+  //             ]
+  //           },
+  //           // Repetir el proceso de CLAVE DE TRADUCCIÓN para todos los demás nodos estáticos:
+  //           {
+  //             id: 'home',
+  //             title: 'PLATAFORMA.HOME',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [{ id: 'dashboard', title: 'PLATAFORMA.DASHBOARD', type: 'item', url: this.getAbsoluteUrl('/home/home') }]
+  //           },
+  //           {
+  //             id: 'frontal',
+  //             title: 'PLATAFORMA.EXTERNAL',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               { id: 'inicio', title: 'PLATAFORMA.INICIO_APPS', type: 'item', url: this.getAbsoluteUrl('/frontal/inicio') },
+  //               { id: 'login', title: 'PLATAFORMA.LOGIN_FRONTAL', type: 'item', url: this.getAbsoluteUrl('/frontal/login') }
+  //             ]
+  //           },
+  //           //... (continuar con Sites, Usuarios, AdministracionBD, Aplicaciones, Suscriptor, Licencias, Logs, HelpDesk, Roles)
+  //           {
+  //             id: 'sites',
+  //             title: 'PLATAFORMA.SITES',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               { id: 'sites', title: 'PLATAFORMA.SITES_LISTADO', type: 'item', url: this.getAbsoluteUrl('/sites/sites') },
+  //               { id: 'enlaces', title: 'PLATAFORMA.ENLACES', type: 'item', url: this.getAbsoluteUrl('/sites/enlaces') },
+  //               { id: 'contenidos', title: 'PLATAFORMA.CONTENIDOS', type: 'item', url: this.getAbsoluteUrl('/sites/contenidos') }
+  //             ]
+  //           },
+  //           {
+  //             id: 'usuarios',
+  //             title: 'PLATAFORMA.USUARIOS',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               { id: 'usuarios', title: 'PLATAFORMA.USUARIOS_LISTADO', type: 'item', url: this.getAbsoluteUrl('/usuarios/usuarios') }
+  //             ]
+  //           },
+  //           {
+  //             id: 'administracion-bd',
+  //             title: 'PLATAFORMA.ADMINISTRADORBD',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               { id: 'servidores', title: 'PLATAFORMA.SERVIDORES', type: 'item', url: this.getAbsoluteUrl('/administracion-bd/servidores') },
+  //               { id: 'conexiones', title: 'PLATAFORMA.CONEXIONES', type: 'item', url: this.getAbsoluteUrl('/administracion-bd/conexiones') },
+  //               { id: 'scripts', title: 'PLATAFORMA.SCRIPTS', type: 'item', url: this.getAbsoluteUrl('/administracion-bd/scripts') },
+  //               {
+  //                 id: 'log-actividades',
+  //                 title: 'PLATAFORMA.LOG_ACTIVIDADES_BD',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/administracion-bd/log-actividades')
+  //               },
+  //               {
+  //                 id: 'estadisticas',
+  //                 title: 'PLATAFORMA.ESTADISTICAS_BD',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/administracion-bd/estadisticas')
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'aplicaciones',
+  //             title: 'PLATAFORMA.APLICACIONES',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'aplicaciones',
+  //                 title: 'PLATAFORMA.APLICACIONES_LISTADO',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/aplicaciones/aplicaciones')
+  //               },
+  //               { id: 'suites', title: 'PLATAFORMA.SUITES', type: 'item', url: this.getAbsoluteUrl('/aplicaciones/suites') },
+  //               { id: 'modulos', title: 'PLATAFORMA.MODULOS', type: 'item', url: this.getAbsoluteUrl('/aplicaciones/modulos') },
+  //               { id: 'versiones', title: 'PLATAFORMA.VERSIONES', type: 'item', url: this.getAbsoluteUrl('/aplicaciones/versiones') },
+  //               { id: 'paquetes', title: 'PLATAFORMA.PAQUETES', type: 'item', url: this.getAbsoluteUrl('/aplicaciones/paquetes') },
+  //               {
+  //                 id: 'log-actividades',
+  //                 title: 'PLATAFORMA.LOG_ACTIVIDADES_APP',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/aplicaciones/log-actividades')
+  //               },
+  //               {
+  //                 id: 'log-excepciones',
+  //                 title: 'PLATAFORMA.LOG_EXCEPCIONES',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/aplicaciones/log-excepciones')
+  //               },
+  //               {
+  //                 id: 'estadisticas',
+  //                 title: 'PLATAFORMA.ESTADISTICAS_APP',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/aplicaciones/estadisticas')
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'suscriptor',
+  //             title: 'PLATAFORMA.SUSCRIPTORES',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'suscriptores',
+  //                 title: 'PLATAFORMA.SUSCRIPTORES_LISTADO',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/suscriptor/suscriptores')
+  //               },
+  //               { id: 'empresas', title: 'PLATAFORMA.EMPRESAS', type: 'item', url: this.getAbsoluteUrl('/suscriptor/empresas') },
+  //               {
+  //                 id: 'usuarios-suscriptor',
+  //                 title: 'PLATAFORMA.USUARIOS_SUSCRIPTOR',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/suscriptor/usuarios-suscriptor')
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'licencias',
+  //             title: 'PLATAFORMA.LICENCIAS',
+  //             type: 'collapse',
+  //             icon: 'feather icon-monitor',
+  //             children: [
+  //               {
+  //                 id: 'licencias-afiliado',
+  //                 title: 'PLATAFORMA.LICENCIAS_AFILIADO',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/licencias/licencias-afiliado')
+  //               },
+  //               {
+  //                 id: 'adiciones-sustracciones',
+  //                 title: 'PLATAFORMA.ADICIONES_SUSTRACCIONES',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/licencias/adiciones-sustracciones')
+  //               },
+  //               {
+  //                 id: 'historial-pagos',
+  //                 title: 'PLATAFORMA.HISTORIAL_PAGOS',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/licencias/historial-pagos')
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'logs',
+  //             title: 'PLATAFORMA.LOGS',
+  //             type: 'collapse',
+  //             icon: 'feather icon-monitor',
+  //             children: [
+  //               {
+  //                 id: 'log-actividades',
+  //                 title: 'PLATAFORMA.LOG_ACTIVIDADES_GENERAL',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/logs/log-actividades')
+  //               },
+  //               {
+  //                 id: 'log-actualizaciones',
+  //                 title: 'PLATAFORMA.LOG_ACTUALIZACIONES',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/logs/log-actualizaciones')
+  //               },
+  //               {
+  //                 id: 'log-transacciones',
+  //                 title: 'PLATAFORMA.LOG_TRANSACCIONES',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/logs/log-transacciones')
+  //               },
+  //               { id: 'estadisticas', title: 'PLATAFORMA.ESTADISTICAS_LOGS', type: 'item', url: this.getAbsoluteUrl('/logs/estadisticas') }
+  //             ]
+  //           },
+  //           {
+  //             id: 'help-desk',
+  //             title: 'PLATAFORMA.HELP_DESK',
+  //             type: 'collapse',
+  //             icon: 'feather icon-monitor',
+  //             children: [
+  //               {
+  //                 id: 'estadisticas',
+  //                 title: 'PLATAFORMA.ESTADISTICAS_HD',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/help-desk/estadisticas')
+  //               },
+  //               {
+  //                 id: 'requerimientos',
+  //                 title: 'PLATAFORMA.REQUERIMIENTOS',
+  //                 type: 'item',
+  //                 url: this.getAbsoluteUrl('/help-desk/requerimientos')
+  //               },
+  //               { id: 'seguimientos', title: 'PLATAFORMA.SEGUIMIENTOS', type: 'item', url: this.getAbsoluteUrl('/help-desk/seguimientos') },
+  //               { id: 'tickets', title: 'PLATAFORMA.TICKETS', type: 'item', url: this.getAbsoluteUrl('/help-desk/tickets') }
+  //             ]
+  //           },
+  //           {
+  //             id: 'roles',
+  //             title: 'PLATAFORMA.ROLES',
+  //             type: 'collapse',
+  //             icon: 'feather icon-monitor',
+  //             children: [
+  //               { id: 'roles', title: 'PLATAFORMA.ROLES_LISTADO', type: 'item', url: this.getAbsoluteUrl('/roles/roles') },
+  //               { id: 'roles-usuarios', title: 'PLATAFORMA.ROLES_USUARIOS', type: 'item', url: this.getAbsoluteUrl('/roles/roles-usuarios') }
+  //             ]
+  //           }
+  //         ]
+  //       }
+  //     ];
+  //   }
+
+  //   private getHelpDeskItems(): NavigationItem[] {
+  //     return [
+  //       {
+  //         id: 'helpdesk-group',
+  //         title: 'HELPDESK.MENU',
+  //         type: 'group',
+  //         children: [
+  //           {
+  //             id: 'tickets',
+  //             title: 'HELPDESK.TICKETS',
+  //             type: 'item',
+  //             url: this.getAbsoluteUrl('/helpdesk/tickets'),
+  //             icon: 'feather icon-tag'
+  //           },
+  //           {
+  //             id: 'estadisticas',
+  //             title: 'HELPDESK.ESTADISTICAS',
+  //             type: 'item',
+  //             url: this.getAbsoluteUrl('/helpdesk/estadisticas'),
+  //             icon: 'feather icon-pie-chart'
+  //           }
+  //         ]
+  //       }
+  //     ];
+  //   }
+
+  //   private getPlataformaItems(): NavigationItem[] {
+  //     this.suitesApp = this.suites.filter((x) => x.codigoAplicacion == this.aplicacion.codigoAplicacion);
+  //     return [
+  //       {
+  //         id: 'e1a8fa99-15db-479b-a0a4-9c2be72273b5',
+  //         title: 'Plataforma',
+  //         type: 'group',
+  //         icon: 'feather icon-monitor',
+  //         children: [
+  //           // ... (Resto de tu menú estático) ...
+  //           {
+  //             id: 'autenticacion',
+  //             title: 'Autenticación',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'logn',
+  //                 title: 'Login',
+  //                 type: 'item',
+  //                 url: '/autenticacion/login'
+  //               },
+  //               {
+  //                 id: 'change-password',
+  //                 title: 'Cambio Clave',
+  //                 type: 'item',
+  //                 url: '/autenticacion/change-password'
+  //               },
+  //               {
+  //                 id: 'reset-password',
+  //                 title: 'Resetear Clave',
+  //                 type: 'item',
+  //                 url: '/autenticacion/reset-password'
+  //               },
+  //               {
+  //                 id: 'perfil',
+  //                 title: 'Perfil Usuario',
+  //                 type: 'item',
+  //                 url: '/autenticacion/perfil'
+  //               },
+  //               {
+  //                 id: 'perfil-configuracion',
+  //                 title: 'Configuración Perfil',
+  //                 type: 'item',
+  //                 url: '/autenticacion/perfil-configuracion'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'frontal',
+  //             title: 'External',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'inicio',
+  //                 title: 'Inicio Apps',
+  //                 type: 'item',
+  //                 url: '/frontal/inicio'
+  //               },
+  //               {
+  //                 id: 'login',
+  //                 title: 'Login',
+  //                 type: 'item',
+  //                 url: '/frontal/login'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'sites',
+  //             title: 'Sites',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'sites',
+  //                 title: 'Sites',
+  //                 type: 'item',
+  //                 url: '/sites/sites'
+  //               },
+  //               {
+  //                 id: 'enlaces',
+  //                 title: 'Enlaces',
+  //                 type: 'item',
+  //                 url: '/sites/enlaces'
+  //               },
+  //               {
+  //                 id: 'contenidos',
+  //                 title: 'Contenidos',
+  //                 type: 'item',
+  //                 url: '/sites/contenidos'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'usuarios',
+  //             title: 'Usuarios',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'usuarios',
+  //                 title: 'Usuarios',
+  //                 type: 'item',
+  //                 url: '/usuarios/usuarios'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'administracion-bd',
+  //             title: 'AdministradorBD',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'servidores',
+  //                 title: 'Servidores',
+  //                 type: 'item',
+  //                 url: '/administracion-bd/servidores'
+  //               },
+  //               {
+  //                 id: 'conexiones',
+  //                 title: 'Conexiones',
+  //                 type: 'item',
+  //                 url: '/administracion-bd/conexiones'
+  //               },
+  //               {
+  //                 id: 'scripts',
+  //                 title: 'Scripts',
+  //                 type: 'item',
+  //                 url: '/administracion-bd/scripts'
+  //               },
+  //               {
+  //                 id: 'log-actividades',
+  //                 title: 'Log Actividades',
+  //                 type: 'item',
+  //                 url: '/administracion-bd/log-actividades'
+  //               },
+  //               {
+  //                 id: 'estadisticas',
+  //                 title: 'Estadisticas',
+  //                 type: 'item',
+  //                 url: '/administracion-bd/estadisticas'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'aplicaciones',
+  //             title: 'Aplicaciones',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'aplicaciones',
+  //                 title: 'Aplicaciones',
+  //                 type: 'item',
+  //                 url: '/aplicaciones/aplicaciones'
+  //               },
+  //               {
+  //                 id: 'suites',
+  //                 title: 'Suites',
+  //                 type: 'item',
+  //                 url: '/aplicaciones/suites'
+  //               },
+  //               {
+  //                 id: 'modulos',
+  //                 title: 'Modulos',
+  //                 type: 'item',
+  //                 url: '/aplicaciones/modulos'
+  //               },
+  //               {
+  //                 id: 'versiones',
+  //                 title: 'Versiones',
+  //                 type: 'item',
+  //                 url: '/aplicaciones/versiones'
+  //               },
+  //               {
+  //                 id: 'paquetes',
+  //                 title: 'Paqauetes',
+  //                 type: 'item',
+  //                 url: '/aplicaciones/paquetes'
+  //               },
+  //               {
+  //                 id: 'log-actividades',
+  //                 title: 'Log Actividades',
+  //                 type: 'item',
+  //                 url: '/aplicaciones/log-actividades'
+  //               },
+  //               {
+  //                 id: 'log-actividades',
+  //                 title: 'LogExcepciones',
+  //                 type: 'item',
+  //                 url: '/aplicaciones/log-excepciones'
+  //               },
+  //               {
+  //                 id: 'estadisticas',
+  //                 title: 'Estadisticas',
+  //                 type: 'item',
+  //                 url: '/aplicaciones/estadisticas'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'suscriptor',
+  //             title: 'Suscriptores',
+  //             type: 'collapse',
+  //             icon: 'feather icon-home',
+  //             children: [
+  //               {
+  //                 id: 'suscriptores',
+  //                 title: 'Suscriptores',
+  //                 type: 'item',
+  //                 url: '/suscriptor/suscriptores'
+  //               },
+  //               {
+  //                 id: 'empresas',
+  //                 title: 'Empresas',
+  //                 type: 'item',
+  //                 url: '/suscriptor/empresas'
+  //               },
+  //               {
+  //                 id: 'usuarios-suscriptor',
+  //                 title: 'Usuarios',
+  //                 type: 'item',
+  //                 url: '/suscriptor/usuarios-suscriptor'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'licencias',
+  //             title: 'Licencias',
+  //             type: 'collapse',
+  //             icon: 'feather icon-monitor',
+  //             children: [
+  //               {
+  //                 id: 'licencias-afiliado',
+  //                 title: 'Licencias Afiliado',
+  //                 type: 'item',
+  //                 url: '/licencias/licencias-afiliado'
+  //               },
+  //               {
+  //                 id: 'adiciones-sustracciones',
+  //                 title: 'Adiciones/Sustracciones',
+  //                 type: 'item',
+  //                 url: '/licencias/adiciones-sustracciones'
+  //               },
+  //               {
+  //                 id: 'historial-pagos',
+  //                 title: 'Historial Pagos',
+  //                 type: 'item',
+  //                 url: '/licencias/historial-pagos'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'logs',
+  //             title: 'Logs',
+  //             type: 'collapse',
+  //             icon: 'feather icon-monitor',
+  //             children: [
+  //               {
+  //                 id: 'log-actividades',
+  //                 title: 'Log Actividades',
+  //                 type: 'item',
+  //                 url: '/logs/log-actividades'
+  //               },
+  //               {
+  //                 id: 'log-actualizaciones',
+  //                 title: 'Log Actualizaciones',
+  //                 type: 'item',
+  //                 url: '/logs/log-actualizaciones'
+  //               },
+  //               {
+  //                 id: 'log-transacciones',
+  //                 title: 'Log Transacciones',
+  //                 type: 'item',
+  //                 url: '/logs/log-transacciones'
+  //               },
+  //               {
+  //                 id: 'estadisticas',
+  //                 title: 'Estadisticas',
+  //                 type: 'item',
+  //                 url: '/logs/estadisticas'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'help-desk',
+  //             title: 'Help Desk',
+  //             type: 'collapse',
+  //             icon: 'feather icon-monitor',
+  //             children: [
+  //               {
+  //                 id: 'estadisticas',
+  //                 title: 'Estadícas',
+  //                 type: 'item',
+  //                 url: '/help-desk/estadisticas'
+  //               },
+  //               {
+  //                 id: 'requerimientos',
+  //                 title: 'Requerimientos',
+  //                 type: 'item',
+  //                 url: '/help-desk/requerimientos'
+  //               },
+  //               {
+  //                 id: 'seguimientos',
+  //                 title: 'Seguimientos',
+  //                 type: 'item',
+  //                 url: '/help-desk/seguimientos'
+  //               },
+  //               {
+  //                 id: 'tickets',
+  //                 title: 'Tickets',
+  //                 type: 'item',
+  //                 url: '/help-desk/tickets'
+  //               }
+  //             ]
+  //           },
+  //           {
+  //             id: 'roles',
+  //             title: 'Roles',
+  //             type: 'collapse',
+  //             icon: 'feather icon-monitor',
+  //             children: [
+  //               {
+  //                 id: 'roles',
+  //                 title: 'Roles',
+  //                 type: 'item',
+  //                 url: '/roles/roles'
+  //               },
+  //               {
+  //                 id: 'roles-usuarios',
+  //                 title: 'Roles Usuarios',
+  //                 type: 'item',
+  //                 url: '/roles/roles-usuarios'
+  //               }
+  //             ]
+  //           }
+  //         ]
+  //       }
+  //     ];
+  //   }
 
   consultarAplicacines() {
     this.aplicacionesSub = this._aplicacionesService
@@ -641,7 +1899,7 @@ export class NavigationService implements OnInit {
     this.suite = this._localStorageService.getSuiteLocalStorage();
     const codigoApp = this.aplicacion.codigoAplicacion;
     switch (codigoApp) {
-      case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
+      case 'ela8fa09-15db-479b-a0a4-9c2be72273b5':
         this._modulosService.getRegistros().subscribe((data) => {
           const nuevosModulos = data.modulos;
           if (nuevosModulos.length > 0) {
@@ -652,459 +1910,9 @@ export class NavigationService implements OnInit {
           }
         });
         break;
-      case 'helpdesk':
-        const menuHelpdesk = this.getHelpDeskItems();
-        this.menuSubject.next(menuHelpdesk);
-        break;
       default:
         this.menuSubject.next([]);
         break;
     }
-  }
-
-  private getAplicacionSuiteItems(todosLosModulos: PTLModuloAP[]): NavigationItem[] {
-    const codigoSuiteActual = this.suite.codigoSuite;
-    const modulosDeLaSuite = todosLosModulos.filter((x) => x.codigoSuite === codigoSuiteActual);
-    if (modulosDeLaSuite.length === 0) {
-      return [];
-    }
-    const modulosPadreRaiz = modulosDeLaSuite.filter((x) => x.codigoPadre === '0');
-    const hijosDelNodoSuite = this.buildMenuItems(modulosPadreRaiz, modulosDeLaSuite);
-    const hijosOrdenados = this.sortMenuItems(hijosDelNodoSuite);
-    const nodoSuite: NavigationItem = {
-      id: this.suite.codigoSuite || '',
-      title: this.suite.nombreSuite || '',
-      type: 'group',
-      icon: 'feather icon-monitor',
-      children: hijosOrdenados
-    };
-    return [nodoSuite];
-  }
-
-  private consultarNodosHijos(codModulo: string, modulos: PTLModuloAP[]) {
-    const hijos = modulos.filter((x) => x.codigoPadre == codModulo);
-    return hijos;
-  }
-
-  private buildMenuItems(modulosPadre: PTLModuloAP[], todosLosModulos: PTLModuloAP[]): NavigationItem[] {
-    const menuItems: NavigationItem[] = [];
-    modulosPadre.forEach((modulo: any) => {
-      const childrenNodes = this.consultarNodosHijos(modulo.codigoModulo, todosLosModulos);
-      const hasChildren = modulo.hijos == true;
-      const type: 'collapse' | 'item' = hasChildren ? 'collapse' : 'item';
-      const item: NavigationItem = {
-        id: modulo.codigoModulo,
-        title: modulo.nombreModulo,
-        type: type,
-        icon: 'feather icon-menu'
-      };
-      if (hasChildren) {
-        item.children = this.buildMenuItems(childrenNodes, todosLosModulos);
-      } else {
-        item.url = modulo.rutaModulo;
-      }
-      menuItems.push(item);
-    });
-    return menuItems;
-  }
-
-  private getPlataformaItems(): NavigationItem[] {
-    this.suitesApp = this.suites.filter((x) => x.codigoAplicacion == this.aplicacion.codigoAplicacion);
-    return [
-      {
-        id: 'e1a8fa99-15db-479b-a0a4-9c2be72273b5',
-        title: 'Plataforma',
-        type: 'group',
-        icon: 'feather icon-monitor',
-        children: [
-          // ... (Resto de tu menú estático) ...
-          {
-            id: 'autenticacion',
-            title: 'Autenticación',
-            type: 'collapse',
-            icon: 'feather icon-home',
-            children: [
-              {
-                id: 'logn',
-                title: 'Login',
-                type: 'item',
-                url: '/autenticacion/login'
-              },
-              {
-                id: 'change-password',
-                title: 'Cambio Clave',
-                type: 'item',
-                url: '/autenticacion/change-password'
-              },
-              {
-                id: 'reset-password',
-                title: 'Resetear Clave',
-                type: 'item',
-                url: '/autenticacion/reset-password'
-              },
-              {
-                id: 'perfil',
-                title: 'Perfil Usuario',
-                type: 'item',
-                url: '/autenticacion/perfil'
-              },
-              {
-                id: 'perfil-configuracion',
-                title: 'Configuración Perfil',
-                type: 'item',
-                url: '/autenticacion/perfil-configuracion'
-              }
-            ]
-          },
-          {
-            id: 'home',
-            title: 'Home',
-            type: 'collapse',
-            icon: 'feather icon-home',
-            children: [
-              {
-                id: 'home',
-                title: 'Dashboard',
-                type: 'item',
-                url: '/home/home'
-              }
-            ]
-          },
-          {
-            id: 'frontal',
-            title: 'External',
-            type: 'collapse',
-            icon: 'feather icon-home',
-            children: [
-              {
-                id: 'inicio',
-                title: 'Inicio Apps',
-                type: 'item',
-                url: '/frontal/inicio'
-              },
-              {
-                id: 'login',
-                title: 'Login',
-                type: 'item',
-                url: '/frontal/login'
-              }
-            ]
-          },
-          {
-            id: 'sites',
-            title: 'Sites',
-            type: 'collapse',
-            icon: 'feather icon-home',
-            children: [
-              {
-                id: 'sites',
-                title: 'Sites',
-                type: 'item',
-                url: '/sites/sites'
-              },
-              {
-                id: 'enlaces',
-                title: 'Enlaces',
-                type: 'item',
-                url: '/sites/enlaces'
-              },
-              {
-                id: 'contenidos',
-                title: 'Contenidos',
-                type: 'item',
-                url: '/sites/contenidos'
-              }
-            ]
-          },
-          {
-            id: 'usuarios',
-            title: 'Usuarios',
-            type: 'collapse',
-            icon: 'feather icon-home',
-            children: [
-              {
-                id: 'usuarios',
-                title: 'Usuarios',
-                type: 'item',
-                url: '/usuarios/usuarios'
-              }
-            ]
-          },
-          {
-            id: 'administracion-bd',
-            title: 'AdministradorBD',
-            type: 'collapse',
-            icon: 'feather icon-home',
-            children: [
-              {
-                id: 'servidores',
-                title: 'Servidores',
-                type: 'item',
-                url: '/administracion-bd/servidores'
-              },
-              {
-                id: 'conexiones',
-                title: 'Conexiones',
-                type: 'item',
-                url: '/administracion-bd/conexiones'
-              },
-              {
-                id: 'scripts',
-                title: 'Scripts',
-                type: 'item',
-                url: '/administracion-bd/scripts'
-              },
-              {
-                id: 'log-actividades',
-                title: 'Log Actividades',
-                type: 'item',
-                url: '/administracion-bd/log-actividades'
-              },
-              {
-                id: 'estadisticas',
-                title: 'Estadisticas',
-                type: 'item',
-                url: '/administracion-bd/estadisticas'
-              }
-            ]
-          },
-          {
-            id: 'aplicaciones',
-            title: 'Aplicaciones',
-            type: 'collapse',
-            icon: 'feather icon-home',
-            children: [
-              {
-                id: 'aplicaciones',
-                title: 'Aplicaciones',
-                type: 'item',
-                url: '/aplicaciones/aplicaciones'
-              },
-              {
-                id: 'suites',
-                title: 'Suites',
-                type: 'item',
-                url: '/aplicaciones/suites'
-              },
-              {
-                id: 'modulos',
-                title: 'Modulos',
-                type: 'item',
-                url: '/aplicaciones/modulos'
-              },
-              {
-                id: 'versiones',
-                title: 'Versiones',
-                type: 'item',
-                url: '/aplicaciones/versiones'
-              },
-              {
-                id: 'paquetes',
-                title: 'Paqauetes',
-                type: 'item',
-                url: '/aplicaciones/paquetes'
-              },
-              {
-                id: 'log-actividades',
-                title: 'Log Actividades',
-                type: 'item',
-                url: '/aplicaciones/log-actividades'
-              },
-              {
-                id: 'log-actividades',
-                title: 'LogExcepciones',
-                type: 'item',
-                url: '/aplicaciones/log-excepciones'
-              },
-              {
-                id: 'estadisticas',
-                title: 'Estadisticas',
-                type: 'item',
-                url: '/aplicaciones/estadisticas'
-              }
-            ]
-          },
-          {
-            id: 'suscriptor',
-            title: 'Suscriptores',
-            type: 'collapse',
-            icon: 'feather icon-home',
-            children: [
-              {
-                id: 'suscriptores',
-                title: 'Suscriptores',
-                type: 'item',
-                url: '/suscriptor/suscriptores'
-              },
-              {
-                id: 'empresas',
-                title: 'Empresas',
-                type: 'item',
-                url: '/suscriptor/empresas'
-              },
-              {
-                id: 'usuarios-suscriptor',
-                title: 'Usuarios',
-                type: 'item',
-                url: '/suscriptor/usuarios-suscriptor'
-              }
-            ]
-          },
-          {
-            id: 'licencias',
-            title: 'Licencias',
-            type: 'collapse',
-            icon: 'feather icon-monitor',
-            children: [
-              {
-                id: 'licencias-afiliado',
-                title: 'Licencias Afiliado',
-                type: 'item',
-                url: '/licencias/licencias-afiliado'
-              },
-              {
-                id: 'adiciones-sustracciones',
-                title: 'Adiciones/Sustracciones',
-                type: 'item',
-                url: '/licencias/adiciones-sustracciones'
-              },
-              {
-                id: 'historial-pagos',
-                title: 'Historial Pagos',
-                type: 'item',
-                url: '/licencias/historial-pagos'
-              }
-            ]
-          },
-          {
-            id: 'logs',
-            title: 'Logs',
-            type: 'collapse',
-            icon: 'feather icon-monitor',
-            children: [
-              {
-                id: 'log-actividades',
-                title: 'Log Actividades',
-                type: 'item',
-                url: '/logs/log-actividades'
-              },
-              {
-                id: 'log-actualizaciones',
-                title: 'Log Actualizaciones',
-                type: 'item',
-                url: '/logs/log-actualizaciones'
-              },
-              {
-                id: 'log-transacciones',
-                title: 'Log Transacciones',
-                type: 'item',
-                url: '/logs/log-transacciones'
-              },
-              {
-                id: 'estadisticas',
-                title: 'Estadisticas',
-                type: 'item',
-                url: '/logs/estadisticas'
-              }
-            ]
-          },
-          {
-            id: 'help-desk',
-            title: 'Help Desk',
-            type: 'collapse',
-            icon: 'feather icon-monitor',
-            children: [
-              {
-                id: 'estadisticas',
-                title: 'Estadícas',
-                type: 'item',
-                url: '/help-desk/estadisticas'
-              },
-              {
-                id: 'requerimientos',
-                title: 'Requerimientos',
-                type: 'item',
-                url: '/help-desk/requerimientos'
-              },
-              {
-                id: 'seguimientos',
-                title: 'Seguimientos',
-                type: 'item',
-                url: '/help-desk/seguimientos'
-              },
-              {
-                id: 'tickets',
-                title: 'Tickets',
-                type: 'item',
-                url: '/help-desk/tickets'
-              }
-            ]
-          },
-          {
-            id: 'roles',
-            title: 'Roles',
-            type: 'collapse',
-            icon: 'feather icon-monitor',
-            children: [
-              {
-                id: 'roles',
-                title: 'Roles',
-                type: 'item',
-                url: '/roles/roles'
-              },
-              {
-                id: 'roles-usuarios',
-                title: 'Roles Usuarios',
-                type: 'item',
-                url: '/roles/roles-usuarios'
-              }
-            ]
-          }
-        ]
-      }
-    ];
-  }
-
-  private getHelpDeskItems(): NavigationItem[] {
-    return [
-      {
-        id: 'helpdesk-group',
-        title: 'HELPDESK.MENU',
-        type: 'group',
-        children: [
-          {
-            id: 'tickets',
-            title: 'HELPDESK.TICKETS',
-            type: 'item',
-            url: '/helpdesk/tickets',
-            icon: 'feather icon-tag'
-          },
-          {
-            id: 'estadisticas',
-            title: 'HELPDESK.ESTADISTICAS',
-            type: 'item',
-            url: '/helpdesk/estadisticas',
-            icon: 'feather icon-pie-chart'
-          }
-        ]
-      }
-    ];
-  }
-
-  private sortMenuItems(items: NavigationItem[]): NavigationItem[] {
-    if (!items || items.length === 0) {
-      return [];
-    }
-    items.sort((a, b) => {
-      const titleA = a.title || '';
-      const titleB = b.title || '';
-      return titleA.localeCompare(titleB, 'es', { sensitivity: 'base' });
-    });
-    items.forEach((item) => {
-      if (item.children && item.children.length > 0) {
-        item.children = this.sortMenuItems(item.children);
-      }
-    });
-    return items;
   }
 }

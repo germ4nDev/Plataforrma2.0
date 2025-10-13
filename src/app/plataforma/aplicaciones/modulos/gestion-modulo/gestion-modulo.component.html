@@ -142,6 +142,14 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
+                                <label class="form-label">{{ 'MODULOS.ICON' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="icon"
+                                    placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERPATH' | translate }}"
+                                    #icon="ngModel" [(ngModel)]="FormRegistro.icon" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
                                 <label class="form-label">{{ 'MODULOS.DESCRIPTION' | translate }}</label>
                                 <app-text-editor
                                     [toolbarType]="tipoEditorTexto"

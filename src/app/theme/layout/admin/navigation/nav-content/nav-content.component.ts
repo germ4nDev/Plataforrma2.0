@@ -51,7 +51,7 @@ export class NavContentComponent implements OnInit, AfterViewInit {
     this.menuItems$ = this._navigationService.menuItems$;
     this.menuSubscription = this.menuItems$.subscribe(items => {
       if (items && items.length > 0) {
-        console.log('Primer elemento del menú (Suite/Group):', items[0]);
+        console.log('Primer elemento del menú (Suite/Group):', items);
       }
     });
     if (this.windowWidth < 992) {

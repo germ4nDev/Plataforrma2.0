@@ -1,19 +1,26 @@
 <ng-container *ngIf="!item.hidden">
     <li class="nav-item pcoded-hasmenu" [routerLinkActive]="['active']">
         <a href="javascript:" class="nav-link" (click)="navCollapse($event)">
-            <!-- Ícono e información principal -->
+
             <span *ngIf="item.icon" class="pcoded-micon">
                 <i class="{{ item.icon }}"></i>
             </span>
+
             <span class="pcoded-mtext">
                 {{ item.title | translate }}
                 <span *ngIf="item.badge" class="badge label" [ngClass]="item.badge.type">
                     {{ item.badge.title }}
                 </span>
             </span>
-        </a>
 
-        <!-- Submenú: solo si visible -->
+            <span class="pcoded-micon float-right">
+                <i class="feather" [ngClass]="{
+                    'icon-chevron-down': visible,
+                    'icon-chevron-right': !visible
+                }"></i>
+            </span>
+
+        </a>
         <ul *ngIf="visible" [@slideInOut] class="pcoded-submenu" [ngClass]="item.classes">
             <ng-container *ngFor="let child of item.children">
                 <app-nav-group *ngIf="child.type === 'group'" [item]="child"></app-nav-group>

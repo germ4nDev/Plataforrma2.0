@@ -80,7 +80,7 @@ export class GestionModuloComponent implements OnInit {
             this.consultarMLodulos(this.FormRegistro.codigoSuite);
           },
           error: () => {
-            this._swalAlertService.getAlertError('No se pudo obtener el modulo.')
+            this._swalAlertService.getAlertError('No se pudo obtener el modulo.');
           }
         });
       } else {
@@ -193,9 +193,16 @@ export class GestionModuloComponent implements OnInit {
 
   btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
-    if (!form.valid) {
-      return;
+    if (this.FormRegistro.hijos == true) {
+      this.FormRegistro.codigoPadre = '0';
+      this.FormRegistro.rutaModulo = '';
+    } else {
+      this.FormRegistro.icon = '';
     }
+    console.log('insertar formRegistro', this.FormRegistro);
+    // if (!form.valid) {
+    //   return;
+    // }
     if (this.modoEdicion) {
       this._registrosService.putModificarRegistro(this.FormRegistro, this.moduloId).subscribe({
         next: (resp: any) => {
@@ -212,11 +219,9 @@ export class GestionModuloComponent implements OnInit {
         }
       });
     } else {
-      console.log('insertar formRegistro', this.FormRegistro);
       this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
-            console.log('reesp', resp);
-
+          console.log('reesp', resp);
           if (resp.ok) {
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
@@ -226,7 +231,7 @@ export class GestionModuloComponent implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
-          this._swalAlertService.getAlertError( this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err);
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err);
         }
       });
     }
