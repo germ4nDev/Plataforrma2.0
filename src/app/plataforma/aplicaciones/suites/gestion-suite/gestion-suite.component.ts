@@ -20,6 +20,7 @@ import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.se
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
+import { SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-suite',
@@ -46,6 +47,12 @@ export class GestionSuiteComponent implements OnInit {
   codigosuite = uuidv4();
   tipoEditorTexto = 'basica';
 
+  selectedFile: File | null = null;
+  previewUrl: string | ArrayBuffer | null = null;
+  userPhotoUrl: string = '';
+  fileName: string | null = null;
+  selectedFileUrl: string | null = null;
+
   // constructor
   constructor(
     private router: Router,
@@ -54,7 +61,10 @@ export class GestionSuiteComponent implements OnInit {
     private _registrosService: PtlSuitesAPService,
     private _aplicacionesService: PtlAplicacionesService,
     private _layoutInitializer: LayoutInitializerService,
+    private _swalService: SwalAlertService,
+    private _translate: TranslateService,
     private _localStorageService: LocalStorageService,
+    private _uploadService: UploadFilesService,
     private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
@@ -69,13 +79,15 @@ export class GestionSuiteComponent implements OnInit {
         this._registrosService.getSuiteAPById(this.registroId).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.suite;
+            this.codigosuite = resp.suite.codigoAplicacion;
+            this.selectedFileUrl = this._uploadService.getFilePath('suites', resp.suite.imagenInicio);
           },
           error: () => {
             Swal.fire('Error', 'No se pudo obtener la suite por, ', 'error');
           }
         });
       } else {
-        this.FormRegistro.codigoSuite =  uuidv4();
+        this.FormRegistro.codigoSuite = uuidv4();
         this.modoEdicion = false;
       }
     });
@@ -120,6 +132,33 @@ export class GestionSuiteComponent implements OnInit {
     // }
   }
 
+  onFileSelectedClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      id: '0',
+      tipo: 'suites'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+          console.log('resultado', path);
+          this.FormRegistro.imagenInicio = path.nombreArchivo;
+        },
+        error: () => {
+          this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+        }
+      });
+    } else {
+      this.selectedFileUrl = null;
+      this.userPhotoUrl = '';
+    }
+  }
+
   btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
     if (!form.valid) {
@@ -129,22 +168,22 @@ export class GestionSuiteComponent implements OnInit {
       this._registrosService.actualizarSuiteAP(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
+            this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
             this.router.navigate(['/aplicaciones/suites']);
           } else {
-            Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+            this._swalService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+          this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
         }
       });
     } else {
       this._registrosService.crearSuiteAP(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
+            this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
             this.router.navigate(['/aplicaciones/suites']);
@@ -152,7 +191,7 @@ export class GestionSuiteComponent implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+          this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'));
         }
       });
     }

@@ -31,11 +31,13 @@ export class PtlmodulosApService {
   }
 
   getRegistros() {
+            console.log('4');
     const url = `${base_url}/modulos`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        // console.log('servicio de modulo', resp);
+                console.log('5');
+        console.log('servicio de modulos', resp);
         return {
           ok: true,
           modulos: resp.modulos

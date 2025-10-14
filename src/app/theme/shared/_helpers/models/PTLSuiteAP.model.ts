@@ -8,6 +8,8 @@ export class PTLSuiteAPModel {
         public nomEstado? : string,
         public nomAplicacion? : string,
         public rutaInicio? : string,
+        public translateKey? : string,
+        public imagenInicio? : string,
         public estadoSuite? : boolean
    ) {}
 }

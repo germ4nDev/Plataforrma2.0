@@ -106,8 +106,9 @@ export class PerfilComponent implements OnInit {
       reader.readAsDataURL(file);
 
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-        next: (path) => {
-          this.userPhotoUrl = path;
+        next: (path: any) => {
+          console.log('resultado', path);
+          this.userPhotoUrl = path.nombreArchivo;
         },
         error: () => {
           this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));

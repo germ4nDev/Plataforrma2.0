@@ -86,7 +86,6 @@ export class HomeComponent implements OnInit {
             });
             this.registros = resp.sitios;
             this.registrosFiltrado = resp.sitios;
-            console.log('Todos los sitios', this.registrosFiltrado);
             return;
           }
         }),

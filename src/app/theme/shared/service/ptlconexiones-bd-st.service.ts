@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { PTLConexionBDModel } from '../_helpers/models/PTLConexionBD.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { environment } from 'src/environments/environment';
 
 const base_url = environment.apiUrl;
 @Injectable({

@@ -1,36 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
+const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
 export class UploadFilesService {
 
-  private baseUrl = 'http://localhost:3000/api'; // Cambia según tu backend
 
   constructor(private http: HttpClient) { }
 
-  uploadUserPhoto(file: File, objUload: any): Observable<string> {
+  uploadUserPhoto(file: File, objUpload: any) {
     const formData = new FormData();
     formData.append('foto', file);
-    return this.http.post<{ ok: boolean, path: string }>(`${this.baseUrl}/upload`, formData, objUload)
-      .pipe(
-        map((res: any) => res.path),
-        catchError(this.handleError)
-      );
+    const url = `${base_url}/upload/${objUpload.tipo}/${objUpload.id}`;
+    return this.http.put(url, formData);
   }
 
   getFilePath(type: string, fileName: string) {
-    const pathUrl = `${this.baseUrl}/upload/${type}/${fileName}`;
+    const pathUrl = `${base_url}/upload/${type}/${fileName}`;
     console.log('path de la imagen', pathUrl);
     return pathUrl;
-  }
-
-  private handleError(error: HttpErrorResponse) {
-    console.error('Error en la subida de archivo:', error);
-    return throwError(() => new Error('Error al subir la imagen.'));
   }
 }

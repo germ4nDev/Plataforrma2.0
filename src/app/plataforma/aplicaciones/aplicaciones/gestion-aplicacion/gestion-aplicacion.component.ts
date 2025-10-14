@@ -8,9 +8,9 @@ import { GradientConfig } from 'src/app/app-config';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLAplicacionModel } from '../../../../theme/shared/_helpers/models/PTLAplicacion.model';
-import { PtlAplicacionesService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtlAplicacionesService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
 import { v4 as uuidv4 } from 'uuid';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -33,6 +33,11 @@ export class GestionAplicacionComponent implements OnInit {
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
   windowWidth: number = 0;
+  selectedFile: File | null = null;
+  previewUrl: string | ArrayBuffer | null = null;
+  userPhotoUrl: string = '';
+  fileName: string | null = null;
+  selectedFileUrl: string | null = null;
 
   form: undefined;
   isSubmit: boolean = false;
@@ -43,8 +48,12 @@ export class GestionAplicacionComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-   private _navigationService: NavigationService,
-    private _aplicacionesService: PtlAplicacionesService
+    private _navigationService: NavigationService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _swalService: SwalAlertService,
+    private _translate: TranslateService,
+    private _localStorageService: LocalStorageService,
+    private _uploadService: UploadFilesService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true;
@@ -65,6 +74,7 @@ export class GestionAplicacionComponent implements OnInit {
           next: (resp: any) => {
             this.FormRegistro = resp.aplicacion;
             this.codeAplicacion = resp.aplicacion.codigoAplicacion;
+            this.selectedFileUrl = this._uploadService.getFilePath('aplicaciones', resp.aplicacion.imagenInicio);
           },
           error: () => {
             Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error');
@@ -83,6 +93,33 @@ export class GestionAplicacionComponent implements OnInit {
     console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionAplicacion);
     // if (this.validationForm && this.isSubmit) {
     // }
+  }
+
+  onFileSelectedClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      id: '0',
+      tipo: 'aplicaciones'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+            console.log('resultado', path);
+            this.FormRegistro.imagenInicio = path.nombreArchivo;
+        },
+        error: () => {
+          this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+        }
+      });
+    } else {
+      this.selectedFileUrl = null;
+      this.userPhotoUrl = '';
+    }
   }
 
   btnGestionarAplicacionClick(form: any) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export class PTLAplicacionModel {
     constructor(
         public aplicacionId?: number,
@@ -6,6 +7,8 @@ export class PTLAplicacionModel {
         public descripcionAplicacion?: string,
         public estadoAplicacion?: boolean,
         public nomEstado?: string,
-        public roles?: any
+        public roles?: any,
+        public translateKey? : string,
+        public imagenInicio? : string
     ) {}
 }

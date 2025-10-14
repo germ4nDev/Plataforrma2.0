@@ -30,10 +30,10 @@ export class AplicacionesComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   aplicaciones: PTLAplicacionModel[] = [];
   aplicacionesFiltrado: PTLAplicacionModel[] = [];
+  registrosSub?: Subscription;
   moduloTituloExcel: string = '';
   filtroPersonalizado: string = '';
   hasFiltersSlot: boolean = false;
-  registrosSub?: Subscription;
   gradientConfig;
   lang = localStorage.getItem('lang');
   menuItems$!: Observable<NavigationItem[]>;

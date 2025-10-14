@@ -38,7 +38,6 @@ export class PTLSitiosAPService {
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de sitios', resp);
         return {
           ok: true,
           sitios: resp.sitios

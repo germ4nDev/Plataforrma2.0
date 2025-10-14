@@ -29,22 +29,38 @@
             "MODULOS": "Modulos",
             "VERSIONES": "Versiones",
             "PAQUETES": "Paquetes",
-            "LOG ACTIVIDADES": "Log Actividades",
-            "LOG EXEPCIONES": "Log Exepciones",
-            "LOG ACTUALIZACIONES": "Log Actualizaciones",
+            "LOGACTIVIDADES": "Log Actividades",
+            "LOGEXCEPCIONES": "Log Exepciones",
+            "LOGACTUALIZACIONES": "Log Actualizaciones",
             "ESTADISTICAS": "Estadísticas",
 
             "AUTENTICACION": "Autenticación",
             "LOGIN": "Login",
-            "CAMBIO_CLAVE": "Cambio Clave",
-            "RESETEAR_CLAVE": "Resetear Clave",
+            "CAMBIARCLAVE": "Cambio Clave",
+            "RESETCLAVE": "Resetear Clave",
             "PERFIL_USUARIO": "Perfil Usuario",
             "CONFIGURACION_PERFIL": "Configuración Perfil",
+
+            "INICIO": "Inicio",
             "HOME": "Home",
+            "INICIOAPLICACIONES": "Inicio Aplicaciones",
+            "INICIOSUITES": "Inicio Suites",
+
             "DASHBOARD": "Dashboard",
             "EXTERNAL": "External",
-            "SITES": "Sites",
-            "USUARIOS": "Usuarios"
+
+            "SITIOS": "Sitios",
+            "CONTENIDOS": "Contenidos",
+            "ENLACES": "Enlaces",
+
+            "SUSCRIPTORES": "Suscriptores",
+            "EMPRESAS": "Empresas",
+            "USURIOSSC": "Usuarios",
+
+            "USUARIOS": "Usuarios",
+
+            "SERVIDORES": "Servidores",
+            "CONEXIONES": "Conexiones"
         },
 
         "NAVBAR": {

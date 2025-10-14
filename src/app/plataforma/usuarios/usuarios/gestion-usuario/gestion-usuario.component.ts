@@ -34,10 +34,10 @@ export class GestionUsuarioComponent implements OnInit {
   menuItems!: Observable<NavigationItem[]>;
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
+  claveUsuario: string = '';
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
   userPhotoUrl: string = '';
-  claveUsuario: string = '';
   fileName: string | null = null;
   selectedFileUrl: string | null = null;
   isClaveActual: boolean = true;
@@ -92,7 +92,7 @@ export class GestionUsuarioComponent implements OnInit {
     const objUpload = {
       suscriptor: '0',
       aplicacion: this._localStorageService.getAplicaicionLocalStorage().nombreAplicacion,
-      carpeta: 'usuarios'
+      tipo: 'usuarios'
     };
     if (file) {
       const reader = new FileReader();
@@ -101,8 +101,9 @@ export class GestionUsuarioComponent implements OnInit {
       };
       reader.readAsDataURL(file);
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-        next: (path) => {
-          this.userPhotoUrl = path;
+        next: (path: any) => {
+          console.log('resultado', path);
+          this.userPhotoUrl = path.nombreArchivo;
         },
         error: () => {
           this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));

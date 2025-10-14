@@ -23,16 +23,19 @@
                         <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'SUITES.UPDATE' | translate }}</h4>
                     </div>
                     <div class="d-flex">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                        <button *ngIf="!modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SUITES.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SUITES.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
@@ -47,7 +50,8 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoAplicacion">
                                     {{ 'SUITES.GESTION.APLICACION' | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer;" name="codigoAplicacion" id="codigoAplicacion"
+                                <select class="form-control form-input" style="cursor: pointer;" name="codigoAplicacion"
+                                    id="codigoAplicacion"
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
                                     (change)="onAplicacionchangeClick($event)">
@@ -69,8 +73,7 @@
                                 <input type="text" class="form-control form-input" name="codigoSuite"
                                     placeholder="{{ 'SUITES.GESTION.PLACEHOLDERCODE' | translate }}"
                                     [ngClass]="{'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
-                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite"
-                                    readonly />
+                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite" readonly />
                                 <label
                                     *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
@@ -109,22 +112,34 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SUITES.DESCRIPTION' | translate }}</label>
-                                <app-text-editor
-                                    [toolbarType]="tipoEditorTexto"
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [(contentHtml)]="FormRegistro.descripcionSuite"
-                                    (contentHtmlChange)="actualizarDescripcionVersion($event)"
-                                    name="descripcionSuite"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionSuite"
                                     [(ngModel)]="FormRegistro.descripcionSuite"
                                     [ngClass]="{'is-invalid': !descripcionSuite.valid && (descripcionSuite.dirty || descripcionSuite.touched || isSubmit)}"
-                                    #descripcionSuite="ngModel"
-                                    required
-                                    rows="5">
+                                    #descripcionSuite="ngModel" required rows="5">
                                 </app-text-editor>
                                 <label
                                     *ngIf="!descripcionSuite.valid && (descripcionSuite.dirty || descripcionSuite.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SUITES.GESTION.REQUERIDODESCRIPCION' | translate }}
                                 </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'SUITES.GESTION.FOTO' | translate }}</label>
+                                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview">
+                                <div class="file-input-wrapper">
+                                    <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
+                                        {{ 'Seleccionar archivo' | translate }}
+                                    </label>
+                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
+                                        id="fileUploadInput" class="form-control form-input d-none" name="fotoUsuario">
+                                    <span class="file-name" [ngClass]="{'has-file': fileName}">
+                                        {{ fileName || ('SUITES.GESTION.FOTOHOLDER' | translate) }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -152,6 +167,3 @@
         </div>
     </div>
 </div>
-
-
-

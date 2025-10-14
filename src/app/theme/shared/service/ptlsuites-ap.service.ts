@@ -35,7 +35,6 @@ export class PtlSuitesAPService {
   geSuitesAP() {
     return this.http.get<PTLSuiteAPModel>(`${environment.apiUrl}/suites`).pipe(
       map((resp: any) => {
-        console.log('respuesta servicio', resp);
         return {
           ok: true,
           suites: resp.suites

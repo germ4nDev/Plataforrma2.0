@@ -37,10 +37,9 @@ export class PtlAplicacionesService {
     const url = `${base_url}/aplicaciones`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('servicio de aplicaciones', resp);
         return {
           ok: true,
-          aplicaciones: resp.aplicaciones
+          aplicaciones: resp.aplicaciones.filter((x: { estadoAplicacion: boolean }) => x.estadoAplicacion == true)
         };
       })
     );
@@ -64,7 +63,7 @@ export class PtlAplicacionesService {
     return this.http.post(url, aplicacion);
   }
 
-getAplicacionByCode(code: string) {
+  getAplicacionByCode(code: string) {
     const url = `${base_url}/aplicaciones/code/${code}`;
     return this.http.get(url).pipe(
       map((resp: any) => {

@@ -12,7 +12,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 // third party
 import { ColorPickerModule } from 'ngx-color-picker';
-import { PtlAplicacionesService } from 'src/app/theme/shared/service';
+import { PtlAplicacionesService, UploadFilesService } from 'src/app/theme/shared/service';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
@@ -34,6 +34,7 @@ export class InicioComponent implements OnInit {
     private route: ActivatedRoute,
     private _aplicacionesService: PtlAplicacionesService,
     private _suitesService: PtlSuitesAPService,
+    private _uploadService: UploadFilesService,
     private _localStorage: LocalStorageService,
     private router: Router
   ) {}
@@ -49,6 +50,11 @@ export class InicioComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
+            resp.aplicaciones.forEach((app: any) => {
+                app.imagenInicio = this._uploadService.getFilePath('suites', app.imagenInicio);
+            });
+            console.log('aplicaciones', resp.aplicaciones);
+
             this.aplicaciones = resp.aplicaciones;
           }
         }),
