@@ -140,12 +140,20 @@
                                     #rutaModulo="ngModel" required [(ngModel)]="FormRegistro.rutaModulo" />
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'MODULOS.ICON' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="icon"
                                     placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERPATH' | translate }}"
                                     #icon="ngModel" [(ngModel)]="FormRegistro.icon" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'MODULOS.TRANSLATEKEY' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="translateKey"
+                                    placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERPATH' | translate }}"
+                                    #translateKey="ngModel" [(ngModel)]="FormRegistro.translateKey" />
                             </div>
                         </div>
                         <div class="col-md-12">

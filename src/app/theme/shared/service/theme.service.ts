@@ -8,6 +8,7 @@ interface ThemeSettings {
   navbarColor: string;
   iconosColor: string;
   textoColor: string;
+  buttonsHoverColor: string;
 }
 
 @Injectable({
@@ -19,18 +20,20 @@ export class ThemeService {
   private navbarColor = new BehaviorSubject<string>('');
   private iconosColor = new BehaviorSubject<string>('');
   private textoColor = new BehaviorSubject<string>('');
+  private buttonsHoverColor = new BehaviorSubject<string>('');
 
   isDarkTheme$ = this.isDarkTheme.asObservable();
   navbarColor$ = this.navbarColor.asObservable();
   iconosColor$ = this.iconosColor.asObservable();
   textoColor$ = this.textoColor.asObservable();
+  buttonsHoverColor$ = this.buttonsHoverColor.asObservable();
 
   public colorPalette: any[] = [
-    { color: '#66b5ff', iconos: '#000', texto: '#000' },
-    { color: '#2c3e50', iconos: '#fff', texto: '#fff' },
-    { color: '#c0392b', iconos: '#fff', texto: '#fff' },
-    { color: '#27ae60', iconos: '#fff', texto: '#fff' },
-    { color: '#f39c12', iconos: '#000', texto: '#000' }
+    { color: '#66b5ff', iconos: '#000', texto: '#000', botonhover: '#66b5ff' },
+    { color: '#2c3e50', iconos: '#fff', texto: '#fff', botonhover: '#000000' },
+    { color: '#c0392b', iconos: '#fff', texto: '#fff', botonhover: '#c0392b' },
+    { color: '#27ae60', iconos: '#fff', texto: '#fff', botonhover: '#27ae60' },
+    { color: '#f39c12', iconos: '#000', texto: '#000', botonhover: '#f39c12' }
   ];
 
   constructor(
@@ -47,6 +50,9 @@ export class ThemeService {
     });
     this.textoColor$.subscribe((color) => {
       document.body.style.setProperty('--app-texto-color', color);
+    });
+    this.buttonsHoverColor$.subscribe((color) => {
+      document.body.style.setProperty('--app-boton-hover-color', color);
     });
     this.isDarkTheme$.subscribe((isDark) => {
       if (isDark) {
@@ -66,6 +72,7 @@ export class ThemeService {
         this.navbarColor.next(savedSettings.navbarColor);
         this.iconosColor.next(savedSettings.iconosColor);
         this.textoColor.next(savedSettings.textoColor);
+        this.buttonsHoverColor.next(savedSettings.buttonsHoverColor);
       } catch (e) {
         console.error('Error al cargar la configuración del tema desde localStorage', e);
       }
@@ -77,7 +84,8 @@ export class ThemeService {
       isDarkTheme: this.isDarkTheme.value,
       navbarColor: this.navbarColor.value,
       textoColor: this.textoColor.value,
-      iconosColor: this.iconosColor.value
+      iconosColor: this.iconosColor.value,
+      buttonsHoverColor: this.buttonsHoverColor.value
     };
     console.log('save settings', settings);
     this._loclaStorageService.setThemeSettingsLocalStorage(settings);
@@ -98,6 +106,12 @@ export class ThemeService {
   setTextoColor(color: any): void {
     console.log('ThemeService: setTextoColor se ha llamado con el color:', color);
     this.textoColor.next(color);
+    this.saveThemeSettings();
+  }
+
+  setBotonHoverColor(color: any): void {
+    console.log('ThemeService: setTextoColor se ha llamado con el color:', color);
+    this.buttonsHoverColor.next(color);
     this.saveThemeSettings();
   }
 

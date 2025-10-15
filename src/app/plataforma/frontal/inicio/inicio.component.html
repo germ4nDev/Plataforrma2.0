@@ -1,33 +1,25 @@
-<!-- <div class="row">
-    <div class="col-sm-12">
-        <app-card cardTitle="Basic Component">
-            <h5>Ingresar a la Plataforma</h5>
-            <hr />
-            <div class="row">
-                <div class="col-md-6">
-                    <form action="">
-                        <div *ngFor="let app of aplicaciones">
-                            <button type="submit" class="btn btn-primary mb-2"
-                                (click)="ingresarPlataforma(app)">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </app-card>
+<nav class="navbar fixed-top navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"></a>
+        <div class="nav-right">
+            <app-language-selector></app-language-selector>
+        </div>
     </div>
-</div> -->
-
-<div class="card-grid">
-    <div class="card" *ngFor="let app of aplicaciones" [style.backgroundImage]="'url(app.imagenInicio)'"
+</nav><br><br>
+<h1 class="page-title text-center">
+    {{ 'PLATAFORMA.TITULO_GRID_APLICACIONES' | translate }}
+</h1>
+<div class="card-grid-apps">
+    <div class="card-grd" *ngFor="let app of aplicaciones" [style.backgroundImage]="'url(' + app.imagenInicio + ')'"
         [title]="app.nombreAplicacion">
-        <div class="card-content">
-            <h3>{{ app.nombreAplicacion }}</h3>
-
-            <p>{{ app.descripcion }}</p>
-
-            <a (click)="ingresarPlataforma(app)" class="card-button">
-                Acceder
-            </a>
+        <div class="card-grd-content">
+            <h1>{{ app.nombreAplicacion }}</h1>
+            <p [innerHTML]="app.descripcionAplicacion"></p>
+            <div class="card-grd-actions">
+                <a (click)="ingresarPlataforma(app)" class="card-grd-button">
+                    {{ 'PLATAFORMA.ENTRAR' | translate }}
+                </a>
+            </div>
         </div>
     </div>
 </div>

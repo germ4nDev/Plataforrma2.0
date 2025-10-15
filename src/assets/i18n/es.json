@@ -16,6 +16,9 @@
         "UPDATEUSERSUCCESS": "El Usuario se modificó correctamente",
         "UPDATEUSERERROR": "No se pudo actualizar el Usuairo",
         "UPLOADPHOTOERROR": "Error al subir la imagen",
+        "TITULO_GRID_APLICACIONES": "Explora Nuestras Aplicaciones",
+        "TITULO_GRID_SUITES": "Suites de la Aplicación",
+        "ENTRAR": "Acceder",
 
         "APLICACIONES": {
             "PLATAFORMA": "Plataforma"
@@ -33,36 +36,31 @@
             "LOGEXCEPCIONES": "Log Exepciones",
             "LOGACTUALIZACIONES": "Log Actualizaciones",
             "ESTADISTICAS": "Estadísticas",
-
             "AUTENTICACION": "Autenticación",
             "LOGIN": "Login",
             "CAMBIARCLAVE": "Cambio Clave",
             "RESETCLAVE": "Resetear Clave",
             "PERFIL_USUARIO": "Perfil Usuario",
             "CONFIGURACION_PERFIL": "Configuración Perfil",
-
             "INICIO": "Inicio",
             "HOME": "Home",
             "INICIOAPLICACIONES": "Inicio Aplicaciones",
             "INICIOSUITES": "Inicio Suites",
-
             "DASHBOARD": "Dashboard",
             "EXTERNAL": "External",
-
             "SITIOS": "Sitios",
             "CONTENIDOS": "Contenidos",
             "ENLACES": "Enlaces",
-
             "SUSCRIPTORES": "Suscriptores",
             "EMPRESAS": "Empresas",
             "USURIOSSC": "Usuarios",
-
             "USUARIOS": "Usuarios",
-
             "SERVIDORES": "Servidores",
-            "CONEXIONES": "Conexiones"
+            "CONEXIONES": "Conexiones",
+            "UTILIDADES": "Utilidades",
+            "COLORESNAV": "Colores Navbar",
+            "SLIDER": "Imágees Inicio"
         },
-
         "NAVBAR": {
             "NOTIFICACIONES": "Notificaciones",
             "READ": "Marcar como Leído",
@@ -114,12 +112,12 @@
         "ELIMINARERROR": "No se pudo eliminar el Aplicación.",
         "CREATE": "Crear Aplicación",
         "FILTROS": {
-            "TITULO" : "Filtros Aplicaciones",
-            "FILTROCODIGO" : "Código",
-            "FILTRONOMBRE" : "Nombre",
-            "FILTRODECRIPCION" : "Descripción",
-            "FILTROESTADO" : "Estado",
-            "TODOS" : "Mostrar Todos",
+            "TITULO": "Filtros Aplicaciones",
+            "FILTROCODIGO": "Código",
+            "FILTRONOMBRE": "Nombre",
+            "FILTRODECRIPCION": "Descripción",
+            "FILTROESTADO": "Estado",
+            "TODOS": "Mostrar Todos",
             "DESCRIPCIONCHOLDER": "Descripción Aplicación"
         }
     },
@@ -159,12 +157,12 @@
             "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
         },
         "FILTROS": {
-            "TITULO" : "Filtros Sitios",
-            "FILTRONOMBRE" : "Nombre",
-            "FILTRODECRIPCION" : "Descripción",
-            "FILTROESTADO" : "Estado",
-            "TODOS" : "Mostrar Todos",
-            "NOMBRECHOLDER" : "Nombre Sitio",
+            "TITULO": "Filtros Sitios",
+            "FILTRONOMBRE": "Nombre",
+            "FILTRODECRIPCION": "Descripción",
+            "FILTROESTADO": "Estado",
+            "TODOS": "Mostrar Todos",
+            "NOMBRECHOLDER": "Nombre Sitio",
             "DESCRIPCIONCHOLDER": "Descripción Sitio"
         },
         "ENLACES": {
@@ -199,12 +197,12 @@
                 "REQUERIDOSITIOS": "Por favor, seleccione un sitio. Este campo es obligatorio."
             },
             "FILTROS": {
-                "TITULO" : "Filtros Enlaces",
-                "FILTRONOMBRE" : "Nombre",
-                "FILTRODECRIPCION" : "Descripción",
-                "FILTROESTADO" : "Estado",
-                "TODOS" : "Mostrar Todos",
-                "NOMBRECHOLDER" : "Nombre Enlaces",
+                "TITULO": "Filtros Enlaces",
+                "FILTRONOMBRE": "Nombre",
+                "FILTRODECRIPCION": "Descripción",
+                "FILTROESTADO": "Estado",
+                "TODOS": "Mostrar Todos",
+                "NOMBRECHOLDER": "Nombre Enlaces",
                 "DESCRIPCIONCHOLDER": "Descripción Enlaces"
             }
         },
@@ -243,12 +241,12 @@
                 "REQUERIDOENLACES": "Por favor, seleccione un enlaces. Este campo es obligatorio."
             },
             "FILTROS": {
-                "TITULO" : "Filtros Contenidos",
-                "FILTRONOMBRE" : "Nombre",
-                "FILTRODECRIPCION" : "Descripción",
-                "FILTROESTADO" : "Estado",
-                "TODOS" : "Mostrar Todos",
-                "NOMBRECHOLDER" : "Nombre Contenidos",
+                "TITULO": "Filtros Contenidos",
+                "FILTRONOMBRE": "Nombre",
+                "FILTRODECRIPCION": "Descripción",
+                "FILTROESTADO": "Estado",
+                "TODOS": "Mostrar Todos",
+                "NOMBRECHOLDER": "Nombre Contenidos",
                 "DESCRIPCIONCHOLDER": "Descripción Contenidos"
             }
         }
@@ -286,57 +284,57 @@
             "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
         },
         "FILTROS": {
-                "TITULO" : "Filtros Tickets",
-                "FILTRONOMBRE" : "Nombre",
-                "FILTRODECRIPCION" : "Descripción",
-                "FILTROESTADO" : "Estado",
-                "TODOS" : "Mostrar Todos",
-                "NOMBRECHOLDER" : "Nombre Ticket",
-                "DESCRIPCIONCHOLDER": "Descripción Ticket"
+            "TITULO": "Filtros Tickets",
+            "FILTRONOMBRE": "Nombre",
+            "FILTRODECRIPCION": "Descripción",
+            "FILTROESTADO": "Estado",
+            "TODOS": "Mostrar Todos",
+            "NOMBRECHOLDER": "Nombre Ticket",
+            "DESCRIPCIONCHOLDER": "Descripción Ticket"
         },
         "REQUERIMIENTOS": {
-        "TITLE": "Administración de Requerimientos",
-        "NEW": "Nuevo Requerimiento",
-        "UPDATE": "Modificar Requerimiento",
-        "DELETE": "Eliminar Requerimiento",
-        "CREATE": "Crear Requerimiento",
-        "NOMBREREQUERIMIENTO": "Nombre",
-        "DESCRICIONREQUERIMIENTO": "Descripción",
-        "ESTADOREQUERIMIENTO": "Estado",
-        "NAMETICKET": "Nombre Ticket",
-        "FILTER_NAMEREQUERIMIENTO": "Filtro Nombre",
-        "FILTER_DESCRIPCIONREQUERIMIENTO": "Filtro Descripción",
-        "FILTRO_STATUSREQUERIMIENTO": "Filtro Estado",
-        "ELIMINARTITULO": "¿Está seguro de eliminar?",
-        "ELIMINARTEXTO": "¡Será Eliminada el Requerimiento! ",
-        "ELIMINAREXITOSA": "¡El Requerimiento fué eliminado correctamente! ",
-        "ELIMINARERROR": "No se pudo eliminar el Requerimiento.",
-        "GESTION": {
-            "TITLE": "Crear/Actualizar un Requerimiento",
-            "CREATE": "Crear Requerimiento",
-            "UPDATE": "Actualizar Requerimiento",
+            "TITLE": "Administración de Requerimientos",
             "NEW": "Nuevo Requerimiento",
-            "NAME": "Nombre Requerimiento",
-            "NAMEHOLDER": "Ingrese el Nombre del Requerimiento",
-            "DESCRIPTION": "Descripción Requerimiento",
-            "DESCRIPTIONHOLDER": "Ingrese la Descripción del Requerimiento",
-            "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
-            "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
-            "STATUS": "Estado Requerimiento",
-            "TICKET": "Ticket",
-            "PLACEHOLDERTICKET": "Seleccione un Ticket",
-            "REQUERIDOTICKET": "Por favor, seleccione un Ticket. Este campo es obligatorio."
-        },
-        "FILTROS": {
-            "TITULO" : "Filtros Requerimientos",
-            "FILTRONOMBRE" : "Nombre",
-            "FILTRODECRIPCION" : "Descripción",
-            "FILTROESTADO" : "Estado",
-            "TODOS" : "Mostrar Todos",
-            "NOMBRECHOLDER" : "Nombre Requerimientos",
-            "DESCRIPCIONCHOLDER": "Descripción Requerimientos",
-            "ESTADOREQUERIMIENTO" : "Estado Requerimiento"
-        }
+            "UPDATE": "Modificar Requerimiento",
+            "DELETE": "Eliminar Requerimiento",
+            "CREATE": "Crear Requerimiento",
+            "NOMBREREQUERIMIENTO": "Nombre",
+            "DESCRICIONREQUERIMIENTO": "Descripción",
+            "ESTADOREQUERIMIENTO": "Estado",
+            "NAMETICKET": "Nombre Ticket",
+            "FILTER_NAMEREQUERIMIENTO": "Filtro Nombre",
+            "FILTER_DESCRIPCIONREQUERIMIENTO": "Filtro Descripción",
+            "FILTRO_STATUSREQUERIMIENTO": "Filtro Estado",
+            "ELIMINARTITULO": "¿Está seguro de eliminar?",
+            "ELIMINARTEXTO": "¡Será Eliminada el Requerimiento! ",
+            "ELIMINAREXITOSA": "¡El Requerimiento fué eliminado correctamente! ",
+            "ELIMINARERROR": "No se pudo eliminar el Requerimiento.",
+            "GESTION": {
+                "TITLE": "Crear/Actualizar un Requerimiento",
+                "CREATE": "Crear Requerimiento",
+                "UPDATE": "Actualizar Requerimiento",
+                "NEW": "Nuevo Requerimiento",
+                "NAME": "Nombre Requerimiento",
+                "NAMEHOLDER": "Ingrese el Nombre del Requerimiento",
+                "DESCRIPTION": "Descripción Requerimiento",
+                "DESCRIPTIONHOLDER": "Ingrese la Descripción del Requerimiento",
+                "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+                "STATUS": "Estado Requerimiento",
+                "TICKET": "Ticket",
+                "PLACEHOLDERTICKET": "Seleccione un Ticket",
+                "REQUERIDOTICKET": "Por favor, seleccione un Ticket. Este campo es obligatorio."
+            },
+            "FILTROS": {
+                "TITULO": "Filtros Requerimientos",
+                "FILTRONOMBRE": "Nombre",
+                "FILTRODECRIPCION": "Descripción",
+                "FILTROESTADO": "Estado",
+                "TODOS": "Mostrar Todos",
+                "NOMBRECHOLDER": "Nombre Requerimientos",
+                "DESCRIPCIONCHOLDER": "Descripción Requerimientos",
+                "ESTADOREQUERIMIENTO": "Estado Requerimiento"
+            }
         },
         "SEGUIMIENTOS": {
             "TITLE": "Administración de Seguimientos",
@@ -375,14 +373,14 @@
                 "NOMODIFICOREQUERIMIENTO": "El registro se modificó, pero no se actualizó el estado del requerimiento."
             },
             "FILTROS": {
-                "TITULO" : "Filtros Seguimientos",
-                "FILTRONOMBRE" : "Nombre",
-                "FILTRODECRIPCION" : "Descripción",
-                "FILTROESTADO" : "Estado",
-                "TODOS" : "Mostrar Todos",
-                "NOMBRECHOLDER" : "Nombre Seguimientos",
+                "TITULO": "Filtros Seguimientos",
+                "FILTRONOMBRE": "Nombre",
+                "FILTRODECRIPCION": "Descripción",
+                "FILTROESTADO": "Estado",
+                "TODOS": "Mostrar Todos",
+                "NOMBRECHOLDER": "Nombre Seguimientos",
                 "DESCRIPCIONCHOLDER": "Descripción Seguimientos",
-                "ESTADOSEGUIMIENTO" : "Estado Seguimiento"
+                "ESTADOSEGUIMIENTO": "Estado Seguimiento"
             }
         }
     },
@@ -446,20 +444,19 @@
             "BDPORT": "Port Base de Datos",
             "PLACEHOLDERBDPORT": "Ingrese Port Base de Datos",
             "REQUERIDOBDPORT": "Por favor, ingrese un Port. Este campo es obligatorio."
-
         },
         "FILTROS": {
-            "TITULO" : "Filtros Conexiones",
-            "FILTRONOMBRE" : "Nombre Aplicación",
-            "FILTRONOMBRESUSCRIP" : "Nombre Suscriptor",
-            "FILTRONOMBRESERVE" : "Nombre servidor",
-            "FILTRONOMBREBD" : "Nombre Base de Datos",
-            "FILTROESTADO" : "Estado Conexión",
-            "TODOS" : "Mostrar Todos",
-            "NOMBREHOLDER" : "Nombre Conexión",
-            "NOMBRESUSCRIPHOLDER" : "Nombre Suscriptor",
-            "NOMBRESERVEHOLDER" : "Nombre Servidor",
-            "NOMBREBDHOLDER" : "Nombre Base de Datos"
+            "TITULO": "Filtros Conexiones",
+            "FILTRONOMBRE": "Nombre Aplicación",
+            "FILTRONOMBRESUSCRIP": "Nombre Suscriptor",
+            "FILTRONOMBRESERVE": "Nombre servidor",
+            "FILTRONOMBREBD": "Nombre Base de Datos",
+            "FILTROESTADO": "Estado Conexión",
+            "TODOS": "Mostrar Todos",
+            "NOMBREHOLDER": "Nombre Conexión",
+            "NOMBRESUSCRIPHOLDER": "Nombre Suscriptor",
+            "NOMBRESERVEHOLDER": "Nombre Servidor",
+            "NOMBREBDHOLDER": "Nombre Base de Datos"
         },
         "SERVIDORES": {
             "TITLE": "Administración de Servidores",
@@ -496,12 +493,12 @@
                 "STATUS": "Estado Servidor"
             },
             "FILTROS": {
-                "TITULO" : "Filtros Servidores",
-                "FILTRONOMBRE" : "Nombre",
-                "FILTRODECRIPCION" : "Descripción",
-                "FILTROESTADO" : "Estado",
-                "TODOS" : "Mostrar Todos",
-                "NOMBRECHOLDER" : "Nombre Servidor",
+                "TITULO": "Filtros Servidores",
+                "FILTRONOMBRE": "Nombre",
+                "FILTRODECRIPCION": "Descripción",
+                "FILTROESTADO": "Estado",
+                "TODOS": "Mostrar Todos",
+                "NOMBRECHOLDER": "Nombre Servidor",
                 "DESCRIPCIONCHOLDER": "Descripción Servidor"
             }
         }
@@ -537,12 +534,12 @@
             "REQUERIDODESCRIPCION": "Por favor, ingrese una descripcion. Este campo es obligatorio."
         },
         "FILTROS": {
-            "TITULO" : "Filtros Suscriptores",
-            "FILTRONOMBRE" : "Nombre",
-            "FILTROIDENTIFICACION" : "Identificación",
-            "FILTROESTADO" : "Estado",
-            "TODOS" : "Mostrar Todos",
-            "NOMBRECHOLDER" : "Nombre Suscriptor",
+            "TITULO": "Filtros Suscriptores",
+            "FILTRONOMBRE": "Nombre",
+            "FILTROIDENTIFICACION": "Identificación",
+            "FILTROESTADO": "Estado",
+            "TODOS": "Mostrar Todos",
+            "NOMBRECHOLDER": "Nombre Suscriptor",
             "IDENTIFICACIONHOLDER": "Identificación Suscriptor"
         }
     },

@@ -59,6 +59,11 @@ const routes: Routes = [
                 path: 'roles',
                 loadChildren: () =>
                     import('./plataforma/roles/roles.module').then((module) => module.RolesModule)
+            },
+            {
+                path: 'utilidades',
+                loadChildren: () =>
+                    import('./plataforma/utilidades/utilidades.module').then((module) => module.UtilidadesModule)
             }
         ]
     },

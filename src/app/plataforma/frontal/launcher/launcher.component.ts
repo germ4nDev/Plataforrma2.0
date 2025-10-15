@@ -9,11 +9,15 @@ import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
+import { environment } from 'src/environments/environment';
+
+const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-launcher',
   standalone: true,
-  imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule],
+  imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent],
   templateUrl: './launcher.component.html',
   styleUrl: './launcher.component.scss'
 })
@@ -42,6 +46,11 @@ export class LauncherComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
+            resp.suites.forEach((suite: any) => {
+              // suite.imagenInicio = this._uploadService.getFilePath('aplicaciones', suite.imagenInicio);
+              suite.imagenInicio = `${base_url}/upload/suites/${suite.imagenInicio}`;
+            });
+            console.log('aplicaciones', resp.aplicaciones);
             this.suites = resp.suites;
           }
         }),

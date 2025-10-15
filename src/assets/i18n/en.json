@@ -10,11 +10,14 @@
         "MENU": "Menu",
         "FILTERS": "Filters",
         "REQUIRED": "Field Required",
-        "EXCEL":"Download Excel file",
+        "EXCEL": "Download Excel file",
         "PASSWORDSERROR": "Password and confirm password are difenrent",
         "UPDATEUSERSUCCESS": "User data updated successfully",
         "UPDATEUSERERROR": "User data update Error",
         "UPLOADPHOTOERROR": "upload image error",
+        "TITULO_GRID_APLICACIONES": "Explore Our Applications",
+        "TITULO_GRID_SUITES": "Suites in Aplication",
+        "ENTRAR": "Get In",
 
         "APLICACIONES": {
             "PLATAFORMA": "Platform"
@@ -32,31 +35,27 @@
             "LOGEXCEPCIONES": "Exeptions Log",
             "LOGACTUALIZACIONES": "Updates Log",
             "ESTADISTICAS": "Estatistics",
-
             "AUTENTICACION": "Autentication",
             "LOGIN": "Login",
             "CAMBIARCLAVE": "Change Password",
             "RESETCLAVE": "Reset Password",
             "PERFILUSUARIO": "User Profile",
-
             "INICIO": "Start",
             "HOME": "Home",
             "INICIOAPLICACIONES": "Aplications Start",
             "INICIOSUITES": "Suites Start",
-
             "SITIOS": "Sites",
             "CONTENIDOS": "Contents",
             "ENLACES": "Links",
-
             "SUSCRIPTORES": "Suscriptors",
             "EMPRESAS": "Companies",
             "USURIOSSC": "Users",
-
             "USUARIOS": "Users",
-
             "SERVIDORES": "Servers",
-            "CONEXIONES": "Connections"
-
+            "CONEXIONES": "Connections",
+            "UTILIDADES": "Utilities",
+            "COLORESNAV": "Navbar Colors",
+            "SLIDER": "Images Slider"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notifications",
@@ -109,11 +108,11 @@
         "ELIMINARERROR": "The aplication could't be eliminated.",
         "CREATE": "Create Aplication",
         "FILTROS": {
-            "TITULO" : "Aplications Filters",
-            "FILTROCODIGO" : "Code",
-            "FILTRONOMBRE" : "Name",
-            "FILTRODECRIPCION" : "Descripction",
-            "FILTROESTADO" : "Status",
+            "TITULO": "Aplications Filters",
+            "FILTROCODIGO": "Code",
+            "FILTRONOMBRE": "Name",
+            "FILTRODECRIPCION": "Descripction",
+            "FILTROESTADO": "Status",
             "DESCRIPCIONCHOLDER": "aplication Descripction"
         }
     },
@@ -153,12 +152,12 @@
             "REQUERIDOAPLICACION": "This field is required."
         },
         "FILTROS": {
-            "TITULO" : "Sites Filters",
-            "FILTRONOMBRE" : "Name",
-            "FILTRODECRIPCION" : "Descripction",
-            "FILTROESTADO" : "Status",
-            "TODOS" : "Show All",
-            "NOMBRECHOLDER" : "Site Name",
+            "TITULO": "Sites Filters",
+            "FILTRONOMBRE": "Name",
+            "FILTRODECRIPCION": "Descripction",
+            "FILTROESTADO": "Status",
+            "TODOS": "Show All",
+            "NOMBRECHOLDER": "Site Name",
             "DESCRIPCIONCHOLDER": "Site Descripction"
         },
         "ENLACES": {
@@ -193,12 +192,12 @@
                 "REQUERIDOSITIOS": "This field is required."
             },
             "FILTROS": {
-                "TITULO" : "Link Filters",
-                "FILTRONOMBRE" : "Name",
-                "FILTRODECRIPCION" : "Descripction",
-                "FILTROESTADO" : "Status",
-                "TODOS" : "Show All",
-                "NOMBRECHOLDER" : "Name Link",
+                "TITULO": "Link Filters",
+                "FILTRONOMBRE": "Name",
+                "FILTRODECRIPCION": "Descripction",
+                "FILTROESTADO": "Status",
+                "TODOS": "Show All",
+                "NOMBRECHOLDER": "Name Link",
                 "DESCRIPCIONCHOLDER": "Link Descripction"
             }
         },
@@ -237,12 +236,12 @@
                 "REQUERIDOENLACES": "This field is required."
             },
             "FILTROS": {
-                "TITULO" : "Content Filters",
-                "FILTRONOMBRE" : "Name",
-                "FILTRODECRIPCION" : "Descripction",
-                "FILTROESTADO" : "Status",
-                "TODOS" : "Show All",
-                "NOMBRECHOLDER" : "Name Content",
+                "TITULO": "Content Filters",
+                "FILTRONOMBRE": "Name",
+                "FILTRODECRIPCION": "Descripction",
+                "FILTROESTADO": "Status",
+                "TODOS": "Show All",
+                "NOMBRECHOLDER": "Name Content",
                 "DESCRIPCIONCHOLDER": "Content Descripction"
             }
         }
@@ -280,12 +279,12 @@
             "REQUERIDOAPLICACION": "This field is required."
         },
         "FILTROS": {
-            "TITULO" : "Ticket Filters",
-            "FILTRONOMBRE" : "Name",
-            "FILTRODECRIPCION" : "Descripction",
-            "FILTROESTADO" : "Status",
-            "TODOS" : "Show All",
-            "NOMBRECHOLDER" : "Ticket Name",
+            "TITULO": "Ticket Filters",
+            "FILTRONOMBRE": "Name",
+            "FILTRODECRIPCION": "Descripction",
+            "FILTROESTADO": "Status",
+            "TODOS": "Show All",
+            "NOMBRECHOLDER": "Ticket Name",
             "DESCRIPCIONCHOLDER": "Ticket Descripction"
         },
         "REQUERIMIENTOS": {
@@ -322,17 +321,17 @@
                 "REQUERIDOTICKET": "This field is required."
             },
             "FILTROS": {
-                "TITULO" : "Requirement Filters",
-                "FILTRONOMBRE" : "Name",
-                "FILTRODECRIPCION" : "Descripction",
-                "FILTROESTADO" : "Status",
-                "TODOS" : "Show All",
-                "NOMBRECHOLDER" : "Requirement Name",
+                "TITULO": "Requirement Filters",
+                "FILTRONOMBRE": "Name",
+                "FILTRODECRIPCION": "Descripction",
+                "FILTROESTADO": "Status",
+                "TODOS": "Show All",
+                "NOMBRECHOLDER": "Requirement Name",
                 "DESCRIPCIONCHOLDER": "Requirement Descripction",
-                "ESTADOREQUERIMIENTO" : "Requirement Status"
+                "ESTADOREQUERIMIENTO": "Requirement Status"
             }
-            },
-            "SEGUIMIENTOS": {
+        },
+        "SEGUIMIENTOS": {
             "TITLE": "Follow-up Administration",
             "NEW": "New Follow-up",
             "UPDATE": "Edit Follow-up",
@@ -369,14 +368,14 @@
                 "NOMODIFICOREQUERIMIENTO": "The record was updated, but the requirement status was not changed."
             },
             "FILTROS": {
-                "TITULO" : "Follow-up Filters",
-                "FILTRONOMBRE" : "Name",
-                "FILTRODECRIPCION" : "Descripction",
-                "FILTROESTADO" : "Status",
-                "TODOS" : "Show All",
-                "NOMBRECHOLDER" : "Follow-up Name",
+                "TITULO": "Follow-up Filters",
+                "FILTRONOMBRE": "Name",
+                "FILTRODECRIPCION": "Descripction",
+                "FILTROESTADO": "Status",
+                "TODOS": "Show All",
+                "NOMBRECHOLDER": "Follow-up Name",
                 "DESCRIPCIONCHOLDER": "Follow-up Descripction",
-                "ESTADOSEGUIMIENTO" : "Follow-up Status"
+                "ESTADOSEGUIMIENTO": "Follow-up Status"
             }
         }
     },
@@ -442,17 +441,17 @@
             "REQUERIDOBDPORT": "This field is required."
         },
         "FILTROS": {
-            "TITULO" : "Connection Filters",
-            "FILTRONOMBRE" : "Aplication Name",
-            "FILTRONOMBRESUSCRIP" : "Subscriber Name",
-            "FILTRONOMBRESERVE" : "Server Name",
-            "FILTRONOMBREBD" : "Database Name",
-            "FILTROESTADO" : "Conection Status",
-            "TODOS" : "Show All",
-            "NOMBREHOLDER" : "Conection Name",
-            "NOMBRESUSCRIPHOLDER" : "Subscriber Name",
-            "NOMBRESERVEHOLDER" : "Server Name",
-            "NOMBREBDHOLDER" : "Database Name"
+            "TITULO": "Connection Filters",
+            "FILTRONOMBRE": "Aplication Name",
+            "FILTRONOMBRESUSCRIP": "Subscriber Name",
+            "FILTRONOMBRESERVE": "Server Name",
+            "FILTRONOMBREBD": "Database Name",
+            "FILTROESTADO": "Conection Status",
+            "TODOS": "Show All",
+            "NOMBREHOLDER": "Conection Name",
+            "NOMBRESUSCRIPHOLDER": "Subscriber Name",
+            "NOMBRESERVEHOLDER": "Server Name",
+            "NOMBREBDHOLDER": "Database Name"
         },
         "SERVIDORES": {
             "TITLE": "Server Administration",
@@ -489,12 +488,12 @@
                 "STATUS": "Server Status"
             },
             "FILTROS": {
-                "TITULO" : "Server Filters",
-                "FILTRONOMBRE" : "Name",
-                "FILTRODECRIPCION" : "Descripction",
-                "FILTROESTADO" : "Status",
-                "TODOS" : "Show All",
-                "NOMBRECHOLDER" : "Server Name",
+                "TITULO": "Server Filters",
+                "FILTRONOMBRE": "Name",
+                "FILTRODECRIPCION": "Descripction",
+                "FILTROESTADO": "Status",
+                "TODOS": "Show All",
+                "NOMBRECHOLDER": "Server Name",
                 "DESCRIPCIONCHOLDER": "Server Descripction"
             }
         }
@@ -530,12 +529,12 @@
             "REQUERIDODESCRIPCION": "This field is required."
         },
         "FILTROS": {
-            "TITULO" : "Subscriber Filters",
-            "FILTRONOMBRE" : "Name",
-            "FILTROIDENTIFICACION" : "Identification",
-            "FILTROESTADO" : "Status",
-            "TODOS" : "Show All",
-            "NOMBRECHOLDER" : "Subscriber Name",
+            "TITULO": "Subscriber Filters",
+            "FILTRONOMBRE": "Name",
+            "FILTROIDENTIFICACION": "Identification",
+            "FILTROESTADO": "Status",
+            "TODOS": "Show All",
+            "NOMBRECHOLDER": "Subscriber Name",
             "IDENTIFICACIONHOLDER": "Subscriber Identification"
         }
     },

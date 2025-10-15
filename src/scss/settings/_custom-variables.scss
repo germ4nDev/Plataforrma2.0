@@ -1278,3 +1278,8 @@ $enable-deprecation-messages: true;
 $enable-important-utilities: true;
 
 $negative-spacers: if($enable-negative-margins, negativify-map($spacers), null);
+
+
+$card-radius: 10px;
+$card-transition: 0.3s ease;
+$primary-color: #007bff;

@@ -53,9 +53,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     LanguageSelectorComponent,
     NavContentComponent,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
     NavigationComponent,
     HttpClientModule,
+    ToastrModule.forRoot(),
     TranslateModule.forRoot({
       defaultLanguage: 'es',
       loader: {

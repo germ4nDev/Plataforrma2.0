@@ -17,11 +17,15 @@ import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.se
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
+import { environment } from 'src/environments/environment';
+import { LanguageSelectorComponent } from "src/app/theme/shared/components/language-selector/language-selector.component";
+
+const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule],
+  imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.scss'
 })
@@ -51,7 +55,8 @@ export class InicioComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.aplicaciones.forEach((app: any) => {
-                app.imagenInicio = this._uploadService.getFilePath('suites', app.imagenInicio);
+                // app.imagenInicio = this._uploadService.getFilePath('aplicaciones', app.imagenInicio);
+                app.imagenInicio = `${base_url}/upload/aplicaciones/${app.imagenInicio}`;
             });
             console.log('aplicaciones', resp.aplicaciones);
 

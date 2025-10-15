@@ -1,103 +1,86 @@
 <div class="auth-wrapper align-items-stretch aut-bg-img">
-  <div class="flex-grow-1">
-    <div class="h-100 d-md-flex align-items-center auth-side-img row">
-      <div class="col-sm-10 auth-content w-auto">
-        <img src="assets/images/auth/auth-logo.png" alt="logo" class="img-fluid" />
-      </div>
-    </div>
-    <div class="auth-side-form">
-      <div class="auth-content">
-        <nav class="navbar fixed-top navbar-expand-lg">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#"></a>
-                <div class="nav-right">
-                    <app-language-selector></app-language-selector>
+    <nav class="navbar fixed-top navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"></a>
+            <div class="nav-right">
+                <app-language-selector></app-language-selector>
+            </div>
+        </div>
+    </nav>
+    <div class="card card-body"><br>
+        <div class="text-center">
+            <h3 class="filtros-title">{{ 'LOGIN.TITLE' | translate }}</h3>
+        </div><br><br>
+        <form [formGroup]="loginForm" (ngSubmit)="onLoginUserClick()">
+            <div class="input-group mb-3">
+                <span class="input-group-text form-input" id="basic-addon1"><i class="feather icon-user"></i></span>
+                <input type="text" placeholder="{{ 'LOGIN.USERNAME' | translate }}" formControlName="username"
+                    class="form-control form-input"
+                    [ngClass]="{ 'is-invalid': usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched) }" />
+                @if (usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched)) {
+                <div class="invalid-feedback">
+                    @if (usernameControl?.errors?.['required']) {
+                    <div>{{ 'LOGIN.USER_REQ' | translate }}</div>
+                    }
+                </div>
+                }
+            </div>
+            <div class="input-group mb-4">
+                <span class="input-group-text form-input" id="basic-addon2"><i class="feather icon-lock"></i></span>
+                <input type="password" placeholder="{{ 'LOGIN.PASSWORD' | translate }}" formControlName="password"
+                    class="form-control form-input"
+                    [ngClass]="{ 'is-invalid': passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched) }" />
+                @if (passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)) {
+                <div class="invalid-feedback">
+                    @if (passwordControl?.errors?.['required']) {
+                    <div>{{ 'LOGIN.PASS_REQ' | translate }}</div>
+                    }
+                </div>
+                }
+            </div>
+            <div class="form-group text-start mt-2">
+                <div class="checkbox checkbox-primary d-inline">
+                    <input type="checkbox" name="checkbox-p-1" id="checkbox-p-1" checked="" />
+                    <label for="checkbox-p-1" class="cr">{{ 'LOGIN.REMEMBER_ME' | translate }}</label>
                 </div>
             </div>
-        </nav>
-        <div class="text-center">
-          <h3 class="mb-4 f-w-400">{{ 'LOGIN.TITLE' | translate }}</h3>
-        </div>
-        <form [formGroup]="loginForm" (ngSubmit)="onLoginUserClick()">
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1"><i class="feather icon-user"></i></span>
-            <input
-              type="text"
-              placeholder="{{ 'LOGIN.USERNAME' | translate }}"
-              formControlName="username"
-              class="form-control"
-              [ngClass]="{ 'is-invalid': usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched) }"
-            />
-            @if (usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched)) {
-              <div class="invalid-feedback">
-                @if (usernameControl?.errors?.['required']) {
-                  <div>{{ 'LOGIN.USER_REQ' | translate }}</div>
-                }
-              </div>
-            }
-          </div>
-          <div class="input-group mb-4">
-            <span class="input-group-text" id="basic-addon2"><i class="feather icon-lock"></i></span>
-            <input
-              type="password"
-              placeholder="{{ 'LOGIN.PASSWORD' | translate }}"
-              formControlName="password"
-              class="form-control"
-              [ngClass]="{ 'is-invalid': passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched) }"
-            />
-            @if (passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)) {
-              <div class="invalid-feedback">
-                @if (passwordControl?.errors?.['required']) {
-                  <div>{{ 'LOGIN.PASS_REQ' | translate }}</div>
-                }
-              </div>
-            }
-          </div>
-          <div class="form-group text-start mt-2">
-            <div class="checkbox checkbox-primary d-inline">
-              <input type="checkbox" name="checkbox-p-1" id="checkbox-p-1" checked="" />
-              <label for="checkbox-p-1" class="cr">{{ 'LOGIN.REMEMBER_ME' | translate }}</label>
+            <div class="d-grid">
+                <button class="btn btn-primary btn-NuevoRegistro" type="submit"
+                    [disabled]="!loginForm.valid || loading">
+                    <span *ngIf="!loading">{{ 'LOGIN.ACCESS' | translate }}</span>
+                    <span *ngIf="loading">
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        {{ 'PLATAFORMA.CHARGING' | translate }}
+                    </span>
+                </button>
             </div>
-          </div>
-          <div class="d-grid">
-            <button class="btn btn-block btn-primary mb-0" type="submit" [disabled]="!loginForm.valid || loading">
-              <span *ngIf="!loading">{{ 'LOGIN.ACCESS' | translate }}</span>
-              <span *ngIf="loading">
-                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                {{ 'PLATAFORMA.CHARGING' | translate }}
-              </span>
-            </button>
-          </div>
-          @if (error) {
+            @if (error) {
             <div class="alert alert-danger mt-3 mb-0">{{ error }}</div>
-          }
-          <div class="d-grid text-center">
-            <br />
-            <p class="mb-2 text-muted"
-              >{{ 'LOGIN.CHANGE_PASS_Q' | translate }}
-              <a [routerLink]="['/autenticacion/change-password']" class="f-w-400">{{ 'LOGIN.CHANGE_PASS_T' | translate }}</a></p
-            >
-            <p class="mb-2 text-muted"
-              >{{ 'LOGIN.RESET_PASS_Q' | translate }}
-              <a [routerLink]="['/autenticacion/reset-password']" class="f-w-400">{{ 'LOGIN.RESET_PASS_T' | translate }}</a></p
-            >
-          </div>
+            }
+            <div class="d-grid text-center">
+                <br />
+                <p class="text-muted">{{ 'LOGIN.CHANGE_PASS_Q' | translate }}
+                    <a [routerLink]="['/autenticacion/change-password']" class="link-label">{{ 'LOGIN.CHANGE_PASS_T' |
+                        translate }}</a>
+                </p>
+                <p class="text-muted">{{ 'LOGIN.RESET_PASS_Q' | translate }}
+                    <a [routerLink]="['/autenticacion/reset-password']" class="link-label">{{ 'LOGIN.RESET_PASS_T' |
+                        translate }}</a>
+                </p>
+            </div>
         </form>
         <div class="text-center">
-          <div class="saprator my-4"
-            ><span>{{ 'LOGIN.SOCIAL_NETWORKS' | translate }}</span></div
-          >
-          <button class="btn text-white bg-facebook mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="facebook"
-            ><i class="fab fa-facebook-f"></i
-          ></button>
-          <button class="btn text-white bg-googlePlus mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="Google"
-            ><i class="fab fa-google-plus-g"></i
-          ></button>
-          <button class="btn text-white bg-twitter mb-2 wid-40 px-0 hei-40 rounded-circle" title="Twitter"
-            ><i class="fab fa-twitter"></i
-          ></button>
+            <p><b>{{ 'LOGIN.SOCIAL_NETWORKS' | translate }}</b></p>
+            <button class="btn text-white bg-facebook mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="facebook"><i
+                    class="fab fa-facebook-f"></i></button>
+            <button class="btn text-white bg-googlePlus mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="Google"><i
+                    class="fab fa-google-plus-g"></i></button>
+            <button class="btn text-white bg-twitter mb-2 wid-40 px-0 hei-40 rounded-circle" title="Twitter"><i
+                    class="fab fa-twitter"></i></button>
         </div>
-      </div>
+        <br><br>
+        <div class="card-footer text-center">
+            © 2025 D&M Software Solutions SAS.
+        </div>
     </div>
-  </div>
 </div>

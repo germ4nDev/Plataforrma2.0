@@ -9,11 +9,36 @@ form .password-show {
     position: absolute;
     top: 0px;
     right: 25px;
-  }
+}
 
-  .navbar-transparent {
-    background-color: transparent !important; /* Asegura la transparencia */
-    border-bottom: none; /* Opcional: Remueve cualquier línea divisoria */
-    transition: background-color 0.5s ease; /* Transición suave al cambiar de color */
-    box-shadow: none !important; /* Asegura que no tenga sombra inicial */
+.navbar-transparent {
+    background-color: transparent !important;
+    border-bottom: none;
+    transition: background-color 0.5s ease;
+    box-shadow: none !important;
+}
+
+.card.card-body {
+    width: 400px;
+    color: black;
+    background: rgb(255, 255, 255, 0.8);
+    margin: 0 auto;
+    float: none;
+    margin-bottom: 10px;
+    padding: 20px !important;
+    position: absolute;
+     opacity: 0.8;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+
+.login-register {
+    background-image: url(https://koral360.dymsites.co/assets/images/background/login-register.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100%;
+    width: 100%;
+    position: fixed;
 }
