@@ -49,20 +49,15 @@
                         </td>
                         <td *ngFor="let col of columns">
                             <ng-container *ngIf="col === 'fotoUsuario' && showAvatar; else checkNested">
-                                <img [src]="'assets/images/user/' + row[col]" [alt]="'Avatar de ' + row['nombreUsuario']"
-                                    class="avatar-table">
+                                <img [src]="row[col]" [alt]="'Avatar de ' + row['nombreUsuario']" class="avatar-table">
                             </ng-container>
-                            <ng-template #checkNested>
-                                <ng-container
-                                    *ngIf="col === 'aplicaciones' || col === 'suites' || col === 'roles'; else defaultCell">
-                                    <span *ngFor="let item of row[col]">
-                                        {{ item }}<br>
-                                    </span>
-                                </ng-container>
-                            </ng-template>
-                            <ng-template #defaultCell>
+                            <ng-container *ngIf="col === 'imagen' && showImagen; else checkNested">
+                                <img [src]="row[col]" [alt]="'PLATAFORMA.DATATABLE.SHOWIIMAGE' | translate"
+                                    class="image-table">
+                            </ng-container>
+                            <ng-container *ngIf="col !== 'fotoUsuario' && col !== 'imagen'" >
                                 {{ row[col] }}
-                            </ng-template>
+                            </ng-container>
                         </td>
                         <td style="width: 120px; text-align: center;" *ngIf="showActions">
                             <button *ngIf="showViewButton" class="btn btn-sm btn-outline-primary me-1" (click)="onView(row)">

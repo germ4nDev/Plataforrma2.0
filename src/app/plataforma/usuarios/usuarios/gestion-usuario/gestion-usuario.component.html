@@ -23,6 +23,10 @@
                         <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'USUARIOS.UPDATE' | translate }}</h4>
                     </div>
                     <div class="d-flex">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
                         <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarAplicacionClick(validationForm)">
                             {{ 'USUARIOS.GESTION.CREATE' | translate }}
@@ -32,10 +36,6 @@
                             (click)="btnGestionarAplicacionClick(validationForm)">
                             {{ 'USUARIOS.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
                 </div>

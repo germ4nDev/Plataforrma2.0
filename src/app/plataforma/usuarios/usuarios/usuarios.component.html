@@ -62,20 +62,25 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['fotoUsuario', 'identificacionUsuario', 'nombreUsuario', 'correoUsuario', 'userNameUsuario', 'userNameUsuario', 'nomEstado']"
+                    [idField]="'usuarioId'"
+                    [tableTitle]="'USUARIOS.TITLE' | translate"
+                    [columns]="['fotoUsuario', 'identificacionUsuario', 'nombreUsuario', 'correoUsuario', 'userNameUsuario', 'nomEstado']"
                     [columnTitles]="[
                         'USUARIOS.FOTO' | translate,
                         'USUARIOS.IDENTIFICACION' | translate,
                         'USUARIOS.NAME' | translate,
                         'USUARIOS.CORREO' | translate,
                         'USUARIOS.USERNAME' | translate,
-                        'USUARIOS.STATUS' | translate,
-                        'PLATAFORMA.OPTIONS' | translate
+                        'USUARIOS.STATUS' | translate
                     ]"
-                    [idField]="'usuarioId'"
-                    [tableTitle]="'USUARIOS.TITLE' | translate"
-                    [showAvatar]="true"
+                    [detailColumns]="['descripcionUsuario']"
+                    [detailTitles]="[
+                      'USUARIOS.DESCRIPTION'| translate
+                    ]"
+                    [showDetail]="true"
                     [showActions]="true"
+                    [showAvatar]="true"
+                    [showImage]="false"
                     [showNewButton]="true"
                     [showViewButton]="false"
                     [showEditButton]="true"

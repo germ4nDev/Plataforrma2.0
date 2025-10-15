@@ -59,7 +59,6 @@ export class PreciosUnitariosComponent implements OnInit {
     this.hasFiltersSlot = true;
     this.consultarTiposValor();
     this.consultarRegistros();
-    console.log('elementos menu componente', this.menuItems);
   }
 
   consultarTiposValor() {

@@ -847,6 +847,13 @@ body.gradient-dark {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+.image-table {
+  width: 40px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
 .image-preview-container {
   width: 100px;
   /* Ajusta el ancho deseado */

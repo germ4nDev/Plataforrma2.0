@@ -24,6 +24,7 @@ export class DatatableComponent implements OnInit, OnChanges {
   @Input() exportLabel: string = 'Exportar';
   @Input() newButtonLabel: string = 'Nueva Aplicación';
   @Input() showAvatar: boolean = false;
+  @Input() showImage: boolean = false;
   @Input() showActions: boolean = true;
   @Input() idField: string = 'id';
   @Input() showSearchBox: boolean = true;
@@ -54,7 +55,7 @@ export class DatatableComponent implements OnInit, OnChanges {
   constructor() {}
 
   ngOnInit(): void {
-    console.log('entrar aqui', this.data);
+    console.log('************ elementos recibidos', this.data);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -75,11 +76,9 @@ export class DatatableComponent implements OnInit, OnChanges {
       }
       return true;
     });
-
     if (this.sortByColumn) {
       tempFilteredData = this.sortData(tempFilteredData);
     }
-
     this.filteredData = tempFilteredData;
     this.totalPages = Math.ceil(this.filteredData.length / this.itemsPerPage);
     if (this.currentPage > this.totalPages) {

@@ -17,8 +17,8 @@ import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.se
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
-import { environment } from 'src/environments/environment';
 import { LanguageSelectorComponent } from "src/app/theme/shared/components/language-selector/language-selector.component";
+import { environment } from 'src/environments/environment';
 
 const base_url = environment.apiUrl;
 
