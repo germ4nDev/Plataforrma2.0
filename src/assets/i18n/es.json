@@ -59,7 +59,10 @@
             "CONEXIONES": "Conexiones",
             "UTILIDADES": "Utilidades",
             "COLORESNAV": "Colores Navbar",
-            "SLIDER": "Imágees Inicio"
+            "SLIDER": "Imágees Inicio",
+            "PRECIOS": "Precios Unitarios",
+            "PRECIOSUNITARIOS": "Precios Unitarios",
+            "TIPOSVALOR": "Tipos Precio"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notificaciones",

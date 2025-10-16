@@ -15,6 +15,7 @@ import { GradientConfig } from 'src/app/app-config';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-suscriptores',
@@ -75,6 +76,29 @@ export class SuscriptoresComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'codigoSuscriptor',
+      header: 'SUSCRIPTORES.CODE',
+      type: 'text'
+    },
+    {
+      name: 'nombreSuscriptor',
+      header: 'SUSCRIPTORES.NAME',
+      type: 'text'
+    },
+    {
+      name: 'identificacion',
+      header: 'SUSCRIPTORES.IDENTIFICATION',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'SUSCRIPTORES.STATUS',
+      type: 'text'
+    }
+  ];
 
   OnNuevoRegistroClick() {
     this.router.navigate(['/suscriptor/gestion-suscriptor']);

@@ -46,19 +46,14 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nombreRequerimiento', 'nomEstado']"
-                    [columnTitles]="[
-                      'TICKETS.REQUERIMIENTOS.NOMBREREQUERIMIENTO' | translate,
-                      'TICKETS.REQUERIMIENTOS.ESTADOREQUERIMIENTO' | translate
-                    ]"
+                    [idField]="'requerimientoId'"
+                    [tableTitle]="'TICKETS.REQUERIMIENTOS.TITLE' | translate"
+                    [metadataColumns]="columnasRegistros"
                     [detailColumns]="['nomTicket','descripcionRequerimiento']"
                     [detailTitles]="[
                        'TICKETS.REQUERIMIENTOS.NAMETICKET'| translate,
                        'TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO'| translate
                     ]"
-                    [idField]="'requerimientoId'"
-                    [tableTitle]="'TICKETS.REQUERIMIENTOS.TITLE' | translate"
-                    [showAvatar]="false"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"

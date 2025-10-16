@@ -19,8 +19,9 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-import { environment } from 'src/environments/environment';
 import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { environment } from 'src/environments/environment';
 
 const base_url = environment.apiUrl;
 //#endregion IMPORTS
@@ -87,6 +88,42 @@ export class UsuariosComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasUsuarios: ColumnMetadata[] = [
+    {
+      name: 'fotoUsuario',
+      header: 'USUARIOS.FOTO',
+      type: 'avatar', // 👈 ¡CLAVE! Esto le dice al datatable que renderice la imagen.
+      isSortable: false
+    },
+    {
+      name: 'identificacionUsuario',
+      header: 'USUARIOS.IDENTIFICACION',
+      type: 'text'
+    },
+    {
+      name: 'nombreUsuario',
+      header: 'USUARIOS.NAME',
+      type: 'text'
+    },
+    {
+      name: 'correoUsuario',
+      header: 'USUARIOS.CORREO',
+      type: 'text'
+    },
+    {
+      name: 'userNameUsuario',
+      header: 'USUARIOS.USERNAME',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'USUARIOS.STATUS',
+      type: 'text'
+    }
+    // Si tuvieras una columna de precio, usarías:
+    // { name: 'costo', header: 'USUARIOS.COSTO', type: 'number' }
+  ];
 
   getEstado(estado: boolean): string {
     return estado ? 'Activo' : 'Inactivo';
@@ -198,3 +235,10 @@ export class UsuariosComponent implements OnInit {
     this.toggleSidebar.emit();
   }
 }
+
+// export interface ColumnMetadata {
+//   name: string;
+//   header: string;
+//   type: 'number' | 'text' | 'date' | 'avatar' | 'image' | 'unknown';
+//   isSortable?: boolean;
+// }

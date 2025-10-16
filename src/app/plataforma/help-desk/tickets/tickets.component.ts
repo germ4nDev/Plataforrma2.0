@@ -16,6 +16,7 @@ import { GradientConfig } from 'src/app/app-config';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import Swal from 'sweetalert2';
 import { NavigationService, PtlAplicacionesService } from 'src/app/theme/shared/service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-tickets',
@@ -82,6 +83,19 @@ export class TicketsComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nombreTicket',
+      header: 'TICKETS.NOMBREREQUERIMIENTO',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'TICKETS..STATUS',
+      type: 'text'
+    }
+  ];
 
   consultarAplicaciones() {
     this.aplicacionesSub = this._aplicacionesService

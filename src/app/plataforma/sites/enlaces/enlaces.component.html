@@ -1,78 +1,76 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'PLATAFORMA.MENU' | translate }}
+        </button>
+        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+          {{ 'PLATAFORMA.FILTERS' | translate }}
+        </button>
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
-            </ng-container>
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <div class="filtro">
-                        <small>{{ 'SITIOS.ENLACES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'SITIOS.ENLACES.FILTROS.NOMBRECHOLDER' | translate }}" />
-
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'SITIOS.ENLACES.FILTROS.FILTRODECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'SITIOS.ENLACES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'SITIOS.ENLACES.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
+      <ng-container *ngIf="activeTab === 'menu'">
+        <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+      </ng-container>
+      <ng-container *ngIf="activeTab === 'filters'">
+        <div class="p-3 filtros-scroll-wrapper">
+          <div class="filtro">
+            <small>{{ 'SITIOS.ENLACES.FILTROS.FILTRONOMBRE' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroNombreChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'SITIOS.ENLACES.FILTROS.NOMBRECHOLDER' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'SITIOS.ENLACES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroDescripcionChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'SITIOS.ENLACES.FILTROS.DESCRIPCIONCHOLDER' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'SITIOS.ENLACES.FILTROS.FILTROESTADO' | translate }}</small>
+            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+              <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <app-data-table
-                    [data]="registrosFiltrado"
-                    [columns]="['nombreEnlace','rutaEnlace','nomEstado']"
-                    [columnTitles]="[
-                      'SITIOS.ENLACES.NAME' | translate,
-                      'SITIOS.ENLACES.RUTA'| translate,
-                      'SITIOS.ENLACES.STATUS' | translate
-                    ]"
-                    [detailColumns]="['nomSitio', 'descripcionEnlace']"
-                    [detailTitles]="[
-                      'SITIOS.ENLACES.NAMESITIO' | translate,
-                      'SITIOS.ENLACES.DESCRIPTION'| translate
-                    ]"
-                    [idField]="'enlaceId'"
-                    [tableTitle]="'SITIOS.ENLACES.TITLE' | translate"
-                    [showAvatar]="false"
-                    [showActions]="true"
-                    [showNewButton]="true"
-                    [showViewButton]="false"
-                    [showEditButton]="true"
-                    [showDeleteButton]="true"
-                    [showDetail]="true"
-                    [newButtonLabel]="'SITIOS.ENLACES.GESTION.NEW' | translate"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                    (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick($event)"
-                    (deleteRecord)="OnEliminarRegistroClick($event)">
-                </app-data-table>
-            </div>
-        </div>
+      </ng-container>
     </div>
-</div>
+  </aside>
 
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        <app-data-table
+          [data]="registrosFiltrado"
+          [idField]="'enlaceId'"
+          [tableTitle]="'SITIOS.ENLACES.TITLE' | translate"
+          [metadataColumns]="columnasRegistros"
+          [detailColumns]="['nomSitio', 'descripcionEnlace']"
+          [detailTitles]="['SITIOS.ENLACES.NAMESITIO' | translate, 'SITIOS.ENLACES.DESCRIPTION' | translate]"
+          [showActions]="true"
+          [showNewButton]="true"
+          [showViewButton]="false"
+          [showEditButton]="true"
+          [showDeleteButton]="true"
+          [showDetail]="true"
+          [newButtonLabel]="'SITIOS.ENLACES.GESTION.NEW' | translate"
+          [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+          (newRecord)="OnNuevoRegistroClick()"
+          (editRecord)="OnEditarRegistroClick($event)"
+          (deleteRecord)="OnEliminarRegistroClick($event)"
+        >
+        </app-data-table>
+      </div>
+    </div>
+  </div>
+</div>

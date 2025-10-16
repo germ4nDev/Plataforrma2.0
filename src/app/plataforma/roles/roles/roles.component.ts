@@ -22,6 +22,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 //#endregion IMPORTS
 
 @Component({
@@ -69,25 +70,6 @@ export class RolesComponent implements OnInit {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
     this.consultarRegistros();
-    this._languageService.currentLang$.subscribe((lang) => {
-      this.translate.use(lang);
-      this.translate
-        .get(['ROLES.NOMBREAPLICACION', 'ROLES.NOMBRESUITE', 'ROLES.NOMBREROLE', 'ROLES.DESCRIPCIONROLE', 'ROLES.ESTADOROLE'])
-        .subscribe((translations) => {
-          this.tituloPagina = translations['ROLES.TITLE'];
-          this.dtColumnSearchingOptions = {
-            responsive: true,
-            columns: [
-              { title: translations['ROLES.NOMBREAPLICACION'], data: 'nombreSuite' },
-              { title: translations['ROLES.NOMBRESUITE'], data: 'nombreAplicacion' },
-              { title: translations['ROLES.NOMBREROLE'], data: 'nombreRole' },
-              { title: translations['ROLES.DESCRIPCIONROL'], data: 'descripcionRole' },
-              { title: translations['ROLES.ESTADOROLE'], data: 'estadoRole' },
-              { title: translations['PLATAFORMA.OPTIONS'], data: 'opciones' }
-            ]
-          };
-        });
-    });
   }
 
   ngOnDestroy(): void {
@@ -164,6 +146,29 @@ export class RolesComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nombreAplicacion',
+      header: 'ROLES.NOMBREAPLICACION',
+      type: 'text'
+    },
+    {
+      name: 'nombreSuite',
+      header: 'ROLES.NOMBRESUITE',
+      type: 'text'
+    },
+    {
+      name: 'nombreRole',
+      header: 'ROLES.NOMBREROL',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'ROLES.ESTADOROLE',
+      type: 'text'
+    }
+  ];
 
   filtrarColumna(columna: number, valor: string) {
     this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {

@@ -14,8 +14,6 @@ import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-in
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
-import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
-import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { PTLTiposValoresModel } from 'src/app/theme/shared/_helpers/models/PTLTiposValores.model';
 import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLValoresUnitarios.model';
@@ -46,11 +44,6 @@ export class GestionPrecioComponent implements OnInit {
   tiposValor: PTLTiposValoresModel[] = [];
   valoresUnitariosSub?: Subscription;
   valoresUnitarios: PTLValoresUnitarios[] = [];
-  suitesSub?: Subscription;
-  modulosSub?: Subscription;
-  suites: PTLSuiteAPModel[] = [];
-  modulosPadre: PTLModuloAP[] = [];
-  codigoModulo = uuidv4();
   tipoEditorTexto = 'basica';
 
   // constructor
@@ -75,10 +68,10 @@ export class GestionPrecioComponent implements OnInit {
         this.modoEdicion = true;
         this._registrosService.getRegistroById(this.valorUnitarioId).subscribe({
           next: (resp: any) => {
-            this.FormRegistro = resp.valoresUnitarios;
+            this.FormRegistro = resp.valorUnitario;
           },
           error: () => {
-            Swal.fire('Error', 'No se pudo obtener la suite por, ', 'error');
+            Swal.fire('Error', 'No se pudo obtener el precio unitario por, ', 'error');
           }
         });
       } else {
@@ -101,7 +94,7 @@ export class GestionPrecioComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.tiposValor = resp.tiposValor;
+            this.tiposValor = resp.tiposValores;
           }
         }),
         catchError((err) => {

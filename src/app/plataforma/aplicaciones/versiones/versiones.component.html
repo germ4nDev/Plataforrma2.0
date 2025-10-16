@@ -59,24 +59,15 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nomAplicacion', 'fechaVersion', 'codigoVersion', 'nomEstado']"
                     [idField]="'versionId'"
                     [tableTitle]="'VERSIONES.TITLE' | translate"
-                    [columnTitles]="[
-                      'VERSIONES.APLICACION' | translate,
-                      'VERSIONES.FECHA' | translate,
-                      'VERSIONES.CODIGO' | translate,
-                      'VERSIONES.STATUS' | translate
-                    ]"
-                    [detailColumns]="[
-                        'nombreVersion', 'descripcionVersion'
-                    ]"
+                    [metadataColumns]="columnasRegistros"
+                    [detailColumns]="['nombreVersion', 'descripcionVersion']"
                     [detailTitles]="[
                         'VERSIONES.NAME' | translate,
                         'VERSIONES.DESCRIPTION' | translate
                     ]"
                     [showDetail]="true"
-                    [showAvatar]="false"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"

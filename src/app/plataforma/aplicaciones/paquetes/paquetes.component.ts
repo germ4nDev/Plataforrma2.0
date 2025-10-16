@@ -20,6 +20,7 @@ import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaci
 import Swal from 'sweetalert2';
 import { PTLPaqueteAP } from 'src/app/theme/shared/_helpers/models/PTLPaqueteAP.model';
 import { PTLPaquetesAplicacionesService } from 'src/app/theme/shared/service/ptlpaquetes-ap.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-paquetes',
@@ -100,6 +101,24 @@ export class PaquetesComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasPaquetes: ColumnMetadata[] = [
+    {
+      name: 'nomAplicacion',
+      header: 'PAQUETES.APLICACION',
+      type: 'text'
+    },
+    {
+      name: 'nombrePaquete',
+      header: 'PAQUETES.NAME',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'PAQUETES.STATUS',
+      type: 'text'
+    }
+  ];
 
   getLanguageUrl(): string {
     const lang = localStorage.getItem('lang') || 'en';

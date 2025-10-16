@@ -18,6 +18,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 import { PTLSitiosAPService } from 'src/app/theme/shared/service/ptlsitios-ap.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-enlaces',
@@ -83,6 +84,24 @@ export class EnlacesComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nombreEnlace',
+      header: 'SITIOS.ENLACES.NAME',
+      type: 'text'
+    },
+    {
+      name: 'rutaEnlace',
+      header: 'SITIOS.ENLACES.RUTA',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'SITIOS.ENLACES.STATUS',
+      type: 'text'
+    }
+  ];
 
   consultarSitios() {
     this.sitiosSub = this._sitiosService

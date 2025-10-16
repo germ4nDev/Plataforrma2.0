@@ -19,6 +19,7 @@ import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLVal
 import Swal from 'sweetalert2';
 import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
 import { PTLTiposValoresModel } from '../../../theme/shared/_helpers/models/PTLTiposValores.model';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-precios-unitarios',
@@ -89,7 +90,7 @@ export class PreciosUnitariosComponent implements OnInit {
             });
             this.registros = resp.valoresUnitarios;
             this.registrosFiltrado = resp.valoresUnitarios;
-            console.log('Todos los sitios', this.registrosFiltrado);
+            console.log('Todos los precios unitarios', this.registrosFiltrado);
             return;
           }
         }),
@@ -100,6 +101,34 @@ export class PreciosUnitariosComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nomTipo',
+      header: 'PRECIOS.TIPO',
+      type: 'text'
+    },
+    {
+      name: 'nombreValor',
+      header: 'PRECIOS.NAME',
+      type: 'text'
+    },
+    {
+      name: 'valorUnitario',
+      header: 'PRECIOS.VALOR',
+      type: 'price'
+    },
+    {
+      name: 'costoValor',
+      header: 'PRECIOS.COSTO',
+      type: 'price'
+    },
+    {
+      name: 'nomEstado',
+      header: 'PRECIOS.STATUS',
+      type: 'text'
+    }
+  ];
 
   OnNuevoRegistroClick() {
     this.router.navigate(['/precios/gestion-precio']);

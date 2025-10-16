@@ -21,6 +21,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-sites',
@@ -87,6 +88,29 @@ export class SitesComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nombreSitio',
+      header: 'SITIOS.NAME',
+      type: 'text'
+    },
+    {
+      name: 'urlSitio',
+      header: 'SITIOS.URL',
+      type: 'text'
+    },
+    {
+      name: 'puertoSitio',
+      header: 'SITIOS.SITESPORT',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'SITIOS.STATUS',
+      type: 'text'
+    }
+  ];
 
   consultarAplicaciones() {
     this.aplicacionesSub = this._aplicacionesService

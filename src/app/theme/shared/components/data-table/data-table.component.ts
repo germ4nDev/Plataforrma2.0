@@ -1,11 +1,12 @@
+/* eslint-disable valid-typeof */
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import * as XLSX from 'xlsx';
-
-// Añade OnChanges y SimpleChanges a las importaciones
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { ColumnMetadata } from '../../_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-data-table',
@@ -14,13 +15,13 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChange
   styleUrls: ['./data-table.component.scss'],
   imports: [CommonModule, TranslateModule, FormsModule]
 })
-// Añade 'implements OnChanges' a la declaración de la clase
 export class DatatableComponent implements OnInit, OnChanges {
   @Input() data: any[] = [];
-  @Input() columns: string[] = [];
-  @Input() detailColumns: string[] = [];
+  @Input() metadataColumns: any[] = [];
   @Input() columnTitles: string[] = [];
+  @Input() detailColumns: string[] = [];
   @Input() detailTitles: string[] = [];
+
   @Input() exportLabel: string = 'Exportar';
   @Input() newButtonLabel: string = 'Nueva Aplicación';
   @Input() showAvatar: boolean = false;
@@ -40,6 +41,9 @@ export class DatatableComponent implements OnInit, OnChanges {
   @Output() newRecord = new EventEmitter<void>();
   @Output() editRecord = new EventEmitter<any>();
   @Output() deleteRecord = new EventEmitter<any>();
+  @Output() excelExport = new EventEmitter<void>();
+
+  public finalColumns: ColumnMetadata[] = [];
 
   public filteredData: any[] = [];
   public paginatedData: any[] = [];
@@ -50,26 +54,95 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   public sortByColumn: string | null = null;
   public sortDirection: 'asc' | 'desc' = 'asc';
-  public registroId: number = 0;
+  public registroId: number | null = null;
 
   constructor() {}
 
   ngOnInit(): void {
     console.log('************ elementos recibidos', this.data);
+    this.processDataAndColumns();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data']) {
+    if (changes['data'] || changes['metadataColumns']) {
       this.currentPage = 1;
-      this.applyFiltersAndPagination();
+      this.processDataAndColumns();
     }
+  }
+
+  private processDataAndColumns(): void {
+    if (!this.data || this.data.length === 0) {
+      this.finalColumns = [];
+      this.filteredData = [];
+      this.paginatedData = [];
+      this.totalPages = 1;
+      return;
+    }
+
+    if (this.metadataColumns && this.metadataColumns.length > 0) {
+      this.finalColumns = this.metadataColumns.map((col) => {
+        if (typeof col === 'string') {
+          return this.generateMetadata(col, this.data[0][col]);
+        }
+        return col as ColumnMetadata;
+      });
+    } else {
+      this.finalColumns = this.generateInferredMetadata(this.data[0]);
+    }
+    this.applyFiltersAndPagination();
+  }
+
+  private generateInferredMetadata(firstRow: any): ColumnMetadata[] {
+    const metadata: ColumnMetadata[] = [];
+
+    for (const key in firstRow) {
+      if (firstRow.hasOwnProperty(key)) {
+        metadata.push(this.generateMetadata(key, firstRow[key]));
+      }
+    }
+    return metadata;
+  }
+
+  private generateMetadata(key: string, value: any): ColumnMetadata {
+    const type = this.inferColumnType(key, value);
+    return {
+      name: key,
+      header: this.formatHeader(key),
+      type: type,
+      isSortable: type !== 'avatar' && type !== 'image'
+    };
+  }
+
+  private inferColumnType(key: string, value: any): ColumnMetadata['type'] {
+    if (value === null || value === undefined) {
+      return 'unknown';
+    }
+
+    const lowerKey = key.toLowerCase();
+    if (lowerKey.includes('avatar') || lowerKey.includes('foto') || lowerKey.includes('image')) {
+      return 'avatar';
+    }
+
+    if (typeof value === 'number' || (typeof value === 'string' && !isNaN(Number(value)) && value.trim() !== '')) {
+      return 'number';
+    }
+
+    if (typeof value === 'string' && !isNaN(Date.parse(value)) && value.length >= 8) {
+        return 'date';
+    }
+
+    return 'text';
+  }
+
+  private formatHeader(key: string): string {
+    return key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
   }
 
   applyFiltersAndPagination(): void {
     let tempFilteredData = this.data.filter((row) => {
       for (const key of Object.keys(this.filterValues)) {
         const filterValue = this.filterValues[key].toLowerCase();
-        const rowValue = String(row[key]).toLowerCase();
+        const rowValue = String(row[key] || '').toLowerCase();
         if (filterValue && !rowValue.includes(filterValue)) {
           return false;
         }
@@ -81,11 +154,32 @@ export class DatatableComponent implements OnInit, OnChanges {
     }
     this.filteredData = tempFilteredData;
     this.totalPages = Math.ceil(this.filteredData.length / this.itemsPerPage);
+
     if (this.currentPage > this.totalPages) {
       this.currentPage = this.totalPages > 0 ? this.totalPages : 1;
+    } else if (this.currentPage < 1) {
+      this.currentPage = 1;
     }
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     this.paginatedData = this.filteredData.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+  onSort(columnName: string): void {
+    const columnMeta = this.finalColumns.find((c) => c.name === columnName);
+    if (columnMeta && columnMeta.isSortable === false) {
+      return;
+    }
+    if (this.sortByColumn === columnName) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortByColumn = columnName;
+      this.sortDirection = 'asc';
+    }
+    this.applyFiltersAndPagination();
+  }
+
+  onItemsPerPageChange(): void {
+    this.currentPage = 1;
+    this.applyFiltersAndPagination();
   }
 
   onPageChange(page: number): void {
@@ -93,11 +187,6 @@ export class DatatableComponent implements OnInit, OnChanges {
       this.currentPage = page;
       this.applyFiltersAndPagination();
     }
-  }
-
-  onItemsPerPageChange(): void {
-    this.currentPage = 1;
-    this.applyFiltersAndPagination();
   }
 
   sortData(data: any[]): any[] {
@@ -111,29 +200,45 @@ export class DatatableComponent implements OnInit, OnChanges {
       const bValue = b[column];
       let comparison = 0;
 
-      if (aValue > bValue) {
-        comparison = 1;
-      } else if (aValue < bValue) {
-        comparison = -1;
+      const columnType = this.finalColumns.find((c) => c.name === column)?.type;
+      if (columnType === 'number') {
+        const numA = Number(aValue);
+        const numB = Number(bValue);
+        if (!isNaN(numA) && !isNaN(numB)) {
+          comparison = numA - numB;
+        }
+      } else {
+        const strA = String(aValue || '');
+        const strB = String(bValue || '');
+        if (strA > strB) {
+          comparison = 1;
+        } else if (strA < strB) {
+          comparison = -1;
+        }
       }
-
       return this.sortDirection === 'desc' ? comparison * -1 : comparison;
     });
   }
 
-  onSort(column: string): void {
-    if (this.sortByColumn === column) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortByColumn = column;
-      this.sortDirection = 'asc';
-    }
-    this.applyFiltersAndPagination();
-  }
-
   getPages(): number[] {
-    const pages = [];
-    for (let i = 1; i <= this.totalPages; i++) {
+    const maxPagesToShow = 5;
+    const pages: number[] = [];
+    let startPage: number;
+    let endPage: number;
+
+    if (this.totalPages <= maxPagesToShow) {
+      startPage = 1;
+      endPage = this.totalPages;
+    } else {
+      startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+      endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+
+      if (endPage - startPage + 1 < maxPagesToShow) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
     return pages;
@@ -144,8 +249,6 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   onEdit(row: any): void {
-    console.log('idfield', row[this.idField]);
-
     this.editRecord.emit(row[this.idField]);
   }
 
@@ -165,12 +268,20 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   onExcelExport(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.filteredData);
+    this.excelExport.emit();
+    const exportData = this.filteredData.map((row) => {
+      const newRow: any = {};
+      this.finalColumns.forEach((col) => {
+        newRow[col.header] = row[col.name];
+      });
+      return newRow;
+    });
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, this.tableTitle);
+    XLSX.utils.book_append_sheet(wb, ws, this.tableTitle || 'Datos');
     const hoy = new Date();
     const timestamp = hoy.getTime();
-    const bookName = this.tableTitle + '_' + timestamp + '.xlsx';
+    const bookName = (this.tableTitle || 'export') + '_' + timestamp + '.xlsx';
     XLSX.writeFile(wb, bookName);
   }
 
@@ -182,3 +293,4 @@ export class DatatableComponent implements OnInit, OnChanges {
     console.log('Metodo vacio');
   }
 }
+

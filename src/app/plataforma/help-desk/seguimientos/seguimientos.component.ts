@@ -18,6 +18,7 @@ import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.servi
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
 import Swal from 'sweetalert2';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-seguimientos',
@@ -52,7 +53,6 @@ export class SeguimientosComponent implements OnInit {
     private _seguimientosService: PTLSeguimientosRqService,
     private _estadosService: PTLEstadosService,
     private _requerimientoService: PTLRequerimientosTkService
-
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -74,8 +74,8 @@ export class SeguimientosComponent implements OnInit {
           if (resp.ok) {
             resp.seguimientos.forEach((seguimiento: any) => {
               seguimiento.nomEstado = seguimiento.estadoSeguimiento;
-              seguimiento.nomRequerimiento = this.requerimientos.filter(x => x.requerimientoId == seguimiento.requerimientoId)[0].nombreRequerimiento || '';
-
+              seguimiento.nomRequerimiento =
+                this.requerimientos.filter((x) => x.requerimientoId == seguimiento.requerimientoId)[0].nombreRequerimiento || '';
             });
             this.registros = resp.seguimientos;
             this.registrosFiltrado = resp.seguimientos;
@@ -90,6 +90,19 @@ export class SeguimientosComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nombreSeguimiento',
+      header: 'TICKETS.SEGUIMIENTOS.NOMBREREQUERIMIENTO',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'TICKETS.SEGUIMIENTOS..STATUS',
+      type: 'text'
+    }
+  ];
 
   consultarRequerimientos() {
     this.registrosSub = this._requerimientoService
@@ -189,9 +202,9 @@ export class SeguimientosComponent implements OnInit {
   onFiltroEstadoChangeClick(evento: any) {
     console.log('filtrar el estado ', evento.target.value);
     if (evento.target.value == 'todos') {
-        this.registrosFiltrado = this.registros;
+      this.registrosFiltrado = this.registros;
     } else {
-        this.registrosFiltrado = this.registros.filter(x => x.estadoSeguimiento == evento.target.value);
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoSeguimiento == evento.target.value);
     }
   }
 

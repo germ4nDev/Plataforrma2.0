@@ -17,6 +17,7 @@ import { DatatableComponent } from 'src/app/theme/shared/components/data-table/d
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import Swal from 'sweetalert2';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-contenidos',
@@ -46,7 +47,7 @@ export class ContenidosComponent implements OnInit {
     private translate: TranslateService,
     private _contenidoService: PTLContenidosELService,
     private _navigationService: NavigationService,
-    private _enlacesService: PTLEnlacesSTService,
+    private _enlacesService: PTLEnlacesSTService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -68,7 +69,7 @@ export class ContenidosComponent implements OnInit {
           if (resp.ok) {
             resp.contenidos.forEach((contenido: any) => {
               contenido.nomEstado = contenido.estadoContenido == true ? 'Activa' : 'Inactiva';
-              contenido.nomEnlace = this.enlaces.filter(x => x.enlaceId == contenido.enlaceId)[0].nombreEnlace || '';
+              contenido.nomEnlace = this.enlaces.filter((x) => x.enlaceId == contenido.enlaceId)[0].nombreEnlace || '';
             });
             this.registros = resp.contenidos;
             this.registrosFiltrado = resp.contenidos;
@@ -83,6 +84,24 @@ export class ContenidosComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nombreContenido',
+      header: 'SITIOS.CONTENIDOS.NAME',
+      type: 'text'
+    },
+    {
+      name: 'nomEnlace',
+      header: 'PRECIOS.TIPOS.NAMEENLACE',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'SITIOS.CONTENIDOS.STATUS',
+      type: 'text'
+    }
+  ];
 
   consultarEnlaces() {
     this.enlaceSub = this._enlacesService

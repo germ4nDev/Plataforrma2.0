@@ -59,19 +59,12 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nomAplicacion', 'nombrePaquete', 'descripcionPaquete', 'nomEstado']"
                     [idField]="'paqueteId'"
                     [tableTitle]="'PAQUETES.TITLE' | translate"
-                    [columnTitles]="[
-                      'PAQUETES.CODE' | translate,
-                      'PAQUETES.NAME' | translate,
-                      'PAQUETES.DESCRIPTION' | translate,
-                      'PAQUETES.STATUS' | translate
-                    ]"
-                    [detailColumns]="[]"
-                    [detailTitles]="[]"
-                    [showDetail]="false"
-                    [showAvatar]="false"
+                    [metadataColumns]="columnasPaquetes"
+                    [detailColumns]="['descripcionPaquete']"
+                    [detailTitles]="['PAQUETES.DESCRIPTION' | translate]"
+                    [showDetail]="true"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"

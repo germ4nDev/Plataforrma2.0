@@ -55,7 +55,10 @@
             "CONEXIONES": "Connections",
             "UTILIDADES": "Utilities",
             "COLORESNAV": "Navbar Colors",
-            "SLIDER": "Images Slider"
+            "SLIDER": "Images Slider",
+            "PRECIOS": "Prices List",
+            "PRECIOSUNITARIOS": "Unit Prices",
+            "TIPOSVALOR": "Prices Types"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notifications",

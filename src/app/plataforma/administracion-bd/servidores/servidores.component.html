@@ -46,19 +46,13 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['nombreServidor', 'rutaServidor', 'nomEstado']"
-                    [columnTitles]="[
-                      'CONEXIONES.SERVIDORES.NOMBRESERVIDOR' | translate,
-                      'CONEXIONES.SERVIDORES.RUTASERVIDOR' | translate,
-                      'CONEXIONES.SERVIDORES.ESTADOSERVIDOR' | translate
-                    ]"
+                    [idField]="'servidorId'"
+                    [tableTitle]="'CONEXIONES.SERVIDORES.TITLE' | translate"
+                    [metadataColumns]="columnasServidores"
                     [detailColumns]="['descripcionServidor']"
                     [detailTitles]="[
                       'CONEXIONES.SERVIDORES.DESCRIPCIONSERVIDOR'| translate
                     ]"
-                    [idField]="'servidorId'"
-                    [tableTitle]="'CONEXIONES.SERVIDORES.TITLE' | translate"
-                    [showAvatar]="false"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"

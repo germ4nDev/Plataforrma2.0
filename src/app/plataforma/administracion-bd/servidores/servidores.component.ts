@@ -15,6 +15,7 @@ import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.ser
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
 import Swal from 'sweetalert2';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-servidores',
@@ -78,6 +79,24 @@ export class ServidoresComponent implements OnInit {
       )
       .subscribe();
   }
+
+     columnasServidores: ColumnMetadata[] = [
+      {
+        name: 'nombreServidor',
+        header: 'CONEXIONES.SERVIDORES.NOMBRESERVIDOR',
+        type: 'text',
+      },
+      {
+        name: 'rutaServidor',
+        header: 'CONEXIONES.SERVIDORES.RUTASERVIDOR',
+        type: 'text'
+      },
+      {
+        name: 'nomEstado',
+        header: 'USUARIOS.STATUS',
+        type: 'text'
+      }
+    ];
 
   OnNuevoRegistroClick() {
     this.router.navigate(['administracion-bd/gestion-servidor/']);

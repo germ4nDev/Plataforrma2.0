@@ -7,7 +7,7 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        path: 'sites',
+        path: 'precios-unitarios',
         loadComponent: () => import('./precios-unitarios/precios-unitarios.component').then((m) => m.PreciosUnitariosComponent)
       },
       {

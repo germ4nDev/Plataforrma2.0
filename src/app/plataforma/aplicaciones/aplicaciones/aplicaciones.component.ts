@@ -18,6 +18,10 @@ import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaci
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
 import Swal from 'sweetalert2';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { environment } from 'src/environments/environment';
+
+const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-aplicaciones',
@@ -64,6 +68,7 @@ export class AplicacionesComponent implements OnInit {
           if (resp.ok) {
             resp.aplicaciones.forEach((app: any) => {
               app.nomEstado = app.estadoAplicacion ? 'Activo' : 'Inactivo';
+              app.imagenInicio = `${base_url}/upload/aplicaciones/${app.imagenInicio}`;
             });
             this.aplicaciones = resp.aplicaciones;
             this.aplicacionesFiltrado = resp.aplicaciones;
@@ -76,6 +81,30 @@ export class AplicacionesComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasAplicaciopnes: ColumnMetadata[] = [
+    {
+      name: 'imagenInicio',
+      header: 'APLICACIONES.FOTO',
+      type: 'image',
+      isSortable: false
+    },
+    {
+      name: 'codigoAplicacion',
+      header: 'APLICACIONES.CODE',
+      type: 'text'
+    },
+    {
+      name: 'nombreAplicacion',
+      header: 'APLICACIONES.NAME',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'APLICACIONES.STATUS',
+      type: 'text'
+    }
+  ];
 
   getLanguageUrl(): string {
     const lang = localStorage.getItem('lang') || 'en';
@@ -121,7 +150,7 @@ export class AplicacionesComponent implements OnInit {
     } else {
       const estado = evento.target.value == 'true' ? true : false;
       console.log('Aplicaciones', this.aplicacionesFiltrado);
-      this.aplicacionesFiltrado = this.aplicaciones.filter(x => x.estadoAplicacion == estado);
+      this.aplicacionesFiltrado = this.aplicaciones.filter((x) => x.estadoAplicacion == estado);
     }
   }
 
@@ -157,8 +186,6 @@ export class AplicacionesComponent implements OnInit {
       }
     });
   }
-
-
 
   toggleNav(): void {
     this.toggleSidebar.emit();

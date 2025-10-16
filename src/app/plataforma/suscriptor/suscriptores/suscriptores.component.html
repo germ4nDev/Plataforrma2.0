@@ -1,79 +1,83 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'PLATAFORMA.MENU' | translate }}
+        </button>
+        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+          {{ 'PLATAFORMA.FILTERS' | translate }}
+        </button>
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
-            </ng-container>
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'SUSCRIPTORES.FILTROS.TITULO' | translate }}</h6>
-                    <div class="filtro">
-                        <small>{{ 'SUSCRIPTORES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'SUSCRIPTORES.FILTROS.NOMBRECHOLDER' | translate }}" />
-
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'SUSCRIPTORES.FILTROS.FILTROIDENTIFICACION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'SUSCRIPTORES.FILTROS.IDENTIFICACIONHOLDER' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'SUSCRIPTORES.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
+      <ng-container *ngIf="activeTab === 'menu'">
+        <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+      </ng-container>
+      <ng-container *ngIf="activeTab === 'filters'">
+        <div class="p-3 filtros-scroll-wrapper">
+          <h6 class="filtros-title">{{ 'SUSCRIPTORES.FILTROS.TITULO' | translate }}</h6>
+          <div class="filtro">
+            <small>{{ 'SUSCRIPTORES.FILTROS.FILTRONOMBRE' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroNombreChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'SUSCRIPTORES.FILTROS.NOMBRECHOLDER' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'SUSCRIPTORES.FILTROS.FILTROIDENTIFICACION' | translate }}</small>
+            <input
+              type="text"
+              (keyup)="onFiltroIdentificacionChangeClick($event)"
+              class="form-control form-input"
+              placeholder="{{ 'SUSCRIPTORES.FILTROS.IDENTIFICACIONHOLDER' | translate }}"
+            />
+          </div>
+          <div class="filtro">
+            <small>{{ 'SUSCRIPTORES.FILTROS.FILTROESTADO' | translate }}</small>
+            <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer">
+              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+              <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <app-data-table
-                    [data]="registrosFiltrado"
-                    [columns]="['codigoSuscriptor', 'nombreSuscriptor', 'identificacion', 'nomEstado']"
-                    [columnTitles]="[
-                      'SUSCRIPTORES.CODE' | translate,
-                      'SUSCRIPTORES.NAME'| translate,
-                      'SUSCRIPTORES.IDENTIFICATION' | translate,
-                      'SUSCRIPTORES.STATUS' | translate
-                    ]"
-                    [detailColumns]="['descripcionSuscriptor']"
-                    [detailTitles]="[
-                        'SUSCRIPTORES.DESCRIPTION' | translate
-                    ]"
-                    [idField]="'suscriptorId'"
-                    [tableTitle]="'SUSCRIPTORES.TITLE' | translate"
-                    [showAvatar]="false"
-                    [showActions]="true"
-                    [showNewButton]="true"
-                    [showViewButton]="false"
-                    [showEditButton]="true"
-                    [showDeleteButton]="true"
-                    [showDetail]="true"
-                    [newButtonLabel]="'SUSCRIPTORES.NEW' | translate"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                    (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick($event)"
-                    (deleteRecord)="OnEliminarRegistroClick($event)">
-                </app-data-table>
-            </div>
-        </div>
+      </ng-container>
     </div>
-</div>
+  </aside>
 
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        <app-data-table
+          [data]="registrosFiltrado"
+          [idField]="'suscriptorId'"
+          [tableTitle]="'SUSCRIPTORES.TITLE' | translate"
+          [metadataColumns]="columnasRegistros"
+          [columnTitles]="[
+            'SUSCRIPTORES.CODE' | translate,
+            'SUSCRIPTORES.NAME' | translate,
+            'SUSCRIPTORES.IDENTIFICATION' | translate,
+            'SUSCRIPTORES.STATUS' | translate
+          ]"
+          [detailColumns]="['descripcionSuscriptor']"
+          [detailTitles]="['SUSCRIPTORES.DESCRIPTION' | translate]"
+          [showActions]="true"
+          [showNewButton]="true"
+          [showViewButton]="false"
+          [showEditButton]="true"
+          [showDeleteButton]="true"
+          [showDetail]="true"
+          [newButtonLabel]="'SUSCRIPTORES.NEW' | translate"
+          [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+          (newRecord)="OnNuevoRegistroClick()"
+          (editRecord)="OnEditarRegistroClick($event)"
+          (deleteRecord)="OnEliminarRegistroClick($event)"
+        >
+        </app-data-table>
+      </div>
+    </div>
+  </div>
+</div>

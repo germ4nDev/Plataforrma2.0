@@ -68,19 +68,12 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['codigoSuite', 'nombreSuite', 'nomAplicacion', 'nomEstado']"
                     [idField]="'suiteId'"
                     [tableTitle]="'SUITES.TITLE' | translate"
-                    [columnTitles]="[
-                      'SUITES.CODE' | translate,
-                      'SUITES.NAME' | translate,
-                      'SUITES.APLICACION' | translate,
-                      'SUITES.STATUS' | translate
-                    ]"
+                    [metadataColumns]="columnasRegistros"
                     [detailColumns]="['descripcionSuite']"
                     [detailTitles]="['SUITES.DESCRIPTION' | translate]"
                     [showDetail]="true"
-                    [showAvatar]="false"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"

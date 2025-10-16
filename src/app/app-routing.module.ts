@@ -64,6 +64,11 @@ const routes: Routes = [
                 path: 'utilidades',
                 loadChildren: () =>
                     import('./plataforma/utilidades/utilidades.module').then((module) => module.UtilidadesModule)
+            },
+            {
+                path: 'precios',
+                loadChildren: () =>
+                    import('./plataforma/precios/precios.module').then((module) => module.PreciosModule)
             }
         ]
     },

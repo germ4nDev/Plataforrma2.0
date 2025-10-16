@@ -24,6 +24,7 @@ import { PTLLogActividadAP } from 'src/app/theme/shared/_helpers/models/PTLlogAc
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-log-excepciones',
@@ -32,7 +33,7 @@ import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.
   templateUrl: './log-excepciones.component.html',
   styleUrl: './log-excepciones.component.scss'
 })
-export class LogExcepcionesComponent implements OnInit{
+export class LogExcepcionesComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   aplicaciones: PTLAplicacionModel[] = [];
   suites: PTLSuiteAPModel[] = [];
@@ -94,6 +95,44 @@ export class LogExcepcionesComponent implements OnInit{
       .subscribe();
   }
 
+  columnasLogExepciones: ColumnMetadata[] = [
+    {
+      name: 'fechaLog',
+      header: 'LOGEXEPCIONES.FECHA',
+      type: 'date'
+    },
+    {
+      name: 'nomAplicacion',
+      header: 'LOGEXEPCIONES.APLICACION',
+      type: 'text'
+    },
+    {
+      name: 'nombreAplicacion',
+      header: 'APLICACIONES.NAME',
+      type: 'text'
+    },
+    {
+      name: 'nomSuite',
+      header: 'LOGEXEPCIONES.SUITE',
+      type: 'text'
+    },
+    {
+      name: 'nomModulo',
+      header: 'LOGEXEPCIONES.MODULO',
+      type: 'text'
+    },
+    {
+      name: 'codigoErrr',
+      header: 'LOGEXEPCIONES.CODIGO',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'LOGEXEPCIONES.STATUS',
+      type: 'text'
+    }
+  ];
+
   consultarSuites(codApp?: string): void {
     this.suitesSub = this._suitesService
       .geSuitesAP()
@@ -122,7 +161,7 @@ export class LogExcepcionesComponent implements OnInit{
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-              this.usuarios = resp.usuarios;
+            this.usuarios = resp.usuarios;
           }
         }),
         catchError((err) => {
@@ -162,10 +201,10 @@ export class LogExcepcionesComponent implements OnInit{
           if (resp.ok) {
             resp.registros.forEach((reg: any) => {
               reg.nomEstado = reg.estadoSuite ? 'Activo' : 'Inactivo';
-              reg.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion || '';
-              reg.nomSuite = this.suites.filter(x => x.codigoSuite == reg.codigoSuite)[0].nombreSuite || '';
-              reg.nomModulo = this.modulos.filter(x => x.codigoModulo == reg.codigoModulo)[0].nombreModulo || '';
-              reg.nomUsuario = this.usuarios.filter(x => x.usuarioId == reg.usuarioId)[0].nombreUsuario || '';
+              reg.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion || '';
+              reg.nomSuite = this.suites.filter((x) => x.codigoSuite == reg.codigoSuite)[0].nombreSuite || '';
+              reg.nomModulo = this.modulos.filter((x) => x.codigoModulo == reg.codigoModulo)[0].nombreModulo || '';
+              reg.nomUsuario = this.usuarios.filter((x) => x.usuarioId == reg.usuarioId)[0].nombreUsuario || '';
             });
             if (codSuite) {
               this.registros = resp.registros.filter((x: { codigosuite: string }) => x.codigosuite == codSuite);

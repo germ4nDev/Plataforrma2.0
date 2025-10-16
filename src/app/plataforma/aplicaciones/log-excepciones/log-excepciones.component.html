@@ -16,9 +16,9 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'LOGACTIVIDADES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'LOGEXEPCIONES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
+                        <small>{{ 'LOGEXEPCIONES.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
                         <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="reg.codigoaplicacion" *ngFor="let reg of aplicaciones">
@@ -27,7 +27,7 @@
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
+                        <small>{{ 'LOGEXEPCIONES.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
                         <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="reg.codigosuite" *ngFor="let reg of suites">
@@ -36,7 +36,7 @@
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTROCODIGO' | translate }}</small>
+                        <small>{{ 'LOGEXEPCIONES.FILTROS.FILTROCODIGO' | translate }}</small>
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="reg.nombreModulo" *ngFor="let reg of registros">
@@ -45,12 +45,12 @@
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'LOGEXEPCIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'LOGACTIVIDADES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'LOGEXEPCIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'LOGEXEPCIONES.FILTROS.FILTROESTADO' | translate }}</small>
                         <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
@@ -67,30 +67,21 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['fechaLog','nomAplicacion', 'nomSuite', 'nomModulo', 'codigoErrr', 'nomEstado']"
                     [idField]="'logId'"
-                    [tableTitle]="'LOGACTIVIDADES.TITLE' | translate"
-                    [columnTitles]="[
-                      'LOGACTIVIDADES.FECHA' | translate,
-                      'LOGACTIVIDADES.APLICACION' | translate,
-                      'LOGACTIVIDADES.SUITE' | translate,
-                      'LOGACTIVIDADES.MODULO' | translate,
-                      'LOGACTIVIDADES.CODIGO' | translate,
-                      'LOGACTIVIDADES.STATUS' | translate
-                    ]"
+                    [tableTitle]="'LOGEXEPCIONES.TITLE' | translate"
+                    [metadataColumns]="columnasLogExepciones"
                     [detailColumns]="['descripcionModulo', 'nomUsuario']"
                     [detailTitles]="[
-                      'LOGACTIVIDADES.DESCRIPTION' | translate,
-                      'LOGACTIVIDADES.USUARIO' | translate
+                      'LOGEXEPCIONES.DESCRIPTION' | translate,
+                      'LOGEXEPCIONES.USUARIO' | translate
                     ]"
                     [showDetail]="true"
-                    [showAvatar]="false"
                     [showActions]="false"
                     [showNewButton]="false"
                     [showViewButton]="false"
                     [showEditButton]="false"
                     [showDeleteButton]="false"
-                    [newButtonLabel]="'LOGACTIVIDADES.NEW' | translate"
+                    [newButtonLabel]="'LOGEXEPCIONES.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)"

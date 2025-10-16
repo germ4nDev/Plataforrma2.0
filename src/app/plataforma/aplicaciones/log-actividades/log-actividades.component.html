@@ -67,24 +67,15 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [columns]="['fechaLog','nomAplicacion', 'nomSuite', 'nomModulo', 'codigoErrr', 'nomEstado']"
                     [idField]="'logId'"
                     [tableTitle]="'LOGACTIVIDADES.TITLE' | translate"
-                    [columnTitles]="[
-                      'LOGACTIVIDADES.FECHA' | translate,
-                      'LOGACTIVIDADES.APLICACION' | translate,
-                      'LOGACTIVIDADES.SUITE' | translate,
-                      'LOGACTIVIDADES.MODULO' | translate,
-                      'LOGACTIVIDADES.CODIGO' | translate,
-                      'LOGACTIVIDADES.STATUS' | translate
-                    ]"
+                    [metadataColumns]="columnasLogActividades"
                     [detailColumns]="['descripcionModulo', 'nomUsuario']"
                     [detailTitles]="[
                       'LOGACTIVIDADES.DESCRIPTION' | translate,
                       'LOGACTIVIDADES.USUARIO' | translate
                     ]"
                     [showDetail]="true"
-                    [showAvatar]="false"
                     [showActions]="false"
                     [showNewButton]="false"
                     [showViewButton]="false"

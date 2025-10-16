@@ -17,6 +17,7 @@ import { DatatableComponent } from 'src/app/theme/shared/components/data-table/d
 import Swal from 'sweetalert2';
 import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
 import { PTLTiposValoresModel } from '../../../theme/shared/_helpers/models/PTLTiposValores.model';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-tipos-valor',
@@ -78,6 +79,24 @@ export class TiposValorComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nomTipo',
+      header: 'PRECIOS.TIPOS.NAME',
+      type: 'text'
+    },
+    {
+      name: 'decripcionTipo',
+      header: 'PRECIOS.TIPOS.DESCRIPCIONTIPO',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'PRECIOS.TIPOS.STATUS',
+      type: 'text'
+    }
+  ];
 
   OnNuevoRegistroClick() {
     this.router.navigate(['/precios/gestion-tipo']);
@@ -147,5 +166,4 @@ export class TiposValorComponent implements OnInit {
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
-
 }

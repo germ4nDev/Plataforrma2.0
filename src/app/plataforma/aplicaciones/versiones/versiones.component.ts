@@ -21,6 +21,7 @@ import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaci
 import { PTLVersionAP } from 'src/app/theme/shared/_helpers/models/PTLVersionAP.model';
 import { PtlversionesApService } from 'src/app/theme/shared/service/ptlversiones-ap.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-versiones',
@@ -108,6 +109,29 @@ export class VersionesComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nomAplicacion',
+      header: 'VERSIONES.APLICACIONE',
+      type: 'text'
+    },
+    {
+      name: 'fechaVersion',
+      header: 'VERSIONES.FECHA',
+      type: 'date'
+    },
+    {
+      name: 'codigoVersion',
+      header: 'VERSIONES.CODIGO',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'VERSIONES.STATUS',
+      type: 'text'
+    }
+  ];
 
   getLanguageUrl(): string {
     return this._localStorageService.getLanguageUrl();

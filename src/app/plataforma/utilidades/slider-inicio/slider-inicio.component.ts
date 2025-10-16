@@ -22,6 +22,7 @@ import { environment } from 'src/environments/environment';
 import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service';
 import { PTLSlierInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model';
 import { PtlSlidersInicioService } from 'src/app/theme/shared/service/ptlsliders-inicio.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 const base_url = environment.apiUrl;
 //#endregion IMPORTS
@@ -89,6 +90,24 @@ export class SliderInicioComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'urlSlider',
+      header: 'SLIDER.SLIDER',
+      type: 'image'
+    },
+    {
+      name: 'nombreSlider',
+      header: 'SLIDER.NOMBRE',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'SLIDER.STATUS',
+      type: 'text'
+    }
+  ];
 
   getEstado(estado: boolean): string {
     return estado ? 'Activo' : 'Inactivo';
@@ -199,5 +218,4 @@ export class SliderInicioComponent implements OnInit {
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
-
 }

@@ -21,6 +21,10 @@ import Swal from 'sweetalert2';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { environment } from 'src/environments/environment';
+
+const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-registros',
@@ -93,7 +97,8 @@ export class SuitesComponent implements OnInit {
           if (resp.ok) {
             resp.suites.forEach((reg: any) => {
               reg.nomEstado = reg.estadoSuite ? 'Activo' : 'Inactivo';
-              reg.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion;
+              reg.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion;
+              reg.imagenInicio = `${base_url}/upload/suites/${reg.imagenInicio}`;
             });
             this.registros = resp.suites;
             this.registrosFiltrado = resp.suites;
@@ -106,6 +111,35 @@ export class SuitesComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'imagenInicio',
+      header: 'SUITE.FOTO',
+      type: 'image',
+      isSortable: false
+    },
+    {
+      name: 'codigoSuite',
+      header: 'SUITES.CODE',
+      type: 'text'
+    },
+    {
+      name: 'nombroSuite',
+      header: 'SUITES.NAME',
+      type: 'text'
+    },
+    {
+      name: 'nomAplicacion',
+      header: 'SUITES.APLICACION',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'SUITE.STATUS',
+      type: 'text'
+    }
+  ];
 
   onFiltroCodigoAplicacionChangeClick(evento: any) {
     console.log('filtrar el codigo ', evento.target.value);

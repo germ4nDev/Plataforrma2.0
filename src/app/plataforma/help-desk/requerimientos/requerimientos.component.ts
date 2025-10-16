@@ -18,6 +18,7 @@ import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.servi
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
 import Swal from 'sweetalert2';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-requerimientos',
@@ -90,6 +91,19 @@ export class RequerimientosComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasRegistros: ColumnMetadata[] = [
+    {
+      name: 'nombreRequerimiento',
+      header: 'TICKETS.REQUERIMIENTOS.NOMBREREQUERIMIENTO',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'TICKETS.REQUERIMIENTOS..STATUS',
+      type: 'text'
+    }
+  ];
 
   consultarTickets() {
     this.registrosSub = this._tickesService

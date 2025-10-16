@@ -71,15 +71,9 @@
       <div class="card-body">
         <app-data-table
           [data]="registrosFiltrado"
-          [columns]="['nombreModulo', 'nomPadre', 'nomHijos', 'nomEstado']"
           [idField]="'moduloId'"
           [tableTitle]="'MODULOS.TITLE' | translate"
-          [columnTitles]="[
-            'MODULOS.NAME' | translate,
-            'MODULOS.PADRE' | translate,
-            'MODULOS.HIJOS' | translate,
-            'MODULOS.STATUS' | translate
-          ]"
+          [metadataColumns]="columnasModulos"
           [detailColumns]="['codigoModulo', 'nomAplicacion', 'nomSuite', 'descripcionModulo']"
           [detailTitles]="[
             'MODULOS.APLICACION' | translate,
@@ -88,7 +82,6 @@
             'MODULOS.DESCRIPTION' | translate
           ]"
           [showDetail]="true"
-          [showAvatar]="false"
           [showActions]="true"
           [showNewButton]="true"
           [showViewButton]="false"

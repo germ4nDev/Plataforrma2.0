@@ -19,6 +19,7 @@ import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscript
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-conexciones',
@@ -93,6 +94,29 @@ export class ConexionesComponent implements OnInit {
       )
       .subscribe();
   }
+
+   columnasCnexiones: ColumnMetadata[] = [
+    {
+      name: 'nombreConexion',
+      header: 'CONEXIONES.NOMBRECONEXION',
+      type: 'text',
+    },
+    {
+      name: 'nombreAplicacion',
+      header: 'CONEXIONES.NOMBREAPLICACION',
+      type: 'text'
+    },
+    {
+      name: 'nombreSuscriptor',
+      header: 'CONEXIONES.NOMBRESUSCRIPTOR',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'USUARIOS.STATUS',
+      type: 'text'
+    }
+  ];
 
   consultarAplicaciones() {
     this.registrosSub = this._aplicacionesService

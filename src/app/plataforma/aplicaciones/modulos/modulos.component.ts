@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
 @Component({
   selector: 'app-modulos',
@@ -161,6 +162,29 @@ export class ModulosComponent implements OnInit {
       )
       .subscribe();
   }
+
+  columnasModulos: ColumnMetadata[] = [
+    {
+      name: 'nombreModulo',
+      header: 'MODULOS.NAME',
+      type: 'text'
+    },
+    {
+      name: 'nomPadre',
+      header: 'MODULOS.PADR',
+      type: 'text'
+    },
+    {
+      name: 'nomHijos',
+      header: 'MODULOS.HIJOS',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'MODULOS.STATUS',
+      type: 'text'
+    }
+  ];
 
   getLanguageUrl(): string {
     const lang = localStorage.getItem('lang') || 'en';
