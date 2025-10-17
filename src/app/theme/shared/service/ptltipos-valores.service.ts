@@ -30,21 +30,21 @@ export class PtltiposValoresService {
   }
 
   getRegistros() {
-    const url = `${base_url}/tipos-valores`;
+    const url = `${base_url}/tipos-valor`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
         console.log('servicio de tipoValor', resp);
         return {
           ok: true,
-          tiposValores: resp.tiposValores
+          tiposValor: resp.tiposValor
         };
       })
     );
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/tipos-valores/${id}`;
+    const url = `${base_url}/tipos-valor/${id}`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
@@ -58,12 +58,12 @@ export class PtltiposValoresService {
   }
 
   postCrearRegistro(tipoValor: PTLTiposValoresModel) {
-    const url = `${base_url}/tipos-valores`;
+    const url = `${base_url}/tipos-valor`;
     return this.http.post(url, tipoValor);
   }
 
   putModificarRegistro(tipoValor: PTLTiposValoresModel) {
-    const url = `${base_url}/tipos-valores/${tipoValor.tipoValorId}`;
+    const url = `${base_url}/tipos-valor/${tipoValor.tipoValorId}`;
     return this.http.put(url, tipoValor)
     .pipe(
       map((resp: any) => {
@@ -77,7 +77,7 @@ export class PtltiposValoresService {
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/tipos-valores/${_id}`;
+    const url = `${base_url}/tipos-valor/${_id}`;
     return this.http.delete(url)
     .pipe(
       map((resp: any) => {

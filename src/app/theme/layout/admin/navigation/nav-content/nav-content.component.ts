@@ -47,14 +47,14 @@ export class NavContentComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('1');
+    // console.log('1');
 
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
     this.menuSubscription = this.menuItems$.subscribe(items => {
-        console.log('Todos los items del menu', items);
+        // console.log('Todos los items del menu', items);
       if (items && items.length > 0) {
-        console.log('Primer elemento del menú (Suite/Group):', items);
+        // console.log('Primer elemento del menú (Suite/Group):', items);
       }
     });
     if (this.windowWidth < 992) {

@@ -12,13 +12,13 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { PTLTiposValoresModel } from 'src/app/theme/shared/_helpers/models/PTLTiposValores.model';
 import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLValoresUnitarios.model';
 import { PtlvaloresUnitariosService } from 'src/app/theme/shared/service/ptlvalores-unitarios.service';
 import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
+import { SwalAlertService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-precio',
@@ -54,6 +54,7 @@ export class GestionPrecioComponent implements OnInit {
     private _registrosService: PtlvaloresUnitariosService,
     private _tiposValorService: PtltiposValoresService,
     private _layoutInitializer: LayoutInitializerService,
+    private _swalAlertService: SwalAlertService,
     private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
@@ -70,8 +71,8 @@ export class GestionPrecioComponent implements OnInit {
           next: (resp: any) => {
             this.FormRegistro = resp.valorUnitario;
           },
-          error: () => {
-            Swal.fire('Error', 'No se pudo obtener el precio unitario por, ', 'error');
+          error: (err) => {
+            this._swalAlertService.getAlertError('No se pudo obtener el precio unitario por ' + err);
           }
         });
       } else {
@@ -89,12 +90,14 @@ export class GestionPrecioComponent implements OnInit {
   }
 
   consultarTiposValor() {
+    console.log('1');
     this.tiposValorSub = this._tiposValorService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.tiposValor = resp.tiposValores;
+            console.log('tipos valor', resp);
+            this.tiposValor = resp.tiposValor;
           }
         }),
         catchError((err) => {
@@ -127,37 +130,37 @@ export class GestionPrecioComponent implements OnInit {
       this._registrosService.putModificarRegistro(this.FormRegistro, this.valorUnitarioId).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
-            this.router.navigate(['/precios/precios-unitarios']);
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
+            this.router.navigate(['/lista-precios/precios-unitarios']);
           } else {
-            Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+            this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
         }
       });
     } else {
       this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
-            this.router.navigate(['/precios/precios-unitarios']);
+            this.router.navigate(['/lista-precios/precios-unitarios']);
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'));
         }
       });
     }
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/precios/precios-unitarios']);
+    this.router.navigate(['/lista-precios/precios-unitarios']);
   }
 
   toggleNav(): void {

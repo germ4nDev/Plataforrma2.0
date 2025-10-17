@@ -63,11 +63,11 @@ export class TiposValorComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.valoresUnitarios.forEach((reg: any) => {
+            resp.tiposValor.forEach((reg: any) => {
               reg.nomEstado = reg.estadoTipo == true ? 'Activa' : 'Inactiva';
             });
-            this.registros = resp.tiposValores;
-            this.registrosFiltrado = resp.tiposValores;
+            this.registros = resp.tiposValor;
+            this.registrosFiltrado = resp.tiposValor;
             console.log('Todos los sitios', this.registrosFiltrado);
             return;
           }
@@ -82,12 +82,12 @@ export class TiposValorComponent implements OnInit {
 
   columnasRegistros: ColumnMetadata[] = [
     {
-      name: 'nomTipo',
+      name: 'nombreTipo',
       header: 'PRECIOS.TIPOS.NAME',
       type: 'text'
     },
     {
-      name: 'decripcionTipo',
+      name: 'descripcionTipo',
       header: 'PRECIOS.TIPOS.DESCRIPCIONTIPO',
       type: 'text'
     },
@@ -99,11 +99,11 @@ export class TiposValorComponent implements OnInit {
   ];
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['/precios/gestion-tipo']);
+    this.router.navigate(['/lista-precios/gestion-tipo']);
   }
 
   OnEditarRegistroClick(id: number) {
-    this.router.navigate(['/precios/gestion-tipo'], { queryParams: { regId: id } });
+    this.router.navigate(['/lista-precios/gestion-tipo'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(id: any) {
@@ -137,7 +137,7 @@ export class TiposValorComponent implements OnInit {
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((sitio) => (sitio.tipoValor || '').toLowerCase().includes(textoFiltro));
+      this.registrosFiltrado = this.registrosFiltrado.filter((sitio) => (sitio.nombreTipo || '').toLowerCase().includes(textoFiltro));
       console.log('filtrados', this.registrosFiltrado);
     }
   }

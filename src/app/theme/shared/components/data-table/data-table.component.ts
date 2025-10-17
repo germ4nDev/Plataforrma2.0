@@ -104,12 +104,29 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   private generateMetadata(key: string, value: any): ColumnMetadata {
-    const type = this.inferColumnType(key, value);
+    let type: ColumnMetadata['type'] = 'text';
+    if (Array.isArray(value)) {
+      const lowerKey = key.toLowerCase();
+      if (lowerKey.includes('tags') || lowerKey.includes('permisos') || lowerKey.includes('roles')) {
+        type = 'array_tags';
+      } else {
+        type = 'array_text';
+      }
+    } else if (typeof value === 'number') {
+      type = 'number';
+    } else if (key.toLowerCase().includes('foto') || key.toLowerCase().includes('avatar')) {
+      type = 'avatar';
+    } else if (key.toLowerCase().includes('imagen') || key.toLowerCase().includes('img')) {
+      type = 'image';
+    } else if (value && new Date(value).toString() !== 'Invalid Date' && !isNaN(new Date(value) as any)) {
+      type = 'date';
+    }
+
     return {
       name: key,
-      header: this.formatHeader(key),
+      header: key,
       type: type,
-      isSortable: type !== 'avatar' && type !== 'image'
+      isSortable: type !== 'avatar' && type !== 'image' && type !== 'array_text' && type !== 'array_tags'
     };
   }
 
@@ -128,7 +145,7 @@ export class DatatableComponent implements OnInit, OnChanges {
     }
 
     if (typeof value === 'string' && !isNaN(Date.parse(value)) && value.length >= 8) {
-        return 'date';
+      return 'date';
     }
 
     return 'text';
@@ -293,4 +310,3 @@ export class DatatableComponent implements OnInit, OnChanges {
     console.log('Metodo vacio');
   }
 }
-

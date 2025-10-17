@@ -31,13 +31,13 @@ export class PtlmodulosApService {
   }
 
   getRegistros() {
-            console.log('4');
+            // console.log('4');
     const url = `${base_url}/modulos`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-                console.log('5');
-        console.log('servicio de modulos', resp);
+                // console.log('5');
+        // console.log('servicio de modulos', resp);
         return {
           ok: true,
           modulos: resp.modulos
@@ -50,7 +50,7 @@ export class PtlmodulosApService {
     const url = `${base_url}/modulos/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        // console.log('data de modulo', resp);
+        // // console.log('data de modulo', resp);
         return {
           ok: true,
           modulo: resp.modulo
@@ -68,7 +68,7 @@ export class PtlmodulosApService {
     const url = `${base_url}/modulos/${moduloId}`;
     return this.http.put(url, modulo).pipe(
       map((resp: any) => {
-        // console.log('data de modulo modificacda', resp);
+        // // console.log('data de modulo modificacda', resp);
         return {
           ok: true,
           modulo: resp.modulo
@@ -81,7 +81,7 @@ export class PtlmodulosApService {
     const url = `${base_url}/modulos/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        // console.log('data de modulo eliminado', resp);
+        // // console.log('data de modulo eliminado', resp);
         return {
           ok: true,
           modulo: resp.modulo

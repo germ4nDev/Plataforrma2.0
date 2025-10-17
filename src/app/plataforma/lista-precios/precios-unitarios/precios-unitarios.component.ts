@@ -20,6 +20,7 @@ import Swal from 'sweetalert2';
 import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
 import { PTLTiposValoresModel } from '../../../theme/shared/_helpers/models/PTLTiposValores.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { SwalAlertService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-precios-unitarios',
@@ -49,6 +50,7 @@ export class PreciosUnitariosComponent implements OnInit {
     private translate: TranslateService,
     private _registrosService: PtlvaloresUnitariosService,
     private _tiposValorService: PtltiposValoresService,
+    private _swalAlertService: SwalAlertService,
     private _navigationService: NavigationService
   ) {
     this.gradientConfig = GradientConfig;
@@ -87,6 +89,7 @@ export class PreciosUnitariosComponent implements OnInit {
           if (resp.ok) {
             resp.valoresUnitarios.forEach((reg: any) => {
               reg.nomEstado = reg.estadoValor == true ? 'Activa' : 'Inactiva';
+              reg.nomTipo = this.tiposValor.filter(x => x.tipoValorId == reg.tipoValorId)[0].nombreTipo;
             });
             this.registros = resp.valoresUnitarios;
             this.registrosFiltrado = resp.valoresUnitarios;
@@ -131,11 +134,11 @@ export class PreciosUnitariosComponent implements OnInit {
   ];
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['/precios/gestion-precio']);
+    this.router.navigate(['/lista-precios/gestion-precio']);
   }
 
   OnEditarRegistroClick(id: number) {
-    this.router.navigate(['/precios/gestion-precio'], { queryParams: { regId: id } });
+    this.router.navigate(['/lista-precios/gestion-precio'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(id: any) {
@@ -151,11 +154,11 @@ export class PreciosUnitariosComponent implements OnInit {
       if (result.isConfirmed) {
         this._registrosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('PRECIOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this._swalAlertService.getAlertSuccess(resp.mensaje);
             this.consultarRegistros();
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('PRECIOS.ELIMINARERROR'), 'error');
+            this._swalAlertService.getAlertError(this.translate.instant('PRECIOS.ELIMINARERROR'));
             console.error('Error eliminando', err);
           }
         });

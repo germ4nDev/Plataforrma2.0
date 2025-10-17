@@ -41,7 +41,7 @@ export class NavigationService implements OnInit, OnDestroy {
     private _modulosService: PtlmodulosApService,
     private _localStorageService: LocalStorageService,
     private _languageService: LanguageService,
-    private translate: TranslateService // 🛑 INYECCIÓN DE SERVICIO DE TRADUCCIÓN
+    private translate: TranslateService
   ) {
     this.langSubscription = this._languageService.currentLang$.subscribe((lang) => {
       console.log(`[NavigationService] Detectado cambio de idioma a: ${lang}. Actualizando menú.`);
@@ -804,13 +804,13 @@ export class NavigationService implements OnInit, OnDestroy {
   }
 
   getNavigationItems(): void {
-    console.log('2');
+    //console.log('2');
     this.aplicacion = this._localStorageService.getAplicaicionLocalStorage();
     this.suite = this._localStorageService.getSuiteLocalStorage();
     const codigoApp = this.aplicacion.codigoAplicacion;
     switch (codigoApp) {
       case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
-        console.log('3');
+        //console.log('3');
         this._modulosService.getRegistros().subscribe((data) => {
           const nuevosModulos = data.modulos;
           if (nuevosModulos.length > 0) {

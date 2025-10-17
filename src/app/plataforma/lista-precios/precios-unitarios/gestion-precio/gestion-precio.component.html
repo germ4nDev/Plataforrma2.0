@@ -56,8 +56,8 @@
                                     (change)="onTipoValorChangeClick($event)">
                                     <option value="">{{ 'PRECIOS.GESTION.PLACEHOLDERTIPOBVALOR' | translate }}
                                     </option>
-                                    <option [value]="app.tipoValorId" *ngFor="let reg of tiposValor">
-                                        {{ app.nombreTipo }}</option>
+                                    <option [value]="reg.tipoValorId" *ngFor="let reg of tiposValor">
+                                        {{ reg.nombreTipo }}</option>
                                 </select>
                                 <label
                                     *ngIf="!tipoValorId.valid && (tipoValorId.dirty || tipoValorId.touched || isSubmit)"
@@ -81,7 +81,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreValor">{{ 'PRECIOS.NAME' | translate
                                     }}</label>

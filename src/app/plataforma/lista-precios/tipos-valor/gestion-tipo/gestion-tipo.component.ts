@@ -11,10 +11,10 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import Swal from 'sweetalert2';
 import { PTLTiposValoresModel } from 'src/app/theme/shared/_helpers/models/PTLTiposValores.model';
 import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
 import { Observable } from 'rxjs';
+import { SwalAlertService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-tipo',
@@ -41,7 +41,8 @@ export class GestionTipoComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-   private _navigationService: NavigationService,
+    private _navigationService: NavigationService,
+    private _swalAlertService: SwalAlertService,
     private _registrosService: PtltiposValoresService
   ) {
     this.isSubmit = false;
@@ -59,7 +60,7 @@ export class GestionTipoComponent implements OnInit {
             this.FormRegistro = resp.tipoValor;
           },
           error: () => {
-            Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error');
+            this._swalAlertService.getAlertError('No se pudo obtener el tipo valor');
           }
         });
       } else {
@@ -81,7 +82,7 @@ export class GestionTipoComponent implements OnInit {
     // }
   }
 
-  btnGestionarAplicacionClick(form: any) {
+  btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
     if (!form.valid) {
       return;
@@ -91,41 +92,40 @@ export class GestionTipoComponent implements OnInit {
       this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', 'la Aplicación se modificó correctamente', 'success');
-            this.router.navigate(['/precios/gestion-tipo']);
+            this._swalAlertService.getAlertSuccess('El tipo valor se modificó correctamente');
+            this.router.navigate(['/lista-precios/tipos-valor']);
           } else {
-            Swal.fire('Error', resp.message || 'No se pudo actualizar la Aplicación', 'error');
+            this._swalAlertService.getAlertError('No se pudo actualizar el tipo valor');
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo actualizar la Aplicación', 'error');
+          this._swalAlertService.getAlertError('No se pudo actualizar el tipo valor');
         }
       });
     } else {
       this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', 'La Aplicación se insertó correctamente', 'success');
+            this._swalAlertService.getAlertSuccess('El tipo valor se insertó correctamente');
             form.resetForm();
             this.isSubmit = false;
-            this.router.navigate(['/precios/gestion-tipo']);
+            this.router.navigate(['/lista-precios/tipos-valor']);
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo insertar la Aplicación', 'error');
+          this._swalAlertService.getAlertError('No se pudo insertar el tipo valor');
         }
       });
     }
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/precios/tios-valor']);
+    this.router.navigate(['/lista-precios/tipos-valor']);
   }
 
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
-
 }
