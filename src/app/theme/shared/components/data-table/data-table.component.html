@@ -96,6 +96,13 @@
                                             {{ row[column.name] }}
                                         </ng-container>
                                     </ng-container>
+                                    <ng-template [ngSwitchCase]="'color_chip'">
+                                        <div
+                                            class="color-chip"
+                                            [style.backgroundColor]="item[col.name]"
+                                            [title]="item[col.name]">
+                                        </div>
+                                    </ng-template>
                                     <ng-container *ngSwitchCase="'text'">
                                         <span [innerHTML]="row[column.name]"></span>
                                     </ng-container>

@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import * as XLSX from 'xlsx';
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ColumnMetadata } from '../../_helpers/models/ColumnMetadata.model';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-data-table',
@@ -56,7 +57,11 @@ export class DatatableComponent implements OnInit, OnChanges {
   public sortDirection: 'asc' | 'desc' = 'asc';
   public registroId: number | null = null;
 
-  constructor() {}
+  constructor(private sanitizer: DomSanitizer) {}
+
+  safeHtml(html: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
 
   ngOnInit(): void {
     console.log('************ elementos recibidos', this.data);
@@ -112,13 +117,18 @@ export class DatatableComponent implements OnInit, OnChanges {
       } else {
         type = 'array_text';
       }
+    } else if (key.toLowerCase().includes('color') || key.toLowerCase().includes('hex')) {
+      type = 'color_chip';
     } else if (typeof value === 'number') {
       type = 'number';
     } else if (key.toLowerCase().includes('foto') || key.toLowerCase().includes('avatar')) {
       type = 'avatar';
     } else if (key.toLowerCase().includes('imagen') || key.toLowerCase().includes('img')) {
       type = 'image';
-    } else if (value && new Date(value).toString() !== 'Invalid Date' && !isNaN(new Date(value) as any)) {
+    } else if (value &&
+        typeof value === 'string' &&
+        value.length > 5 &&value && new Date(value).toString() !== 'Invalid Date' &&
+        !isNaN(new Date(value) as any)) {
       type = 'date';
     }
 

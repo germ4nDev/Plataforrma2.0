@@ -3,6 +3,7 @@ export class PTLSlierInicioModel {
         public sliderId? : number,
         public nombreSlider? : string,
         public urlSlider? : string,
+        public imageSlider? : string,
         public descripcionSlider? : string,
         public nomEstado? : string,
         public estadoSlider? : boolean

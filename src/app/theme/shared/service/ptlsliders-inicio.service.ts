@@ -69,8 +69,8 @@ export class PtlSlidersInicioService {
      return this.http.post(url, slider);
    }
 
-   putModificarRegistro(sliderInicio: PTLSlierInicioModel) {
-     const url = `${base_url}/sliders/${sliderInicio.sliderId}`;
+   putModificarRegistro(sliderInicio: PTLSlierInicioModel, sliderId:number) {
+     const url = `${base_url}/sliders/${sliderId}`;
      return this.http.put(url, sliderInicio).pipe(
        map((resp: any) => {
          console.log('data de sliderInicio modificacda', resp);

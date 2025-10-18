@@ -12,11 +12,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import Swal from 'sweetalert2';
 import { ThemeService } from 'src/app/theme/shared/service';
+import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterModule, LanguageSelectorComponent, SharedModule, TranslateModule],
+  imports: [CommonModule, RouterModule, LanguageSelectorComponent, SharedModule, TranslateModule, FullScreenSliderComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

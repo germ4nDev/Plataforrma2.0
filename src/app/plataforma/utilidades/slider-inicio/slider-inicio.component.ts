@@ -18,11 +18,11 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-import { environment } from 'src/environments/environment';
 import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service';
 import { PTLSlierInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model';
 import { PtlSlidersInicioService } from 'src/app/theme/shared/service/ptlsliders-inicio.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { environment } from 'src/environments/environment';
 
 const base_url = environment.apiUrl;
 //#endregion IMPORTS
@@ -37,9 +37,9 @@ const base_url = environment.apiUrl;
 export class SliderInicioComponent implements OnInit {
   //#region VARIABLES
   @Output() toggleSidebar = new EventEmitter<void>();
-  registrosSub?: Subscription;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   menuItems!: Observable<NavigationItem[]>;
+  registrosSub?: Subscription;
   registros: PTLSlierInicioModel[] = [];
   registrosFiltrado: PTLUsuarioModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
@@ -74,8 +74,8 @@ export class SliderInicioComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.slidersInicio.forEach((slider: any) => {
-              slider.nomEstado = slider.estadoUsuario == true ? 'Activo' : 'Inactivo';
-              slider.urlSlider = `${base_url}/upload/plataforma/slider/${slider.urlSlider}`;
+              slider.nomEstado = slider.estadoSlider == true ? 'Activo' : 'Inactivo';
+              slider.urlSlider = `${base_url}/upload/sliders/${slider.urlSlider}`;
             });
             this.registros = resp.slidersInicio;
             this.registrosFiltrado = resp.slidersInicio;

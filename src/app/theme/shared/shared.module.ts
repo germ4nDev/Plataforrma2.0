@@ -73,6 +73,7 @@ const bootstrap = [
     bootstrap,
     NgClickOutsideDirective,
     TranslateModule
+
   ],
   declarations: [DataFilterPipe, TodoListRemoveDirective, TodoCardCompleteDirective, SpinnerComponent]
 })

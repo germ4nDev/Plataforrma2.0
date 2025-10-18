@@ -38,7 +38,7 @@
                             <div class="form-group text-center">
                                 <label class="form-label">{{ 'USUARIOS.GESTION.FOTO' | translate }}</label>
                                 <div style="display: flex; justify-content: center;">
-                                    <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview">
+                                    <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="avatar-preview">
                                 </div>
                                 <div class="file-input-wrapper">
                                     <label for="fileUploadInput" style="cursor: pointer;" class="text-link change-image-label" (change)="onFileSelectedClick($event)">
