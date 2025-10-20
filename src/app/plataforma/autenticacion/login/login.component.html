@@ -1,5 +1,5 @@
 <div class="auth-wrapper align-items-stretch aut-bg-img">
-    <app-full-screen-slider></app-full-screen-slider>
+    <app-full-screen-slider [tipoSlider]="1"></app-full-screen-slider>
     <nav class="navbar fixed-top navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"></a>
@@ -8,7 +8,7 @@
             </div>
         </div>
     </nav>
-    <div class="card card-body login-overlay" ><br>
+    <div class="card card-body login-overlay"><br>
         <div class="text-center">
             <h3 class="filtros-title">{{ 'LOGIN.TITLE' | translate }}</h3>
         </div><br><br>
@@ -28,9 +28,11 @@
             </div>
             <div class="input-group mb-4">
                 <span class="input-group-text form-input" id="basic-addon2"><i class="feather icon-lock"></i></span>
-                <input type="password" placeholder="{{ 'LOGIN.PASSWORD' | translate }}" formControlName="password"
+                <input id="password" type="password" placeholder="{{ 'LOGIN.PASSWORD' | translate }}" formControlName="password"
                     class="form-control form-input"
                     [ngClass]="{ 'is-invalid': passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched) }" />
+                <span class="input-group-text form-input"><i class="feather icon-eye" style="cursor: pointer;"
+                        id="togglePassword"></i></span>
                 @if (passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)) {
                 <div class="invalid-feedback">
                     @if (passwordControl?.errors?.['required']) {

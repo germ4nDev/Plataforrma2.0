@@ -1,0 +1,6 @@
+<div class="form-control form-input">
+    <input type="color" [id]="id" [(ngModel)]="selectedColor" (ngModelChange)="onColorChange($event)"
+        class="h-10 w-10 border-none rounded-md cursor-pointer color-input-override"
+        [attr.aria-label]="'Selector de color para ' + label" style="cursor: pointer; margin-bottom: 0px;" />&nbsp;
+    <label>{{selectedColor.toUpperCase()}}</label>
+</div>

@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { FullScreenSliderComponent } from "src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component";
+import { LanguageSelectorComponent } from "src/app/theme/shared/components/language-selector/language-selector.component";
 
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, FullScreenSliderComponent, LanguageSelectorComponent, TranslateModule],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.scss'
 })

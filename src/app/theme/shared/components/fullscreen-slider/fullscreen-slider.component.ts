@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PtlSlidersInicioService } from '../../service/ptlsliders-inicio.service';
 import { of, Subscription } from 'rxjs';
 import { PTLSlierInicioModel } from '../../_helpers/models/PTLSliderInicio.model';
@@ -16,17 +16,34 @@ const base_url = environment.apiUrl;
   templateUrl: './fullscreen-slider.component.html',
   styleUrl: './fullscreen-slider.component.scss'
 })
-export class FullScreenSliderComponent implements OnInit {
+export class FullScreenSliderComponent implements OnInit, OnDestroy {
+  @Input() tipoSlider: number = 0;
+  autoSlideInterval: number = 7000;
   registrosSub?: Subscription;
   registros: PTLSlierInicioModel[] = [];
   currentIndex: number = 0;
   images: PTLSlierInicioModel[] = [];
   private readonly defaultPlaceholder = `${base_url}/upload/sliders/imagen-inicio.png`;
+  private intervalId: any;
 
   constructor(private _sliderService: PtlSlidersInicioService) {}
 
   ngOnInit(): void {
-    this.consultarRegistros();
+    if (this.tipoSlider == 1) {
+      this.consultarRegistros();
+    } else if (this.tipoSlider == 2) {
+        const newImage = {
+            nombreslider: 'Ner Image',
+            urlSlider: 'imagen-inicio.png',
+            imageSlider: `${base_url}/upload/sliders/imagen-inicio.png`
+        }
+        this.images.push(newImage);
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Limpiar el temporizador al destruir el componente
+    this.stopAutoSlide();
   }
 
   consultarRegistros() {
@@ -38,10 +55,11 @@ export class FullScreenSliderComponent implements OnInit {
             resp.slidersInicio.forEach((slider: any) => {
               slider.imageSlider = `${base_url}/upload/sliders/${slider.urlSlider}`;
             });
-              console.warn('FullscreenSliderComponent: No se proporcionaron imágenes. Se mostrará un placeholder.');
-              this.images = resp.slidersInicio;
-              console.log('slider images', this.images);
+            console.warn('FullscreenSliderComponent: No se proporcionaron imágenes. Se mostrará un placeholder.');
+            this.images = resp.slidersInicio;
+            console.log('slider images', this.images);
             console.log('Todos las sliders', this.images);
+            this.startAutoSlide();
             return;
           }
         }),
@@ -51,6 +69,26 @@ export class FullScreenSliderComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  private startAutoSlide(): void {
+    if (this.images.length > 1 && this.autoSlideInterval > 0) {
+      this.intervalId = setInterval(() => {
+        this.nextImage();
+      }, this.autoSlideInterval);
+    }
+  }
+
+  private stopAutoSlide(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
+
+  private resetAutoSlide(): void {
+    this.stopAutoSlide();
+    this.startAutoSlide();
   }
 
   nextImage(): void {

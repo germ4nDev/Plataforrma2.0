@@ -6,6 +6,6 @@ export class PTLColorSettingModel {
         public iconosColor? : string,
         public buttonsHoverColor? : string,
         public nomEstado? : string,
-        public estadoSlider? : boolean
+        public estadoColor? : boolean
    ) {}
 }

@@ -64,7 +64,7 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log('************ elementos recibidos', this.data);
+    // console.log('************ elementos recibidos', this.data);
     this.processDataAndColumns();
   }
 
@@ -112,6 +112,7 @@ export class DatatableComponent implements OnInit, OnChanges {
     let type: ColumnMetadata['type'] = 'text';
     if (Array.isArray(value)) {
       const lowerKey = key.toLowerCase();
+      // console.log('*********** array types', lowerKey);
       if (lowerKey.includes('tags') || lowerKey.includes('permisos') || lowerKey.includes('roles')) {
         type = 'array_tags';
       } else {
@@ -190,6 +191,7 @@ export class DatatableComponent implements OnInit, OnChanges {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     this.paginatedData = this.filteredData.slice(startIndex, startIndex + this.itemsPerPage);
   }
+
   onSort(columnName: string): void {
     const columnMeta = this.finalColumns.find((c) => c.name === columnName);
     if (columnMeta && columnMeta.isSortable === false) {
@@ -317,6 +319,6 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   emptyMethod() {
-    console.log('Metodo vacio');
+    // console.log('Metodo vacio');
   }
 }

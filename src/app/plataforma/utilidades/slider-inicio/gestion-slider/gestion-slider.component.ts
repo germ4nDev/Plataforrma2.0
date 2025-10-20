@@ -71,6 +71,7 @@ export class GestionSliderComponent implements OnInit {
         this.modoEdicion = true;
         this._registrosService.getRegistroById(this.sliderId).subscribe({
           next: (resp: any) => {
+            this.selectedFileUrl =
             this.FormRegistro = resp.sliderInicio;
           },
           error: (err) => {

@@ -19,13 +19,14 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { LanguageSelectorComponent } from "src/app/theme/shared/components/language-selector/language-selector.component";
 import { environment } from 'src/environments/environment';
+import { FullScreenSliderComponent } from "src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component";
 
 const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent],
+  imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.scss'
 })
@@ -59,7 +60,6 @@ export class InicioComponent implements OnInit {
                 app.imagenInicio = `${base_url}/upload/aplicaciones/${app.imagenInicio}`;
             });
             console.log('aplicaciones', resp.aplicaciones);
-
             this.aplicaciones = resp.aplicaciones;
           }
         }),

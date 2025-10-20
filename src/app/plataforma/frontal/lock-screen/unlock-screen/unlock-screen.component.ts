@@ -13,11 +13,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import Swal from 'sweetalert2';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
+import { FullScreenSliderComponent } from "src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component";
 
 @Component({
   selector: 'app-unlock-screen',
   standalone: true,
-    imports: [CommonModule, RouterModule, SharedModule, TranslateModule, LanguageSelectorComponent],
+    imports: [CommonModule, RouterModule, SharedModule, TranslateModule, LanguageSelectorComponent, FullScreenSliderComponent],
   templateUrl: './unlock-screen.component.html',
   styleUrl: './unlock-screen.component.scss'
 })

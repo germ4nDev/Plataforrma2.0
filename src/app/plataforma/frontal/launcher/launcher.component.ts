@@ -11,13 +11,14 @@ import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.se
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import { environment } from 'src/environments/environment';
+import { FullScreenSliderComponent } from "src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component";
 
 const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-launcher',
   standalone: true,
-  imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent],
+  imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
   templateUrl: './launcher.component.html',
   styleUrl: './launcher.component.scss'
 })
