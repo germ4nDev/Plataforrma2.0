@@ -19,7 +19,18 @@
         "TITULO_GRID_APLICACIONES": "Explora Nuestras Aplicaciones",
         "TITULO_GRID_SUITES": "Suites de la Aplicación",
         "ENTRAR": "Acceder",
-
+        "COLORSETTING": {
+            "TITLE": "Configuración Colres",
+            "NEW": "Nueva Configuración Colres",
+            "UPDATE": "Editar Configuración Colres",
+            "NAVBARCOLOR": "Color Navbar",
+            "TEXTCOLOR": "Color Texto",
+            "ICONSCOLOR": "Color Iconos",
+            "HOVERCOLOR": "Color Botón Activo",
+            "STATUS": "Estado Color",
+            "FILTROSTITULO": "Filtros",
+            "FILTROESTADO": "Filtro Estado"
+        },
         "APLICACIONES": {
             "PLATAFORMA": "Plataforma"
         },

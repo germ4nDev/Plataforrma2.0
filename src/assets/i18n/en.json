@@ -18,7 +18,18 @@
         "TITULO_GRID_APLICACIONES": "Explore Our Applications",
         "TITULO_GRID_SUITES": "Suites in Aplication",
         "ENTRAR": "Get In",
-
+        "COLORSETTING": {
+            "TITLE": "Color Settings",
+            "NEW": "New Color Settings",
+            "UPDATE": "Edit Color Settings",
+            "NAVBARCOLOR": "Navbar Color",
+            "TEXTCOLOR": "Text Color",
+            "ICONSCOLOR": "Icons Color",
+            "HOVERCOLOR": "Buttons Hover Color",
+            "STATUS": "Color Status",
+            "FILTROSTITULO": "Filters",
+            "FILTROESTADO": "Status Filter"
+        },
         "APLICACIONES": {
             "PLATAFORMA": "Platform"
         },

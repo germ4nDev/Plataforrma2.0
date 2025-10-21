@@ -69,8 +69,8 @@ export class PtlColoresSettingsService {
      return this.http.post(url, colorNav);
    }
 
-   putModificarRegistro(colorNav: PTLColorSettingModel) {
-     const url = `${base_url}/colores/${colorNav.colorNavId}`;
+   putModificarRegistro(colorNav: PTLColorSettingModel, settingId: number) {
+     const url = `${base_url}/colores/${settingId}`;
      return this.http.put(url, colorNav).pipe(
        map((resp: any) => {
          console.log('data de colorNav modificacda', resp);

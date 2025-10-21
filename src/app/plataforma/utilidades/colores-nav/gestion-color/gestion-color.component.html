@@ -7,20 +7,18 @@
                     {{ 'PLATAFORMA.MENU' | translate }}
                 </button>
             </div>
-
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
         </div>
     </aside>
-
     <div class="form-area">
         <div class="card">
             <div class="card-header card-header-sticky">
                 <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
-                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PLATAFORMA.SLIDERS.NEW' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PLATAFORMA.SLIDERS.UPDATE' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PLATAFORMA.COLORSETTING.NEW' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PLATAFORMA.COLORSETTING.UPDATE' | translate }}</h4>
                     </div>
                     <div class="d-flex">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
@@ -47,28 +45,40 @@
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORNAV' | translate }}</label>
                                 <app-color-selector
-                                [initialColor]="FormRegistro.navbarColor"
-                                [id]="FormRegistro.colorNavId"
+                                [initialColor]="FormRegistro?.navbarColor"
+                                [id]="navbarColor"
                                 (colorSelected)="OnColorSelectedClick($event)"
                                 ></app-color-selector>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreAplicacion">{{ 'PLATAFORMA.COLORS.COLORTEXTO' | translate }}</label>
-                                <app-color-selector class="form-control form-input"></app-color-selector>
+                                <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORTEXT' | translate }}</label>
+                                <app-color-selector
+                                [initialColor]="FormRegistro?.textoColor"
+                                [id]="textoColor"
+                                (colorSelected)="OnColorSelectedClick($event)"
+                                ></app-color-selector>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreAplicacion">{{ 'PLATAFORMA.COLORS.COLORICONS' | translate }}</label>
-                                <app-color-selector class="form-control form-input"></app-color-selector>
+                                <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORICONS' | translate }}</label>
+                                <app-color-selector
+                                [initialColor]="FormRegistro?.iconosColor"
+                                [id]="iconosColor"
+                                (colorSelected)="OnColorSelectedClick($event)"
+                                ></app-color-selector>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreAplicacion">{{ 'PLATAFORMA.COLORS.COLORHOVER' | translate }}</label>
-                                <app-color-selector class="form-control form-input"></app-color-selector>
+                                <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORBUTTONHOVER' | translate }}</label>
+                                <app-color-selector
+                                [initialColor]="FormRegistro?.buttonsHoverColor"
+                                [id]="buttonsHoverColor"
+                                (colorSelected)="OnColorSelectedClick($event)"
+                                ></app-color-selector>
                             </div>
                         </div>
                         <div class="col-md-12">

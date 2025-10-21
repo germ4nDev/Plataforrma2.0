@@ -17,10 +17,10 @@
       <ng-container *ngIf="activeTab === 'filters'">
         <div class="p-3 filtros-scroll-wrapper">
           <DIV class="text-center">
-            <h6 class="filtros-title">{{ 'PLATAFORMA.COLORESNAV.FILTROS.TITULO' | translate }}</h6>
+            <h6 class="filtros-title">{{ 'PLATAFORMA.COLORSETTING.FILTROSTITULO' | translate }}</h6>
           </DIV>
           <div class="filtro">
-            <small>{{ 'PLATAFORMA.COLORESNAV.FILTROS.ESTADO' | translate }}</small>
+            <small>{{ 'PLATAFORMA.COLORSETTING.FILTROESTADO' | translate }}</small>
             <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-input" required>
               <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
               <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
@@ -38,19 +38,19 @@
         <app-data-table
           [data]="registrosFiltrado"
           [idField]="'colorNavId'"
-          [tableTitle]="'PLATAFORMA.COLORESNAV.TITLE' | translate"
+          [tableTitle]="'PLATAFORMA.COLORSETTING.TITLE' | translate"
           [metadataColumns]="columnasRegistros"
           [detailColumns]="[]"
           [detailTitles]="[]"
           [showDetail]="false"
           [showActions]="true"
-          [showAvatar]="true"
+          [showAvatar]="false"
           [showImage]="false"
           [showNewButton]="true"
           [showViewButton]="false"
           [showEditButton]="true"
           [showDeleteButton]="true"
-          [newButtonLabel]="'PLATAFORMA.COLORESNAV.NEW' | translate"
+          [newButtonLabel]="'PLATAFORMA.COLORSETTING.NEW' | translate"
           [exportLabel]="'PLATAFORMA.EXCEL' | translate"
           (newRecord)="OnNuevoRegistroClick()"
           (editRecord)="OnEditarRegistroClick($event)"

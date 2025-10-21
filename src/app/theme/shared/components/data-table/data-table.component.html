@@ -57,20 +57,20 @@
                                     (click)="toggleDetails(row)" style="cursor: pointer;"></i>
                             </td>
                             <td *ngFor="let column of finalColumns" [class.text-right]="column.type === 'number'">
-                                <ng-container [ngSwitch]="column.type">
-                                    <ng-container *ngSwitchCase="'avatar'"> <img [src]="row[column.name]"
-                                            [alt]="'Avatar'" class="avatar-table">
+                                <ng-container *ngIf="column" [ngSwitch]="column.type">
+                                    <ng-container *ngSwitchCase="'avatar'">
+                                        <img [src]="row[column.name]" [alt]="'Avatar'" class="avatar-table">
                                     </ng-container>
-                                    <ng-container *ngSwitchCase="'image'"> <img [src]="row[column.name]" [alt]="'Image'"
-                                            class="image-table">
+                                    <ng-container *ngSwitchCase="'image'">
+                                        <img [src]="row[column.name]" [alt]="'Image'" class="image-table">
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'number'">
-                                        <span style="display: block;">
+                                        <span style="display: block; text-align: right;">
                                             {{ row[column.name] | number: '1.2-2' }}
                                         </span>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'price'">
-                                        <span style="display: block;">
+                                        <span style="display: block; text-align: right;">
                                             ${{ row[column.name] | number: '1.2-2' }}
                                         </span>
                                     </ng-container>
@@ -96,13 +96,12 @@
                                             {{ row[column.name] }}
                                         </ng-container>
                                     </ng-container>
-                                    <ng-template [ngSwitchCase]="'color_chip'">
-                                        <div
-                                            class="color-chip"
-                                            [style.backgroundColor]="item[col.name]"
-                                            [title]="item[col.name]">
-                                        </div>
-                                    </ng-template>
+                                    <ng-container *ngSwitchCase="'color_chip'" style="align-content: center;">
+                                        <span style="display: block; text-align: center;">
+                                            <div class="color-chip" [style.backgroundColor]="row[column.name]" [title]="row[column.name]">
+                                            </div>
+                                        </span>
+                                    </ng-container>
                                     <ng-container *ngSwitchCase="'text'">
                                         <span [innerHTML]="row[column.name]"></span>
                                     </ng-container>
@@ -132,7 +131,8 @@
                                 class="detail-row">
                                 <div class="p-3">
                                     <hr>
-                                    <div class="row" *ngFor="let detailColumn of detailColumns; let i = index" style="margin-bottom: 16px !important;">
+                                    <div class="row" *ngFor="let detailColumn of detailColumns; let i = index"
+                                        style="margin-bottom: 16px !important;">
                                         <div class="col-md-2 fw-bold text-end">
                                             {{ detailTitles[i] | translate | uppercase }}:
                                         </div>
@@ -148,7 +148,8 @@
                     <tr>
                         <td *ngIf="showDetail"></td>
                         <td *ngFor="let column of finalColumns; let i = index">
-                            <ng-container *ngIf="column.type === 'text' || column.type === 'number' || column.type === 'price'">
+                            <ng-container
+                                *ngIf="column.type === 'text' || column.type === 'number' || column.type === 'price'">
                                 <input type="text" class="form-control form-control-sm"
                                     [placeholder]="column.header | translate" (keyup)="onFilter(column.name, $event)" />
                             </ng-container>
@@ -183,3 +184,10 @@
         </nav>
     </div>
 </div>
+
+<!-- <ng-template [ngSwitchCase]="'color_chip'">
+                                        <input type="color"
+                                            [style.backgroundColor]="item[col.name]"
+                                            [title]="item[col.name]"
+                                            class="h-full w-full p-0 border-none cursor-pointer color-input-override color-chip" />
+                                    </ng-template> -->

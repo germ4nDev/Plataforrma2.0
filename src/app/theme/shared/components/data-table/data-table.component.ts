@@ -64,7 +64,6 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    // console.log('************ elementos recibidos', this.data);
     this.processDataAndColumns();
   }
 
@@ -89,11 +88,13 @@ export class DatatableComponent implements OnInit, OnChanges {
         if (typeof col === 'string') {
           return this.generateMetadata(col, this.data[0][col]);
         }
+        console.log('****************** ColumnMetadata', col);
         return col as ColumnMetadata;
       });
     } else {
       this.finalColumns = this.generateInferredMetadata(this.data[0]);
     }
+
     this.applyFiltersAndPagination();
   }
 
@@ -110,15 +111,16 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   private generateMetadata(key: string, value: any): ColumnMetadata {
     let type: ColumnMetadata['type'] = 'text';
+    console.log('*********** array types', type);
     if (Array.isArray(value)) {
       const lowerKey = key.toLowerCase();
-      // console.log('*********** array types', lowerKey);
       if (lowerKey.includes('tags') || lowerKey.includes('permisos') || lowerKey.includes('roles')) {
         type = 'array_tags';
       } else {
         type = 'array_text';
       }
     } else if (key.toLowerCase().includes('color') || key.toLowerCase().includes('hex')) {
+      console.log('is color-chip');
       type = 'color_chip';
     } else if (typeof value === 'number') {
       type = 'number';
@@ -126,10 +128,14 @@ export class DatatableComponent implements OnInit, OnChanges {
       type = 'avatar';
     } else if (key.toLowerCase().includes('imagen') || key.toLowerCase().includes('img')) {
       type = 'image';
-    } else if (value &&
-        typeof value === 'string' &&
-        value.length > 5 &&value && new Date(value).toString() !== 'Invalid Date' &&
-        !isNaN(new Date(value) as any)) {
+    } else if (
+      value &&
+      typeof value === 'string' &&
+      value.length > 5 &&
+      value &&
+      new Date(value).toString() !== 'Invalid Date' &&
+      !isNaN(new Date(value) as any)
+    ) {
       type = 'date';
     }
 
@@ -167,6 +173,7 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   applyFiltersAndPagination(): void {
+    console.log('************ elementos recibidos', this.data);
     let tempFilteredData = this.data.filter((row) => {
       for (const key of Object.keys(this.filterValues)) {
         const filterValue = this.filterValues[key].toLowerCase();

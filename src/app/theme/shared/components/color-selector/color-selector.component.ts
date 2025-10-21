@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+interface Setting {
+  color: string;
+  id: string;
+}
 
 @Component({
   selector: 'app-color-selector',
@@ -9,22 +14,40 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './color-selector.component.html',
   styleUrl: './color-selector.component.scss'
 })
-export class ColorSelectorComponent {
+export class ColorSelectorComponent implements OnInit, OnChanges {
   @Input() label: string = 'Color Seleccionado';
-  @Input() id: string = 'color-picker';
-  @Input() initialColor: string = '#1e3a8a'; // Color inicial por defecto
+  @Input() id: string = 'id';
+  @Input() initialColor: string = '#000000';
 
-  @Output() colorSelected = new EventEmitter<string>();
+  @Output() colorSelected = new EventEmitter<Setting>();
 
-  selectedColor: string;
+  selectedColor: string = '#000000';
 
-  constructor() {
-    this.selectedColor = this.initialColor;
+  constructor() {}
+
+  ngOnInit(): void {
+    if (this.initialColor) {
+      this.selectedColor = this.initialColor;
+      console.log('Color inicial cargado en ngOnInit:', this.selectedColor);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialColor'] && changes['initialColor'].currentValue) {
+      const newColor = changes['initialColor'].currentValue;
+      if (this.selectedColor !== newColor) {
+        this.selectedColor = newColor;
+        console.log('Color actualizado vía ngOnChanges:', this.selectedColor);
+      }
+    }
   }
 
   onColorChange(newColor: string): void {
     this.selectedColor = newColor;
-    this.colorSelected.emit(newColor);
-    console.log('Nuevo color seleccionado:', newColor);
+    const color: Setting = {
+      color: newColor,
+      id: this.id
+    };
+    this.colorSelected.emit(color);
   }
 }

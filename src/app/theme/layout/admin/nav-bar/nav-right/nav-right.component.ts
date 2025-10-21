@@ -7,13 +7,15 @@ import { GradientConfig } from 'src/app/app-config';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
-import { AuthenticationService, LanguageService, UploadFilesService } from 'src/app/theme/shared/service';
+import { AuthenticationService, LanguageService, PtlColoresSettingsService, UploadFilesService } from 'src/app/theme/shared/service';
 import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 import { ChatMsgComponent } from './chat-msg/chat-msg.component';
 import { ThemeService } from 'src/app/theme/shared/service/theme.service';
 import { FormsModule } from '@angular/forms';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
+import { catchError, of, Subscription, tap } from 'rxjs';
+import { PTLColorSettingModel } from 'src/app/theme/shared/_helpers/models/PTLColorSetting.model';
 
 @Component({
   selector: 'app-nav-right',
@@ -43,6 +45,7 @@ import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario
 })
 export class NavRightComponent implements DoCheck, OnInit {
   public usuario: PTLUsuarioModel = new PTLUsuarioModel();
+  public colorsettings: PTLColorSettingModel[] = [];
   public visibleUserList: boolean = false;
   public chatMessage: boolean = false;
   public friendId!: number;
@@ -54,14 +57,9 @@ export class NavRightComponent implements DoCheck, OnInit {
   public nombreUsuario: string = '';
   public navbarColor: string = '';
   public currentLanguage: string = 'es';
+  public registrosSub?: Subscription;
   public themeTextKey: string = 'PLATAFORMA.NAVBAR.CHANGE_TO_DARK';
-  public colorPalette: any[] = [
-    { color: '#66b5ff', iconos: '#000', texto: '#000' },
-    { color: '#2c3e50', iconos: '#fff', texto: '#fff' },
-    { color: '#c0392b', iconos: '#fff', texto: '#fff' },
-    { color: '#27ae60', iconos: '#fff', texto: '#fff' },
-    { color: '#f39c12', iconos: '#000', texto: '#000' }
-  ];
+  public colorPalette: any[] = [];
 
   constructor(
     private router: Router,
@@ -70,6 +68,7 @@ export class NavRightComponent implements DoCheck, OnInit {
     private _localstorageService: LocalStorageService,
     private _uploadService: UploadFilesService,
     private _themeService: ThemeService,
+    private _colorsettingsService: PtlColoresSettingsService,
     private languageService: LanguageService
   ) {
     console.log('isDarkTheme', this.isDarkTheme);
@@ -79,6 +78,7 @@ export class NavRightComponent implements DoCheck, OnInit {
   }
 
   ngOnInit(): void {
+    this.consultarColorsettings();
     this.usuario = this._localstorageService.getUsuarioLocalStorage();
     this.avatarUsuario = this._uploadService.getFilePath('usuarios', this.usuario.fotoUsuario || '');
     this.nombreUsuario = this.usuario.nombreUsuario || '';
@@ -91,6 +91,36 @@ export class NavRightComponent implements DoCheck, OnInit {
     this.languageService.currentLang$.subscribe((lang) => {
       this.currentLanguage = lang;
     });
+  }
+
+  consultarColorsettings() {
+    this.registrosSub = this._colorsettingsService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            resp.coloresNav.forEach((color: PTLColorSettingModel) => {
+              if (color.estadoColor == true) {
+                const colorSetting = {
+                  color: color.navbarColor,
+                  iconos: color.iconosColor,
+                  texto: color.textoColor,
+                  hover: color.buttonsHoverColor
+                };
+                this.colorPalette.push(colorSetting);
+              }
+            });
+            this.colorsettings = resp.coloresNav;
+            console.log('Todos las colorSettings', this.colorPalette);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   toggleTheme(): void {

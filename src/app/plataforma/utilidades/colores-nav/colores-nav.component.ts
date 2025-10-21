@@ -66,12 +66,12 @@ export class ColoresNavComponent implements OnInit {
     },
     {
       name: 'textoColor',
-      header: 'PLATAFORMA.COLORSETTING.TEXTOCOLOR',
+      header: 'PLATAFORMA.COLORSETTING.TEXTCOLOR',
       type: 'color_chip'
     },
     {
       name: 'iconosColor',
-      header: 'PLATAFORMA.COLORSETTING.ICONOSCOLOR',
+      header: 'PLATAFORMA.COLORSETTING.ICONSCOLOR',
       type: 'color_chip'
     },
     {
@@ -81,7 +81,7 @@ export class ColoresNavComponent implements OnInit {
     },
     {
       name: 'nomEstado',
-      header: 'PLATAFORMA.COLORSETTING.ESTADOCOLOR',
+      header: 'PLATAFORMA.COLORSETTING.STATUS',
       type: 'text'
     }
   ];
@@ -98,11 +98,11 @@ export class ColoresNavComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.coloresNav.forEach((color: any) => {
-              color.nomEstado = color.estadoSlider == true ? 'Activo' : 'Inactivo';
+              color.nomEstado = color.estadoColor == true ? 'Activo' : 'Inactivo';
             });
             this.registros = resp.coloresNav;
-            this.registrosFiltrado = resp.slidersInicio;
-            console.log('Todos las coloresNav', this.registros);
+            this.registrosFiltrado = resp.coloresNav;
+            console.log('Todos las coloresNav', this.registrosFiltrado);
             return;
           }
         }),

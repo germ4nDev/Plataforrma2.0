@@ -6,7 +6,7 @@ import { GradientConfig } from 'src/app/app-config';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { PtlSlidersInicioService, SwalAlertService } from 'src/app/theme/shared/service';
+import { PtlColoresSettingsService, SwalAlertService } from 'src/app/theme/shared/service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
@@ -15,7 +15,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { Observable, Subscription } from 'rxjs';
 import { PTLColorSettingModel } from 'src/app/theme/shared/_helpers/models/PTLColorSetting.model';
-import { ColorSelectorComponent } from "src/app/theme/shared/components/color-selector/color-selector.component";
+import { ColorSelectorComponent } from 'src/app/theme/shared/components/color-selector/color-selector.component';
 
 @Component({
   selector: 'app-gestion-color',
@@ -41,18 +41,23 @@ export class GestionColorComponent implements OnInit {
   slidersInicio: PTLColorSettingModel[] = [];
   tipoEditorTexto = 'basica';
 
-    navbarColor: string = '';
-    textoColor: string = '';
-    iconosColor: string = '';
-    buttonsHoverColor: string = '';
-    estadoColor: boolean = false;
+  navbarColor: string = 'navbar';
+  textoColor: string = 'texto';
+  iconosColor: string = 'icons';
+  buttonsHoverColor: string = 'hover';
+  estadoColor: boolean = false;
+
+    nColor: string = '';
+  tColor: string = '';
+  iColor: string = '';
+  bHColor: string = '';
 
   // constructor
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslateService,
-    private _registrosService: PtlSlidersInicioService,
+    private _registrosService: PtlColoresSettingsService,
     private _layoutInitializer: LayoutInitializerService,
     private _swalAlertService: SwalAlertService,
     private _navigationService: NavigationService,
@@ -70,7 +75,13 @@ export class GestionColorComponent implements OnInit {
         this.modoEdicion = true;
         this._registrosService.getRegistroById(this.colorNavId).subscribe({
           next: (resp: any) => {
-            this.FormRegistro = resp.colorSetting;
+            this.FormRegistro = resp.colorNav;
+            this.nColor = this.FormRegistro.navbarColor || '#1e3a8a';
+            this.tColor = this.FormRegistro.textoColor || '#1e3a8a';
+            this.iColor = this.FormRegistro.iconosColor || '#1e3a8a';
+            this.bHColor = this.FormRegistro.buttonsHoverColor || '#1e3a8a';
+            console.log('formRegistro', this.FormRegistro);
+            this.colorNavId = this.FormRegistro.colorNavId || 0;
           },
           error: (err) => {
             this._swalAlertService.getAlertError('No se pudo obtener el colorSetting por ' + err);
@@ -89,7 +100,21 @@ export class GestionColorComponent implements OnInit {
   }
 
   OnColorSelectedClick(evento: any) {
-    this.FormRegistro.navbarColor = evento;
+    console.log('evento', evento);
+    switch (evento.id) {
+      case 'navbar':
+        this.FormRegistro.navbarColor = evento.color;
+        break;
+      case 'texto':
+        this.FormRegistro.textoColor = evento.color;
+        break;
+      case 'icons':
+        this.FormRegistro.iconosColor = evento.color;
+        break;
+      case 'hover':
+        this.FormRegistro.buttonsHoverColor = evento.color;
+        break;
+    }
     console.log('formRegistro', this.FormRegistro);
   }
 
@@ -99,28 +124,33 @@ export class GestionColorComponent implements OnInit {
       return;
     }
     if (this.modoEdicion) {
-      this._registrosService.putModificarRegistro(this.FormRegistro, this.colorNavId).subscribe({
-        next: (resp: any) => {
-          if (resp.ok) {
-            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-            this.router.navigate(['/utilidades/slider-inicio']);
-          } else {
-            this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
+      if (this.colorNavId != 0) {
+        this._registrosService.putModificarRegistro(this.FormRegistro, this.colorNavId).subscribe({
+          next: (resp: any) => {
+            if (resp.ok) {
+              this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
+              this.router.navigate(['/utilidades/colores-nav']);
+            } else {
+              this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
+            }
+          },
+          error: (err: any) => {
+            console.error(err);
+            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
           }
-        },
-        error: (err: any) => {
-          console.error(err);
-          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
-        }
-      });
+        });
+      } else {
+        this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.REGISTRONOENCONTRADO'));
+      }
     } else {
+      console.log('formRegistro a insertar', this.FormRegistro);
       this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
-            this.router.navigate(['/utilidades/slider-inicio']);
+            this.router.navigate(['/utilidades/colores-nav']);
           }
         },
         error: (err: any) => {
@@ -132,7 +162,7 @@ export class GestionColorComponent implements OnInit {
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/utilidades/slider-inicio']);
+    this.router.navigate(['/utilidades/colores-nav']);
   }
 
   toggleNav(): void {
