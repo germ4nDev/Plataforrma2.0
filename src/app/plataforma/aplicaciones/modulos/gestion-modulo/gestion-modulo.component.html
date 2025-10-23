@@ -70,13 +70,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoSuite">
-                                    {{ 'MODULOS.GESTION.CODESUITE' | translate }}</label>
+                                    {{ 'MODULOS.GESTION.SUITE' | translate }}</label>
                                 <select class="form-control form-input" style="cursor: pointer;" name="codigoSuite"
                                     id="codigoSuite"
                                     [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
                                     #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite"
                                     (change)="onSuiteChangeClick($event)">
-                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERAPLICACION' | translate }}
+                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERSUITE' | translate }}
                                     </option>
                                     <option [value]="sui.codigoSuite" *ngFor="let sui of suites">
                                         {{ sui.nombreSuite }}</option>
@@ -91,11 +91,11 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoPadre">
-                                    {{ 'MODULOS.GESTION.CODEMODULO' | translate }}</label>
+                                    {{ 'MODULOS.GESTION.PADRE' | translate }}</label>
                                 <select class="form-control form-input" style="cursor: pointer;" name="codigoPadre"
                                     id="codigoPadre" #codigoPadre="ngModel" required [(ngModel)]="FormRegistro.codigoPadre"
                                     (change)="onCodigoPadreChangeClick($event)">
-                                    <option value="0">{{ 'MODULOS.GESTION.PLACEHOLDERAPLICACION' | translate }}
+                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERPADRE' | translate }}
                                     </option>
                                     <option [value]="mod.codigoModulo" *ngFor="let mod of modulosPadre">
                                         {{ mod.nombreModulo }}</option>
@@ -142,15 +142,30 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label class="form-control-label" for="precioModulo">{{ 'MODULOS.PRECIO' | translate
+                                    }}</label>
+                                <input class="form-control form-input" id="precioModulo" name="precioModulo" type="number"
+                                    placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERNAME' | translate }}"
+                                    [ngClass]="{'is-invalid': !precioModulo.valid && (precioModulo.dirty || precioModulo.touched || isSubmit)}"
+                                    #precioModulo="ngModel" required [(ngModel)]="FormRegistro.precioModulo" />
+                                <label
+                                    *ngIf="!precioModulo.valid && (precioModulo.dirty || precioModulo.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'MODULOS.GESTION.REQUERIDOPRECIO' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label class="form-label">{{ 'MODULOS.ICON' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="icon"
                                     placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERPATH' | translate }}"
                                     #icon="ngModel" [(ngModel)]="FormRegistro.icon" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'MODULOS.TRANSLATEKEY' | translate }}</label>
+                                <label class="form-label">{{ 'MODULOS.GESTION.TRANSLATEKEY' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="translateKey"
                                     placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERPATH' | translate }}"
                                     #translateKey="ngModel" [(ngModel)]="FormRegistro.translateKey" />

@@ -70,11 +70,7 @@
                     [idField]="'logId'"
                     [tableTitle]="'LOGACTIVIDADES.TITLE' | translate"
                     [metadataColumns]="columnasLogActividades"
-                    [detailColumns]="['descripcionModulo', 'nomUsuario']"
-                    [detailTitles]="[
-                      'LOGACTIVIDADES.DESCRIPTION' | translate,
-                      'LOGACTIVIDADES.USUARIO' | translate
-                    ]"
+                    [metadataDetailColumns]="columnasDetailRegistros"
                     [showDetail]="true"
                     [showActions]="false"
                     [showNewButton]="false"

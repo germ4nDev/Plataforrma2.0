@@ -62,11 +62,7 @@
                     [idField]="'versionId'"
                     [tableTitle]="'VERSIONES.TITLE' | translate"
                     [metadataColumns]="columnasRegistros"
-                    [detailColumns]="['nombreVersion', 'descripcionVersion']"
-                    [detailTitles]="[
-                        'VERSIONES.NAME' | translate,
-                        'VERSIONES.DESCRIPTION' | translate
-                    ]"
+                    [metadataDetailColumns]="columnasDetailRegistros"
                     [showDetail]="true"
                     [showActions]="true"
                     [showNewButton]="true"

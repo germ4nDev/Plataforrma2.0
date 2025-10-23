@@ -8,19 +8,16 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
-
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
-import Swal from 'sweetalert2';
-import { PTLPaqueteAP } from 'src/app/theme/shared/_helpers/models/PTLPaqueteAP.model';
-import { PTLPaquetesAplicacionesService } from 'src/app/theme/shared/service/ptlpaquetes-ap.service';
+import { PTLPaqueteModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model';
+import { PTLPaquetesService } from 'src/app/theme/shared/service/ptlpaquetes.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-paquetes',
@@ -31,14 +28,12 @@ import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetad
 })
 export class PaquetesComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
-  aplicaciones: PTLAplicacionModel[] = [];
-  registros: PTLPaqueteAP[] = [];
-  registrosFiltrado: PTLPaqueteAP[] = [];
+  registrosSub?: Subscription;
+  registros: PTLPaqueteModel[] = [];
+  registrosFiltrado: PTLPaqueteModel[] = [];
   moduloTituloExcel: string = '';
   filtroPersonalizado: string = '';
   hasFiltersSlot: boolean = false;
-  aplicacionesSub?: Subscription;
-  registrosSub?: Subscription;
   gradientConfig;
   lang = localStorage.getItem('lang');
   menuItems$!: Observable<NavigationItem[]>;
@@ -48,8 +43,9 @@ export class PaquetesComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private _navigationService: NavigationService,
-    private _aplicacionesService: PtlAplicacionesService,
-    private _registrosService: PTLPaquetesAplicacionesService
+    private _swalService: SwalAlertService,
+    private _localstorageService: LocalStorageService,
+    private _registrosService: PTLPaquetesService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -59,25 +55,7 @@ export class PaquetesComponent implements OnInit {
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
-    this.consultarAplicacines();
-  }
-
-  consultarAplicacines() {
-    this.aplicacionesSub = this._aplicacionesService
-      .getAplicaciones()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            this.aplicaciones = resp.aplicaciones;
-            this.consultarRegistros();
-          }
-        }),
-        catchError((err) => {
-          console.error(err);
-          return of([]);
-        })
-      )
-      .subscribe();
+    this.consultarRegistros();
   }
 
   consultarRegistros(): void {
@@ -86,12 +64,11 @@ export class PaquetesComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.registros.forEach((reg: any) => {
+            resp.paquetes.forEach((reg: any) => {
               reg.nomEstado = reg.estadoPaquete ? 'Activo' : 'Inactivo';
-              reg.nomAplicacion = this.aplicaciones.filter((x) => x.aplicacionId == reg.aplicacionId)[0] || '';
             });
-            this.registros = resp.registros;
-            this.registrosFiltrado = resp.registros;
+            this.registros = resp.paquetes;
+            this.registrosFiltrado = resp.paquetes;
           }
         }),
         catchError((err) => {
@@ -104,8 +81,8 @@ export class PaquetesComponent implements OnInit {
 
   columnasPaquetes: ColumnMetadata[] = [
     {
-      name: 'nomAplicacion',
-      header: 'PAQUETES.APLICACION',
+      name: 'codigoPaquete',
+      header: 'PAQUETES.CODE',
       type: 'text'
     },
     {
@@ -114,23 +91,66 @@ export class PaquetesComponent implements OnInit {
       type: 'text'
     },
     {
+      name: 'costoPaquete',
+      header: 'PAQUETES.COSTE',
+      type: 'price'
+    },
+    {
+      name: 'precioPaquete',
+      header: 'PAQUETES.PRECIO',
+      type: 'price'
+    },
+    {
       name: 'nomEstado',
       header: 'PAQUETES.STATUS',
       type: 'text'
     }
   ];
 
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'nomPromocion',
+      header: 'PAQUETES.PROMOCION',
+      type: 'text'
+    },
+    {
+      name: 'precioPromocion',
+      header: 'PAQUETES.PRECIOPROMOCION',
+      type: 'price'
+    },
+    {
+      name: 'imagenPaquete',
+      header: 'PAQUETES.IMAGEN',
+      type: 'image'
+    },
+    {
+      name: 'iconoPaquete',
+      header: 'PAQUETES.ICONO',
+      type: 'avatar'
+    },
+    {
+      name: 'descripcionPaquete',
+      header: 'PAQUETES.DESCRIPTION',
+      type: 'text'
+    },
+    {
+      name: 'acuerdoLicencia',
+      header: 'PAQUETES.ACUERDOLICENCIA',
+      type: 'text'
+    }
+  ];
+
   getLanguageUrl(): string {
-    const lang = localStorage.getItem('lang') || 'en';
+    const lang = this._localstorageService.getLanguage() || 'en';
     return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`;
   }
 
-  onFiltroCodigoAplicacionChangeClick(evento: any) {
+  onFiltroCodigoPaqueteChangeClick(evento: any) {
     console.log('filtrar el codigo ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.aplicacionId = evento.target.value));
+      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoPaquete = evento.target.value));
     }
   }
 

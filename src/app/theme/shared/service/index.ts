@@ -27,7 +27,7 @@ export * from './ptllog-actividades.service';
 export * from './ptllog-actualizaciones.service';
 export * from './ptllog-transacciones.service';
 export * from './ptlmodulos-ap.service';
-export * from './ptlpaquetes-ap.service';
+export * from './ptlpaquetes.service';
 export * from './ptlpaquetes-sc.service';
 export * from './ptlrequerimientos-tk.service';
 export * from './ptlroles-ap.service';

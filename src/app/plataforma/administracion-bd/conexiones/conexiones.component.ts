@@ -9,7 +9,6 @@ import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service';
@@ -30,8 +29,7 @@ import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetad
 })
 export class ConexionesComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
-  @Output()
-  toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
   //#region VARIABLES
   registrosSub?: Subscription;
   registros: PTLConexionBDModel[] = [];
@@ -43,7 +41,6 @@ export class ConexionesComponent implements OnInit {
   menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   datatableElement!: DataTableDirective;
-  aplicaciones: PTLAplicacionModel[] = [];
   suscriptores: PTLSuscriptorModel[] = [];
   //#endregion VARIABLES
 
@@ -67,7 +64,7 @@ export class ConexionesComponent implements OnInit {
   }
 
   consultarRegistros() {
-    this.consultarAplicaciones();
+    // this.consultarAplicaciones();
     this.consultarSuscriptores();
     this.registrosSub = this._conexionService
       .getRegistros()
@@ -75,9 +72,9 @@ export class ConexionesComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.conexiones.forEach((conexion: any) => {
-              const app = this.aplicaciones.filter((x) => x.aplicacionId == conexion.aplicacionId)[0];
+            //   const app = this.aplicaciones.filter((x) => x.aplicacionId == conexion.aplicacionId)[0];
               const susc = this.suscriptores.filter((x) => x.suscriptorId == conexion.suscriptorId)[0];
-              conexion.nombreAplicacion = app.nombreAplicacion;
+            //   conexion.nombreAplicacion = app.nombreAplicacion;
               conexion.nombreSuscriptor = susc.nombreSuscriptor;
               conexion.nomEstado = conexion.estadoConexion == true ? 'Activo' : 'Inactivo';
             });
@@ -95,14 +92,14 @@ export class ConexionesComponent implements OnInit {
       .subscribe();
   }
 
-   columnasCnexiones: ColumnMetadata[] = [
+  columnasCnexiones: ColumnMetadata[] = [
     {
       name: 'nombreConexion',
       header: 'CONEXIONES.NOMBRECONEXION',
-      type: 'text',
+      type: 'text'
     },
     {
-      name: 'nombreAplicacion',
+      name: 'nombreServidor',
       header: 'CONEXIONES.NOMBREAPLICACION',
       type: 'text'
     },
@@ -112,30 +109,24 @@ export class ConexionesComponent implements OnInit {
       type: 'text'
     },
     {
+      name: 'BDNombre',
+      header: 'CONEXIONES.NOMBREBD',
+      type: 'text'
+    },
+    {
       name: 'nomEstado',
       header: 'USUARIOS.STATUS',
       type: 'text'
     }
   ];
 
-  consultarAplicaciones() {
-    this.registrosSub = this._aplicacionesService
-      .getAplicaciones()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            this.aplicaciones = resp.aplicaciones;
-            console.log('Todos las aplicaciones', this.aplicaciones);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
-        })
-      )
-      .subscribe();
-  }
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionLog',
+      header: 'CONEXIONES.DESCRIPCIONCONEXIONN',
+      type: 'text'
+    }
+  ];
 
   consultarSuscriptores() {
     this.registrosSub = this._suscriptoresService
@@ -188,24 +179,15 @@ export class ConexionesComponent implements OnInit {
     });
   }
 
-  onFiltroNombreApliChangeClick(evento: any) {
-    console.log('filtrar el NOMBRE ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((aplicacion) => (aplicacion.nombreAplicacion || '').toLowerCase().includes(textoFiltro));
-      console.log('filtrados', this.registrosFiltrado);
-    }
-  }
-
   onFiltroNombreSuscripChangeClick(evento: any) {
     console.log('filtrar el descripcion ', evento.target.value);
     const textoFiltro = evento.target.value.toLowerCase();
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) => (suscriptor.nombreSuscriptor || '').toLowerCase().includes(textoFiltro));
+      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
+        (suscriptor.nombreSuscriptor || '').toLowerCase().includes(textoFiltro)
+      );
       console.log('filtrados', this.registrosFiltrado);
     }
   }

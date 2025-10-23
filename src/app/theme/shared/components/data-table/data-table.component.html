@@ -56,7 +56,7 @@
                                 <i class="{{ registroId === row[idField] ? 'fas fa-chevron-down' : 'fas fa-chevron-right' }}"
                                     (click)="toggleDetails(row)" style="cursor: pointer;"></i>
                             </td>
-                            <td *ngFor="let column of finalColumns" [class.text-right]="column.type === 'number'">
+                            <td *ngFor="let column of finalColumns">
                                 <ng-container *ngIf="column" [ngSwitch]="column.type">
                                     <ng-container *ngSwitchCase="'avatar'">
                                         <img [src]="row[column.name]" [alt]="'Avatar'" class="avatar-table">
@@ -98,7 +98,8 @@
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'color_chip'" style="align-content: center;">
                                         <span style="display: block; text-align: center;">
-                                            <div class="color-chip" [style.backgroundColor]="row[column.name]" [title]="row[column.name]">
+                                            <div class="color-chip" [style.backgroundColor]="row[column.name]"
+                                                [title]="row[column.name]">
                                             </div>
                                         </span>
                                     </ng-container>
@@ -125,21 +126,70 @@
                                 </button>
                             </td>
                         </tr>
-
-                        <tr *ngIf="registroId === row[idField]">
-                            <td [attr.colspan]="finalColumns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)"
-                                class="detail-row">
-                                <div class="p-3">
-                                    <hr>
-                                    <div class="row" *ngFor="let detailColumn of detailColumns; let i = index"
-                                        style="margin-bottom: 16px !important;">
-                                        <div class="col-md-2 fw-bold text-end">
-                                            {{ detailTitles[i] | translate | uppercase }}:
-                                        </div>
-                                        <div [innerHTML]="row[detailColumn]" class="col-md-9 text-start"></div>
+                        <tr style="padding: 100px;" *ngIf="registroId === row[idField]">
+                            <td [attr.colspan]="metadataColumns.length + (showDetail ? 1 : 0) + (showActions ? 2 : 1)">
+                                <hr class="detail-separator"><br>
+                                <div class="row detail-row" *ngFor="let detailColumn of metadataDetailColumns">
+                                    <div class="col-md-2 text-end">
+                                        {{ detailColumn.header | translate | uppercase }}:
                                     </div>
-                                    <hr>
-                                </div>
+                                    <div class="col-md-9 text-start">
+                                        <ng-container [ngSwitch]="detailColumn.type">
+                                            <ng-container *ngSwitchCase="'avatar'">
+                                                <img [src]="row[detailColumn.name]" [alt]="'Avatar'"
+                                                    class="avatar-table">
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'image'">
+                                                <img [src]="row[detailColumn.name]" [alt]="'Image'" class="image-table">
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'number'">
+                                                <span style="display: block; text-align: right;">
+                                                    {{ row[detailColumn.name] | number: '1.2-2' }}
+                                                </span>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'price'">
+                                                <span style="display: block; text-align: left;">
+                                                    ${{ row[detailColumn.name] | number: '1.2-2' }}
+                                                </span>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'date'">
+                                                {{ row[detailColumn.name] | date: 'mediumDate' }}
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'array_text'">
+                                                <ng-container *ngIf="Array.isArray(row[detailColumn.name])">
+                                                    {{ row[detailColumn.name].join(', ') }}
+                                                </ng-container>
+                                                <ng-container *ngIf="!Array.isArray(row[detailColumn.name])">
+                                                    {{ row[detailColumn.name] }}
+                                                </ng-container>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'array_tags'">
+                                                <div *ngIf="Array.isArray(row[detailColumn.name])"
+                                                    class="flex flex-wrap gap-1">
+                                                    <span *ngFor="let tag of row[detailColumn.name]"
+                                                        class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full dark:bg-blue-200 dark:text-blue-800">
+                                                        {{ tag }}
+                                                    </span>
+                                                </div>
+                                                <ng-container *ngIf="!Array.isArray(row[detailColumn.name])">
+                                                    {{ row[detailColumn.name] }}
+                                                </ng-container>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'color_chip'">
+                                                <div class="color-chip" [style.backgroundColor]="row[detailColumn.name]"
+                                                    [title]="row[detailColumn.name]">
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'text'">
+                                                <span [innerHTML]="row[detailColumn.name]"></span>
+                                            </ng-container>
+                                            <ng-container *ngSwitchDefault>
+                                                <span [innerHTML]="row[detailColumn.name]"></span>
+                                            </ng-container>
+                                        </ng-container>
+                                    </div>
+                                </div><br>
+                                <hr class="detail-separator">
                             </td>
                         </tr>
                     </ng-container>
@@ -156,6 +206,7 @@
                         </td>
                         <td *ngIf="showActions"></td>
                     </tr>
+
                 </tfoot>
             </table>
         </div>
@@ -185,9 +236,91 @@
     </div>
 </div>
 
-<!-- <ng-template [ngSwitchCase]="'color_chip'">
-                                        <input type="color"
-                                            [style.backgroundColor]="item[col.name]"
-                                            [title]="item[col.name]"
-                                            class="h-full w-full p-0 border-none cursor-pointer color-input-override color-chip" />
-                                    </ng-template> -->
+<!-- <td [attr.colspan]="finalColumns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)"
+                                class="detail-row">
+                                <div class="p-3">
+                                    <hr>
+                                    <div class="row" *ngFor="let detailColumn of detailColumns; let i = index"
+                                        style="margin-bottom: 16px !important;">
+                                        <div class="col-md-2 fw-bold text-end">
+                                            {{ detailTitles[i] | translate | uppercase }}:
+                                        </div>
+                                        <div [innerHTML]="row[detailColumn]" class="col-md-9 text-start"></div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </td> -->
+
+
+
+<!--                         <tr *ngIf="registroId === row[idField]">
+                            <td [attr.colspan]="finalColumns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)"
+                                class="detail-row">
+                                <hr>
+                                <div class="p-3">
+                                    <div class="row" *ngFor="let detailColumn of detailColumns; let i = index"
+                                        style="margin-bottom: 16px !important;">
+                                        <div class="col-md-2 fw-bold text-end">
+                                            {{ detailTitles[i] | translate | uppercase }}:
+                                        </div>
+                                        <div class="col-md-9 text-start">
+                                            <ng-container *ngIf="detailColumn" [ngSwitch]="detailColumn.type">
+                                                <ng-container *ngSwitchCase="'avatar'">
+                                                    <img [src]="row[detailColumn.name]" [alt]="'Avatar'" class="avatar-table">
+                                                </ng-container>
+                                                <ng-container *ngSwitchCase="'image'">
+                                                    <img [src]="row[detailColumn.name]" [alt]="'Image'" class="image-table">
+                                                </ng-container>
+
+                                                <ng-container *ngSwitchCase="'number'">
+                                                    <span style="display: block; text-align: right;">
+                                                        {{ row[detailColumn.name] | number: '1.2-2' }}
+                                                    </span>
+                                                </ng-container>
+                                                <ng-container *ngSwitchCase="'price'">
+                                                    <span style="display: block; text-align: right;">
+                                                        ${{ row[detailColumn.name] | number: '1.2-2' }}
+                                                    </span>
+                                                </ng-container>
+
+                                                <ng-container *ngSwitchCase="'date'">
+                                                    {{ row[detailColumn.name] | date: 'mediumDate' }}
+                                                </ng-container>
+                                                <ng-container *ngSwitchCase="'array_text'">
+                                                    <ng-container *ngIf="Array.isArray(row[detailColumn.name])">
+                                                        {{ row[detailColumn.name].join(', ') }}
+                                                    </ng-container>
+                                                    <ng-container *ngIf="!Array.isArray(row[detailColumn.name])">
+                                                        {{ row[detailColumn.name] }}
+                                                    </ng-container>
+                                                </ng-container>
+                                                <ng-container *ngSwitchCase="'array_tags'">
+                                                    <div *ngIf="Array.isArray(row[detailColumn.name])" class="flex flex-wrap gap-1">
+                                                        <span *ngFor="let tag of row[detailColumn.name]"
+                                                            class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full dark:bg-blue-200 dark:text-blue-800">
+                                                            {{ tag }}
+                                                        </span>
+                                                    </div>
+                                                    <ng-container *ngIf="!Array.isArray(row[detailColumn.name])">
+                                                        {{ row[detailColumn.name] }}
+                                                    </ng-container>
+                                                </ng-container>
+
+                                                <ng-container *ngSwitchCase="'color_chip'">
+                                                    <div class="color-chip" [style.backgroundColor]="row[detailColumn.name]" [title]="row[detailColumn.name]">
+                                                    </div>
+                                                </ng-container>
+
+                                                <ng-container *ngSwitchCase="'text'">
+                                                    <span [innerHTML]="row[detailColumn.name]"></span>
+                                                </ng-container>
+                                                <ng-container *ngSwitchDefault>
+                                                    <span [innerHTML]="row[detailColumn.name]"></span>
+                                                </ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </td>
+                        </tr> -->

@@ -8,6 +8,7 @@ export class PTLModuloAP {
         public nombreModulo?: string,
         public descripcionModulo?: string,
         public rutaModulo?: string,
+        public precioModulo?: number,
         public icon?: string,
         public translateKey?: string,
         public estadoModulo?: boolean,

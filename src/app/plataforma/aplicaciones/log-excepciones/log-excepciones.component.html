@@ -70,11 +70,7 @@
                     [idField]="'logId'"
                     [tableTitle]="'LOGEXEPCIONES.TITLE' | translate"
                     [metadataColumns]="columnasLogExepciones"
-                    [detailColumns]="['descripcionModulo', 'nomUsuario']"
-                    [detailTitles]="[
-                      'LOGEXEPCIONES.DESCRIPTION' | translate,
-                      'LOGEXEPCIONES.USUARIO' | translate
-                    ]"
+                    [metadataDetailColumns]="columnasDetailRegistros"
                     [showDetail]="true"
                     [showActions]="false"
                     [showNewButton]="false"

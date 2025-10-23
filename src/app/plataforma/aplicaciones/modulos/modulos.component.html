@@ -73,14 +73,8 @@
           [data]="registrosFiltrado"
           [idField]="'moduloId'"
           [tableTitle]="'MODULOS.TITLE' | translate"
-          [metadataColumns]="columnasModulos"
-          [detailColumns]="['codigoModulo', 'nomAplicacion', 'nomSuite', 'descripcionModulo']"
-          [detailTitles]="[
-            'MODULOS.APLICACION' | translate,
-            'MODULOS.SUITE' | translate,
-            'MODULOS.CODE' | translate,
-            'MODULOS.DESCRIPTION' | translate
-          ]"
+          [metadataColumns]="columnasRegistros"
+          [metadataDetailColumns]="columnasDetailRegistros"
           [showDetail]="true"
           [showActions]="true"
           [showNewButton]="true"

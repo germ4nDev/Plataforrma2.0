@@ -59,12 +59,7 @@
                     [idField]="'conexionId'"
                     [tableTitle]="'CONEXIONES.TITLE' | translate"
                     [metadataColumns]="columnasCnexiones"
-                    [detailColumns]="['nombreServidor', 'BDNombre', 'descripcionConexion']"
-                    [detailTitles]="[
-                      'CONEXIONES.NOMBRESERVIDOR' | translate,
-                      'CONEXIONES.NOMBREBD' | translate,
-                      'CONEXIONES.DESCRIPCIONCONEXION' | translate,
-                    ]"
+                    [metadataDetailColumns]="columnasDetailRegistros"
                     [showDetail]="true"
                     [showActions]="true"
                     [showNewButton]="true"

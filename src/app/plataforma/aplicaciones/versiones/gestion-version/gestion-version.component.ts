@@ -20,6 +20,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { NgForm } from '@angular/forms';
+import { LocalStorageService } from 'src/app/theme/shared/service';
 
 // Definición de la interfaz del modelo de formulario
 interface RegistroForm {
@@ -40,7 +41,6 @@ interface RegistroForm {
   styleUrl: './gestion-version.component.scss'
 })
 export class GestionVersionComponent implements OnInit {
-
   @ViewChild('validationForm') validationForm!: NgForm;
   @Output() toggleSidebar = new EventEmitter<void>();
 
@@ -66,6 +66,9 @@ export class GestionVersionComponent implements OnInit {
   aplicacionesSub?: Subscription;
   aplicaciones: PTLAplicacionModel[] = [];
   codigosuite = uuidv4();
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   // constructor
   constructor(
@@ -75,6 +78,7 @@ export class GestionVersionComponent implements OnInit {
     private _registrosService: PtlversionesApService,
     private _aplicacionesService: PtlAplicacionesService,
     private _layoutInitializer: LayoutInitializerService,
+    private _localStorageService: LocalStorageService,
     private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
@@ -82,7 +86,6 @@ export class GestionVersionComponent implements OnInit {
     this.gradientConfig = GradientConfig;
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
-
     this.route.queryParams.subscribe((params) => {
       this.registroId = params['regId'];
       if (this.registroId) {
@@ -123,6 +126,19 @@ export class GestionVersionComponent implements OnInit {
     this.menuItems$ = this._navigationService.menuItems$;
     this.consultarAplicaciones();
     this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -163,7 +179,8 @@ export class GestionVersionComponent implements OnInit {
     console.log('Fecha NgbDateStruct seleccionada:', this.FormRegistro.fecha);
   }
 
-  btnGestionarRegistroClick(form: NgForm) { // Tipado a NgForm
+  btnGestionarRegistroClick(form: NgForm) {
+    // Tipado a NgForm
     this.isSubmit = true;
     const descripcionValida = this.FormRegistro.descripcionVersion && this.FormRegistro.descripcionVersion.trim() !== '';
     if (!descripcionValida) {

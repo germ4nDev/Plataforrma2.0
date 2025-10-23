@@ -1,18 +1,16 @@
 export class PTLConexionBDModel {
     constructor (
         public conexionId? : number,
-        public aplicacionId? : number,
-        public suscriptorId? : number,
-        public paqueteId? : number,
+        public codigoSuscriptor? : string,
+        public codigoPaquete? : string,
         public nombreConexion? : string,
-        public descripcionConexion? : string,
         public nombreServidor? : string,
         public BDNombre? : string,
         public BDUser? : string,
         public BDPassword? : string,
         public BDPort? : string,
+        public descripcionConexion? : string,
         public estadoConexion? : boolean,
-        public nombreAplicacion? : string,
         public nombreSuscriptor? : string,
         public nomEstado? : string,
     ) {}

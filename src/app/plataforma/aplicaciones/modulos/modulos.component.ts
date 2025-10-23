@@ -163,7 +163,7 @@ export class ModulosComponent implements OnInit {
       .subscribe();
   }
 
-  columnasModulos: ColumnMetadata[] = [
+  columnasRegistros: ColumnMetadata[] = [
     {
       name: 'nombreModulo',
       header: 'MODULOS.NAME',
@@ -171,7 +171,7 @@ export class ModulosComponent implements OnInit {
     },
     {
       name: 'nomPadre',
-      header: 'MODULOS.PADR',
+      header: 'MODULOS.PADRE',
       type: 'text'
     },
     {
@@ -182,6 +182,34 @@ export class ModulosComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'MODULOS.STATUS',
+      type: 'text'
+    }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'codigoModulo',
+      header: 'MODULOS.CODE',
+      type: 'text'
+    },
+    {
+      name: 'nomAplicacion',
+      header: 'MODULOS.NOMBREAPLICACION',
+      type: 'text'
+    },
+    {
+      name: 'nomSuite',
+      header: 'MODULOS.NOMBRESUITE',
+      type: 'text'
+    },
+    {
+      name: 'precioModulo',
+      header: 'MODULOS.PRECIO',
+      type: 'price'
+    },
+    {
+      name: 'descripcionModulo',
+      header: 'MODULOS.DESCRIPTION',
       type: 'text'
     }
   ];

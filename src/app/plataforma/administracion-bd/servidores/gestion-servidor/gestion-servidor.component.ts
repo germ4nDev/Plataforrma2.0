@@ -17,6 +17,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
+import { LocalStorageService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-servidor',
@@ -39,6 +40,9 @@ export class GestionServidorComponent {
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   constructor(
     private router: Router,
@@ -46,6 +50,7 @@ export class GestionServidorComponent {
     private translate: TranslateService,
     private _registrosService: PTLServidorService,
     private _layoutInitializer: LayoutInitializerService,
+    private _localStorageService: LocalStorageService,
     private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
@@ -54,12 +59,6 @@ export class GestionServidorComponent {
 
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems$ = this._navigationService.menuItems$;
-    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -78,6 +77,25 @@ export class GestionServidorComponent {
         this.modoEdicion = false;
       }
     });
+  }
+
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {

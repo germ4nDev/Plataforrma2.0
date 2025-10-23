@@ -141,6 +141,14 @@ export class SuitesComponent implements OnInit {
     }
   ];
 
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionSuite',
+      header: 'SUITES.DESCRIPTION',
+      type: 'text'
+    }
+  ];
+
   onFiltroCodigoAplicacionChangeClick(evento: any) {
     console.log('filtrar el codigo ', evento.target.value);
     if (evento.target.value == 'todos') {

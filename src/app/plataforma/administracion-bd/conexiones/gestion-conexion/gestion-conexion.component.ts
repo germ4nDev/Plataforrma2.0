@@ -9,7 +9,7 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
 import { PTLPaquetesSCModel } from 'src/app/theme/shared/_helpers/models/PTLPaquetesSC.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
-import { PtlAplicacionesService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtlAplicacionesService } from 'src/app/theme/shared/service';
 import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service';
 import { PTLPaquetesSCService } from 'src/app/theme/shared/service/ptlpaquetes-sc.service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
@@ -49,6 +49,9 @@ export class GestionConexionComponent {
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   constructor(
     private router: Router,
@@ -59,22 +62,14 @@ export class GestionConexionComponent {
     private _suscriptoresService: PTLSuscriptoresService,
     private _paquetesService: PTLPaquetesSCService,
     private _layoutInitializer: LayoutInitializerService,
+    private _localStorageService: LocalStorageService,
     private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
-    GradientConfig.header_fixed_layout = true
+    GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems$ = this._navigationService.menuItems$;
-    this.consultarAplicaciones();
-    this.consultarSuscriptores();
-    this.consultarPaquetes();
-    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -83,11 +78,10 @@ export class GestionConexionComponent {
         this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
-            const app = this.aplicaciones.filter(x => x.aplicacionId == resp.aplicacionId)[0];
-            const susc = this.suscriptores.filter(x => x.suscriptorId == resp.suscriptorId)[0];
-            resp.nombreAplicacion = app.nombreAplicacion;
+            const susc = this.suscriptores.filter((x) => x.codigoSuscriptor == resp.codigoSuscriptor)[0];
+            const paque = this.paquetes.filter((x) => x.codigoPaquete == resp.codigoPaquete)[0];
             resp.nombreSuscriptor = susc.nombreSuscriptor;
-            // resp.nombrePaquete = paque.nombrePaquetes;
+            resp.nombrePaquete = paque.nombrePaquete;
             this.FormRegistro = resp.paquetes;
             console.log('datos del FormRegistro', this.FormRegistro);
           },
@@ -103,23 +97,26 @@ export class GestionConexionComponent {
     });
   }
 
-  consultarAplicaciones() {
-    this.registrosSub = this._aplicacionesService
-      .getAplicaciones()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            this.aplicaciones = resp.aplicaciones;
-            console.log('Todos las aplicaciones', this.aplicaciones);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
-        })
-      )
-      .subscribe();
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    // this.consultarAplicaciones();
+    this.consultarSuscriptores();
+    this.consultarPaquetes();
+    this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   consultarSuscriptores() {
@@ -141,7 +138,7 @@ export class GestionConexionComponent {
       .subscribe();
   }
 
-    consultarPaquetes() {
+  consultarPaquetes() {
     this.registrosSub = this._paquetesService
       .getRegistros()
       .pipe(
@@ -161,28 +158,29 @@ export class GestionConexionComponent {
   }
 
   onAplicacionchangeClick(event: any) {
-    const value = event.target.value;
-    const app = this.aplicaciones.filter((x) => x.aplicacionId == value)[0];
-    this.FormRegistro.aplicacionId = app.aplicacionId;
-    this.FormRegistro.aplicacionId = value;
+    console.log('evento', event);
+    // const value = event.target.value;
+    // const app = this.aplicaciones.filter((x) => x.aplicacionId == value)[0];
+    // this.FormRegistro.aplicacionId = app.aplicacionId;
+    // this.FormRegistro.aplicacionId = value;
   }
 
   onSuscriptorChangeClick(event: any) {
     const value = event.target.value;
-    const suscriptor = this.suscriptores.filter((x) => x.suscriptorId == value)[0];
+    const suscriptor = this.suscriptores.filter((x) => x.codigoSuscriptor == value)[0];
     // console.log('Código de suscriptor seleccionado:', value);
     // console.log('data suscriptor seleccionado:', suscriptor);
-    this.FormRegistro.suscriptorId = suscriptor.suscriptorId;
-    this.FormRegistro.suscriptorId = value;
+    this.FormRegistro.codigoSuscriptor = suscriptor.codigoSuscriptor;
+    this.FormRegistro.codigoSuscriptor = value;
   }
 
-   onPaqueteChangeClick(event: any) {
+  onPaqueteChangeClick(event: any) {
     const value = event.target.value;
     const paquete = this.paquetes.filter((x) => x.suscriptorPaqueteId == value)[0];
     // console.log('Código de paquete seleccionado:', value);
     // console.log('data paquete seleccionado:', paquete);
-    this.FormRegistro.paqueteId = paquete.suscriptorPaqueteId;
-    this.FormRegistro.paqueteId = value;
+    this.FormRegistro.codigoPaquete = paquete.codigoSuscriptor;
+    this.FormRegistro.codigoPaquete = value;
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -236,7 +234,7 @@ export class GestionConexionComponent {
     this.router.navigate(['/administracion-bd/conexiones']);
   }
 
-   toggleNav(): void {
+  toggleNav(): void {
     this.toggleSidebar.emit();
   }
 }

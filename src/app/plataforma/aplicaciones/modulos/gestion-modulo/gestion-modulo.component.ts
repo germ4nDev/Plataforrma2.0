@@ -20,7 +20,7 @@ import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP
 import { PtlmodulosApService } from 'src/app/theme/shared/service/ptlmodulos-ap.service';
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
-import { SwalAlertService } from 'src/app/theme/shared/service';
+import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-modulo',
@@ -50,6 +50,9 @@ export class GestionModuloComponent implements OnInit {
   modulosPadre: PTLModuloAP[] = [];
   codigoModulo = uuidv4();
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   // constructor
   constructor(
@@ -61,6 +64,7 @@ export class GestionModuloComponent implements OnInit {
     private _suitesService: PtlSuitesAPService,
     private _layoutInitializer: LayoutInitializerService,
     private _swalAlertService: SwalAlertService,
+    private _localStorageService: LocalStorageService,
     private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
@@ -84,6 +88,10 @@ export class GestionModuloComponent implements OnInit {
           }
         });
       } else {
+        this.FormRegistro.codigoAplicacion = '';
+        this.FormRegistro.codigoSuite = '';
+        this.FormRegistro.codigoPadre = '';
+        this.FormRegistro.codigoModulo = uuidv4();
         this.FormRegistro.codigoModulo = uuidv4();
         this.modoEdicion = false;
       }
@@ -97,6 +105,20 @@ export class GestionModuloComponent implements OnInit {
     this.consultarSuites();
     this.consultarMLodulos();
     this._layoutInitializer.applyLayout();
+    // TODO Replicar en todos los modulos de gestion de datos
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   consultarAplicaciones() {

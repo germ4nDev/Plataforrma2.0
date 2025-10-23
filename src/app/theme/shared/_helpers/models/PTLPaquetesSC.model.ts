@@ -1,8 +1,8 @@
 export class PTLPaquetesSCModel {
     constructor (
         public suscriptorPaqueteId? : number,
-        public suscriptorId? : number,
-        public paqueteId? : number,
+        public codigoSuscriptor? : string,
+        public codigoPaquete? : string,
         public nombrePaquete? : string,
         public fechaInicio? : Date,
         public fechaVencimiento? : Date,

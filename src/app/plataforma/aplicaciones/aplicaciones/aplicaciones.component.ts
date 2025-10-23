@@ -106,6 +106,14 @@ export class AplicacionesComponent implements OnInit {
     }
   ];
 
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionAplicacion',
+      header: 'APLICACIONES.DESCRIPTION',
+      type: 'text'
+    }
+  ];
+
   getLanguageUrl(): string {
     const lang = localStorage.getItem('lang') || 'en';
     return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`;

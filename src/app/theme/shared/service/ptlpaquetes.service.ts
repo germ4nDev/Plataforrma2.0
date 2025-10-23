@@ -3,21 +3,25 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
+import { PTLPaqueteModel } from '../_helpers/models/PTLPaquete.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
-export class PTLPaquetesAplicacionesService {
+export class PTLPaquetesService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
+    this.user = this._localStorageService.getUsuarioLocalStorage() || '';
     return this.user.serviceToken || '';
   }
 
@@ -30,58 +34,58 @@ export class PTLPaquetesAplicacionesService {
   }
 
   getRegistros() {
-    const url = `${base_url}/modulos-ap`;
+    const url = `${base_url}/paquetes`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de modulo', resp);
+        console.log('servicio de paquetes', resp);
         return {
           ok: true,
-          modulos: resp.modulos
+          paquetes: resp.paquetes
         };
       })
     );
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/modulos-ap/${id}`;
+    const url = `${base_url}/paquetes/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('data de modulo', resp);
+        console.log('data de paquete', resp);
         return {
           ok: true,
-          modulo: resp.modulo
+          paquete: resp.paquete
         };
       })
     );
   }
 
-  postCrearRegistro(modulo: PTLModuloAP) {
-    const url = `${base_url}/modulos-ap`;
-    return this.http.post(url, modulo);
+  postCrearRegistro(paquete: PTLPaqueteModel) {
+    const url = `${base_url}/paquetes`;
+    return this.http.post(url, paquete);
   }
 
-  putModificarRegistro(modulo: PTLModuloAP) {
-    const url = `${base_url}/modulos-ap/${modulo.ModuloId}`;
-    return this.http.put(url, modulo).pipe(
+  putModificarRegistro(paquete: PTLPaqueteModel) {
+    const url = `${base_url}/paquetes/${paquete.paqueteId}`;
+    return this.http.put(url, paquete).pipe(
       map((resp: any) => {
-        console.log('data de modulo modificacda', resp);
+        console.log('data de paquete modificacdo', resp);
         return {
           ok: true,
-          modulo: resp.modulo
+          paquete: resp.paquete
         };
       })
     );
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/modulos-ap/${_id}`;
+    const url = `${base_url}/paquetes/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        console.log('data de modulo eliminado', resp);
+        console.log('data de paquete eliminado', resp);
         return {
           ok: true,
-          modulo: resp.modulo
+          paquete: resp.paquete
         };
       })
     );

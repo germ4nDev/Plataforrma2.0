@@ -7,14 +7,14 @@ import { GradientConfig } from 'src/app/app-config';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
-import { AuthenticationService, LanguageService, PtlColoresSettingsService, UploadFilesService } from 'src/app/theme/shared/service';
+import { AuthenticationService, LanguageService, NavigationService, PtlColoresSettingsService, UploadFilesService } from 'src/app/theme/shared/service';
 import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 import { ChatMsgComponent } from './chat-msg/chat-msg.component';
 import { ThemeService } from 'src/app/theme/shared/service/theme.service';
 import { FormsModule } from '@angular/forms';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
-import { catchError, of, Subscription, tap } from 'rxjs';
+import { catchError, Observable, of, Subject, Subscription, tap } from 'rxjs';
 import { PTLColorSettingModel } from 'src/app/theme/shared/_helpers/models/PTLColorSetting.model';
 
 @Component({
@@ -60,6 +60,8 @@ export class NavRightComponent implements DoCheck, OnInit {
   public registrosSub?: Subscription;
   public themeTextKey: string = 'PLATAFORMA.NAVBAR.CHANGE_TO_DARK';
   public colorPalette: any[] = [];
+  public lockScreenSubject = new Subject<string>();
+  public lockScreenEvent$: Observable<string> = this.lockScreenSubject.asObservable();
 
   constructor(
     private router: Router,
@@ -67,8 +69,8 @@ export class NavRightComponent implements DoCheck, OnInit {
     private themeService: ThemeService,
     private _localstorageService: LocalStorageService,
     private _uploadService: UploadFilesService,
-    private _themeService: ThemeService,
     private _colorsettingsService: PtlColoresSettingsService,
+    private _navigationService: NavigationService,
     private languageService: LanguageService
   ) {
     console.log('isDarkTheme', this.isDarkTheme);
@@ -162,6 +164,7 @@ export class NavRightComponent implements DoCheck, OnInit {
   lockscreen() {
     const currentUrl = this.router.url;
     console.log('ruta actual de navegacion', currentUrl);
+    this._navigationService.emitLockScreen('saveForm');
     sessionStorage.setItem('locked_url', currentUrl);
     this.router.navigate(['/frontal/lock-screen']);
   }

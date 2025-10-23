@@ -21,6 +21,7 @@ export class LocalStorageService {
   public aplicacion: any;
   public suite: any;
   public modulo: any;
+  public FormRegistro: any;
   public lang: string = 'en';
   public themeSettings: any;
 
@@ -62,6 +63,11 @@ export class LocalStorageService {
     this.lang = lang;
   }
 
+  setFormRegistro(FormRegistro: any) {
+    sessionStorage.setItem('FormRegistro', JSON.stringify(FormRegistro));
+    this.FormRegistro = FormRegistro;
+  }
+
   setLogOut() {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('aplicacion');
@@ -94,6 +100,11 @@ export class LocalStorageService {
     return this.lang;
   }
 
+  getFormRegistro() {
+    this.FormRegistro = JSON.parse(sessionStorage.getItem('FormRegistro') || '');
+    return this.FormRegistro;
+  }
+
   getThemeSettings() {
     if (localStorage.getItem('app-theme-settings')) {
       this.themeSettings = JSON.parse(localStorage.getItem('app-theme-settings') || '');
@@ -112,6 +123,12 @@ export class LocalStorageService {
   getLanguageUrl() {
     return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${this.lang === 'es' ? 'Spanish' : 'English'}.json`;
   }
-
   // #endregion GETTERS
+
+  // #region REMOVERS
+  removeFormRegistro() {
+    sessionStorage.removeItem('FormRegistro');
+  }
+  // #endregion  REMOVERS
+
 }

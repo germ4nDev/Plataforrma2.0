@@ -19,6 +19,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class DatatableComponent implements OnInit, OnChanges {
   @Input() data: any[] = [];
   @Input() metadataColumns: any[] = [];
+  @Input() metadataDetailColumns: any[] = [];
   @Input() columnTitles: string[] = [];
   @Input() detailColumns: string[] = [];
   @Input() detailTitles: string[] = [];

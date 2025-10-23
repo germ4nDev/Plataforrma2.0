@@ -135,6 +135,37 @@
             "DESCRIPCIONCHOLDER": "Descripción Aplicación"
         }
     },
+    "MODULOS": {
+        "TITLE": "Administración de Módulos",
+        "TITLEGEST": "Crear/Actualizar un Módulo",
+        "CODE": "Código",
+        "NAME": "Nombre",
+        "DESCRIPTION": "Descripción Módulo",
+        "STATUS": "Estado",
+        "PADRE": "Padre",
+        "HIJOS": "Hijos",
+        "NEW": "Nuevo Módulo",
+        "UPDATE": "Modifucar Módulo",
+        "DELETE": "Eliminar Módulo",
+        "PRECIO": "Precio",
+        "NOMBREAPLICACION": "Aplicación",
+        "NOMBRESUITE": "Suite",
+        "ELIMINARTITULO": "¿Está seguro de eliminar?",
+        "ELIMINARTEXTO": "¡Será Eliminada el Módulo ",
+        "ELIMINAREXITOSA": "¡El Módulo fué eliminado correctamente!",
+        "ELIMINARERROR": "No se pudo eliminar el Módulo.",
+        "CREATE": "Crear Módulo",
+        "FILTROS": {
+            "TITULO": "Filtros Módulos",
+            "FILTROCODIGOAPLICACION": "Código Módulo",
+            "FILTROCODIGOSUITE": "Código Suite",
+            "FILTROCODIGO": "Código",
+            "FILTRONOMBRE": "Nombre",
+            "FILTRODECRIPCION": "Descripción",
+            "FILTROESTADO": "Estado",
+            "DESCRIPCIONCHOLDER": "Descripción Módulo"
+        }
+    },
     "SITIOS": {
         "TITLE": "Administración de Sitios",
         "NAME": "Nombre",

@@ -52,6 +52,9 @@ export class GestionSuiteComponent implements OnInit {
   userPhotoUrl: string = '';
   fileName: string | null = null;
   selectedFileUrl: string | null = null;
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   // constructor
   constructor(
@@ -98,6 +101,19 @@ export class GestionSuiteComponent implements OnInit {
     this.menuItems$ = this._navigationService.menuItems$;
     this.consultarAplicaciones();
     this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   consultarAplicaciones() {

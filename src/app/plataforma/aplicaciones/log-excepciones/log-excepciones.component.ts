@@ -133,6 +133,19 @@ export class LogExcepcionesComponent implements OnInit {
     }
   ];
 
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'nomUsuario',
+      header: 'LOGACTIVIDADES.USUARIO',
+      type: 'text'
+    },
+    {
+      name: 'descripcionLog',
+      header: 'LOGACTIVIDADES.DESCRIPTION',
+      type: 'text'
+    }
+  ];
+
   consultarSuites(codApp?: string): void {
     this.suitesSub = this._suitesService
       .geSuitesAP()

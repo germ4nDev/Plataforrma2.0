@@ -16,7 +16,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import Swal from 'sweetalert2';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-aplicacion',
@@ -44,15 +44,18 @@ export class GestionAplicacionComponent implements OnInit {
   modoEdicion: boolean = false;
   codeAplicacion = uuidv4();
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
     private _aplicacionesService: PtlAplicacionesService,
     private _swalService: SwalAlertService,
     private _translate: TranslateService,
-    private _localStorageService: LocalStorageService,
     private _uploadService: UploadFilesService
   ) {
     this.isSubmit = false;
@@ -60,11 +63,6 @@ export class GestionAplicacionComponent implements OnInit {
     this.gradientConfig = GradientConfig;
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems$ = this._navigationService.menuItems$;
     this.route.queryParams.subscribe((params) => {
       const aplicacionId = params['aplicacionId'];
       if (aplicacionId) {
@@ -88,6 +86,24 @@ export class GestionAplicacionComponent implements OnInit {
     });
   }
 
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
+  }
+
   actualizarDescripcionVersion(nuevoContenido: string): void {
     this.FormRegistro.descripcionAplicacion = nuevoContenido;
     console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionAplicacion);
@@ -109,8 +125,8 @@ export class GestionAplicacionComponent implements OnInit {
       reader.readAsDataURL(file);
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path: any) => {
-            console.log('resultado', path);
-            this.FormRegistro.imagenInicio = path.nombreArchivo;
+          console.log('resultado', path);
+          this.FormRegistro.imagenInicio = path.nombreArchivo;
         },
         error: () => {
           this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));

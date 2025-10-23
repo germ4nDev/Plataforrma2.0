@@ -5,7 +5,7 @@ import { NavigationItem } from '../../layout/admin/navigation/navigation';
 import { PtlAplicacionesService } from './ptlaplicaciones.service';
 import { PtlSuitesAPService } from './ptlsuites-ap.service';
 import { PtlmodulosApService } from './ptlmodulos-ap.service';
-import { Subscription, Observable, BehaviorSubject, tap, catchError, of } from 'rxjs';
+import { Subscription, Observable, BehaviorSubject, tap, catchError, of, Subject } from 'rxjs';
 import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
 import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
 import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
@@ -31,9 +31,11 @@ export class NavigationService implements OnInit, OnDestroy {
   modulo: PTLModuloAP = new PTLModuloAP();
   modulo2: PTLModuloAP = new PTLModuloAP();
 
-  private menuSubject = new BehaviorSubject<NavigationItem[]>([]);
-  public menuItems$: Observable<NavigationItem[]> = this.menuSubject.asObservable();
-  private langSubscription: Subscription | undefined;
+  menuSubject = new BehaviorSubject<NavigationItem[]>([]);
+  menuItems$: Observable<NavigationItem[]> = this.menuSubject.asObservable();
+  langSubscription: Subscription | undefined;
+  lockScreenSubject = new Subject<string>();
+  lockScreenEvent$: Observable<string> = this.lockScreenSubject.asObservable();
 
   constructor(
     private _aplicacionesService: PtlAplicacionesService,
@@ -58,6 +60,11 @@ export class NavigationService implements OnInit, OnDestroy {
     if (this.langSubscription) {
       this.langSubscription.unsubscribe();
     }
+  }
+
+  emitLockScreen(message: string): void {
+    console.log('Navigation: Emitiendo evento de bloqueo:', message);
+    this.lockScreenSubject.next(message);
   }
 
   private getAbsoluteUrl(url: string | undefined): string | undefined {
