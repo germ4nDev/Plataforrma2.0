@@ -87,6 +87,11 @@ export class EnlacesComponent implements OnInit {
 
   columnasRegistros: ColumnMetadata[] = [
     {
+      name: 'nomSitio',
+      header: 'SITIOS.ENLACES.NAMESITIO',
+      type: 'text'
+    },
+    {
       name: 'nombreEnlace',
       header: 'SITIOS.ENLACES.NAME',
       type: 'text'
@@ -99,6 +104,14 @@ export class EnlacesComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'SITIOS.ENLACES.STATUS',
+      type: 'text'
+    }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionEnlace',
+      header: 'SITIOS.ENLACES.DESCRIPTION',
       type: 'text'
     }
   ];

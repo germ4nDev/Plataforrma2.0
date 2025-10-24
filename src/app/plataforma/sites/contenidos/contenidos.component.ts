@@ -92,6 +92,11 @@ export class ContenidosComponent implements OnInit {
       type: 'text'
     },
     {
+      name: 'descripcionContenido',
+      header: 'SITIOS.CONTENIDOS.DESCRIPTION',
+      type: 'text'
+    },
+    {
       name: 'nomEnlace',
       header: 'PRECIOS.TIPOS.NAMEENLACE',
       type: 'text'
@@ -99,6 +104,14 @@ export class ContenidosComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'SITIOS.CONTENIDOS.STATUS',
+      type: 'text'
+    }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'contenido',
+      header: 'SITIOS.CONTENIDOS.CONTENIDO',
       type: 'text'
     }
   ];

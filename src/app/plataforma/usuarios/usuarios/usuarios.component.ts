@@ -125,6 +125,14 @@ export class UsuariosComponent implements OnInit {
     // { name: 'costo', header: 'USUARIOS.COSTO', type: 'number' }
   ];
 
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionUsuario',
+      header: 'USUARIOS.DESCRIPTION',
+      type: 'text'
+    }
+  ];
+
   getEstado(estado: boolean): string {
     return estado ? 'Activo' : 'Inactivo';
   }
@@ -236,9 +244,3 @@ export class UsuariosComponent implements OnInit {
   }
 }
 
-// export interface ColumnMetadata {
-//   name: string;
-//   header: string;
-//   type: 'number' | 'text' | 'date' | 'avatar' | 'image' | 'unknown';
-//   isSortable?: boolean;
-// }

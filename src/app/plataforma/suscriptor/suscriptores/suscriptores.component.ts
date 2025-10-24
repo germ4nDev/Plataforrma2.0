@@ -100,6 +100,14 @@ export class SuscriptoresComponent implements OnInit {
     }
   ];
 
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionSuscriptor',
+      header: 'SUSCRIPTORES.DESCRIPTION',
+      type: 'text'
+    }
+  ];
+
   OnNuevoRegistroClick() {
     this.router.navigate(['/suscriptor/gestion-suscriptor']);
   }

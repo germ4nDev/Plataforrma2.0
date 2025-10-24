@@ -91,6 +91,11 @@ export class SitesComponent implements OnInit {
 
   columnasRegistros: ColumnMetadata[] = [
     {
+      name: 'nomAplicacion',
+      header: 'SITIOS.NAMEAPLICATION',
+      type: 'text'
+    },
+{
       name: 'nombreSitio',
       header: 'SITIOS.NAME',
       type: 'text'
@@ -108,6 +113,14 @@ export class SitesComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'SITIOS.STATUS',
+      type: 'text'
+    }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionSitio',
+      header: 'SITIOS.DESCRIPTION',
       type: 'text'
     }
   ];

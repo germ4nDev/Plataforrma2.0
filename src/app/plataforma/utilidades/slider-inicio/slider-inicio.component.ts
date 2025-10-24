@@ -109,6 +109,14 @@ export class SliderInicioComponent implements OnInit {
     }
   ];
 
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionSlider',
+      header: 'SLIDER.DESCRIPCION',
+      type: 'text'
+    }
+  ];
+
   getEstado(estado: boolean): string {
     return estado ? 'Activo' : 'Inactivo';
   }

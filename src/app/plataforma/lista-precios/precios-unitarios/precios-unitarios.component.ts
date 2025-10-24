@@ -89,7 +89,7 @@ export class PreciosUnitariosComponent implements OnInit {
           if (resp.ok) {
             resp.valoresUnitarios.forEach((reg: any) => {
               reg.nomEstado = reg.estadoValor == true ? 'Activa' : 'Inactiva';
-              reg.nomTipo = this.tiposValor.filter(x => x.tipoValorId == reg.tipoValorId)[0].nombreTipo;
+              reg.nomTipo = this.tiposValor.filter((x) => x.tipoValorId == reg.tipoValorId)[0].nombreTipo;
             });
             this.registros = resp.valoresUnitarios;
             this.registrosFiltrado = resp.valoresUnitarios;
@@ -129,6 +129,19 @@ export class PreciosUnitariosComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'PRECIOS.STATUS',
+      type: 'text'
+    }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'codigoValor',
+      header: 'PRECIOS.CODIGO',
+      type: 'text'
+    },
+    {
+      name: 'descripcionValor',
+      header: 'PRECIOS.DESCRIPTION',
       type: 'text'
     }
   ];

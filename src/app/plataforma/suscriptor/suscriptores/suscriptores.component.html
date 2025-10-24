@@ -56,14 +56,7 @@
           [idField]="'suscriptorId'"
           [tableTitle]="'SUSCRIPTORES.TITLE' | translate"
           [metadataColumns]="columnasRegistros"
-          [columnTitles]="[
-            'SUSCRIPTORES.CODE' | translate,
-            'SUSCRIPTORES.NAME' | translate,
-            'SUSCRIPTORES.IDENTIFICATION' | translate,
-            'SUSCRIPTORES.STATUS' | translate
-          ]"
-          [detailColumns]="['descripcionSuscriptor']"
-          [detailTitles]="['SUSCRIPTORES.DESCRIPTION' | translate]"
+          [metadataDetailColumns]="columnasDetailRegistros"
           [showActions]="true"
           [showNewButton]="true"
           [showViewButton]="false"
