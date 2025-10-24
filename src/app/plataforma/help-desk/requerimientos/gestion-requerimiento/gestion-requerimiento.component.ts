@@ -203,6 +203,7 @@ export class GestionRequerimientoComponent {
   btnRegresarClick() {
     this.router.navigate(['/help-desk/requerimientos/']);
   }
+
   toggleNav(): void {
     this.toggleSidebar.emit();
   }

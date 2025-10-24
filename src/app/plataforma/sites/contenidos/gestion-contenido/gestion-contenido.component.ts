@@ -17,6 +17,7 @@ import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-in
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
+import { LocalStorageService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-geston-contenido',
@@ -41,6 +42,9 @@ export class GestonContenidoComponent implements OnInit {
   modoEdicion: boolean = false;
   enlaceSub?: Subscription;
   enlaces: PTLEnlaceSTModel[] = [];
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   constructor(
     private router: Router,
@@ -48,22 +52,15 @@ export class GestonContenidoComponent implements OnInit {
     private translate: TranslateService,
     private _registrosService: PTLContenidosELService,
     private _enlacesService: PTLEnlacesSTService,
-        private _navigationService: NavigationService,
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
     private _layoutInitializer: LayoutInitializerService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
-    this.consultarEnlaces();
-    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -81,6 +78,26 @@ export class GestonContenidoComponent implements OnInit {
         this.modoEdicion = false;
       }
     });
+  }
+
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    this.consultarEnlaces();
+    this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   consultarEnlaces() {

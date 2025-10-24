@@ -18,6 +18,7 @@ import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-in
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
+import { LocalStorageService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-site',
@@ -41,6 +42,9 @@ export class GestionSiteComponent implements OnInit {
   aplicacionesSub?: Subscription;
   aplicaciones: PTLAplicacionModel[] = [];
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   // constructor
   constructor(
@@ -50,21 +54,14 @@ export class GestionSiteComponent implements OnInit {
     private _registrosService: PTLSitiosAPService,
     private _aplicacionesService: PtlAplicacionesService,
     private _layoutInitializer: LayoutInitializerService,
-    private _navigationService: NavigationService
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService
   ) {
     this.isSubmit = false;
-    GradientConfig.header_fixed_layout = true
+    GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
-    this.consultarAplicaciones();
-    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -82,6 +79,26 @@ export class GestionSiteComponent implements OnInit {
         this.modoEdicion = false;
       }
     });
+  }
+
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    this.consultarAplicaciones();
+    this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   consultarAplicaciones() {
@@ -160,7 +177,7 @@ export class GestionSiteComponent implements OnInit {
     this.router.navigate(['/sites/sites']);
   }
 
-    toggleNav(): void {
+  toggleNav(): void {
     this.toggleSidebar.emit();
   }
 }

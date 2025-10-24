@@ -93,13 +93,25 @@ export class SeguimientosComponent implements OnInit {
 
   columnasRegistros: ColumnMetadata[] = [
     {
-      name: 'nombreSeguimiento',
-      header: 'TICKETS.SEGUIMIENTOS.NOMBREREQUERIMIENTO',
+      name: 'nomRequerimiento',
+      header: 'TICKETS.SEGUIMIENTOS.NAMEREQUERIMIENTO',
       type: 'text'
     },
-    {
+{
+      name: 'nombreSeguimiento',
+      header: 'TICKETS.SEGUIMIENTOS.NOMBRESEGUIMIENTO',
+      type: 'text'
+    },    {
       name: 'nomEstado',
-      header: 'TICKETS.SEGUIMIENTOS..STATUS',
+      header: 'TICKETS.SEGUIMIENTOS.STATUS',
+      type: 'text'
+    }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionSeguimiento',
+      header: 'TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO',
       type: 'text'
     }
   ];

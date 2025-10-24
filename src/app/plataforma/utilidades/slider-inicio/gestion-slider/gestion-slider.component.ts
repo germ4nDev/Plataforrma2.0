@@ -7,7 +7,7 @@ import { GradientConfig } from 'src/app/app-config';
 // project import
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { PtlSlidersInicioService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtlSlidersInicioService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
@@ -46,6 +46,9 @@ export class GestionSliderComponent implements OnInit {
   userPhotoUrl: string = '';
   fileName: string | null = null;
   selectedFileUrl: string | null = null;
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   // constructor
   constructor(
@@ -57,6 +60,7 @@ export class GestionSliderComponent implements OnInit {
     private _swalAlertService: SwalAlertService,
     private _navigationService: NavigationService,
     private _uploadService: UploadFilesService,
+    private _localStorageService: LocalStorageService,
     private _swalService: SwalAlertService
   ) {
     this.isSubmit = false;
@@ -71,8 +75,7 @@ export class GestionSliderComponent implements OnInit {
         this.modoEdicion = true;
         this._registrosService.getRegistroById(this.sliderId).subscribe({
           next: (resp: any) => {
-            this.selectedFileUrl =
-            this.FormRegistro = resp.sliderInicio;
+            this.selectedFileUrl = this.FormRegistro = resp.sliderInicio;
           },
           error: (err) => {
             this._swalAlertService.getAlertError('No se pudo obtener el slider por ' + err);
@@ -88,6 +91,19 @@ export class GestionSliderComponent implements OnInit {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
     this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -96,7 +112,6 @@ export class GestionSliderComponent implements OnInit {
     // if (this.validationForm && this.isSubmit) {
     // }
   }
-
 
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];

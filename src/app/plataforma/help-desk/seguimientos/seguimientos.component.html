@@ -49,11 +49,7 @@
                     [idField]="'seguimientoId'"
                     [tableTitle]="'TICKETS.SEGUIMIENTOS.TITLE' | translate"
                     [metadataColumns]="columnasRegistros"
-                    [detailColumns]="['nomRequerimiento', 'descripcionSeguimiento']"
-                    [detailTitles]="[
-                      'TICKETS.SEGUIMIENTOS.NAMEREQUERIMIENTO'| translate,
-                      'TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO'| translate
-                    ]"
+                    [metadataDetailColumns]="columnasDetailRegistros"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"

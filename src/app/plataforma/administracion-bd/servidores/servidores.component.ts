@@ -13,7 +13,7 @@ import { PTLServidorModel } from 'src/app/theme/shared/_helpers/models/PTLServid
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 
@@ -26,7 +26,8 @@ import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetad
 })
 export class ServidoresComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
-  @Output()toggleSidebar = new EventEmitter<void>();
+  @Output()
+  toggleSidebar = new EventEmitter<void>();
   //#region VARIABLES
   registrosSub?: Subscription;
   registros: PTLServidorModel[] = [];
@@ -80,23 +81,31 @@ export class ServidoresComponent implements OnInit {
       .subscribe();
   }
 
-     columnasServidores: ColumnMetadata[] = [
-      {
-        name: 'nombreServidor',
-        header: 'CONEXIONES.SERVIDORES.NOMBRESERVIDOR',
-        type: 'text',
-      },
-      {
-        name: 'rutaServidor',
-        header: 'CONEXIONES.SERVIDORES.RUTASERVIDOR',
-        type: 'text'
-      },
-      {
-        name: 'nomEstado',
-        header: 'USUARIOS.STATUS',
-        type: 'text'
-      }
-    ];
+  columnasServidores: ColumnMetadata[] = [
+    {
+      name: 'nombreServidor',
+      header: 'CONEXIONES.SERVIDORES.NOMBRESERVIDOR',
+      type: 'text'
+    },
+    {
+      name: 'rutaServidor',
+      header: 'CONEXIONES.SERVIDORES.RUTASERVIDOR',
+      type: 'text'
+    },
+    {
+      name: 'nomEstado',
+      header: 'USUARIOS.STATUS',
+      type: 'text'
+    }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionServidor',
+      header: 'CONEXIONES.SERVIDORES.DESCRIPCIONSERVIDOR',
+      type: 'text'
+    }
+  ];
 
   OnNuevoRegistroClick() {
     this.router.navigate(['administracion-bd/gestion-servidor/']);
@@ -131,40 +140,38 @@ export class ServidoresComponent implements OnInit {
   }
 
   onFiltroNombreChangeClick(evento: any) {
-        console.log('filtrar el NOMBRE ', evento.target.value);
-        const textoFiltro = evento.target.value.toLowerCase();
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros];
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((server) =>
-                (server.nombreServidor || '').toLowerCase().includes(textoFiltro)
-            );
-            console.log('filtrados', this.registrosFiltrado);
-        }
+    console.log('filtrar el NOMBRE ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((server) => (server.nombreServidor || '').toLowerCase().includes(textoFiltro));
+      console.log('filtrados', this.registrosFiltrado);
     }
+  }
 
-    onFiltroDescripcionChangeClick(evento: any) {
-        console.log('filtrar el descripcion ', evento.target.value);
-        const textoFiltro = evento.target.value.toLowerCase();
-        if (!textoFiltro) {
-            this.registrosFiltrado = [...this.registros];
-        } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((server) =>
-                (server.descripcionServidor || '').toLowerCase().includes(textoFiltro)
-            );
-            console.log('filtrados', this.registrosFiltrado);
-        }
+  onFiltroDescripcionChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((server) =>
+        (server.descripcionServidor || '').toLowerCase().includes(textoFiltro)
+      );
+      console.log('filtrados', this.registrosFiltrado);
     }
+  }
 
-    onFiltroEstadoChangeClick(evento: any) {
-        console.log('filtrar el estado ', evento.target.value);
-        if (evento.target.value == 'todos') {
-            this.registrosFiltrado = this.registros;
-        } else {
-            const estado = evento.target.value == 'true' ? true : false;
-            this.registrosFiltrado = this.registros.filter(x => x.estadoServidor == estado);
-        }
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = this.registros;
+    } else {
+      const estado = evento.target.value == 'true' ? true : false;
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoServidor == estado);
     }
+  }
 
   toggleNav(): void {
     this.toggleSidebar.emit();

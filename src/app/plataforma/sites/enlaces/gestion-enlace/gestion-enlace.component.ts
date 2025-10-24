@@ -1,14 +1,14 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PTLEnlacesSTService } from 'src/app/theme/shared/service/ptlenlaces-st.service';
 import { PTLEnlaceSTModel } from 'src/app/theme/shared/_helpers/models/PTLEnlaceST.model';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 import { catchError, Observable, of, Subscription, tap } from 'rxjs';
-import { PTLSitiosAPService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PTLSitiosAPService } from 'src/app/theme/shared/service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -42,6 +42,9 @@ export class GestionEnlaceComponent implements OnInit {
   sitiosSub?: Subscription;
   sitios: PTLSitiosAPModel[] = [];
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   // constructor
   constructor(
@@ -49,22 +52,16 @@ export class GestionEnlaceComponent implements OnInit {
     private route: ActivatedRoute,
     private translate: TranslateService,
     private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
     private _registrosService: PTLEnlacesSTService,
     private _sitiosService: PTLSitiosAPService,
     private _layoutInitializer: LayoutInitializerService
   ) {
     this.isSubmit = false;
-    GradientConfig.header_fixed_layout = true
+    GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
-    this.consultarSitios();
-    this._layoutInitializer.applyLayout();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -84,26 +81,46 @@ export class GestionEnlaceComponent implements OnInit {
     });
   }
 
-  consultarSitios() {
-      this.sitiosSub = this._sitiosService
-        .getRegistros()
-        .pipe(
-          tap((resp: any) => {
-            if (resp.ok) {
-              this.sitios = resp.sitios;
-              console.log('Todos las sitios', this.sitios);
-              return;
-            }
-          }),
-          catchError((err) => {
-            console.log('Ha ocurrido un error', err);
-            return of(null);
-          })
-        )
-        .subscribe();
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    this.consultarSitios();
+    this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
     }
+  }
 
-    onSitiochangeClick(event: any) {
+  consultarSitios() {
+    this.sitiosSub = this._sitiosService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.sitios = resp.sitios;
+            console.log('Todos las sitios', this.sitios);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  onSitiochangeClick(event: any) {
     const value = event.target.value;
     const sitio = this.sitios.filter((x) => x.sitioId == value)[0];
     console.log('Id del sitio seleccionado:', value);
@@ -124,7 +141,7 @@ export class GestionEnlaceComponent implements OnInit {
       return;
     }
     if (this.modoEdicion) {
-        console.log('Datos a enviar (FormRegistro):', this.FormRegistro);
+      console.log('Datos a enviar (FormRegistro):', this.FormRegistro);
 
       this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
@@ -161,7 +178,7 @@ export class GestionEnlaceComponent implements OnInit {
   btnRegresarClick() {
     this.router.navigate(['/sites/enlaces']);
   }
-     toggleNav(): void {
+  toggleNav(): void {
     this.toggleSidebar.emit();
   }
 }

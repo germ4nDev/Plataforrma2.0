@@ -10,7 +10,6 @@
                     {{ 'PLATAFORMA.FILTERS' | translate }}
                 </button>
             </div>
-
             <ng-container *ngIf="activeTab === 'menu'">
                 <app-nav-content [navigationItems]="menuItems"></app-nav-content>
             </ng-container>
@@ -49,11 +48,7 @@
                     [idField]="'requerimientoId'"
                     [tableTitle]="'TICKETS.REQUERIMIENTOS.TITLE' | translate"
                     [metadataColumns]="columnasRegistros"
-                    [detailColumns]="['nomTicket','descripcionRequerimiento']"
-                    [detailTitles]="[
-                       'TICKETS.REQUERIMIENTOS.NAMETICKET'| translate,
-                       'TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO'| translate
-                    ]"
+                    [metadataColumns]="columnasDetailRegistros"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"

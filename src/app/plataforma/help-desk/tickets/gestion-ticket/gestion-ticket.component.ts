@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { PtlAplicacionesService, NavigationService } from 'src/app/theme/shared/service';
+import { PtlAplicacionesService, NavigationService, LocalStorageService } from 'src/app/theme/shared/service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
@@ -35,22 +35,20 @@ export class GestionTicketComponent {
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslateService,
     private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
     private registrosService: PTLTicketsService,
     private aplicacionesService: PtlAplicacionesService
   ) {
     this.isSubmit = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
-    this.consultarTickets();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -72,6 +70,25 @@ export class GestionTicketComponent {
         // this.FormRegistro.codigoAplicacion = uuidv4();
       }
     });
+  }
+
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    this.consultarTickets();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   consultarTickets() {

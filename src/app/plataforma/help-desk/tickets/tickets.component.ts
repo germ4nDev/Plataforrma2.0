@@ -86,6 +86,11 @@ export class TicketsComponent implements OnInit {
 
   columnasRegistros: ColumnMetadata[] = [
     {
+      name: 'nomAplicacion',
+      header: 'TICKETS.NAMEAPLICATION',
+      type: 'text'
+    },
+        {
       name: 'nombreTicket',
       header: 'TICKETS.NOMBREREQUERIMIENTO',
       type: 'text'
@@ -93,6 +98,14 @@ export class TicketsComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'TICKETS..STATUS',
+      type: 'text'
+    }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'descripcionTicket',
+      header: 'TICKETS.DESCRIPCIONTICKET',
       type: 'text'
     }
   ];

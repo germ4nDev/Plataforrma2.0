@@ -13,8 +13,8 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { PTLTiposValoresModel } from 'src/app/theme/shared/_helpers/models/PTLTiposValores.model';
 import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
-import { Observable } from 'rxjs';
-import { SwalAlertService } from 'src/app/theme/shared/service';
+import { Observable, Subscription } from 'rxjs';
+import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-tipo',
@@ -37,11 +37,15 @@ export class GestionTipoComponent implements OnInit {
   modoEdicion: boolean = false;
   codeAplicacion = uuidv4();
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
     private _swalAlertService: SwalAlertService,
     private _registrosService: PtltiposValoresService
   ) {
@@ -73,6 +77,19 @@ export class GestionTipoComponent implements OnInit {
   ngOnInit() {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {

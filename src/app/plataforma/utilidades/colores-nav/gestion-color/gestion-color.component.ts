@@ -6,7 +6,7 @@ import { GradientConfig } from 'src/app/app-config';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { PtlColoresSettingsService, SwalAlertService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtlColoresSettingsService, SwalAlertService } from 'src/app/theme/shared/service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
@@ -47,10 +47,13 @@ export class GestionColorComponent implements OnInit {
   buttonsHoverColor: string = 'hover';
   estadoColor: boolean = false;
 
-    nColor: string = '';
+  nColor: string = '';
   tColor: string = '';
   iColor: string = '';
   bHColor: string = '';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   // constructor
   constructor(
@@ -60,13 +63,12 @@ export class GestionColorComponent implements OnInit {
     private _registrosService: PtlColoresSettingsService,
     private _layoutInitializer: LayoutInitializerService,
     private _swalAlertService: SwalAlertService,
-    private _navigationService: NavigationService,
-    private _swalService: SwalAlertService
+    private _localStorageService: LocalStorageService,
+    private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
     this.route.queryParams.subscribe((params) => {
@@ -97,6 +99,19 @@ export class GestionColorComponent implements OnInit {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
     this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   OnColorSelectedClick(evento: any) {

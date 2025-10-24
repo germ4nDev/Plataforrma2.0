@@ -49,11 +49,7 @@
                     [idField]="'ticketId'"
                     [tableTitle]="'TICKETS.TITLE' | translate"
                     [metadataColumns]="columnasRegistros"
-                    [detailColumns]="['nomAplicacion', 'descripcionTicket']"
-                    [detailTitles]="[
-                      'SITIOS.NAMEAPLICATION' | translate,
-                      'TICKETS.DESCRIPCIONTICKET'| translate
-                    ]"
+                    [metadataDetailColumns]="columnasDetailRegistros"
                     [showActions]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"

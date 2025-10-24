@@ -14,7 +14,8 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { LocalStorageService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-suscriptor',
@@ -37,20 +38,19 @@ export class GestionSuscriptorComponent {
   modoEdicion: boolean = false;
   cosigoSusucriptor = uuidv4();
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   // constructor
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private _suscriptoresService: PTLSuscriptoresService,
-    private _navigationService: NavigationService
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService
   ) {
     this.isSubmit = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
     this.route.queryParams.subscribe((params) => {
       const id = params['regId'];
       console.log('me llena el Id', id);
@@ -70,6 +70,24 @@ export class GestionSuscriptorComponent {
         this.FormRegistro.codigoSuscriptor = uuidv4();
       }
     });
+  }
+
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   actualizarDescripcionSuscriptor(nuevoContenido: string): void {

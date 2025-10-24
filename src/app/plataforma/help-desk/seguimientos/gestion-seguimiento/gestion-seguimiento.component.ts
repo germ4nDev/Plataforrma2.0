@@ -11,12 +11,12 @@ import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.servi
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
 import { PTLSeguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { NavBarComponent } from "src/app/theme/layout/admin/nav-bar/nav-bar.component";
-import { NavContentComponent } from "src/app/theme/layout/admin/navigation/nav-content/nav-content.component";
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
-import { NavigationService } from 'src/app/theme/shared/service';
+import { LocalStorageService, NavigationService } from 'src/app/theme/shared/service';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 
 @Component({
@@ -39,24 +39,21 @@ export class GestionSeguimientoComponent {
   tipoEstado: number = 1;
   estadosFiltrados: any[] = [];
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslateService,
     private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService,
     private _registrosService: PTLSeguimientosRqService,
     private _requerimientoService: PTLRequerimientosTkService,
     private _estadosService: PTLEstadosService
   ) {
     this.isSubmit = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
-    this.consultarRequerimientos();
-    this.consultarEstado();
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -77,6 +74,26 @@ export class GestionSeguimientoComponent {
         this.modoEdicion = false;
       }
     });
+  }
+
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    this.consultarRequerimientos();
+    this.consultarEstado();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   consultarEstado() {

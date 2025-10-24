@@ -17,7 +17,7 @@ import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-gestion-usuario',
@@ -43,6 +43,9 @@ export class GestionUsuarioComponent implements OnInit {
   isClaveActual: boolean = true;
   claveActual: string = '';
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   constructor(
     private router: Router,
@@ -56,11 +59,6 @@ export class GestionUsuarioComponent implements OnInit {
     private _uploadService: UploadFilesService
   ) {
     this.isSubmit = false;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -85,6 +83,24 @@ export class GestionUsuarioComponent implements OnInit {
         // this.FormRegistro.codigoAplicacion = uuidv4();
       }
     });
+  }
+
+  ngOnInit() {
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   onFileSelectedClick(event: any) {

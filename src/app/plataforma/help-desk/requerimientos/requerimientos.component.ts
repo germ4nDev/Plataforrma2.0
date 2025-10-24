@@ -55,6 +55,7 @@ export class RequerimientosComponent implements OnInit {
   ) {
     this.gradientConfig = GradientConfig;
   }
+
   ngOnInit() {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
@@ -103,6 +104,19 @@ export class RequerimientosComponent implements OnInit {
       header: 'TICKETS.REQUERIMIENTOS..STATUS',
       type: 'text'
     }
+  ];
+
+  columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'nomTicket',
+      header: 'TICKETS.REQUERIMIENTOS.NAMETICKET',
+      type: 'text'
+    },
+    {
+      name: 'descripcionRequerimiento',
+      header: 'TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO',
+      type: 'text'
+    },
   ];
 
   consultarTickets() {

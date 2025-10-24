@@ -18,7 +18,7 @@ import { PTLTiposValoresModel } from 'src/app/theme/shared/_helpers/models/PTLTi
 import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLValoresUnitarios.model';
 import { PtlvaloresUnitariosService } from 'src/app/theme/shared/service/ptlvalores-unitarios.service';
 import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
-import { SwalAlertService } from 'src/app/theme/shared/service';
+import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-precio',
@@ -45,6 +45,9 @@ export class GestionPrecioComponent implements OnInit {
   valoresUnitariosSub?: Subscription;
   valoresUnitarios: PTLValoresUnitarios[] = [];
   tipoEditorTexto = 'basica';
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   // constructor
   constructor(
@@ -55,12 +58,12 @@ export class GestionPrecioComponent implements OnInit {
     private _tiposValorService: PtltiposValoresService,
     private _layoutInitializer: LayoutInitializerService,
     private _swalAlertService: SwalAlertService,
-    private _navigationService: NavigationService
+    private _navigationService: NavigationService,
+    private _localStorageService: LocalStorageService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
     this.route.queryParams.subscribe((params) => {
@@ -87,6 +90,19 @@ export class GestionPrecioComponent implements OnInit {
     this.menuItems = this._navigationService.menuItems$;
     this.consultarTiposValor();
     this._layoutInitializer.applyLayout();
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro);
+        this.isLocked = true;
+        this.lockMessage = message;
+      },
+      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+    });
+    const form = this._localStorageService.getFormRegistro();
+    if (form != undefined) {
+      this.FormRegistro = form;
+      this._localStorageService.removeFormRegistro();
+    }
   }
 
   consultarTiposValor() {
