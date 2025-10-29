@@ -34,12 +34,13 @@ export class PtlAplicacionesService {
   }
 
   getAplicaciones() {
+    console.log('aca');
     const url = `${base_url}/aplicaciones`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         return {
           ok: true,
-          aplicaciones: resp.aplicaciones.filter((x: { estadoAplicacion: boolean }) => x.estadoAplicacion == true)
+          aplicaciones: resp.aplicaciones
         };
       })
     );
@@ -58,11 +59,6 @@ export class PtlAplicacionesService {
     );
   }
 
-  crearAplicacion(aplicacion: PTLAplicacionModel) {
-    const url = `${base_url}/aplicaciones`;
-    return this.http.post(url, aplicacion);
-  }
-
   getAplicacionByCode(code: string) {
     const url = `${base_url}/aplicaciones/code/${code}`;
     return this.http.get(url).pipe(
@@ -75,6 +71,12 @@ export class PtlAplicacionesService {
       })
     );
   }
+
+  crearAplicacion(aplicacion: PTLAplicacionModel) {
+    const url = `${base_url}/aplicaciones`;
+    return this.http.post(url, aplicacion);
+  }
+
   actualizarAplicacion(aplicacion: PTLAplicacionModel) {
     const url = `${base_url}/aplicaciones/${aplicacion.aplicacionId}`;
     return this.http.put(url, aplicacion).pipe(
@@ -88,7 +90,7 @@ export class PtlAplicacionesService {
     );
   }
 
-  eliminarAplicacion(_id: number) {
+  eliminarAplicacion(_id: string) {
     const url = `${base_url}/aplicaciones/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {

@@ -163,15 +163,15 @@ export class AplicacionesComponent implements OnInit {
   }
 
   OnNuevaAplicaicionClick(): void {
-    this.router.navigate(['aplicaciones/gestion-aplicacion']);
+    this._navigationService.navigateNodoMenu('/aplicaciones/gestion-aplicacion', 'nuevo');
   }
 
-  OnEditarAplicaicionClick(id: number): void {
-    this.router.navigate(['aplicaciones/gestion-aplicacion'], { queryParams: { aplicacionId: id } });
+  OnEditarAplicaicionClick(id: string): void {
+    this._navigationService.navigateNodoMenu('/aplicaciones/gestion-aplicacion', id);
   }
 
-  OnEliminarAplicaicionClick(id: number): void {
-    const nombreApp = this.aplicacionesFiltrado.filter((x) => x.aplicacionId == id)[0];
+  OnEliminarAplicaicionClick(id: string): void {
+    const nombreApp = this.aplicacionesFiltrado.filter((x) => x.codigoAplicacion == id)[0];
     Swal.fire({
       title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
       text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreAplicacion}".`,
@@ -184,7 +184,7 @@ export class AplicacionesComponent implements OnInit {
         this._aplicacionesService.eliminarAplicacion(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.aplicaciones = this.aplicaciones.filter((a) => a.aplicacionId !== id);
+            this.aplicaciones = this.aplicaciones.filter((a) => a.codigoAplicacion !== id);
             this.aplicacionesFiltrado = [...this.aplicaciones];
           },
           error: () => {

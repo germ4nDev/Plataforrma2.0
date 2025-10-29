@@ -4,6 +4,7 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
 import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
 import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
+import { FormDataModel } from '../_helpers/models/FormData.model';
 
 interface ThemeSettings {
   isDarkTheme: boolean;
@@ -12,10 +13,22 @@ interface ThemeSettings {
   textoColor: string;
 }
 
+interface Modelostorage {
+  codigoAplicacion: string;
+  codigoSuite: string;
+  codigoModulo: string;
+  usuarioCreacion: string;
+  usuarioModificacion: string;
+  fechaCreacion: Date;
+  fechaModificacion: Date;
+  actividad: [];
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
+  DataModel: FormDataModel = new FormDataModel();
   public usuario: any;
   public currentUser: any;
   public aplicacion: any;
@@ -25,12 +38,7 @@ export class LocalStorageService {
   public lang: string = 'en';
   public themeSettings: any;
 
-  constructor() {
-    // this.usuario = JSON.parse(localStorage.getItem('currentUser') || '');
-    // this.aplicacion = localStorage.getItem('aplicacion') ? JSON.parse(localStorage.getItem('aplicacion')) : new PTLAplicacionModel()
-    // this.suite = JSON.parse(localStorage.getItem('suite') || '');
-    // this.modulo = JSON.parse(localStorage.getItem('modulo') || '');
-  }
+  constructor() {}
 
   // #region SETTERS
   setUsuarioLocalStorage(user: PTLUsuarioModel) {
@@ -72,6 +80,7 @@ export class LocalStorageService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('aplicacion');
     localStorage.removeItem('suite');
+    localStorage.removeItem('modulo');
   }
   // #endregion SETTERS
 
@@ -92,8 +101,28 @@ export class LocalStorageService {
   }
 
   getModuloLocalStorage(): PTLModuloAP {
-    this.modulo = JSON.parse(localStorage.getItem('modulo') || '');
+    this.modulo = localStorage.getItem('modulo') ? JSON.parse(localStorage.getItem('modulo') || '') : '';
+    console.log('modulo local storage', this.modulo);
     return this.modulo;
+  }
+
+  getDataModelsLocalStorage() {
+    this.usuario = JSON.parse(localStorage.getItem('currentUser') || '');
+    this.aplicacion = JSON.parse(localStorage.getItem('aplicacion') || '');
+    this.suite = JSON.parse(localStorage.getItem('suite') || '');
+    this.modulo = JSON.parse(localStorage.getItem('modulo') || '');
+    const modelo: Modelostorage = {
+      codigoAplicacion: this.aplicacion.codigoAplicacion,
+      codigoSuite: this.suite.codigoSuite,
+      codigoModulo: this.modulo.codigoModulo,
+      usuarioCreacion: this.usuario.usuario.codigoUsuario,
+      usuarioModificacion: this.usuario.usuario.codigoUsuario,
+      fechaCreacion: new Date(),
+      fechaModificacion: new Date(),
+      actividad: []
+    };
+    console.log('datamodel local', modelo);
+    return modelo;
   }
 
   getLanguage(): string {
@@ -101,7 +130,10 @@ export class LocalStorageService {
   }
 
   getFormRegistro() {
-    this.FormRegistro = JSON.parse(sessionStorage.getItem('FormRegistro') || '');
+    this.FormRegistro = [];
+    if (sessionStorage.getItem('FormRegistro')) {
+      this.FormRegistro = JSON.parse(sessionStorage.getItem('FormRegistro') || '');
+    }
     return this.FormRegistro;
   }
 
@@ -130,5 +162,4 @@ export class LocalStorageService {
     sessionStorage.removeItem('FormRegistro');
   }
   // #endregion  REMOVERS
-
 }

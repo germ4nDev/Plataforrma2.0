@@ -286,6 +286,7 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   onEdit(row: any): void {
+    console.log('fieldId', this.idField);
     this.editRecord.emit(row[this.idField]);
   }
 

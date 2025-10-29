@@ -38,9 +38,9 @@ export class ModulosComponent implements OnInit {
   suites: PTLSuiteAPModel[] = [];
   modulosPadre: PTLModuloAP[] = [];
   registros: PTLModuloAP[] = [];
+  registrosSub?: Subscription;
   suitesSub?: Subscription;
   modulosSub?: Subscription;
-  registrosSub?: Subscription;
   registrosFiltrado: PTLModuloAP[] = [];
   moduloTituloExcel: string = '';
   filtroPersonalizado: string = '';

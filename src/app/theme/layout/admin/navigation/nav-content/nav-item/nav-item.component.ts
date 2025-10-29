@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Component, Input } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
@@ -5,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Router, RouterModule } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 import { NavigationItem } from '../../../../../shared/_helpers/models/Navigation.model';
+import { NavigationService, PtlmodulosApService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-nav-item',
@@ -20,8 +22,10 @@ export class NavItemComponent {
 
   constructor(
     private router: Router,
-    private location: Location
-) {
+    private location: Location,
+    private _registrosService: PtlmodulosApService,
+    private _navigationService: NavigationService
+  ) {
     console.log('item nav item', this.item);
 
     this.gradientConfig = GradientConfig;
@@ -71,5 +75,9 @@ export class NavItemComponent {
         }
       }, 500);
     }
+  }
+
+  onNavigareClick(url: string) {
+    this._navigationService.navigateNodoMenu(url);
   }
 }

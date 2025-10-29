@@ -12,6 +12,7 @@ import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
 import { LocalStorageService } from './local-storage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from './lenguage.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,7 @@ export class NavigationService implements OnInit, OnDestroy {
   lockScreenEvent$: Observable<string> = this.lockScreenSubject.asObservable();
 
   constructor(
+    private router: Router,
     private _aplicacionesService: PtlAplicacionesService,
     private _suitesService: PtlSuitesAPService,
     private _modulosService: PtlmodulosApService,
@@ -49,6 +51,7 @@ export class NavigationService implements OnInit, OnDestroy {
       console.log(`[NavigationService] Detectado cambio de idioma a: ${lang}. Actualizando menú.`);
       this.getNavigationItems();
     });
+    this.consultarModulos();
   }
 
   ngOnInit() {
@@ -817,7 +820,6 @@ export class NavigationService implements OnInit, OnDestroy {
     const codigoApp = this.aplicacion.codigoAplicacion;
     switch (codigoApp) {
       case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
-        //console.log('3');
         this._modulosService.getRegistros().subscribe((data) => {
           const nuevosModulos = data.modulos;
           if (nuevosModulos.length > 0) {
@@ -831,6 +833,39 @@ export class NavigationService implements OnInit, OnDestroy {
       default:
         this.menuSubject.next([]);
         break;
+    }
+  }
+
+  consultarModulos() {
+    this.modulosSub = this._modulosService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.modulos = resp.modulos;
+          }
+        }),
+        catchError((err) => {
+          console.error(err);
+          return of([]);
+        })
+      )
+      .subscribe();
+  }
+
+  navigateNodoMenu(url: string, id?: string) {
+    // console.log('todos los modulos', this.modulos);
+    // console.log('navegar a otro mnodulo', url);
+    // console.log('id', id);
+    const modulo = this.modulos.filter((x) => x.rutaModulo == url)[0];
+    console.log('modulo', modulo);
+    if (modulo) {
+      this._localStorageService.setModuloLocalStorage(modulo);
+    }
+    if (id !== undefined) {
+      this.router.navigate([url], { queryParams: { regId: id } });
+    } else {
+      this.router.navigate([url]);
     }
   }
 }

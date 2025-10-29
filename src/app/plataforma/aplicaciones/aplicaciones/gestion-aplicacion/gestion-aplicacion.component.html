@@ -45,7 +45,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreAplicacion">nombre</label>
+                                <label class="form-control-label" for="nombreAplicacion">{{ 'APLICACIONES.NAME' | translate }}</label>
                                 <input class="form-control form-input" id="nombreAplicacion" name="nombreAplicacion"
                                     type="text" placeholder="{{ 'APLICACIONES.NAME' | translate }}"
                                     [ngClass]="{'is-invalid': !nombreAplicacion.valid && (nombreAplicacion.dirty || nombreAplicacion.touched || isSubmit)}"
