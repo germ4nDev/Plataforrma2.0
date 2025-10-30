@@ -97,7 +97,7 @@ export class GestionSuscriptorComponent {
     // }
   }
 
-  btnInsertEditSucriptor(form: any) {
+  btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
     if (!form.valid) {
       return;

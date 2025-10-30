@@ -9,7 +9,7 @@
             </div>
 
             <ng-container>
-                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
             </ng-container>
         </div>
     </aside>
@@ -130,7 +130,7 @@
                                 <label class="form-label">{{ 'USUARIOS.GESTION.DESCRIPTION' | translate }}</label>
                                 <app-text-editor
                                     [toolbarType]="tipoEditorTexto"
-                                    [(contentHtml)]="FormRegistro.descripcionUsuario"
+                                    [contentHtml]="FormRegistro.descripcionUsuario ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionRegistro($event)"
                                     name="descripcionUsuario"
                                     [(ngModel)]="FormRegistro.descripcionUsuario"

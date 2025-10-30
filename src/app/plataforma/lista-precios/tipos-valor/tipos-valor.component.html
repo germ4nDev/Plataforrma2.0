@@ -12,16 +12,16 @@
       </div>
 
       <ng-container *ngIf="activeTab === 'menu'">
-        <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+        <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
       </ng-container>
       <ng-container *ngIf="activeTab === 'filters'">
         <div class="p-3 filtros-scroll-wrapper">
           <h6 class="filtros-title">{{ 'PRECIOS.TIPOS.FILTROS.TITULO' | translate }}</h6>
           <div class="filtro">
             <small>{{ 'PRECIOS.TIPOS.FILTROS.FILTROTIPOVALOR' | translate }}</small>
-            <select (change)="onFiltroTipoValorChangeClick($event)" class="form-control form-select">
+            <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option [value]="reg.tipoValorId" *ngFor="let reg of tiposValor">
+              <option [value]="reg.tipoValorId" *ngFor="let reg of registros">
                 {{ reg.nombreTipo }}
               </option>
             </select>
