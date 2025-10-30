@@ -74,6 +74,20 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
+                                <label class="form-control-label" for="translateKey">{{ 'APLICACIONES.TRANSLATEKEY' | translate }}</label>
+                                <input class="form-control form-input" id="translateKey" name="translateKey"
+                                    type="text" placeholder="{{ 'APLICACIONES.TRANSLATEKEY' | translate }}"
+                                    [ngClass]="{'is-invalid': !translateKey.valid && (translateKey.dirty || translateKey.touched || isSubmit)}"
+                                    #translateKey="ngModel" required [(ngModel)]="FormRegistro.translateKey" />
+                                <label
+                                    *ngIf="!translateKey.valid && (translateKey.dirty || translateKey.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'APLICACIONES.NAMEHOLDER' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
                                 <label class="form-label">{{ 'APLICACIONES.DESCRIPTION' | translate }}</label>
                                 <app-text-editor
                                     [toolbarType]="tipoEditorTexto"
@@ -114,14 +128,13 @@
                                 <label class="form-label">{{ 'APLICACIONES.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
-                                        <input name="option" type="radio" [value]="true"
+                                        <input name="estadoAplicacion" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estadoAplicacion">
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
                                     </label>
-
                                     <label class="radio-button">
-                                        <input name="option" type="radio" [value]="false"
+                                        <input name="estadoAplicacion" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoAplicacion">
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>

@@ -4,31 +4,14 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
 import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
 import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
-import { FormDataModel } from '../_helpers/models/FormData.model';
-
-interface ThemeSettings {
-  isDarkTheme: boolean;
-  navbarColor: string;
-  iconosColor: string;
-  textoColor: string;
-}
-
-interface Modelostorage {
-  codigoAplicacion: string;
-  codigoSuite: string;
-  codigoModulo: string;
-  usuarioCreacion: string;
-  usuarioModificacion: string;
-  fechaCreacion: Date;
-  fechaModificacion: Date;
-  actividad: [];
-}
+import { BaseSessionModel } from '../_helpers/models/BaseSession.model';
+import { ThemeSettingsModel } from '../_helpers/models/ThemeSettings.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
-  DataModel: FormDataModel = new FormDataModel();
+  DataModel: BaseSessionModel = new BaseSessionModel();
   public usuario: any;
   public currentUser: any;
   public aplicacion: any;
@@ -61,7 +44,7 @@ export class LocalStorageService {
     this.modulo = modulo;
   }
 
-  setThemeSettingsLocalStorage(settings: ThemeSettings) {
+  setThemeSettingsLocalStorage(settings: ThemeSettingsModel) {
     localStorage.setItem('app-theme-settings', JSON.stringify(settings));
     this.themeSettings = settings;
   }
@@ -111,7 +94,7 @@ export class LocalStorageService {
     this.aplicacion = JSON.parse(localStorage.getItem('aplicacion') || '');
     this.suite = JSON.parse(localStorage.getItem('suite') || '');
     this.modulo = JSON.parse(localStorage.getItem('modulo') || '');
-    const modelo: Modelostorage = {
+    const modelo: BaseSessionModel = {
       codigoAplicacion: this.aplicacion.codigoAplicacion,
       codigoSuite: this.suite.codigoSuite,
       codigoModulo: this.modulo.codigoModulo,
@@ -119,7 +102,7 @@ export class LocalStorageService {
       usuarioModificacion: this.usuario.usuario.codigoUsuario,
       fechaCreacion: new Date(),
       fechaModificacion: new Date(),
-      actividad: []
+      dataLog: []
     };
     console.log('datamodel local', modelo);
     return modelo;
@@ -141,7 +124,7 @@ export class LocalStorageService {
     if (localStorage.getItem('app-theme-settings')) {
       this.themeSettings = JSON.parse(localStorage.getItem('app-theme-settings') || '');
     } else {
-      const settings: ThemeSettings = {
+      const settings: ThemeSettingsModel = {
         isDarkTheme: false,
         navbarColor: '#2c3e50',
         iconosColor: '#fff',

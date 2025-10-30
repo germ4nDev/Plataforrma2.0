@@ -1,0 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export class ThemeSettingsModel {
+  constructor(
+    public isDarkTheme: boolean,
+    public navbarColor: string,
+    public iconosColor: string,
+    public textoColor: string
+  ) {}
+}

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLLogActividadAP } from './../_helpers/models/PTLlogActividadAP.model';
+import { PTLLogActividadAPModel } from './../_helpers/models/PTLlogActividadAP.model';
 
 const base_url = environment.apiUrl;
 
@@ -56,12 +56,12 @@ export class PtllogActividadesService {
     );
   }
 
-  postCrearRegistro(log_actividad: PTLLogActividadAP) {
+  postCrearRegistro(log_actividad: PTLLogActividadAPModel) {
     const url = `${base_url}/logs-actividades`;
     return this.http.post(url, log_actividad);
   }
 
-  putModificarRegistro(log_actividad: PTLLogActividadAP) {
+  putModificarRegistro(log_actividad: PTLLogActividadAPModel) {
     const url = `${base_url}/logs-actividades/${log_actividad.logId}`;
     return this.http.put(url, log_actividad).pipe(
       map((resp: any) => {

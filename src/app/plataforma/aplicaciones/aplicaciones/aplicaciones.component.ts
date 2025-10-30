@@ -20,6 +20,9 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { environment } from 'src/environments/environment';
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
+import { LocalStorageService, PtllogActividadesService } from 'src/app/theme/shared/service';
+import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 
 const base_url = environment.apiUrl;
 
@@ -32,6 +35,8 @@ const base_url = environment.apiUrl;
 })
 export class AplicacionesComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
+  DataModel: BaseSessionModel = new BaseSessionModel();
+  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
   aplicaciones: PTLAplicacionModel[] = [];
   aplicacionesFiltrado: PTLAplicacionModel[] = [];
   registrosSub?: Subscription;
@@ -47,6 +52,8 @@ export class AplicacionesComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private _navigationService: NavigationService,
+    private _logActividadesService: PtllogActividadesService,
+    private _localStorageService: LocalStorageService,
     private _aplicacionesService: PtlAplicacionesService
   ) {
     this.gradientConfig = GradientConfig;
@@ -57,6 +64,7 @@ export class AplicacionesComponent implements OnInit {
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Aplicaciones' : 'List of Aplications';
+    this.DataModel = this._localStorageService.getDataModelsLocalStorage();
     this.consultarAplicaciones();
   }
 
@@ -172,6 +180,14 @@ export class AplicacionesComponent implements OnInit {
 
   OnEliminarAplicaicionClick(id: string): void {
     const nombreApp = this.aplicacionesFiltrado.filter((x) => x.codigoAplicacion == id)[0];
+    const usuario = this._localStorageService.getUsuarioLocalStorage();
+    this.DataLogActividad.codigoAplicacion = this.DataModel.codigoAplicacion;
+    this.DataLogActividad.codigoSuite = this.DataModel.codigoSuite;
+    this.DataLogActividad.codigoModulo = this.DataModel.codigoModulo;
+    this.DataLogActividad.codigoSuscriptor = '';
+    this.DataLogActividad.codigoUsuarioCreacion = usuario.codigoUsuario;
+    this.DataLogActividad.fechaLog = new Date().toISOString();
+    this.DataLogActividad.fechaCreacion = new Date().toISOString();
     Swal.fire({
       title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
       text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreAplicacion}".`,
@@ -184,6 +200,8 @@ export class AplicacionesComponent implements OnInit {
         this._aplicacionesService.eliminarAplicacion(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.translate.instant('APLICACIONES.ELIMINAREXITOSA');
+            this._logActividadesService.postCrearRegistro(this.DataLogActividad).subscribe(() => console.log('log creado exitosamente'));
             this.aplicaciones = this.aplicaciones.filter((a) => a.codigoAplicacion !== id);
             this.aplicacionesFiltrado = [...this.aplicaciones];
           },

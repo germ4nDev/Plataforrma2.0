@@ -20,7 +20,7 @@ import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.mo
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtllogActividadesService } from 'src/app/theme/shared/service/ptllog-actividades.service';
-import { PTLLogActividadAP } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
@@ -39,8 +39,8 @@ export class LogExcepcionesComponent implements OnInit {
   suites: PTLSuiteAPModel[] = [];
   modulos: PTLModuloAP[] = [];
   usuarios: PTLUsuarioModel[] = [];
-  registros: PTLLogActividadAP[] = [];
-  registrosFiltrado: PTLLogActividadAP[] = [];
+  registros: PTLLogActividadAPModel[] = [];
+  registrosFiltrado: PTLLogActividadAPModel[] = [];
   moduloTituloExcel: string = '';
   filtroPersonalizado: string = '';
   hasFiltersSlot: boolean = false;
@@ -245,7 +245,7 @@ export class LogExcepcionesComponent implements OnInit {
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoAplicacin = evento.target.value));
+      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoAplicacion = evento.target.value));
       this.consultarSuites(evento.target.value);
     }
   }

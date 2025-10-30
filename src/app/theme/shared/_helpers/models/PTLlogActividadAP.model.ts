@@ -1,12 +1,14 @@
-export class PTLLogActividadAP {
+export class PTLLogActividadAPModel {
     constructor (
         public logId? : number,
-        public codigoAplicacin? : string,
+        public codigoAplicacion? : string,
         public codigoSuite? : string,
         public codigoModulo? : string,
-        public fechaLog? : Date,
+        public codigoSuscriptor? : string,
+        public fechaLog? : string,
         public descripcionLg? : string,
-        public codigoErrr? : number,
-        public usuarioId?: number
+        public codigoRespuesta? : number,
+        public codigoUsuarioCreacion?: string,
+        public fechaCreacion?: string,
     ) {}
 }

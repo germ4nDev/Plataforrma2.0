@@ -73,8 +73,17 @@ export class PtlAplicacionesService {
   }
 
   crearAplicacion(aplicacion: PTLAplicacionModel) {
+    console.log('aplicacion servicio', aplicacion);
     const url = `${base_url}/aplicaciones`;
     return this.http.post(url, aplicacion);
+    // return this.http.post(url, aplicacion).pipe(
+    //   map((resp: any) => {
+    //     return {
+    //       ok: true,
+    //       aplicacion: resp.aplicacion
+    //     };
+    //   })
+    // );
   }
 
   actualizarAplicacion(aplicacion: PTLAplicacionModel) {

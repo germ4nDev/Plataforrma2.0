@@ -6,16 +6,23 @@ import { GradientConfig } from 'src/app/app-config';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLAplicacionModel } from '../../../../theme/shared/_helpers/models/PTLAplicacion.model';
-import { LocalStorageService, PtlAplicacionesService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
+import {
+  LocalStorageService,
+  PtlAplicacionesService,
+  PtllogActividadesService,
+  SwalAlertService,
+  UploadFilesService
+} from 'src/app/theme/shared/service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { Observable, Subscription } from 'rxjs';
-import { FormDataModel } from 'src/app/theme/shared/_helpers/models/FormData.model';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
+// import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
+// import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 
 @Component({
   selector: 'app-gestion-aplicacion',
@@ -27,7 +34,8 @@ import Swal from 'sweetalert2';
 export class GestionAplicacionComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLAplicacionModel = new PTLAplicacionModel();
-  DataModel: FormDataModel = new FormDataModel();
+//   DataModel: BaseSessionModel = new BaseSessionModel();
+//   DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
   menuItems$!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
@@ -51,8 +59,10 @@ export class GestionAplicacionComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private translate: TranslateService,
     private _navigationService: NavigationService,
     private _localStorageService: LocalStorageService,
+    private _logActividadesService: PtllogActividadesService,
     private _aplicacionesService: PtlAplicacionesService,
     private _swalService: SwalAlertService,
     private _translate: TranslateService,
@@ -79,9 +89,6 @@ export class GestionAplicacionComponent implements OnInit {
               Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error');
             }
           });
-        } else {
-          this.FormRegistro.codigoAplicacion = uuidv4();
-          this.modoEdicion = false;
         }
       }
     });
@@ -102,8 +109,14 @@ export class GestionAplicacionComponent implements OnInit {
       this.FormRegistro = form;
       this._localStorageService.removeFormRegistro();
     }
-    this.DataModel = this._localStorageService.getDataModelsLocalStorage();
-    console.log('datamodel 1', this.DataModel);
+    if (this.modoEdicion == false) {
+      this.FormRegistro.codigoAplicacion = uuidv4();
+      this.FormRegistro.imagenInicio = 'no-image.png';
+    }
+    console.log('Inicial formregistro', this.FormRegistro);
+
+    // this.DataModel = this._localStorageService.getDataModelsLocalStorage();
+    // console.log('dataLog 1', this.DataModel);
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -141,17 +154,33 @@ export class GestionAplicacionComponent implements OnInit {
   }
 
   btnGestionarAplicacionClick(form: any) {
+    console.log('form', form.value);
+
     this.isSubmit = true;
-    if (!form.valid) {
-      return;
-    }
-    this.DataModel.data = this.FormRegistro;
-    console.log('datamodel', this.DataModel);
+    // if (!form.valid) {
+    //   return;
+    // }
+    // const usuario = this._localStorageService.getUsuarioLocalStorage();
+    // this.DataModel.dataLog = this.FormRegistro;
+    // this.DataLogActividad.codigoAplicacion = this.DataModel.codigoAplicacion;
+    // this.DataLogActividad.codigoSuite = this.DataModel.codigoSuite;
+    // this.DataLogActividad.codigoModulo = this.DataModel.codigoModulo;
+    // this.DataLogActividad.codigoSuscriptor = '';
+    // this.DataLogActividad.codigoUsuarioCreacion = usuario.codigoUsuario;
+    // this.DataLogActividad.fechaLog = new Date().toISOString();
+    // this.DataLogActividad.fechaCreacion = new Date().toISOString();
+    // console.log('datamodel', this.DataModel);
     if (this.modoEdicion) {
-      this._aplicacionesService.actualizarAplicacion(this.DataModel).subscribe({
+      this._aplicacionesService.actualizarAplicacion(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            this._swalService.getAlertSuccess('la Aplicación se modificó correctamente');
+            // this.DataLogActividad.codigoRespuesta = 200;
+            // this.DataLogActividad.descripcionLg =
+            //   + this.FormRegistro.nombreAplicacion;
+            // this._logActividadesService.postCrearRegistro(this.DataLogActividad).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY') );
+            form.resetForm();
+            // this.isSubmit = false;
             this.router.navigate(['/aplicaciones/aplicaciones']);
           } else {
             this._swalService.getAlertError('No se pudo actualizar la Aplicación');
@@ -163,12 +192,12 @@ export class GestionAplicacionComponent implements OnInit {
         }
       });
     } else {
-      this._aplicacionesService.crearAplicacion(this.DataModel).subscribe({
+      this._aplicacionesService.crearAplicacion(form.value).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            this._swalService.getAlertSuccess('La Aplicación se insertó correctamente');
+            this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.UPDATESUCCSESSFULLY'));
             form.resetForm();
-            this.isSubmit = false;
+            // this.isSubmit = false;
             this.router.navigate(['/aplicaciones/aplicaciones']);
           }
         },
