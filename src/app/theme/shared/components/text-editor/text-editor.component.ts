@@ -22,7 +22,7 @@ const CUSTOM_VALUE_ACCESSOR: any = {
 })
 export class TextEditorComponent implements ControlValueAccessor, OnInit {
   @Input() toolbarType: string = 'standard';
-  @Input() contentHtml: string = '';
+  @Input() contentHtml: string | '' = '';
   @Output() contentHtmlChange: EventEmitter<string> = new EventEmitter<string>();
 
   disabled: boolean = false;
@@ -96,7 +96,7 @@ export class TextEditorComponent implements ControlValueAccessor, OnInit {
     this.disabled = isDisabled;
   }
 
-  onContentChange(html: string) {
+  onContentChange(html: any) {
     this.onChange(html);
     this.contentHtml = html;
     this.contentHtmlChange.emit(html);

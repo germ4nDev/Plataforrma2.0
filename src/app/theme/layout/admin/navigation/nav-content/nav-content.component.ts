@@ -23,7 +23,7 @@ import { Observable, Subscription } from 'rxjs';
   ]
 })
 export class NavContentComponent implements OnInit, AfterViewInit {
-  @Input() navigationItems: NavigationItem[] = []; // <- Input recibido del padre
+  @Input() navigationItems: NavigationItem[] | null = [];
   @Output() NavMobCollapse = new EventEmitter();
   gradientConfig = GradientConfig;
   windowWidth = window.innerWidth;

@@ -179,6 +179,19 @@ export class ConexionesComponent implements OnInit {
     });
   }
 
+  onFiltroNombreApliChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
+        (suscriptor.nombreServidor || '').toLowerCase().includes(textoFiltro)
+      );
+      console.log('filtrados', this.registrosFiltrado);
+    }
+  }
+
   onFiltroNombreSuscripChangeClick(evento: any) {
     console.log('filtrar el descripcion ', evento.target.value);
     const textoFiltro = evento.target.value.toLowerCase();

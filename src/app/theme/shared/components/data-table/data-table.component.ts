@@ -64,6 +64,10 @@ export class DatatableComponent implements OnInit, OnChanges {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+
   ngOnInit(): void {
     this.processDataAndColumns();
   }
@@ -112,7 +116,6 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   private generateMetadata(key: string, value: any): ColumnMetadata {
     let type: ColumnMetadata['type'] = 'text';
-    console.log('*********** array types', type);
     if (Array.isArray(value)) {
       const lowerKey = key.toLowerCase();
       if (lowerKey.includes('tags') || lowerKey.includes('permisos') || lowerKey.includes('roles')) {
@@ -174,7 +177,6 @@ export class DatatableComponent implements OnInit, OnChanges {
   }
 
   applyFiltersAndPagination(): void {
-    console.log('************ elementos recibidos', this.data);
     let tempFilteredData = this.data.filter((row) => {
       for (const key of Object.keys(this.filterValues)) {
         const filterValue = this.filterValues[key].toLowerCase();

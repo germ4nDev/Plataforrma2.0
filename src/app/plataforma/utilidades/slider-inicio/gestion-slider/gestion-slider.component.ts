@@ -49,7 +49,6 @@ export class GestionSliderComponent implements OnInit {
   lockScreenSubscription: Subscription | undefined;
   isLocked: boolean = false;
   lockMessage: string = '';
-
   // constructor
   constructor(
     private router: Router,
@@ -66,7 +65,6 @@ export class GestionSliderComponent implements OnInit {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
     this.route.queryParams.subscribe((params) => {

@@ -1,3 +1,5 @@
+import { PTLAplicacionModel } from './../../../theme/shared/_helpers/models/PTLAplicacion.model';
+import { PtlAplicacionesService } from './../../../theme/shared/service/ptlaplicaciones.service';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -28,9 +30,11 @@ import Swal from 'sweetalert2';
 })
 export class PaquetesComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
+  aplicacionesSub?: Subscription;
   registrosSub?: Subscription;
   registros: PTLPaqueteModel[] = [];
   registrosFiltrado: PTLPaqueteModel[] = [];
+  aplicaciones: PTLAplicacionModel[] = [];
   moduloTituloExcel: string = '';
   filtroPersonalizado: string = '';
   hasFiltersSlot: boolean = false;
@@ -45,7 +49,8 @@ export class PaquetesComponent implements OnInit {
     private _navigationService: NavigationService,
     private _swalService: SwalAlertService,
     private _localstorageService: LocalStorageService,
-    private _registrosService: PTLPaquetesService
+    private _registrosService: PTLPaquetesService,
+    private _aplicacionesService: PtlAplicacionesService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -145,7 +150,7 @@ export class PaquetesComponent implements OnInit {
     return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`;
   }
 
-  onFiltroCodigoPaqueteChangeClick(evento: any) {
+  onFiltroNombreCodigoClick(evento: any) {
     console.log('filtrar el codigo ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;

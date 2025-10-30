@@ -12,7 +12,7 @@
             </div>
 
             <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
@@ -31,7 +31,7 @@
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="app.nombreVersion" *ngFor="let app of registros">
-                                {{ version.nombreVersion }}
+                                {{ app.nombreVersion }}
                             </option>
                         </select>
                     </div>

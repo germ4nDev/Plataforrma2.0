@@ -12,7 +12,7 @@
             </div>
 
             <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
@@ -21,7 +21,7 @@
                         <small>{{ 'LOGEXEPCIONES.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
                         <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="reg.codigoaplicacion" *ngFor="let reg of aplicaciones">
+                            <option [value]="reg.codigoAplicacion" *ngFor="let reg of aplicaciones">
                                 {{ reg.nombreAplicacion }}
                             </option>
                         </select>
@@ -30,16 +30,16 @@
                         <small>{{ 'LOGEXEPCIONES.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
                         <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="reg.codigosuite" *ngFor="let reg of suites">
+                            <option [value]="reg.codigoSuite" *ngFor="let reg of suites">
                                 {{ reg.nombreSuite }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'LOGEXEPCIONES.FILTROS.FILTROCODIGO' | translate }}</small>
-                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+                        <small>{{ 'LOGACTIVIDADES.FILTROS.FILTROMODULO' | translate }}</small>
+                        <select (change)="onFiltroCodigoModuloChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="reg.nombreModulo" *ngFor="let reg of registros">
+                            <option [value]="reg.nombreModulo" *ngFor="let reg of modulos">
                                 {{ reg.nombreModulo }}
                             </option>
                         </select>
@@ -48,14 +48,6 @@
                         <small>{{ 'LOGEXEPCIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'LOGEXEPCIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'LOGEXEPCIONES.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
-                        </select>
                     </div>
                 </div>
             </ng-container>

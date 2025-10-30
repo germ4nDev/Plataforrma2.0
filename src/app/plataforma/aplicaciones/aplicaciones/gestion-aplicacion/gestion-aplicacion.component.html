@@ -9,7 +9,7 @@
             </div>
 
             <ng-container>
-                <app-nav-content [navigationItems]="menuItems$"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
         </div>
     </aside>
@@ -91,7 +91,7 @@
                                 <label class="form-label">{{ 'APLICACIONES.DESCRIPTION' | translate }}</label>
                                 <app-text-editor
                                     [toolbarType]="tipoEditorTexto"
-                                    [(contentHtml)]="FormRegistro.descripcionAplicacion"
+                                    [contentHtml]="FormRegistro.descripcionAplicacion ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)"
                                     name="descripcionAplicacion"
                                     [(ngModel)]="FormRegistro.descripcionAplicacion"

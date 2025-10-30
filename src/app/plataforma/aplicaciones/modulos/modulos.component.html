@@ -21,7 +21,7 @@
             <small>{{ 'MODULOS.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
             <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option [value]="reg.codigoaplicacion" *ngFor="let reg of aplicaciones">
+              <option [value]="reg.codigoAplicacion" *ngFor="let reg of aplicaciones">
                 {{ reg.nombreAplicacion }}
               </option>
             </select>
@@ -30,7 +30,7 @@
             <small>{{ 'MODULOS.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
             <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option [value]="reg.codigosuite" *ngFor="let reg of suites">
+              <option [value]="reg.codigoSuite" *ngFor="let reg of suites">
                 {{ reg.nombreSuite }}
               </option>
             </select>

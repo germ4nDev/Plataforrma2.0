@@ -27,8 +27,7 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit(): void {
     this._navigationService.getNavigationItems();
-    this.navigationItems = this._navigationService.menuItems$;
-
+    this.navigationItems = this._navigationService.menuItems$ || [];
     console.log('navigationItems', this.navigationItems);
   }
 

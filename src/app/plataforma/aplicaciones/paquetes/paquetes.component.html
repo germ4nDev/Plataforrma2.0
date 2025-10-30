@@ -11,26 +11,17 @@
                 </button>
             </div>
             <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <h6 class="filtros-title">{{ 'PAQUETES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'MODULOS.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
-                        <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="reg.aplicacionId" *ngFor="let reg of aplicaciones">
-                                {{ reg.nombreAplicacion }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="filtro">
                         <small>{{ 'PAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
+                        <select (change)="onFiltroNombreCodigoClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="reg.nombreVersion" *ngFor="let reg of registros">
-                                {{ reg.nombreVersion }}
+                            <option [value]="reg.codigoPaquete" *ngFor="let reg of registros">
+                                {{ reg.nombrePaquete }}
                             </option>
                         </select>
                     </div>

@@ -9,7 +9,7 @@
             </div>
 
             <ng-container>
-                <app-nav-content [navigationItems]="menuItems$"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
         </div>
     </aside>
@@ -76,7 +76,6 @@
                                     <input class="form-control form-input" placeholder="yyyy-mm-dd" name="fecha"
                                         id="fecha" [(ngModel)]="FormRegistro.fecha" ngbDatepicker
                                         #d="ngbDatepicker" (dateSelect)="onDateChange()"
-                                        [ngClass]="{ 'is-invalid': !d.valid && (d.dirty || d.touched || isSubmit) }"
                                         required />
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"
@@ -85,10 +84,6 @@
                                         </button>
                                     </div>
                                 </div>
-                                <label *ngIf="!d.valid && (d.dirty || d.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'VERSIONES.GESTION.REQUERIDOFECHA' | translate }}
-                                </label>
                             </div>
                         </div>
                         <div class="col-md-6">

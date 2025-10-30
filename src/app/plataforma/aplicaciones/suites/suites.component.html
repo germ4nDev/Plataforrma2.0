@@ -12,7 +12,7 @@
             </div>
 
             <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$  | async"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
@@ -21,14 +21,14 @@
                         <small>{{ 'MODULOS.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
                         <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="reg.codigoaplicacion" *ngFor="let reg of aplicaciones">
+                            <option [value]="reg.codigoAplicacion" *ngFor="let reg of aplicaciones">
                                 {{ reg.nombreAplicacion }}
                             </option>
                         </select>
                     </div>
                     <div class="filtro">
                         <small>{{ 'SUITES.FILTROS.FILTROSUITE' | translate }}</small>
-                        <select (change)="onFiltroSuiteChangeClick($event)" class="form-control form-select">
+                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="reg.codigoSuite" *ngFor="let reg of registros">
                                 {{ reg.codigoSuite }}
@@ -39,7 +39,7 @@
                         <small>{{ 'SUITES.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="app.codigoSuite" *ngFor="let app of regitstros">
+                            <option [value]="app.nombreSuite" *ngFor="let app of registros">
                                 {{ app.nombreSuite }}
                             </option>
                         </select>

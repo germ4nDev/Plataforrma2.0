@@ -11,7 +11,7 @@
                 </button>
             </div>
             <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">

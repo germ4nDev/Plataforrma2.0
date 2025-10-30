@@ -1,4 +1,4 @@
 <app-nav-content
-  [navigationItems]="navigationItems"
+  [navigationItems]="navigationItems | async"
   (NavMobCollapse)="navMobCollapse()"
 ></app-nav-content>

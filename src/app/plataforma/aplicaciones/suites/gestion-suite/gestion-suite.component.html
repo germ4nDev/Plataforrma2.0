@@ -9,7 +9,7 @@
             </div>
 
             <ng-container>
-                <app-nav-content [navigationItems]="menuItems$"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
         </div>
     </aside>
@@ -113,7 +113,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'SUITES.DESCRIPTION' | translate }}</label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
-                                    [(contentHtml)]="FormRegistro.descripcionSuite"
+                                    [contentHtml]="FormRegistro.descripcionSuite ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionSuite"
                                     [(ngModel)]="FormRegistro.descripcionSuite"
                                     [ngClass]="{'is-invalid': !descripcionSuite.valid && (descripcionSuite.dirty || descripcionSuite.touched || isSubmit)}"

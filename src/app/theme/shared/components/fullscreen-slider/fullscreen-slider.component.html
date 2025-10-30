@@ -3,7 +3,7 @@
     <div class="image-wrapper">
         <img
             *ngFor="let imageUrl of images; let i = index"
-            [ngSrc]="imageUrl.imageSlider"
+            [ngSrc]="imageUrl.imageSlider?? ''"
             [fill]="true"
             [priority]="i === 0"
             [attr.alt]="'imageUrl.nombreSlider ' + (i + 1)"
