@@ -53,7 +53,7 @@
               <div class="form-group">
                 <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORNAV' | translate }}</label>
                 <app-color-selector
-                  [initialColor]="FormRegistro?.navbarColor ?? ''"
+                  [initialColor]="FormRegistro.navbarColor ?? ''"
                   [id]="navbarColor"
                   (colorSelected)="OnColorSelectedClick($event)"
                 ></app-color-selector>
@@ -63,7 +63,7 @@
               <div class="form-group">
                 <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORTEXT' | translate }}</label>
                 <app-color-selector
-                  [initialColor]="FormRegistro?.textoColor ?? ''"
+                  [initialColor]="FormRegistro.textoColor ?? ''"
                   [id]="textoColor"
                   (colorSelected)="OnColorSelectedClick($event)"
                 ></app-color-selector>
@@ -73,7 +73,7 @@
               <div class="form-group">
                 <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORICONS' | translate }}</label>
                 <app-color-selector
-                  [initialColor]="FormRegistro?.iconosColor ?? ''"
+                  [initialColor]="FormRegistro.iconosColor ?? ''"
                   [id]="iconosColor"
                   (colorSelected)="OnColorSelectedClick($event)"
                 ></app-color-selector>
@@ -83,7 +83,7 @@
               <div class="form-group">
                 <label class="form-control-label">{{ 'PLATAFORMA.COLORS.COLORBUTTONHOVER' | translate }}</label>
                 <app-color-selector
-                  [initialColor]="FormRegistro?.buttonsHoverColor ?? ''"
+                  [initialColor]="FormRegistro.buttonsHoverColor ?? ''"
                   [id]="buttonsHoverColor"
                   (colorSelected)="OnColorSelectedClick($event)"
                 ></app-color-selector>

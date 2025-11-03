@@ -17,9 +17,11 @@ import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.se
 import { Subscription, tap, catchError, of } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
-import { LanguageSelectorComponent } from "src/app/theme/shared/components/language-selector/language-selector.component";
+import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import { environment } from 'src/environments/environment';
-import { FullScreenSliderComponent } from "src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component";
+import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
+import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
+import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 
 const base_url = environment.apiUrl;
 
@@ -56,8 +58,8 @@ export class InicioComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.aplicaciones.forEach((app: any) => {
-                // app.imagenInicio = this._uploadService.getFilePath('aplicaciones', app.imagenInicio);
-                app.imagenInicio = `${base_url}/upload/aplicaciones/${app.imagenInicio}`;
+              // app.imagenInicio = this._uploadService.getFilePath('aplicaciones', app.imagenInicio);
+              app.imagenInicio = `${base_url}/upload/aplicaciones/${app.imagenInicio}`;
             });
             console.log('aplicaciones', resp.aplicaciones);
             this.aplicaciones = resp.aplicaciones;
@@ -74,17 +76,13 @@ export class InicioComponent implements OnInit {
   ingresarPlataforma(app: PTLAplicacionModel) {
     //TODO Validar las aplicaciones con los suscriptores y los usuarios
     console.log('ingresar a', app);
+    const navSettings = {
+        aplicacion: app,
+        suite: {} as PTLSuiteAPModel,
+        modulo: {} as PTLModuloAP
+    }
 
-    this._localStorage.setAplicacionLocalStorage(app);
-        this.router.navigate(['/frontal/launcher']);
-    // this._suitesService.geSuitesAP().subscribe((resp) => {
-    //   const suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == app.codigoAplicacion);
-    //   if (suites.length < 2) {
-    //     this._localStorage.setSuiteLocalStorage(suites[0]);
-    //     this.router.navigate(['/aplicaciones/aplicaciones']);
-    //   } else {
-    //     this.router.navigate(['/frontal/inicio-suites']);
-    //   }
-    // });
+    this._localStorage.setNavSettingsLocalStorage(navSettings);
+    this.router.navigate(['/frontal/launcher']);
   }
 }

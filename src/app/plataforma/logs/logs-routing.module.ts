@@ -21,8 +21,11 @@ const routes: Routes = [
         {
             path: 'estadisticas',
             loadComponent: () => import('./estadisticas/estadisticas.module').then(m => m.EstadisticasModule)
+        },
+        {
+            path: 'tipos-logs',
+            loadComponent: () => import('./tipos-logs/tipos-logs.component').then(m => m.TiposLogsComponent)
         }
-
     ]
   }
 ];

@@ -1,10 +1,11 @@
-export class PTLTiposEstadosModel {
+export class PTLTiposLogsModel {
   constructor(
-    public tipoEstadoId?: number,
-    public tipoEstado?: number,
+    public tipoLogId?: number,
+    public codigoTipoLog?: string,
     public nombreTipo?: string,
-    public descripcionEstado?: string,
-    public estado?: boolean,
+    public descripcionTipo?: string,
+    public codigoRespuesta?: string,
+    public estadoTipo?: boolean,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,
     public codigoUsuarioModificacion?: string,

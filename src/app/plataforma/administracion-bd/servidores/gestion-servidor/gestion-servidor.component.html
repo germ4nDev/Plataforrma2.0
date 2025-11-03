@@ -60,6 +60,21 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label class="form-label">{{ 'CONEXIONES.SERVIDORES.GESTION.CODE' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="codigoServidor"
+                                    placeholder="Código del Servidor"
+                                    [ngClass]="{'is-invalid': !codigoServidor.valid && (codigoServidor.dirty || codigoServidor.touched || isSubmit) }"
+                                    #codigoServidor="ngModel" required [(ngModel)]="FormRegistro.codigoServidor"
+                                    readonly />
+                                <label
+                                    *ngIf="!codigoServidor.valid && (codigoServidor.dirty || codigoServidor.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'CONEXIONES.SERVIDORES.GESTION.CODEHOLDER' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label class="form-control-label" for="rutaServidor">{{ 'CONEXIONES.SERVIDORES.GESTION.RUTA' |
                                     translate }}</label>
                                 <input class="form-control form-input" id="rutaServidor" name="rutaServidor" type="text"

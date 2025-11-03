@@ -275,7 +275,7 @@ export class LogActividadesComponent implements OnInit {
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((reg) => (reg.descripcionLg || '').toLowerCase().includes(textoFiltro));
+      this.registrosFiltrado = this.registrosFiltrado.filter((reg) => (reg.descripcionLog || '').toLowerCase().includes(textoFiltro));
       console.log('filtrados', this.registrosFiltrado);
     }
   }

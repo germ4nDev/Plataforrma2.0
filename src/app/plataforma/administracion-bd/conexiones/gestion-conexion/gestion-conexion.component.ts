@@ -9,7 +9,7 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
 import { PTLPaquetesSCModel } from 'src/app/theme/shared/_helpers/models/PTLPaquetesSC.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
-import { LocalStorageService, PtlAplicacionesService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtlAplicacionesService, PtllogActividadesService } from 'src/app/theme/shared/service';
 import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service';
 import { PTLPaquetesSCService } from 'src/app/theme/shared/service/ptlpaquetes-sc.service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
@@ -59,6 +59,7 @@ export class GestionConexionComponent {
     private translate: TranslateService,
     private _registrosService: PTLConexionesBDSTService,
     private _aplicacionesService: PtlAplicacionesService,
+    private _logActividadesService: PtllogActividadesService,
     private _suscriptoresService: PTLSuscriptoresService,
     private _paquetesService: PTLPaquetesSCService,
     private _layoutInitializer: LayoutInitializerService,
@@ -112,6 +113,10 @@ export class GestionConexionComponent {
       },
       error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
     });
+    if (this.modoEdicion == false) {
+      this.FormRegistro.codigoConexion = uuidv4();
+      console.log('FormRegistro loading', this.FormRegistro);
+    }
     const form = this._localStorageService.getFormRegistro();
     if (form != undefined) {
       this.FormRegistro = form;
@@ -200,22 +205,52 @@ export class GestionConexionComponent {
       this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
             this.router.navigate(['/administracion-bd/conexiones']);
           } else {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
           }
         },
         error: (err: any) => {
           console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
         }
       });
     } else {
       // console.log('formregistro', this.FormRegistro);
-      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      const registroData = form.value as PTLConexionBDModel;
+      registroData.codigoConexion = uuidv4();
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+      this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
             form.resetForm();
             this.isSubmit = false;
@@ -224,6 +259,12 @@ export class GestionConexionComponent {
         },
         error: (err: any) => {
           console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
         }
       });

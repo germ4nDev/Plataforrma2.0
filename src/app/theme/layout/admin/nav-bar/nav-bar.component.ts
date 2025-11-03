@@ -14,7 +14,7 @@ import { ThemeService } from 'src/app/theme/shared/service/theme.service';
 })
 export class NavBarComponent implements OnInit {
   gradientConfig = GradientConfig;
-  navbarColor: string = '#052f5f';
+  navbarColor: string = '#346BA6';
   menuClass = false;
   collapseStyle = 'none';
   windowWidth = window.innerWidth;
@@ -30,10 +30,6 @@ export class NavBarComponent implements OnInit {
     this.themeService.navbarColor$.subscribe(color => {
       this.navbarColor = color;
     });
-    // const storedColor = localStorage.getItem('navbarColor');
-    // if (storedColor) {
-    //   this.navbarColor = storedColor;
-    // }
   }
 
   toggleMobOption(): void {

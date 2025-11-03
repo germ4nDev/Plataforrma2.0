@@ -17,7 +17,7 @@ interface Setting {
 export class ColorSelectorComponent implements OnInit, OnChanges {
   @Input() label: string = 'Color Seleccionado';
   @Input() id: string = 'id';
-  @Input() initialColor: string | null = '#000000';
+  @Input() initialColor: string | null | undefined | '' = '#000000';
 
   @Output() colorSelected = new EventEmitter<Setting>();
 

@@ -90,20 +90,6 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoPadre">
-                                    {{ 'MODULOS.GESTION.PADRE' | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer;" name="codigoPadre"
-                                    id="codigoPadre" #codigoPadre="ngModel" required [(ngModel)]="FormRegistro.codigoPadre"
-                                    (change)="onCodigoPadreChangeClick($event)">
-                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERPADRE' | translate }}
-                                    </option>
-                                    <option [value]="mod.codigoModulo" *ngFor="let mod of modulosPadre">
-                                        {{ mod.nombreModulo }}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
                                 <label class="form-label">{{ 'MODULOS.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigoModulo"
                                     placeholder="{{ 'MODULOS.GESTION.PLACEHOLDERCODE' | translate }}"
@@ -115,6 +101,20 @@
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'MODULOS.GESTION.REQUERIDCODE' | translate }}
                                 </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoPadre">
+                                    {{ 'MODULOS.GESTION.PADRE' | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer;" name="codigoPadre"
+                                    id="codigoPadre" #codigoPadre="ngModel" required [(ngModel)]="FormRegistro.codigoPadre"
+                                    (change)="onCodigoPadreChangeClick($event)">
+                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERPADRE' | translate }}
+                                    </option>
+                                    <option [value]="mod.codigoModulo" *ngFor="let mod of modulosPadre">
+                                        {{ mod.nombreModulo }}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">

@@ -69,6 +69,8 @@
             "SLIDER": "Images Slider",
             "PRECIOS": "Prices List",
             "PRECIOSUNITARIOS": "Unit Prices",
+            "LOGS": "Logs",
+            "TIPOSLOGS": "Logs Types",
             "TIPOSVALOR": "Prices Types"
         },
         "NAVBAR": {

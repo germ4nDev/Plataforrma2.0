@@ -7,6 +7,10 @@ export class PTLEnlaceSTModel {
     public rutaEnlace?: string,
     public estadoEnlace?: boolean,
     public nomEstado?: string,
-    public nomSitio? : string
+    public nomSitio?: string,
+    public codigoUsuarioCreacion?: string,
+    public fechaCreacion?: string,
+    public codigoUsuarioModificacion?: string,
+    public fechaModificacion?: string
   ) {}
 }

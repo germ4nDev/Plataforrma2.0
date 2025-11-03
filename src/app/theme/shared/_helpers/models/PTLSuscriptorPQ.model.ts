@@ -7,6 +7,10 @@ export class PTLSuscriptorPQ {
     public fechaVencimiento?: Date,
     public cdigoLicencia?: string,
     public conexionId?: number,
-    public estadoLicencia?: boolean
+    public estadoLicencia?: boolean,
+    public codigoUsuarioCreacion?: string,
+    public fechaCreacion?: string,
+    public codigoUsuarioModificacion?: string,
+    public fechaModificacion?: string
   ) {}
 }

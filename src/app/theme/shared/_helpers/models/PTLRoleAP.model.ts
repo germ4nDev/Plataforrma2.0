@@ -11,6 +11,10 @@ export class PTLRoleAPModel {
     public descripcionRole?: string,
     public estadoRole?: number,
     public nomEstado?: string,
-    public checked?: boolean
+    public checked?: boolean,
+    public codigoUsuarioCreacion?: string,
+    public fechaCreacion?: string,
+    public codigoUsuarioModificacion?: string,
+    public fechaModificacion?: string
   ) {}
 }

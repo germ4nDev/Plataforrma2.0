@@ -28,7 +28,8 @@ export class PtlAplicacionesService {
   get headers() {
     return {
       headers: {
-        'x-token': this.token
+        //   'x-token': this.token,
+        'Content-Type': 'application/json'
       }
     };
   }
@@ -72,22 +73,20 @@ export class PtlAplicacionesService {
     );
   }
 
-  crearAplicacion(aplicacion: PTLAplicacionModel) {
-    console.log('aplicacion servicio', aplicacion);
+  crearAplicacion(data: PTLAplicacionModel) {
     const url = `${base_url}/aplicaciones`;
-    return this.http.post(url, aplicacion);
-    // return this.http.post(url, aplicacion).pipe(
-    //   map((resp: any) => {
-    //     return {
-    //       ok: true,
-    //       aplicacion: resp.aplicacion
-    //     };
-    //   })
-    // );
+    return this.http.post(url, data).pipe(
+      map((resp: any) => {
+        return {
+          ok: true,
+          aplicacion: resp.aplicacion
+        };
+      })
+    );
   }
 
   actualizarAplicacion(aplicacion: PTLAplicacionModel) {
-    const url = `${base_url}/aplicaciones/${aplicacion.aplicacionId}`;
+    const url = `${base_url}/aplicaciones/${aplicacion.codigoAplicacion}`;
     return this.http.put(url, aplicacion).pipe(
       map((resp: any) => {
         console.log('data de aplicacion modificacda', resp);
@@ -99,11 +98,12 @@ export class PtlAplicacionesService {
     );
   }
 
-  eliminarAplicacion(_id: string) {
-    const url = `${base_url}/aplicaciones/${_id}`;
+  eliminarAplicacion(_id: any) {
+    console.log('eliminar aplicacion', _id);
+    const url = `${base_url}/aplicaciones/${_id.id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        console.log('data de aplicacion modificacda', resp);
+        console.log('data de aplicacion eliminada', resp);
         return {
           ok: true,
           aplicacion: resp.aplicacion

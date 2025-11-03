@@ -9,24 +9,16 @@ import { ThemeStorageService } from './theme/shared/service/theme-storage.servic
 })
 export class AppComponent implements OnInit {
 
-
   constructor(
     private router: Router,
     private themeStorage: ThemeStorageService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
-        // this.lang = this.languageService.getCurrentLanguage();
-        // this.translate.use(this.lang);
-        // localStorage.setItem('lang', this.lang);
         window.scrollTo(0, 0);
       }
     });
   }
-
-
 }

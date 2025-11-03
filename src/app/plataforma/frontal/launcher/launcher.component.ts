@@ -12,6 +12,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import { environment } from 'src/environments/environment';
 import { FullScreenSliderComponent } from "src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component";
+import { ThemeService } from 'src/app/theme/shared/service';
 
 const base_url = environment.apiUrl;
 
@@ -31,6 +32,7 @@ export class LauncherComponent implements OnInit {
   constructor(
     private router: Router,
     private _localStorage: LocalStorageService,
+    private _themeStorage: ThemeService,
     private _suitesService: PtlSuitesAPService
   ) {}
 
@@ -66,6 +68,7 @@ export class LauncherComponent implements OnInit {
   ingresaSuiteaplicacion(suite: PTLSuiteAPModel) {
     console.log('ingresar a la suite', suite);
     this._localStorage.setSuiteLocalStorage(suite);
+    this._themeStorage.saveThemeSettings();
     this.router.navigate([suite.rutaInicio]);
     // this._suitesService.geSuitesAP().subscribe((resp) => {
     //   const suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == app.codigoAplicacion);

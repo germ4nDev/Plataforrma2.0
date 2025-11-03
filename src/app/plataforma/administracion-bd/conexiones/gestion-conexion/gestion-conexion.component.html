@@ -109,6 +109,21 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label class="form-label">{{ 'CONEXIONES.GESTION.CODE' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="codigoConexion"
+                                    placeholder="Código de la Conexión"
+                                    [ngClass]="{'is-invalid': !codigoConexion.valid && (codigoConexion.dirty || codigoConexion.touched || isSubmit) }"
+                                    #codigoConexion="ngModel" required [(ngModel)]="FormRegistro.codigoConexion"
+                                    readonly />
+                                <label
+                                    *ngIf="!codigoConexion.valid && (codigoConexion.dirty || codigoConexion.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'CONEXIONES.GESTION.CODEHOLDER' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label class="form-control-label" for="nombreServidor">
                                     {{ 'CONEXIONES.GESTION.NAMESERVIDOR' | translate }}</label>
                                 <input class="form-control form-input" id="nombreServidor" name="nombreServidor"
@@ -183,7 +198,7 @@
                                 <label class="form-label">
                                     {{ 'CONEXIONES.GESTION.DESCRIPCION' | translate }}</label>
                                 <app-text-editor [toolbarType]="tipoEditorTexto"
-                                    [(contentHtml)]="FormRegistro.descripcionConexion"
+                                    [contentHtml]="FormRegistro.descripcionConexion ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionVersion($event)"
                                     name="descripcionConexion" [(ngModel)]="FormRegistro.descripcionConexion"
                                     [ngClass]="{'is-invalid': !descripcionConexion.valid && (descripcionConexion.dirty || descripcionConexion.touched || isSubmit)}"

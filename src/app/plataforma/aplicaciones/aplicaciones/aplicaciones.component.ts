@@ -179,18 +179,11 @@ export class AplicacionesComponent implements OnInit {
   }
 
   OnEliminarAplicaicionClick(id: string): void {
-    const nombreApp = this.aplicacionesFiltrado.filter((x) => x.codigoAplicacion == id)[0];
-    const usuario = this._localStorageService.getUsuarioLocalStorage();
-    this.DataLogActividad.codigoAplicacion = this.DataModel.codigoAplicacion;
-    this.DataLogActividad.codigoSuite = this.DataModel.codigoSuite;
-    this.DataLogActividad.codigoModulo = this.DataModel.codigoModulo;
-    this.DataLogActividad.codigoSuscriptor = '';
-    this.DataLogActividad.codigoUsuarioCreacion = usuario.codigoUsuario;
-    this.DataLogActividad.fechaLog = new Date().toISOString();
-    this.DataLogActividad.fechaCreacion = new Date().toISOString();
+    console.log('id aplicacion', id);
+    // const nombreApp = this.aplicacionesFiltrado.filter((x) => x.codigoAplicacion == id)[0];
     Swal.fire({
       title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreAplicacion}".`,
+      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -199,13 +192,23 @@ export class AplicacionesComponent implements OnInit {
       if (result.isConfirmed) {
         this._aplicacionesService.eliminarAplicacion(id).subscribe({
           next: (resp: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.translate.instant('APLICACIONES.ELIMINAREXITOSA');
-            this._logActividadesService.postCrearRegistro(this.DataLogActividad).subscribe(() => console.log('log creado exitosamente'));
             this.aplicaciones = this.aplicaciones.filter((a) => a.codigoAplicacion !== id);
-            this.aplicacionesFiltrado = [...this.aplicaciones];
+            this.consultarAplicaciones();
           },
           error: () => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
           }
         });

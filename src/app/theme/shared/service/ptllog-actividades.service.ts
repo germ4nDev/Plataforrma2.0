@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLLogActividadAPModel } from './../_helpers/models/PTLlogActividadAP.model';
+import { NavSettings } from '../_helpers/models/navSettings.model';
+import { LocalStorageService } from './local-storage.service';
+import { PTLTiposLogsService } from './ptltipos-logs.service';
+import { map } from 'rxjs';
 
 const base_url = environment.apiUrl;
 
@@ -13,8 +16,8 @@ const base_url = environment.apiUrl;
 })
 export class PtllogActividadesService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
-
-  constructor(private http: HttpClient) {}
+  navSettings: NavSettings = new NavSettings();
+  tipos: any[] = [];
 
   get token(): string {
     this.user = JSON.parse(localStorage.getItem('currentUser') || '');
@@ -29,10 +32,37 @@ export class PtllogActividadesService {
     };
   }
 
+  get getLogBody() {
+    const navs = this._localStorageSercice.getNavSettingsLocalStorage();
+    const codigoAplicacion = navs.aplicacion ? navs.aplicacion.codigoAplicacion : '';
+    const codigoSuite = navs.suite ? navs.suite.codigoSuite : '';
+    const codigoModulo = navs.modulo ? navs.modulo.codigoModulo : '';
+    const usuario = this._localStorageSercice.getUsuarioLocalStorage();
+    const dataLog = {
+      codigoAplicacion: codigoAplicacion,
+      codigoSuite: codigoSuite,
+      codigoModulo: codigoModulo,
+      codigoSuscriptor: '',
+      codigoTipoLog: '',
+      codigoRespuesta: '',
+      descripcionLog: '',
+      codigoUsuarioCreacion: usuario.codigoUsuario,
+      fechaLog: new Date().toISOString(),
+      fechaCreacion: new Date().toISOString()
+    };
+    return dataLog;
+  }
+
+  constructor(
+    private http: HttpClient,
+    private _localStorageSercice: LocalStorageService,
+    private _tiposLogsService: PTLTiposLogsService
+  ) {
+  }
+
   getRegistros() {
     const url = `${base_url}/logs-actividades`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de log_actividads', resp);
         return {
@@ -56,32 +86,22 @@ export class PtllogActividadesService {
     );
   }
 
-  postCrearRegistro(log_actividad: PTLLogActividadAPModel) {
+  postCrearRegistro(data: any) {
+    // console.log('tipos logs', this.TiposLog);
+    // AQUI ES DONDE NECESITARIA TENER LA LISTA DE TIPOS DE LOGS <-------------------
+    const body = this.getLogBody;
+    body.codigoTipoLog = data.codigoTipoLog || '';
+    body.codigoRespuesta = data.codigoRespuesta || '';
+    body.descripcionLog = data.descripcionLog || '';
+    console.log('log actividad', data);
+    const logactividad = body as PTLLogActividadAPModel;
     const url = `${base_url}/logs-actividades`;
-    return this.http.post(url, log_actividad);
-  }
-
-  putModificarRegistro(log_actividad: PTLLogActividadAPModel) {
-    const url = `${base_url}/logs-actividades/${log_actividad.logId}`;
-    return this.http.put(url, log_actividad).pipe(
+    // return this.http.post(url, log_actividad);
+    return this.http.post(url, logactividad).pipe(
       map((resp: any) => {
-        console.log('data de log_actividad modificacda', resp);
         return {
           ok: true,
-          log_actividad: resp.log_actividad
-        };
-      })
-    );
-  }
-
-  deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/logs-actividades/${_id}`;
-    return this.http.delete(url).pipe(
-      map((resp: any) => {
-        console.log('data de log_actividad eliminado', resp);
-        return {
-          ok: true,
-          log_actividad: resp.log_actividad
+          logActividad: resp.log
         };
       })
     );

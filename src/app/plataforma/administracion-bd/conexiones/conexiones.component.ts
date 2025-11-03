@@ -11,7 +11,7 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
-import { PtlAplicacionesService } from 'src/app/theme/shared/service';
+import { PtlAplicacionesService, PtllogActividadesService } from 'src/app/theme/shared/service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
@@ -29,7 +29,8 @@ import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetad
 })
 export class ConexionesComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
-  @Output() toggleSidebar = new EventEmitter<void>();
+  @Output()
+  toggleSidebar = new EventEmitter<void>();
   //#region VARIABLES
   registrosSub?: Subscription;
   registros: PTLConexionBDModel[] = [];
@@ -49,6 +50,7 @@ export class ConexionesComponent implements OnInit {
     private translate: TranslateService,
     private _conexionService: PTLConexionesBDSTService,
     private _aplicacionesService: PtlAplicacionesService,
+    private _logActividadesService: PtllogActividadesService,
     private _suscriptoresService: PTLSuscriptoresService,
     private _navigationService: NavigationService
   ) {
@@ -72,9 +74,9 @@ export class ConexionesComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.conexiones.forEach((conexion: any) => {
-            //   const app = this.aplicaciones.filter((x) => x.aplicacionId == conexion.aplicacionId)[0];
+              //   const app = this.aplicaciones.filter((x) => x.aplicacionId == conexion.aplicacionId)[0];
               const susc = this.suscriptores.filter((x) => x.suscriptorId == conexion.suscriptorId)[0];
-            //   conexion.nombreAplicacion = app.nombreAplicacion;
+              //   conexion.nombreAplicacion = app.nombreAplicacion;
               conexion.nombreSuscriptor = susc.nombreSuscriptor;
               conexion.nomEstado = conexion.estadoConexion == true ? 'Activo' : 'Inactivo';
             });
@@ -167,10 +169,22 @@ export class ConexionesComponent implements OnInit {
       if (result.isConfirmed) {
         this._conexionService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('CONEXIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this.translate.instant('CONEXIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.conexionId !== id.id);
           },
           error: (err: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('CONEXIONES.ELIMINARERROR') + ' ' + err
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('Error', this.translate.instant('CONEXIONES.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }

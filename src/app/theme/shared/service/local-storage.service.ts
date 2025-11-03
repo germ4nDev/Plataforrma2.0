@@ -6,12 +6,14 @@ import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
 import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
 import { BaseSessionModel } from '../_helpers/models/BaseSession.model';
 import { ThemeSettingsModel } from '../_helpers/models/ThemeSettings.model';
+import { NavSettings } from '../_helpers/models/navSettings.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
   DataModel: BaseSessionModel = new BaseSessionModel();
+  navsettings: NavSettings = new NavSettings();
   public usuario: any;
   public currentUser: any;
   public aplicacion: any;
@@ -29,23 +31,31 @@ export class LocalStorageService {
     this.usuario = user;
   }
 
+  setNavSettingsLocalStorage(navsettings: NavSettings) {
+    localStorage.setItem('navsettings', JSON.stringify(navsettings));
+    this.navsettings = navsettings;
+  }
+
   setAplicacionLocalStorage(aplicacion: PTLAplicacionModel) {
-    localStorage.setItem('aplicacion', JSON.stringify(aplicacion));
+    this.navsettings.aplicacion = aplicacion;
+    localStorage.setItem('navsettings', JSON.stringify(this.navsettings));
     this.aplicacion = aplicacion;
   }
 
   setSuiteLocalStorage(suite: PTLSuiteAPModel) {
-    localStorage.setItem('suite', JSON.stringify(suite));
+    this.navsettings.suite = suite;
+    localStorage.setItem('navsettings', JSON.stringify(this.navsettings));
     this.suite = suite;
   }
 
   setModuloLocalStorage(modulo: PTLModuloAP) {
-    localStorage.setItem('modulo', JSON.stringify(modulo));
+    this.navsettings.modulo = modulo;
+    localStorage.setItem('navsettings', JSON.stringify(this.navsettings));
     this.modulo = modulo;
   }
 
   setThemeSettingsLocalStorage(settings: ThemeSettingsModel) {
-    localStorage.setItem('app-theme-settings', JSON.stringify(settings));
+    localStorage.setItem('themeSettings', JSON.stringify(settings));
     this.themeSettings = settings;
   }
 
@@ -73,27 +83,31 @@ export class LocalStorageService {
     return this.usuario.usuario;
   }
 
+  getNavSettingsLocalStorage(): NavSettings {
+    this.navsettings = JSON.parse(localStorage.getItem('navsettings') || '');
+    return this.navsettings;
+  }
+
   getAplicaicionLocalStorage(): PTLAplicacionModel {
-    this.aplicacion = JSON.parse(localStorage.getItem('aplicacion') || '');
-    return this.aplicacion;
+    const aplicacion = this.getNavSettingsLocalStorage().aplicacion || new PTLAplicacionModel();
+    return aplicacion;
   }
 
   getSuiteLocalStorage(): PTLSuiteAPModel {
-    this.suite = JSON.parse(localStorage.getItem('suite') || '');
-    return this.suite;
+    const suite = this.getNavSettingsLocalStorage().suite || new PTLSuiteAPModel();
+    return suite;
   }
 
   getModuloLocalStorage(): PTLModuloAP {
-    this.modulo = localStorage.getItem('modulo') ? JSON.parse(localStorage.getItem('modulo') || '') : '';
-    console.log('modulo local storage', this.modulo);
-    return this.modulo;
+    const modulo = this.getNavSettingsLocalStorage().modulo || new PTLModuloAP();
+    return modulo;
   }
 
   getDataModelsLocalStorage() {
     this.usuario = JSON.parse(localStorage.getItem('currentUser') || '');
-    this.aplicacion = JSON.parse(localStorage.getItem('aplicacion') || '');
-    this.suite = JSON.parse(localStorage.getItem('suite') || '');
-    this.modulo = JSON.parse(localStorage.getItem('modulo') || '');
+    this.aplicacion = this.getNavSettingsLocalStorage().aplicacion || new PTLAplicacionModel();
+    this.suite = this.getNavSettingsLocalStorage().suite || new PTLSuiteAPModel();
+    this.modulo =  this.getNavSettingsLocalStorage().modulo || new PTLModuloAP();
     const modelo: BaseSessionModel = {
       codigoAplicacion: this.aplicacion.codigoAplicacion,
       codigoSuite: this.suite.codigoSuite,
@@ -122,13 +136,14 @@ export class LocalStorageService {
 
   getThemeSettings() {
     if (localStorage.getItem('app-theme-settings')) {
-      this.themeSettings = JSON.parse(localStorage.getItem('app-theme-settings') || '');
+      this.themeSettings = JSON.parse(localStorage.getItem('themeSettings') || '');
     } else {
       const settings: ThemeSettingsModel = {
         isDarkTheme: false,
-        navbarColor: '#2c3e50',
-        iconosColor: '#fff',
-        textoColor: '#fff'
+        navbarColor: '#346BA6',
+        iconosColor: '#f6f4f4',
+        textoColor: '#f6f4f4',
+        buttonsHoverColor: '#346BA6'
       };
       this.themeSettings = settings;
     }

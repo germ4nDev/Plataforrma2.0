@@ -1,12 +1,16 @@
 export class PTLContenidoELModel {
-    constructor (
-        public contenidoId? : number,
-        public enlaceId? : number,
-        public nombreContenido? : string,
-        public descripcionContenido? : string,
-        public contenido? : string,
-        public estadoContenido? : boolean,
-        public nomEstado? : string,
-        public nomEnlace? : string
-    ) {}
+  constructor(
+    public contenidoId?: number,
+    public enlaceId?: number,
+    public nombreContenido?: string,
+    public descripcionContenido?: string,
+    public contenido?: string,
+    public estadoContenido?: boolean,
+    public nomEstado?: string,
+    public nomEnlace?: string,
+    public codigoUsuarioCreacion?: string,
+    public fechaCreacion?: string,
+    public codigoUsuarioModificacion?: string,
+    public fechaModificacion?: string
+  ) {}
 }

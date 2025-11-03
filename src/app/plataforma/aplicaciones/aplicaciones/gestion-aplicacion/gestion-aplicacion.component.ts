@@ -5,7 +5,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GradientConfig } from 'src/app/app-config';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { PTLAplicacionModel } from '../../../../theme/shared/_helpers/models/PTLAplicacion.model';
 import {
   LocalStorageService,
   PtlAplicacionesService,
@@ -15,6 +14,8 @@ import {
 } from 'src/app/theme/shared/service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -34,8 +35,7 @@ import Swal from 'sweetalert2';
 export class GestionAplicacionComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLAplicacionModel = new PTLAplicacionModel();
-//   DataModel: BaseSessionModel = new BaseSessionModel();
-//   DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
+  logActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
   menuItems$!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
@@ -112,11 +112,11 @@ export class GestionAplicacionComponent implements OnInit {
     if (this.modoEdicion == false) {
       this.FormRegistro.codigoAplicacion = uuidv4();
       this.FormRegistro.imagenInicio = 'no-image.png';
+      console.log('FormRegistro loading', this.FormRegistro);
     }
     console.log('Inicial formregistro', this.FormRegistro);
-
-    // this.DataModel = this._localStorageService.getDataModelsLocalStorage();
-    // console.log('dataLog 1', this.DataModel);
+    // const navSettings = this._localStorageService.getNavSettingsLocalStorage();
+    console.log('data del log', this.logActividad);
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -154,47 +154,55 @@ export class GestionAplicacionComponent implements OnInit {
   }
 
   btnGestionarAplicacionClick(form: any) {
-    console.log('form', form.value);
-
-    this.isSubmit = true;
-    // if (!form.valid) {
-    //   return;
-    // }
-    // const usuario = this._localStorageService.getUsuarioLocalStorage();
-    // this.DataModel.dataLog = this.FormRegistro;
-    // this.DataLogActividad.codigoAplicacion = this.DataModel.codigoAplicacion;
-    // this.DataLogActividad.codigoSuite = this.DataModel.codigoSuite;
-    // this.DataLogActividad.codigoModulo = this.DataModel.codigoModulo;
-    // this.DataLogActividad.codigoSuscriptor = '';
-    // this.DataLogActividad.codigoUsuarioCreacion = usuario.codigoUsuario;
-    // this.DataLogActividad.fechaLog = new Date().toISOString();
-    // this.DataLogActividad.fechaCreacion = new Date().toISOString();
-    // console.log('datamodel', this.DataModel);
+    // this.isSubmit = true;
     if (this.modoEdicion) {
+      this.FormRegistro.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      this.FormRegistro.fechaModificacion = new Date().toISOString();
       this._aplicacionesService.actualizarAplicacion(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            // this.DataLogActividad.codigoRespuesta = 200;
-            // this.DataLogActividad.descripcionLg =
-            //   + this.FormRegistro.nombreAplicacion;
-            // this._logActividadesService.postCrearRegistro(this.DataLogActividad).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY') );
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY'));
             form.resetForm();
             // this.isSubmit = false;
             this.router.navigate(['/aplicaciones/aplicaciones']);
-          } else {
-            this._swalService.getAlertError('No se pudo actualizar la Aplicación');
           }
         },
         error: (err: any) => {
           console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           this._swalService.getAlertError('No se pudo actualizar la Aplicación');
         }
       });
     } else {
-      this._aplicacionesService.crearAplicacion(form.value).subscribe({
+      form.aplicacionId = 0;
+      const registroData = form.value as PTLAplicacionModel;
+      registroData.codigoAplicacion = uuidv4();
+      registroData.imagenInicio = this.FormRegistro.imagenInicio;
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+      this._aplicacionesService.crearAplicacion(registroData).subscribe({
         next: (resp: any) => {
+          console.log('resp', resp);
           if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.UPDATESUCCSESSFULLY'));
             form.resetForm();
             // this.isSubmit = false;
@@ -203,7 +211,13 @@ export class GestionAplicacionComponent implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
-          this._swalService.getAlertError('No se pudo actualizar la Aplicación');
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '500',
+            descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          this._swalService.getAlertError('No se pudo crear la Aplicación');
         }
       });
     }

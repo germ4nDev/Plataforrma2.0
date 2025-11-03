@@ -73,6 +73,8 @@
             "SLIDER": "Imágees Inicio",
             "PRECIOS": "Lista Precios",
             "PRECIOSUNITARIOS": "Precios Unitarios",
+            "LOGS": "Logs",
+            "TIPOSLOGS": "Tipos Logs",
             "TIPOSVALOR": "Tipos Precio"
         },
         "NAVBAR": {

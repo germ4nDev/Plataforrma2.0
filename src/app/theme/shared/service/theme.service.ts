@@ -28,14 +28,6 @@ export class ThemeService {
   textoColor$ = this.textoColor.asObservable();
   buttonsHoverColor$ = this.buttonsHoverColor.asObservable();
 
-  public colorPalette: any[] = [
-    { color: '#66b5ff', iconos: '#000', texto: '#000', botonhover: '#66b5ff' },
-    { color: '#2c3e50', iconos: '#fff', texto: '#fff', botonhover: '#000000' },
-    { color: '#c0392b', iconos: '#fff', texto: '#fff', botonhover: '#c0392b' },
-    { color: '#27ae60', iconos: '#fff', texto: '#fff', botonhover: '#27ae60' },
-    { color: '#f39c12', iconos: '#000', texto: '#000', botonhover: '#f39c12' }
-  ];
-
   constructor(
     rendererFactory: RendererFactory2,
     private _loclaStorageService: LocalStorageService
@@ -64,7 +56,7 @@ export class ThemeService {
     this.loadThemeSettings();
   }
 
-  private loadThemeSettings(): void {
+  loadThemeSettings(): void {
     const savedSettings = this._loclaStorageService.getThemeSettings();
     if (savedSettings) {
       try {
@@ -79,7 +71,7 @@ export class ThemeService {
     }
   }
 
-  private saveThemeSettings(): void {
+  saveThemeSettings(): void {
     const settings: ThemeSettings = {
       isDarkTheme: this.isDarkTheme.value,
       navbarColor: this.navbarColor.value,
@@ -115,7 +107,7 @@ export class ThemeService {
     this.saveThemeSettings();
   }
 
-  public isDarkThemeEnabled(): boolean {
+  isDarkThemeEnabled(): boolean {
     return this.isDarkTheme.value;
   }
 

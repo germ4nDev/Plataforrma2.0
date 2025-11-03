@@ -17,7 +17,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
-import { LocalStorageService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtllogActividadesService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-servidor',
@@ -50,13 +50,13 @@ export class GestionServidorComponent {
     private translate: TranslateService,
     private _registrosService: PTLServidorService,
     private _layoutInitializer: LayoutInitializerService,
+    private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
     private _navigationService: NavigationService
   ) {
     this.isSubmit = false;
     GradientConfig.header_fixed_layout = true;
     this.gradientConfig = GradientConfig;
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
     this.route.queryParams.subscribe((params) => {
@@ -91,6 +91,10 @@ export class GestionServidorComponent {
       },
       error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
     });
+    if (this.modoEdicion == false) {
+      this.FormRegistro.codigoServidor = uuidv4();
+      console.log('FormRegistro loading', this.FormRegistro);
+    }
     const form = this._localStorageService.getFormRegistro();
     if (form != undefined) {
       this.FormRegistro = form;
@@ -115,22 +119,51 @@ export class GestionServidorComponent {
       this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
             this.router.navigate(['/administracion-bd/servidores/']);
           } else {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
           }
         },
         error: (err: any) => {
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           console.error(err);
           Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
         }
       });
     } else {
-      // console.log('formregistro', this.FormRegistro);
-      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      const registroData = form.value as PTLServidorModel;
+      registroData.codigoServidor = uuidv4();
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+      this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
             form.resetForm();
             this.isSubmit = false;
@@ -139,6 +172,12 @@ export class GestionServidorComponent {
         },
         error: (err: any) => {
           console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
         }
       });

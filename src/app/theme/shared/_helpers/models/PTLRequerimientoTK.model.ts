@@ -6,7 +6,11 @@ export class PTLRequerimientoTKModel {
     public descripcionRequerimiento?: string,
     public estadoRequerimiento?: string,
     public nomEstado?: string,
-    public nomTicket?: string
+    public nomTicket?: string,
     // public codigoError? : string
+    public codigoUsuarioCreacion?: string,
+    public fechaCreacion?: string,
+    public codigoUsuarioModificacion?: string,
+    public fechaModificacion?: string
   ) {}
 }

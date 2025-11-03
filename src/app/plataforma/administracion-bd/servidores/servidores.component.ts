@@ -16,6 +16,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { PtllogActividadesService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-servidores',
@@ -45,6 +46,7 @@ export class ServidoresComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private _servidorService: PTLServidorService,
+    private _logActividadesService: PtllogActividadesService,
     private _navigationService: NavigationService
   ) {
     this.gradientConfig = GradientConfig;
@@ -127,10 +129,22 @@ export class ServidoresComponent implements OnInit {
       if (result.isConfirmed) {
         this._servidorService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('CONEXIONES.SERVIDORES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this.translate.instant('CONEXIONES.SERVIDORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((s) => s.servidorId !== id.id);
           },
           error: (err: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('Error', this.translate.instant('CONEXIONES.SERVIDORES.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }

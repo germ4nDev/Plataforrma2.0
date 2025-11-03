@@ -4,6 +4,11 @@ export class ThemeSettingsModel {
     public isDarkTheme: boolean,
     public navbarColor: string,
     public iconosColor: string,
-    public textoColor: string
+    public textoColor: string,
+    public buttonsHoverColor: string,
+    public codigoUsuarioCreacion?: string,
+    public fechaCreacion?: string,
+    public codigoUsuarioModificacion?: string,
+    public fechaModificacion?: string
   ) {}
 }

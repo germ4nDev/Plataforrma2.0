@@ -20,7 +20,7 @@ import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP
 import { PtlmodulosApService } from 'src/app/theme/shared/service/ptlmodulos-ap.service';
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
-import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtllogActividadesService, SwalAlertService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-gestion-modulo',
@@ -63,6 +63,7 @@ export class GestionModuloComponent implements OnInit {
     private _aplicacionesService: PtlAplicacionesService,
     private _suitesService: PtlSuitesAPService,
     private _layoutInitializer: LayoutInitializerService,
+    private _logActividadesService: PtllogActividadesService,
     private _swalAlertService: SwalAlertService,
     private _localStorageService: LocalStorageService,
     private _navigationService: NavigationService
@@ -88,11 +89,6 @@ export class GestionModuloComponent implements OnInit {
           }
         });
       } else {
-        this.FormRegistro.codigoAplicacion = '';
-        this.FormRegistro.codigoSuite = '';
-        this.FormRegistro.codigoPadre = '';
-        this.FormRegistro.codigoModulo = uuidv4();
-        this.FormRegistro.codigoModulo = uuidv4();
         this.modoEdicion = false;
       }
     });
@@ -118,6 +114,15 @@ export class GestionModuloComponent implements OnInit {
     if (form != undefined) {
       this.FormRegistro = form;
       this._localStorageService.removeFormRegistro();
+    }
+    if (!this.modoEdicion) {
+      console.log('modo edicion', this.modoEdicion);
+      this.FormRegistro.codigoAplicacion = '';
+      this.FormRegistro.codigoSuite = '';
+      this.FormRegistro.codigoPadre = '';
+      this.FormRegistro.codigoModulo = uuidv4();
+      // this.FormRegistro.codigoModulo = uuidv4();
+      console.log('FormRegistro', this.FormRegistro);
     }
   }
 
@@ -229,22 +234,52 @@ export class GestionModuloComponent implements OnInit {
       this._registrosService.putModificarRegistro(this.FormRegistro, this.moduloId).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
             this.router.navigate(['/aplicaciones/modulos']);
           } else {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
           }
         },
         error: (err: any) => {
           console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
         }
       });
     } else {
-      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      const registroData = form.value as PTLModuloAP;
+      registroData.codigoModulo = uuidv4();
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+      this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
           console.log('reesp', resp);
           if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
@@ -253,6 +288,12 @@ export class GestionModuloComponent implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err);
         }
       });

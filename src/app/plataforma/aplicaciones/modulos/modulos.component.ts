@@ -23,6 +23,7 @@ import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.mo
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { PtllogActividadesService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-modulos',
@@ -55,6 +56,7 @@ export class ModulosComponent implements OnInit {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _aplicacionesService: PtlAplicacionesService,
+    private _logActividadesService: PtllogActividadesService,
     private _suitesService: PtlSuitesAPService,
     private _registrosService: PtlmodulosApService
   ) {
@@ -291,10 +293,22 @@ export class ModulosComponent implements OnInit {
       if (result.isConfirmed) {
         this._registrosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this.translate.instant('MODULOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.consultarRegistros();
           },
-          error: () => {
+          error: (err) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('Error', this.translate.instant('MODULOS.ELIMINARERROR'), 'error');
           }
         });

@@ -16,7 +16,7 @@
         </h2>
         <div class="card-grid-apps">
             <div class="card-grd" *ngFor="let suite of suites"
-                [style.backgroundImage]="'url(' + suite.imagenInicio + ')'" [title]="suite.nombreAplicacion">
+                [style.backgroundImage]="'url(' + suite.imagenInicio + ')'" [title]="suite.nomAplicacion">
                 <div class="card-grd-content">
                     <h1>{{ suite.nombreSuite }}</h1>
                     <p [innerHTML]="suite.descripcionSuite"></p>

@@ -12,6 +12,10 @@ export class PTLPaqueteModel {
     public precioPaquete?: number,
     public promocion?: boolean,
     public precioPromocion?: number,
-    public estadoPaquete?: boolean
+    public estadoPaquete?: boolean,
+    public codigoUsuarioCreacion?: string,
+    public fechaCreacion?: string,
+    public codigoUsuarioModificacion?: string,
+    public fechaModificacion?: string
   ) {}
 }
