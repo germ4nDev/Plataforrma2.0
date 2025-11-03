@@ -5,11 +5,6 @@ const routes: Routes = [
   {
     path: '',
     children: [
-      { path: 'conexiones', loadComponent: () => import('./conexiones/conexiones.component').then(m => m.ConexionesComponent)},
-      {
-        path: 'gestion-conexion',
-        loadComponent: () => import('./conexiones/gestion-conexion/gestion-conexion.component').then(m => m.GestionConexionComponent)
-      },
       {
         path: 'scripts',
         loadComponent: () => import('./scripts/scripts.component').then(m => m.ScriptsComponent)

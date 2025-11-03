@@ -75,7 +75,8 @@
             "PRECIOSUNITARIOS": "Precios Unitarios",
             "LOGS": "Logs",
             "TIPOSLOGS": "Tipos Logs",
-            "TIPOSVALOR": "Tipos Precio"
+            "TIPOSVALOR": "Tipos Precio",
+            "ADMINBD": "Conexiones"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notificaciones",

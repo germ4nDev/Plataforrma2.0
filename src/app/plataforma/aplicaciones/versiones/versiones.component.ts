@@ -22,6 +22,7 @@ import { PTLVersionAP } from 'src/app/theme/shared/_helpers/models/PTLVersionAP.
 import { PtlversionesApService } from 'src/app/theme/shared/service/ptlversiones-ap.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { PtllogActividadesService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-versiones',
@@ -50,6 +51,7 @@ export class VersionesComponent implements OnInit {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _aplicacionesService: PtlAplicacionesService,
+    private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
     private _registrosService: PtlversionesApService
   ) {
@@ -212,11 +214,23 @@ export class VersionesComponent implements OnInit {
       if (result.isConfirmed) {
         this._registrosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('VERSIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this.translate.instant('VERSIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((a) => a.versionId !== id.id);
             this.registrosFiltrado = [...this.registros];
           },
-          error: () => {
+          error: (err) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('VERSIONES.ELIMINARERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('Error', this.translate.instant('VERSIONES.ELIMINARERROR'), 'error');
           }
         });

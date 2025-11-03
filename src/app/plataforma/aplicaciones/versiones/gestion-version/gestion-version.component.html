@@ -92,9 +92,23 @@
                                 <input type="text" class="form-control form-input" name="codigoVersion"
                                     placeholder="{{ 'VERSIONES.GESTION.PLACEHOLDERCODE' | translate }}"
                                     [ngClass]="{ 'is-invalid': !codigoVersion.valid && (codigoVersion.dirty || codigoVersion.touched || isSubmit) }"
-                                    #codigoVersion="ngModel" required [(ngModel)]="FormRegistro.codigoVersion" />
+                                    #codigoVersion="ngModel" required [(ngModel)]="FormRegistro.codigoVersion" readonly/>
                                 <label
                                     *ngIf="!codigoVersion.valid && (codigoVersion.dirty || codigoVersion.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'VERSIONES.CODEHOLDER' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'VERSIONES.VERSION' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="version"
+                                    placeholder="{{ 'VERSIONES.GESTION.PLACEHOLDERVERSION' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !version.valid && (version.dirty || version.touched || isSubmit) }"
+                                    #version="ngModel" required [(ngModel)]="FormRegistro.version" />
+                                <label
+                                    *ngIf="!version.valid && (version.dirty || version.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'VERSIONES.CODEHOLDER' | translate }}
                                 </label>

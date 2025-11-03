@@ -14,13 +14,13 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import Swal from 'sweetalert2';
-import { v4 as uuidv4 } from 'uuid';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
-import { SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
+import { PtllogActividadesService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
+import Swal from 'sweetalert2';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-gestion-suite',
@@ -64,6 +64,7 @@ export class GestionSuiteComponent implements OnInit {
     private _registrosService: PtlSuitesAPService,
     private _aplicacionesService: PtlAplicacionesService,
     private _layoutInitializer: LayoutInitializerService,
+    private _logActividadesService: PtllogActividadesService,
     private _swalService: SwalAlertService,
     private _translate: TranslateService,
     private _localStorageService: LocalStorageService,
@@ -180,25 +181,60 @@ export class GestionSuiteComponent implements OnInit {
     if (!form.valid) {
       return;
     }
+    const registroData = form.value as PTLSuiteAPModel;
     if (this.modoEdicion) {
+      registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion;
+      registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
       this._registrosService.actualizarSuiteAP(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
             this.router.navigate(['/aplicaciones/suites']);
           } else {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + resp.message
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
           }
         },
         error: (err: any) => {
           console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
         }
       });
     } else {
+      registroData.codigoSuite = uuidv4();
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = '';
+      registroData.fechaModificacion = '';
+      console.log('insertar registro', registroData);
       this._registrosService.crearSuiteAP(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
@@ -207,6 +243,12 @@ export class GestionSuiteComponent implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'));
         }
       });

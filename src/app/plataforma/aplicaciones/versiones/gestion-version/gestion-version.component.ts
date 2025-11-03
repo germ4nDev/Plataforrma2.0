@@ -21,16 +21,22 @@ import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { NgForm } from '@angular/forms';
 import { LocalStorageService } from 'src/app/theme/shared/service';
+import { PTLVersionAP } from 'src/app/theme/shared/_helpers/models/PTLVersionAP.model';
 
 // Definición de la interfaz del modelo de formulario
 interface RegistroForm {
   codigoAplicacion: string;
   fecha: NgbDateStruct | null;
-  fechaVersion: Date;
+  fechaVersion: string;
   codigoVersion: string;
+  version: string;
   nombreVersion: string;
   descripcionVersion: string;
   estadoVersion: boolean;
+  codigoUsuarioCreacion?: string;
+  fechaCreacion?: string;
+  codigoUsuarioModificacion?: string;
+  fechaModificacion?: string;
 }
 
 @Component({
@@ -47,8 +53,9 @@ export class GestionVersionComponent implements OnInit {
   public FormRegistro: RegistroForm = {
     codigoAplicacion: '',
     fecha: null,
-    fechaVersion: new Date(),
-    codigoVersion: '0.0.0.0',
+    fechaVersion: new Date().toDateString(),
+    codigoVersion: '',
+    version: '0.0.0.0',
     nombreVersion: '',
     descripcionVersion: '',
     estadoVersion: true
@@ -94,7 +101,6 @@ export class GestionVersionComponent implements OnInit {
           next: (resp: any) => {
             const version = resp.version;
             console.log('version', resp.version);
-
             const fechaVersion = new Date(version.fechaVersion);
             const year = fechaVersion.getUTCFullYear();
             const month = fechaVersion.getUTCMonth() + 1;
@@ -104,7 +110,6 @@ export class GestionVersionComponent implements OnInit {
               month: month,
               day: day
             };
-
             this.FormRegistro = { ...version };
             this.FormRegistro.fecha = dateStruct;
             this.FormRegistro.descripcionVersion = version.descripcionVersion || '';
@@ -115,7 +120,8 @@ export class GestionVersionComponent implements OnInit {
           }
         });
       } else {
-        this.FormRegistro.codigoVersion = '0.0.0.0';
+        this.FormRegistro.codigoVersion = uuidv4();
+        this.FormRegistro.version = '0.0.0.0';
         this.modoEdicion = false;
       }
     });
@@ -190,15 +196,18 @@ export class GestionVersionComponent implements OnInit {
     if (!form.valid) {
       return;
     }
-
     if (this.FormRegistro.fecha) {
       const { year, month, day } = this.FormRegistro.fecha;
-      const fecha = new Date(year, month - 1, day);
+      const fecha = new Date(year, month - 1, day).toISOString();
       this.FormRegistro.fechaVersion = fecha;
     }
-
+    const registroData = form.value as PTLVersionAP;
     if (this.modoEdicion) {
-      this._registrosService.putModificarRegistro(this.FormRegistro).subscribe({
+      registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion;
+      registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+      this._registrosService.putModificarRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
@@ -213,7 +222,13 @@ export class GestionVersionComponent implements OnInit {
         }
       });
     } else {
-      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      registroData.codigoVersion = uuidv4();
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = '';
+      registroData.fechaModificacion = '';
+      console.log('insertar registro', registroData);
+      this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');

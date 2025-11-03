@@ -220,18 +220,23 @@ export class GestionModuloComponent implements OnInit {
 
   btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
-    if (this.FormRegistro.hijos == true) {
-      this.FormRegistro.codigoPadre = '0';
-      this.FormRegistro.rutaModulo = '';
-    } else {
-      this.FormRegistro.icon = '';
+    if (!form.valid) {
+      return;
     }
-    console.log('insertar formRegistro', this.FormRegistro);
-    // if (!form.valid) {
-    //   return;
-    // }
+    if (form.value.hijos == true) {
+      form.value.codigoPadre = '0';
+      form.value.rutaModulo = '';
+    } else {
+      form.value.icon = '';
+    }
+    const registroData = form.value as PTLModuloAP;
+    console.log('insertar formRegistro', registroData);
     if (this.modoEdicion) {
-      this._registrosService.putModificarRegistro(this.FormRegistro, this.moduloId).subscribe({
+      registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion;
+      registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+      this._registrosService.putModificarRegistro(registroData, this.moduloId).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             const logData = {
@@ -264,15 +269,16 @@ export class GestionModuloComponent implements OnInit {
         }
       });
     } else {
-      const registroData = form.value as PTLModuloAP;
+      //   const registroData = form.value as PTLModuloAP;
       registroData.codigoModulo = uuidv4();
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaCreacion = new Date().toISOString();
-      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-      registroData.fechaModificacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = '';
+      registroData.fechaModificacion = '';
+      console.log('insertar registro', registroData);
       this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
-          console.log('reesp', resp);
+          console.log('reesp', resp.modulo);
           if (resp.ok) {
             const logData = {
               codigoTipoLog: '',

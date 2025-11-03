@@ -59,9 +59,18 @@ export class PtlmodulosApService {
     );
   }
 
-  postCrearRegistro(modulo: PTLModuloAP) {
+  postCrearRegistro(data: PTLModuloAP) {
     const url = `${base_url}/modulos`;
-    return this.http.post(url, modulo);
+    console.log('data del modulo', data);
+    // return this.http.post(url, modulo);
+    return this.http.post(url, data).pipe(
+      map((resp: any) => {
+        return {
+          ok: true,
+          modulo: resp.modulo
+        };
+      })
+    );
   }
 
   putModificarRegistro(modulo: PTLModuloAP, moduloId: number) {

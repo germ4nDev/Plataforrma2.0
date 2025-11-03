@@ -20,6 +20,7 @@ import { PTLPaquetesService } from 'src/app/theme/shared/service/ptlpaquetes.ser
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
 import Swal from 'sweetalert2';
+import { PtllogActividadesService } from 'src/app/theme/shared/service/ptllog-actividades.service';
 
 @Component({
   selector: 'app-paquetes',
@@ -49,6 +50,7 @@ export class PaquetesComponent implements OnInit {
     private _navigationService: NavigationService,
     private _swalService: SwalAlertService,
     private _localstorageService: LocalStorageService,
+    private _logActividadesService: PtllogActividadesService,
     private _registrosService: PTLPaquetesService,
     private _aplicacionesService: PtlAplicacionesService
   ) {
@@ -212,11 +214,23 @@ export class PaquetesComponent implements OnInit {
       if (result.isConfirmed) {
         this._registrosService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((a) => a.paqueteId !== id);
             this.registrosFiltrado = [...this.registros];
           },
-          error: () => {
+          error: (err) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
           }
         });

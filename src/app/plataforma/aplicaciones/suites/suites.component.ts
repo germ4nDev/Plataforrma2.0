@@ -23,6 +23,7 @@ import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaci
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { environment } from 'src/environments/environment';
+import { PtllogActividadesService } from 'src/app/theme/shared/service';
 
 const base_url = environment.apiUrl;
 
@@ -50,10 +51,12 @@ export class SuitesComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private translate: TranslateService,
     private _navigationService: NavigationService,
     private _aplicacionesService: PtlAplicacionesService,
     private _registrosService: PtlSuitesAPService,
     private _localstorageService: LocalStorageService,
+    private _logActividadesService: PtllogActividadesService,
     private _translate: TranslateService
   ) {
     this.gradientConfig = GradientConfig;
@@ -219,11 +222,23 @@ export class SuitesComponent implements OnInit {
       if (result.isConfirmed) {
         this._registrosService.eliminarSuiteAP(id.id).subscribe({
           next: (resp: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this._translate.instant('SUITES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this._translate.instant('SUITES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((a) => a.suiteId !== id.id);
             this.registrosFiltrado = [...this.registros];
           },
-          error: () => {
+          error: (err) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this._translate.instant('SUITES.ELIMINARERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire('Error', this._translate.instant('SUITES.ELIMINARERROR'), 'error');
           }
         });
