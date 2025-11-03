@@ -124,8 +124,8 @@ export class VersionesComponent implements OnInit {
       type: 'date'
     },
     {
-      name: 'codigoVersion',
-      header: 'VERSIONES.CODIGO',
+      name: 'version',
+      header: 'VERSIONES.VERSION',
       type: 'text'
     },
     {
@@ -141,6 +141,11 @@ export class VersionesComponent implements OnInit {
   ];
 
   columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'codigoVersion',
+      header: 'VERSIONES.CODE',
+      type: 'text'
+    },
     {
       name: 'descripcionVersion',
       header: 'VERSIONES.DESCRIPTION',

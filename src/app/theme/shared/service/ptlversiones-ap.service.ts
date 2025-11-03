@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { PTLVersionAP } from '../_helpers/models/PTLVersionAP.model';
 
 const base_url = environment.apiUrl;
 
@@ -60,8 +61,9 @@ export class PtlversionesApService {
     return this.http.post(url, verison);
   }
 
-  putModificarRegistro(version: any) {
-    const url = `${base_url}/versiones/${version.versionId}`;
+  putModificarRegistro(version: PTLVersionAP) {
+    console.log('data', version);
+    const url = `${base_url}/versiones/${version.codigoVersion}`;
     return this.http.put(url, version).pipe(
       map((resp: any) => {
         console.log('data de version modificacda', resp);

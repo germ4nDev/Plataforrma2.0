@@ -196,17 +196,24 @@ export class GestionVersionComponent implements OnInit {
     if (!form.valid) {
       return;
     }
-    if (this.FormRegistro.fecha) {
-      const { year, month, day } = this.FormRegistro.fecha;
-      const fecha = new Date(year, month - 1, day).toISOString();
-      this.FormRegistro.fechaVersion = fecha;
-    }
+    // if (this.FormRegistro.fecha) {
+    //   const { year, month, day } = this.FormRegistro.fecha;
+    //   const fecha = new Date(year, month - 1, day).toISOString();
+    //   this.FormRegistro.fechaVersion = fecha;
+    // }
     const registroData = form.value as PTLVersionAP;
     if (this.modoEdicion) {
-      registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion;
-      registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
+      if (!this.FormRegistro.fecha || !this.FormRegistro.fecha.year || !this.FormRegistro.fecha.month || !this.FormRegistro.fecha.day) {
+        return null;
+      }
+      const jsDate = new Date(this.FormRegistro.fecha.year, this.FormRegistro.fecha.month - 1, this.FormRegistro.fecha?.day);
+    registroData.codigoVersion = form.value.codigoVersion;
+      registroData.fechaVersion = jsDate.toISOString();
+      registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion || '';
+      registroData.fechaCreacion = this.FormRegistro.fechaCreacion || '';
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaModificacion = new Date().toISOString();
+      console.log('registroData', registroData);
       this._registrosService.putModificarRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
