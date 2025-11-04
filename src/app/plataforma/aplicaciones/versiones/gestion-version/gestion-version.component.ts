@@ -23,22 +23,6 @@ import { NgForm } from '@angular/forms';
 import { LocalStorageService } from 'src/app/theme/shared/service';
 import { PTLVersionAP } from 'src/app/theme/shared/_helpers/models/PTLVersionAP.model';
 
-// Definición de la interfaz del modelo de formulario
-interface RegistroForm {
-  codigoAplicacion: string;
-  fecha: NgbDateStruct | null;
-  fechaVersion: string;
-  codigoVersion: string;
-  version: string;
-  nombreVersion: string;
-  descripcionVersion: string;
-  estadoVersion: boolean;
-  codigoUsuarioCreacion?: string;
-  fechaCreacion?: string;
-  codigoUsuarioModificacion?: string;
-  fechaModificacion?: string;
-}
-
 @Component({
   selector: 'app-gestion-version',
   standalone: true,
@@ -49,17 +33,7 @@ interface RegistroForm {
 export class GestionVersionComponent implements OnInit {
   @ViewChild('validationForm') validationForm!: NgForm;
   @Output() toggleSidebar = new EventEmitter<void>();
-
-  public FormRegistro: RegistroForm = {
-    codigoAplicacion: '',
-    fecha: null,
-    fechaVersion: new Date().toDateString(),
-    codigoVersion: '',
-    version: '0.0.0.0',
-    nombreVersion: '',
-    descripcionVersion: '',
-    estadoVersion: true
-  };
+  FormRegistro: PTLVersionAP = new PTLVersionAP();
 
   tipoEditorTexto = 'basica';
   menuItems$!: Observable<NavigationItem[]>;
@@ -67,8 +41,8 @@ export class GestionVersionComponent implements OnInit {
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
   windowWidth: number = 0;
-  registroId: number = 0;
-  isSubmit: boolean = false; // Inicialización explícita
+  registroId: string = '';
+  isSubmit: boolean = false;
   modoEdicion: boolean = false;
   aplicacionesSub?: Subscription;
   aplicaciones: PTLAplicacionModel[] = [];
@@ -95,23 +69,16 @@ export class GestionVersionComponent implements OnInit {
     this.navCollapsedMob = false;
     this.route.queryParams.subscribe((params) => {
       this.registroId = params['regId'];
-      if (this.registroId) {
+      console.log('registro Id', this.registroId);
+      console.log('crear version', this.FormRegistro);
+      if (this.registroId != 'nuevo') {
         this.modoEdicion = true;
         this._registrosService.getRegistroById(this.registroId).subscribe({
           next: (resp: any) => {
             const version = resp.version;
             console.log('version', resp.version);
-            const fechaVersion = new Date(version.fechaVersion);
-            const year = fechaVersion.getUTCFullYear();
-            const month = fechaVersion.getUTCMonth() + 1;
-            const day = fechaVersion.getUTCDate();
-            const dateStruct: NgbDateStruct = {
-              year: year,
-              month: month,
-              day: day
-            };
-            this.FormRegistro = { ...version };
-            this.FormRegistro.fecha = dateStruct;
+            this.FormRegistro = version;
+            this.FormRegistro.fecha = this.setFechaRiesgo(new Date(version.fechaVersion));
             this.FormRegistro.descripcionVersion = version.descripcionVersion || '';
             console.log('formRegisto', this.FormRegistro);
           },
@@ -120,9 +87,8 @@ export class GestionVersionComponent implements OnInit {
           }
         });
       } else {
-        this.FormRegistro.codigoVersion = uuidv4();
-        this.FormRegistro.version = '0.0.0.0';
         this.modoEdicion = false;
+        console.log('FormRegistro loading', this.FormRegistro);
       }
     });
   }
@@ -145,6 +111,25 @@ export class GestionVersionComponent implements OnInit {
       this.FormRegistro = form;
       this._localStorageService.removeFormRegistro();
     }
+    if (!this.modoEdicion) {
+      this.FormRegistro.codigoAplicacion = '';
+      this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
+      this.FormRegistro.codigoVersion = uuidv4();
+      this.FormRegistro.version = '0.0.0.0';
+      this.FormRegistro.estadoVersion = true;
+    }
+  }
+
+  setFechaRiesgo(fecha: Date) {
+    const year = fecha.getUTCFullYear();
+    const month = fecha.getUTCMonth() + 1;
+    const day = fecha.getUTCDate();
+    const dateStruct: NgbDateStruct = {
+      year: year,
+      month: month,
+      day: day
+    };
+    return dateStruct;
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -196,18 +181,18 @@ export class GestionVersionComponent implements OnInit {
     if (!form.valid) {
       return;
     }
-    // if (this.FormRegistro.fecha) {
-    //   const { year, month, day } = this.FormRegistro.fecha;
-    //   const fecha = new Date(year, month - 1, day).toISOString();
-    //   this.FormRegistro.fechaVersion = fecha;
-    // }
     const registroData = form.value as PTLVersionAP;
+    if (this.FormRegistro.fecha) {
+      const { year, month, day } = this.FormRegistro.fecha;
+      const fecha = new Date(year, month - 1, day).toISOString();
+      registroData.fechaVersion = fecha;
+    }
     if (this.modoEdicion) {
       if (!this.FormRegistro.fecha || !this.FormRegistro.fecha.year || !this.FormRegistro.fecha.month || !this.FormRegistro.fecha.day) {
         return null;
       }
       const jsDate = new Date(this.FormRegistro.fecha.year, this.FormRegistro.fecha.month - 1, this.FormRegistro.fecha?.day);
-    registroData.codigoVersion = form.value.codigoVersion;
+      registroData.codigoVersion = form.value.codigoVersion;
       registroData.fechaVersion = jsDate.toISOString();
       registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion || '';
       registroData.fechaCreacion = this.FormRegistro.fechaCreacion || '';

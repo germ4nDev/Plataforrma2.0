@@ -15,8 +15,15 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { GradientConfig } from 'src/app/app-config';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import Swal from 'sweetalert2';
-import { NavigationService, PtlAplicacionesService } from 'src/app/theme/shared/service';
+import {
+  NavigationService,
+  PtlAplicacionesService,
+  PTLEstadosService,
+  PtllogActividadesService,
+  SwalAlertService
+} from 'src/app/theme/shared/service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
 
 @Component({
   selector: 'app-tickets',
@@ -33,6 +40,8 @@ export class TicketsComponent implements OnInit {
   registrosFiltrado: PTLTicketAPModel[] = [];
   aplicaciones: PTLAplicacionModel[] = [];
   aplicacionesSub?: Subscription;
+  estadosTicketSub?: Subscription;
+  estadosTicket: PTLEstadoModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   registrosSub?: Subscription;
   tituloPagina: string = '';
@@ -47,7 +56,10 @@ export class TicketsComponent implements OnInit {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _ticketsService: PTLTicketsService,
-    private _aplicacionesService: PtlAplicacionesService
+    private _swalService: SwalAlertService,
+    private _logActividadesService: PtllogActividadesService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _estadosTicketService: PTLEstadosService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -56,8 +68,29 @@ export class TicketsComponent implements OnInit {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
+    this.consultarEstadosTicket();
     this.consultarAplicaciones();
     this.consultarRegistros();
+  }
+
+  consultarEstadosTicket() {
+    this.estadosTicketSub = this._estadosTicketService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            console.log('todos los estados', resp.estados);
+            this.estadosTicket = resp.estados;
+            console.log('Todos las estados padre', this.estadosTicket);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   consultarRegistros() {
@@ -90,7 +123,7 @@ export class TicketsComponent implements OnInit {
       header: 'TICKETS.NAMEAPLICATION',
       type: 'text'
     },
-        {
+    {
       name: 'nombreTicket',
       header: 'TICKETS.NOMBREREQUERIMIENTO',
       type: 'text'
@@ -128,11 +161,11 @@ export class TicketsComponent implements OnInit {
   }
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['help-desk/gestion-ticket']);
+    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: 'nuevo' } });
   }
 
   OnEditarRegistroClick(id: number) {
-    this.router.navigate(['help-desk/gestion-ticket'], { queryParams: { regId: id } });
+    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(id: any) {
@@ -147,11 +180,23 @@ export class TicketsComponent implements OnInit {
       if (result.isConfirmed) {
         this._ticketsService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('TICKETS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.ticketId !== id.id);
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertSuccess(this.translate.instant('TICKETS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
+            this.consultarRegistros();
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('TICKETS.ELIMINARERROR'), 'error');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertError(this.translate.instant('TICKETS.ELIMINARERROR') + ' ' + err.mensaje);
             console.error('Error eliminando', err);
           }
         });
@@ -188,8 +233,7 @@ export class TicketsComponent implements OnInit {
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
-      const estado = evento.target.value == 'true' ? true : false;
-      this.registrosFiltrado = this.registros.filter((x) => x.estadoTicket == estado);
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoTicket == evento.target.value);
     }
   }
 

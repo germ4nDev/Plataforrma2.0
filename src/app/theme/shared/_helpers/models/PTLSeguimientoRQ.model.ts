@@ -1,7 +1,7 @@
 export class PTLSeguimientoRQModel {
   constructor(
     public seguimientoId?: number,
-    public requerimientoId?: number,
+    public codigoRequerimiento?: string,
     public nombreSeguimiento?: string,
     public descripcionSeguimiento?: string,
     public estadoSeguimiento?: string,

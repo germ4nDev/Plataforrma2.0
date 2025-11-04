@@ -1,11 +1,23 @@
+import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
+
 export class PTLTicketAPModel {
   constructor(
     public ticketId?: number,
-    public aplicacionId?: number,
+    public codigoTicket?: string,
+    public codigoAplicacion?: string,
+    public codigoSuite?: string,
+    public codigoModulo?: string,
     public nombreTicket?: string,
+    public codigoUsuarioSender?: string,
+    public codigoUsuarioAsignado?: string,
+    public fecha?: NgbDateStruct,
+    public fechaAsogmacion?: string,
+    public prioridad?: string,
+    public colorPrioridad?: string,
     public descripcionTicket?: string,
-    public estadoTicket?: boolean,
-    public usuarioSenderId?: number,
+    public definicionRequerimiento?: string,
+    public estadoTicket?: string,
+    public capturaTicket?: string,
     public nomEstado?: string,
     public nomAplicacion?: string,
     public codigoUsuarioCreacion?: string,

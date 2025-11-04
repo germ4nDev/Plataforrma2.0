@@ -145,7 +145,7 @@ export class GestionSeguimientoComponent {
   onRequerimientochangeClick(event: any) {
     const value = event.target.value;
     const requerimiento = this.requerimientos.filter((x) => x.requerimientoId == value)[0];
-    this.FormRegistro.requerimientoId = requerimiento.requerimientoId;
+    this.FormRegistro.codigoRequerimiento = requerimiento.codigoRequerimiento;
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -178,7 +178,7 @@ export class GestionSeguimientoComponent {
         next: (resp: any) => {
           if (resp.ok) {
             this._requerimientoService
-              .putModificarEstadoRequerimiento(this.FormRegistro.requerimientoId!, this.FormRegistro.estadoRequerimiento!)
+              .putModificarEstadoRequerimiento(this.FormRegistro.codigoRequerimiento!, this.FormRegistro.estadoRequerimiento!)
               .subscribe({
                 next: () => {
                   Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');

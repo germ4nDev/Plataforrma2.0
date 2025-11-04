@@ -30,7 +30,7 @@ import { LocalStorageService, PtllogActividadesService, SwalAlertService } from 
   styleUrl: './gestion-modulo.component.scss'
 })
 export class GestionModuloComponent implements OnInit {
-  // private props
+  // #region VARIABLES
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLModuloAP = new PTLModuloAP();
   menuItems$!: Observable<NavigationItem[]>;
@@ -53,14 +53,15 @@ export class GestionModuloComponent implements OnInit {
   lockScreenSubscription: Subscription | undefined;
   isLocked: boolean = false;
   lockMessage: string = '';
+  // #endregion VARIABLES
 
   // constructor
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslateService,
-    private _registrosService: PtlmodulosApService,
     private _aplicacionesService: PtlAplicacionesService,
+    private _registrosService: PtlmodulosApService,
     private _suitesService: PtlSuitesAPService,
     private _layoutInitializer: LayoutInitializerService,
     private _logActividadesService: PtllogActividadesService,
@@ -167,13 +168,6 @@ export class GestionModuloComponent implements OnInit {
       .subscribe();
   }
 
-  onAplicacionChangeClick(event: any) {
-    const value = event.target.value;
-    const app = this.aplicaciones.filter((x) => x.codigoAplicacion == value)[0];
-    this.FormRegistro.codigoAplicacion = app.codigoAplicacion || '';
-    this.consultarSuites(app.codigoAplicacion);
-  }
-
   consultarMLodulos(codSuite?: string) {
     this.modulosSub = this._registrosService
       .getRegistros()
@@ -197,6 +191,13 @@ export class GestionModuloComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  onAplicacionChangeClick(event: any) {
+    const value = event.target.value;
+    const app = this.aplicaciones.filter((x) => x.codigoAplicacion == value)[0];
+    this.FormRegistro.codigoAplicacion = app.codigoAplicacion || '';
+    this.consultarSuites(app.codigoAplicacion);
   }
 
   onSuiteChangeClick(event: any) {

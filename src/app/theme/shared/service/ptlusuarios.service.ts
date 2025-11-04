@@ -11,7 +11,7 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLUsuariosService {
-  user: PTLUsuarioModel = new PTLUsuarioModel(0, 0, '', '', '', '', '', '', '', false, '');
+  user: PTLUsuarioModel = new PTLUsuarioModel(0, '',  0, '', '', '', '', '', '', '', false, '');
 
   constructor(private http: HttpClient) {}
 

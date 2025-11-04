@@ -15,7 +15,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
-import { AuthenticationService } from 'src/app/theme/shared/service';
+import { AuthenticationService, PtllogActividadesService } from 'src/app/theme/shared/service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
@@ -60,6 +60,7 @@ export class PerfilComponent implements OnInit {
     private _swalService: SwalAlertService,
     private _translate: TranslateService,
     private _localStorageService: LocalStorageService,
+    private _logActividadesService: PtllogActividadesService,
     private _uploadService: UploadFilesService
   ) {
     this.isSubmit = false;
@@ -170,39 +171,86 @@ export class PerfilComponent implements OnInit {
     if (!form.valid) {
       return;
     }
+    const registroData = form.value as PTLUsuarioModel;
     if (this.modoEdicion) {
+      registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion;
+      registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
       if (this.FormRegistro.claveNew != '') {
         if (this.FormRegistro.claveNew == this.FormRegistro.claveConfirm) {
           this.FormRegistro.claveUsuario = this.FormRegistro.claveNew;
-          this._registrosService.actualizarUsuarioClave(this.FormRegistro).subscribe({
+          this._registrosService.actualizarUsuarioClave(registroData).subscribe({
             next: (resp: any) => {
               if (resp.ok) {
+                const logData = {
+                  codigoTipoLog: '',
+                  codigoRespuesta: '201',
+                  descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS')
+                };
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                 this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'));
                 this.router.navigate(['/autenticacion/login']);
               } else {
+                const logData = {
+                  codigoTipoLog: '',
+                  codigoRespuesta: '501',
+                  descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERERROR') + ' ' + resp.message
+                };
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                 this._swalService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
               }
             },
             error: (err: any) => {
               console.error(err);
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '501',
+                descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERERROR') + ' ' + err.mensaje
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
               this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
             }
           });
         } else {
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this._translate.instant('PLATAFORMA.PASSWORDSERROR')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           this._swalService.getAlertError(this._translate.instant('PLATAFORMA.PASSWORDSERROR'));
         }
       } else {
         this._registrosService.actualizarUsuarioDatos(this.FormRegistro).subscribe({
           next: (resp: any) => {
             if (resp.ok) {
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '201',
+                descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS')
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
               this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'));
               this.router.navigate(['/frontal/home']);
             } else {
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '501',
+                descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERERROR') + ' ' + resp.message
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
               this._swalService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
             }
           },
           error: (err: any) => {
             console.error(err);
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this._translate.instant('PLATAFORMA.UPDATEUSERERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
           }
         });

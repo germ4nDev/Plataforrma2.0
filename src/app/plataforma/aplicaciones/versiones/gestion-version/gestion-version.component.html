@@ -55,10 +55,8 @@
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
                                     (change)="onAplicacionchangeClick($event)">
-                                    <option value="" disabled>{{ 'VERSIONES.GESTION.PLACEHOLDERAPLICACION' | translate
-                                        }} </option>
-                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones"> {{
-                                        app.nombreAplicacion }}</option>
+                                    <option value="">{{ 'VERSIONES.GESTION.PLACEHOLDERAPLICACION' | translate }}</option>
+                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones"> {{ app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
@@ -74,9 +72,8 @@
                                 </label>
                                 <div class="input-group">
                                     <input class="form-control form-input" placeholder="yyyy-mm-dd" name="fecha"
-                                        id="fecha" [(ngModel)]="FormRegistro.fecha" ngbDatepicker
-                                        #d="ngbDatepicker" (dateSelect)="onDateChange()"
-                                        required />
+                                        id="fecha" [(ngModel)]="FormRegistro.fecha" ngbDatepicker #d="ngbDatepicker"
+                                        (dateSelect)="onDateChange()" required />
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"
                                             type="button">
@@ -92,7 +89,8 @@
                                 <input type="text" class="form-control form-input" name="codigoVersion"
                                     placeholder="{{ 'VERSIONES.GESTION.PLACEHOLDERCODE' | translate }}"
                                     [ngClass]="{ 'is-invalid': !codigoVersion.valid && (codigoVersion.dirty || codigoVersion.touched || isSubmit) }"
-                                    #codigoVersion="ngModel" required [(ngModel)]="FormRegistro.codigoVersion" readonly/>
+                                    #codigoVersion="ngModel" required [(ngModel)]="FormRegistro.codigoVersion"
+                                    readonly />
                                 <label
                                     *ngIf="!codigoVersion.valid && (codigoVersion.dirty || codigoVersion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
@@ -107,10 +105,9 @@
                                     placeholder="{{ 'VERSIONES.GESTION.PLACEHOLDERVERSION' | translate }}"
                                     [ngClass]="{ 'is-invalid': !version.valid && (version.dirty || version.touched || isSubmit) }"
                                     #version="ngModel" required [(ngModel)]="FormRegistro.version" />
-                                <label
-                                    *ngIf="!version.valid && (version.dirty || version.touched || isSubmit)"
+                                <label *ngIf="!version.valid && (version.dirty || version.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'VERSIONES.CODEHOLDER' | translate }}
+                                    {{ 'VERSIONES.VERSIONHOLDER' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -132,16 +129,13 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'VERSIONES.DESCRIPTION' | translate }}</label>
-                                <app-text-editor
-                                    [toolbarType]="tipoEditorTexto"
-                                    [(contentHtml)]="FormRegistro.descripcionVersion"
-                                    (contentHtmlChange)="actualizarDescripcionVersion($event)"
-                                    name="descripcionVersion"
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
+                                    [contentHtml]="FormRegistro.descripcionVersion ?? ''"
+                                    (contentHtmlChange)="FormRegistro.descripcionVersion = $event"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionVersion"
                                     [(ngModel)]="FormRegistro.descripcionVersion"
                                     [ngClass]="{'is-invalid': !descripcionVersion.valid && (descripcionVersion.dirty || descripcionVersion.touched || isSubmit)}"
-                                    #descripcionVersion="ngModel"
-                                    required
-                                    rows="5">
+                                    #descripcionVersion="ngModel" required rows="5">
                                 </app-text-editor>
                                 <label
                                     *ngIf="!descripcionVersion.valid && (descripcionVersion.dirty || descripcionVersion.touched || isSubmit)"

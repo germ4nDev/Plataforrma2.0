@@ -6,7 +6,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
 import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
-import { NavigationService } from 'src/app/theme/shared/service';
+import { NavigationService, SwalAlertService, PtllogActividadesService } from 'src/app/theme/shared/service';
 import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
@@ -51,6 +51,8 @@ export class RequerimientosComponent implements OnInit {
     private _navigationService: NavigationService,
     private _requerimientosService: PTLRequerimientosTkService,
     private _estadosService: PTLEstadosService,
+    private _swalService: SwalAlertService,
+    private _logActividadesService: PtllogActividadesService,
     private _tickesService: PTLTicketsService
   ) {
     this.gradientConfig = GradientConfig;
@@ -116,7 +118,7 @@ export class RequerimientosComponent implements OnInit {
       name: 'descripcionRequerimiento',
       header: 'TICKETS.REQUERIMIENTOS.DESCRICIONREQUERIMIENTO',
       type: 'text'
-    },
+    }
   ];
 
   consultarTickets() {
@@ -175,11 +177,23 @@ export class RequerimientosComponent implements OnInit {
       if (result.isConfirmed) {
         this._requerimientosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('REQUERIMIENTOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.requerimientoId !== id.id);
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertSuccess(this.translate.instant('REQUERIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
+            this.consultarRegistros()
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('REQUERIMIENTOS.ELIMINARERROR'), 'error');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertError(this.translate.instant('REQUERIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje);
             console.error('Error eliminando', err);
           }
         });

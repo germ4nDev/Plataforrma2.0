@@ -74,7 +74,7 @@ export class PTLRequerimientosTkService {
     );
   }
 
-  putModificarEstadoRequerimiento(requerimientoId: number, nuevoEstado: string) {
+  putModificarEstadoRequerimiento(requerimientoId: string, nuevoEstado: string) {
   const url = `${base_url}/requerimientos-tk/${requerimientoId}`;
   return this.http.patch(url, { estadoRequerimiento: nuevoEstado }).pipe(
     map((resp: any) => {

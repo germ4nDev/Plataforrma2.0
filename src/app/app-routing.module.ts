@@ -49,9 +49,9 @@ const routes: Routes = [
                     import('./plataforma/sites/sites.module').then((module) => module.SitesModule)
             },
             {
-                path: 'help-desk',
+                path: 'tickets',
                 loadChildren: () =>
-                    import('./plataforma/help-desk/help-desk.module').then((module) => module.HelpDeskModule)
+                    import('./plataforma/tickets/tickets.module').then((module) => module.TicketsModule)
             },
             {
                 path: 'usuarios',

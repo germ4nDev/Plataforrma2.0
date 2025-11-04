@@ -7,20 +7,20 @@ const routes: Routes = [
     path: '',
     children: [
         {
-            path: 'requerimientos',
-            loadComponent: () => import('./requerimientos/requerimientos.component').then(m => m.RequerimientosComponent)
-        },
-        {
-            path: 'gestion-requerimiento',
-            loadComponent: () => import('./requerimientos/gestion-requerimiento/gestion-requerimiento.component').then(m => m.GestionRequerimientoComponent)
-        },
-        {
             path: 'tickets',
             loadComponent: () => import('./tickets/tickets.component').then(m => m.TicketsComponent)
         },
         {
             path: 'gestion-ticket',
             loadComponent: () => import('./tickets/gestion-ticket/gestion-ticket.component').then(m => m.GestionTicketComponent)
+        },
+        {
+            path: 'requerimientos',
+            loadComponent: () => import('./requerimientos/requerimientos.component').then(m => m.RequerimientosComponent)
+        },
+        {
+            path: 'gestion-requerimiento',
+            loadComponent: () => import('./requerimientos/gestion-requerimiento/gestion-requerimiento.component').then(m => m.GestionRequerimientoComponent)
         },
         {
             path: 'seguimientos',
@@ -42,4 +42,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class HelpDeskRoutingModule {}
+export class TicketsRoutingModule {}

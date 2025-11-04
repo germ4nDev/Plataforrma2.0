@@ -43,7 +43,7 @@ export class PtlversionesApService {
     );
   }
 
-  getRegistroById(id: number) {
+  getRegistroById(id: string) {
     const url = `${base_url}/versiones/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {

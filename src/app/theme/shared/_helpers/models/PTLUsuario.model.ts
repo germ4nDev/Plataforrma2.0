@@ -2,6 +2,7 @@
 export class PTLUsuarioModel {
   constructor(
     public usuarioId?: number,
+    public codigoUsuario?: string,
     public identificacionUsuario?: number,
     public nombreUsuario?: string,
     public correoUsuario?: string,

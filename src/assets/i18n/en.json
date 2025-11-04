@@ -72,7 +72,8 @@
             "LOGS": "Logs",
             "TIPOSLOGS": "Logs Types",
             "TIPOSVALOR": "Prices Types",
-            "ADMINBD": "Connections"
+            "ADMINBD": "Connections",
+            "TICKETS": "Tickets"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notifications",

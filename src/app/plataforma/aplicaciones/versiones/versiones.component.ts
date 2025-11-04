@@ -95,6 +95,7 @@ export class VersionesComponent implements OnInit {
               const app = this.aplicaciones.filter((x) => x.codigoAplicacion == reg.codigoAplicacion)[0] || '';
               reg.nomAplicacion = app.nombreAplicacion;
               const fechaVersion = new Date(reg.fechaVersion);
+              console.log('fecha version', fechaVersion);
               const year = fechaVersion.getUTCFullYear(); // Obtiene el año UTC
               const month = fechaVersion.getUTCMonth() + 1; // Obtiene el mes UTC (0-indexado) + 1
               const day = fechaVersion.getUTCDate();
@@ -199,7 +200,7 @@ export class VersionesComponent implements OnInit {
   }
 
   OnNuevoRegistroClick(): void {
-    this.router.navigate(['aplicaciones/gestion-version']);
+    this.router.navigate(['aplicaciones/gestion-version'], { queryParams: { regId: 'nuevo' } });
   }
 
   OnEditarRegistroClick(id: number): void {
@@ -227,7 +228,7 @@ export class VersionesComponent implements OnInit {
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this.translate.instant('VERSIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.registros = this.registros.filter((a) => a.versionId !== id.id);
-            this.registrosFiltrado = [...this.registros];
+            this.consultarRegistros()
           },
           error: (err) => {
             const logData = {

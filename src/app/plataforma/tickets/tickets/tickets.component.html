@@ -25,15 +25,17 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'TICKETS.FILTROS.FILTRODECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
+                            class="form-control form-input"
                             placeholder="{{ 'TICKETS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'TICKETS.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        <select class="form-control form-select" style="cursor: pointer;"
+                            (change)="onFiltroEstadoChangeClick($event)">
+                            <option value="TODOS">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="esta.siglaEstado" *ngFor="let esta of estadosTicket">
+                                {{ esta.nombreEstado }}</option>
                         </select>
                     </div>
                 </div>
@@ -44,22 +46,12 @@
     <div class="content-area">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <app-data-table
-                    [data]="registrosFiltrado"
-                    [idField]="'ticketId'"
-                    [tableTitle]="'TICKETS.TITLE' | translate"
-                    [metadataColumns]="columnasRegistros"
-                    [metadataDetailColumns]="columnasDetailRegistros"
-                    [showActions]="true"
-                    [showNewButton]="true"
-                    [showViewButton]="false"
-                    [showEditButton]="true"
-                    [showDeleteButton]="true"
-                    [showDetail]="true"
-                    [newButtonLabel]="'TICKETS.NEW' | translate"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                    (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick($event)"
+                <app-data-table [data]="registrosFiltrado" [idField]="'ticketId'"
+                    [tableTitle]="'TICKETS.TITLE' | translate" [metadataColumns]="columnasRegistros"
+                    [metadataDetailColumns]="columnasDetailRegistros" [showActions]="true" [showNewButton]="true"
+                    [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showDetail]="true"
+                    [newButtonLabel]="'TICKETS.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
                     (deleteRecord)="OnEliminarRegistroClick($event)">
                 </app-data-table>
             </div>
