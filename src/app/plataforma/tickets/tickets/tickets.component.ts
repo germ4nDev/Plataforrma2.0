@@ -119,27 +119,77 @@ export class TicketsComponent implements OnInit {
 
   columnasRegistros: ColumnMetadata[] = [
     {
-      name: 'nomAplicacion',
-      header: 'TICKETS.NAMEAPLICATION',
+      name: 'color',
+      header: 'TICKETS.COLOR',
+      type: 'color_chip'
+    },
+    {
+      name: 'fechaCreacion',
+      header: 'TICKETS.FECHACREACION',
       type: 'text'
     },
     {
       name: 'nombreTicket',
-      header: 'TICKETS.NOMBREREQUERIMIENTO',
+      header: 'TICKETS.NOMBRETICKET',
       type: 'text'
     },
     {
-      name: 'nomEstado',
-      header: 'TICKETS..STATUS',
+      name: 'nomUsuarioSender',
+      header: 'TICKETS.NOMUSUARIOSENDER',
+      type: 'text'
+    },
+    {
+      name: 'prioridad',
+      header: 'TICKETS.PRIORIDAD',
+      type: 'text'
+    },
+    {
+      name: 'estadoTicket',
+      header: 'TICKETS.ESTADOTICKET',
       type: 'text'
     }
   ];
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
+      name: 'codigTicket',
+      header: 'TICKETS.CODIGOTICKET',
+      type: 'text'
+    },
+    {
+      name: 'nomAplicacion',
+      header: 'TICKETS.NOMMAPLICACION',
+      type: 'text'
+    },
+    {
+      name: 'nomSuiite',
+      header: 'TICKETS.NOMBRESUIR',
+      type: 'text'
+    },
+    {
+      name: 'nomModulo',
+      header: 'TICKETS.NOMBREMODULO',
+      type: 'text'
+    },
+    {
+      name: 'fechaAsignacion',
+      header: 'TICKETS.FECHAASIGNACION',
+      type: 'text'
+    },
+    {
+      name: 'nomUsuarioAsignado',
+      header: 'TICKETS.NOMUSUARIOASIGNADO',
+      type: 'text'
+    },
+    {
       name: 'descripcionTicket',
       header: 'TICKETS.DESCRIPCIONTICKET',
       type: 'text'
+    },
+    {
+      name: 'captura',
+      header: 'TICKETS.CAPTURA',
+      type: 'image'
     }
   ];
 
