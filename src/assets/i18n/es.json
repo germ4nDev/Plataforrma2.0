@@ -316,6 +316,18 @@
         "ELIMINARTEXTO": "¡Será Eliminada el Ticket! ",
         "ELIMINAREXITOSA": "¡El Ticket fué eliminado correctamente!",
         "ELIMINARERROR": "No se pudo eliminar el Ticket.",
+        "COLOR": "Color",
+        "FECHACREACION": "Fecha Ticket",
+        "NOMUSUARIOSENDER": "Usuario",
+        "PRIORIDAD": "Prioridad",
+        "CODIGOTICKET": "Codigo",
+        "NOMMAPLICACION": "Aplicación",
+        "NOMBRESUITE": "Suite",
+        "NOMBREMODULO": "Modulo",
+        "FECHAASIGNACION": "Fecha Asignación",
+        "NOMUSUARIOASIGNADO": "Usuario Asignado",
+        "DEFINICIONREQUERIMIENTO": "Requerimineto",
+        "CAPTURA": "Imágen",
         "GESTION": {
             "TITLE": "Crear/Actualizar un Ticket",
             "CREATE": "Crear Ticket",
@@ -330,7 +342,12 @@
             "STATUS": "Estado Ticket",
             "APLICACION": "Aplicación",
             "PLACEHOLDERAPLICACION": "Seleccione una Aplicación",
-            "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio."
+            "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio.",
+            "CODE" : "Código",
+            "SUITE" : "Suite",
+            "MODULO" : "Modulo",
+            "ASIGNACION" : "Datos Asignación",
+            "ELEMENTOSTICKET" : "Elementos Ticket"
         },
         "FILTROS": {
             "TITULO": "Filtros Tickets",
@@ -339,7 +356,12 @@
             "FILTROESTADO": "Estado",
             "TODOS": "Mostrar Todos",
             "NOMBRECHOLDER": "Nombre Ticket",
-            "DESCRIPCIONCHOLDER": "Descripción Ticket"
+            "DESCRIPCIONCHOLDER": "Descripción Ticket",
+            "FILTROAPLICACION": "Aplicación",
+            "FILTROSUITE": "Suite",
+            "FILTROMODULO": "Modulo",
+            "FILTROSENDER": "Enviado por",
+            "FILTROASIGNADO": "Asignado a"
         },
         "REQUERIMIENTOS": {
             "TITLE": "Administración de Requerimientos",

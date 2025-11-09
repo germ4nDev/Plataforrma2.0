@@ -32,6 +32,8 @@ import { PtlusuariosScService } from '../../../../theme/shared/service/ptlusuari
 import { PTLUsuariosService } from '../../../../theme/shared/service/ptlusuarios.service';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
+import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclasesticket.service';
+import { PTLClaseTicketModel } from 'src/app/theme/shared/_helpers/models/PTLClaseTicket.model';
 
 @Component({
   selector: 'app-gestion-ticket',
@@ -49,6 +51,8 @@ export class GestionTicketComponent {
 
   estadosTicketSub?: Subscription;
   estadosTicket: PTLEstadoModel[] = [];
+  clasesTicketSub?: Subscription;
+  clasesTicket: PTLClaseTicketModel[] = [];
   usuariosSub?: Subscription;
   usuarios: PTLUsuarioModel[] = [];
   aplicacionesSub?: Subscription;
@@ -91,6 +95,7 @@ export class GestionTicketComponent {
     private _localStorageService: LocalStorageService,
     private _usuariosService: PTLUsuariosService,
     private _usuariosScService: PtlusuariosScService,
+    private _clasesTicketService: PtlclasesticketService,
     private _aplicacionesScService: PtlAplicacionesService,
     private _registrosService: PTLTicketsService,
     private _estadosTicketService: PTLEstadosService,
@@ -101,14 +106,18 @@ export class GestionTicketComponent {
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId != 'nuevo') {
-        // console.log('me llena el Id', registroId);
+        console.log('me llena el Id', registroId);
         this.modoEdicion = true;
         this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
             this.FormRegistro = resp.ticket;
+            const fechaString = this.FormRegistro.fechaAsignacion;
+            if (fechaString) {
+              const fechaAsig = new Date(fechaString);
+              this.FormRegistro.fecha = this.setFechaRiesgo(fechaAsig);
+            }
             this.selectedFileUrl = this._uploadService.getFilePath('tickets', resp.ticket.capturaTicket);
-            this.FormRegistro.fecha = this.setFechaRiesgo(new Date(resp.ticket.fechaAsogmacion) || new Date().toISOString());
             console.log('datos del FormRegistro', this.FormRegistro);
           },
           error: () => {
@@ -126,6 +135,7 @@ export class GestionTicketComponent {
   ngOnInit() {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
+    this.consultarClasesTicket();
     this.consultarEstadosTicket();
     this.consultarAplicaciones();
     this.consultarSuites();
@@ -150,8 +160,10 @@ export class GestionTicketComponent {
       this.FormRegistro.codigoSuite = '';
       this.FormRegistro.codigoModulo = '';
       this.FormRegistro.codigoUsuarioAsignado = '';
+      this.FormRegistro.codigoClase = '';
       this.FormRegistro.estadoTicket = '';
       this.FormRegistro.prioridad = '';
+      this.FormRegistro.capturaTicket = 'no-imagen.png';
       this.FormRegistro.codigoTicket = uuidv4();
       this.selectedFileUrl = this._uploadService.getFilePath('tickets', 'no-foto.png');
       this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
@@ -279,6 +291,26 @@ export class GestionTicketComponent {
       .subscribe();
   }
 
+  consultarClasesTicket() {
+    this.clasesTicketSub = this._clasesTicketService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            console.log('todos los clasesTicket', resp.clasesTicket);
+            this.clasesTicket = resp.clasesTicket;
+            console.log('Todos las estados padre', this.clasesTicket);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
   onAplicacionchangeClick(event: any) {
     const value = event.target.value;
     const app = this.aplicaciones.filter((x) => x.codigoAplicacion == value)[0];
@@ -323,7 +355,7 @@ export class GestionTicketComponent {
     // }
   }
 
-  actualizarDefinicinVersion(nuevoContenido: string): void {
+  actualizarDefinicinRequerimiento(nuevoContenido: string): void {
     this.FormRegistro.definicionRequerimiento = nuevoContenido;
     console.log('Definicion de requerimiento actualizada:', this.FormRegistro.definicionRequerimiento);
     // if (this.validationForm && this.isSubmit) {
@@ -342,11 +374,13 @@ export class GestionTicketComponent {
       reader.onload = (e: any) => {
         this.selectedFileUrl = e.target.result;
       };
+      this.FormRegistro.capturaTicket = '';
       reader.readAsDataURL(file);
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path: any) => {
           console.log('resultado', path);
           this.userPhotoUrl = path.nombreArchivo;
+          this.FormRegistro.capturaTicket = path.nombreArchivo;
         },
         error: () => {
           this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
@@ -363,21 +397,27 @@ export class GestionTicketComponent {
     if (!form.valid) {
       return;
     }
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    console.log('CurrentUser', currentUser);
-    this.FormRegistro.codigoUsuarioSender = currentUser.usuario?.usuarioId;
+    console.log('form', form.value);
+    console.log('formRegistro', this.FormRegistro);
+
     const registroData = form.value as PTLTicketAPModel;
+    // registroData = this.FormRegistro as PTLTicketAPModel;
+    registroData.codigoUsuarioSender = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+    if (registroData.fecha) {
+      const { year, month, day } = registroData.fecha;
+      const fecha = new Date(year, month - 1, day).toISOString();
+      registroData.fechaAsignacion = fecha;
+    }
     if (this.modoEdicion) {
-      // console.log('1.0 modificar usuario', this.FormRegistro);
-      registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion;
-      registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
+      registroData.capturaTicket = this.FormRegistro.capturaTicket;
+      registroData.colorPrioridad = this.FormRegistro.colorPrioridad;
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaModificacion = new Date().toISOString();
       this._registrosService.putModificarRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
-            this.router.navigate(['/help-desk/tickets/']);
+            this.router.navigate(['/tickets/tickets/']);
           } else {
             Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
           }
@@ -388,12 +428,19 @@ export class GestionTicketComponent {
         }
       });
     } else {
-      // console.log('formregistro', this.FormRegistro);
+      console.log('nuevo formregistro', this.FormRegistro);
       registroData.codigoTicket = uuidv4();
+      registroData.fechaTicket = new Date().toISOString();
+      //   registroData.codigoAplicacion = this.FormRegistro.codigoAplicacion;
+      //   //   registroData.codigoSuite = this.FormRegistro.codigoSuite || '';
+      //   //   registroData.codigoModulo = this.FormRegistro.codigoModulo || '';
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioSender = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.codigoUsuarioModificacion = '';
       registroData.fechaModificacion = '';
+      registroData.capturaTicket = this.FormRegistro.capturaTicket;
+      registroData.colorPrioridad = this.FormRegistro.colorPrioridad;
       console.log('insertar registro', registroData);
       this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
@@ -401,7 +448,7 @@ export class GestionTicketComponent {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
             form.resetForm();
             this.isSubmit = false;
-            this.router.navigate(['/help-desk/tickets/']);
+            this.router.navigate(['/tickets/tickets/']);
           }
         },
         error: (err: any) => {

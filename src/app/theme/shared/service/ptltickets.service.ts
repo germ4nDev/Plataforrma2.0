@@ -30,7 +30,7 @@ export class PTLTicketsService {
   }
 
   getRegistros() {
-    const url = `${base_url}/tickets`;
+    const url = `${base_url}/tickets-ap`;
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
@@ -44,38 +44,46 @@ export class PTLTicketsService {
   }
 
   getRegistroById(id: number) {
-    const url = `${base_url}/tickets/${id}`;
+    const url = `${base_url}/tickets-ap/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de ticket', resp);
         return {
           ok: true,
-          ticket: resp.ticket
+          ticket: resp.ticketAP
         };
       })
     );
   }
 
-  postCrearRegistro(ticket: PTLTicketAPModel) {
-    const url = `${base_url}/tickets`;
-    return this.http.post(url, ticket);
+  postCrearRegistro(data: any) {
+    console.log('servicio tickets', data);
+    const url = `${base_url}/tickets-ap`;
+    return this.http.post(url, data).pipe(
+      map((resp: any) => {
+        return {
+          ok: true,
+          ticket: resp.ticketAP
+        };
+      })
+    );
   }
 
   putModificarRegistro(ticket: PTLTicketAPModel) {
-    const url = `${base_url}/tickets/${ticket.ticketId}`;
+    const url = `${base_url}/tickets-ap/${ticket.ticketId}`;
     return this.http.put(url, ticket).pipe(
       map((resp: any) => {
         console.log('data de ticket modificacda', resp);
         return {
           ok: true,
-          ticket: resp.ticket
+          ticket: resp.ticketAP
         };
       })
     );
   }
 
   deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/tickets/${_id}`;
+    const url = `${base_url}/tickets-ap/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de ticket eliminado', resp);

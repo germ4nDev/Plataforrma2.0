@@ -64,6 +64,9 @@
                                     <ng-container *ngSwitchCase="'image'">
                                         <img [src]="row[column.name]" [alt]="'Image'" class="image-table">
                                     </ng-container>
+                                    <ng-container *ngSwitchCase="'capture'">
+                                        <img [src]="row[column.name]" [alt]="'Capture'" class="capture-table">
+                                    </ng-container>
                                     <ng-container *ngSwitchCase="'number'">
                                         <span style="display: block; text-align: right;">
                                             {{ row[column.name] | number: '1.2-2' }}
@@ -142,6 +145,10 @@
                                             <ng-container *ngSwitchCase="'image'">
                                                 <img [src]="row[detailColumn.name]" [alt]="'Image'" class="image-table">
                                             </ng-container>
+                                            <ng-container *ngSwitchCase="'capture'">
+                                                <img [src]="row[detailColumn.name]" [alt]="'Capture'"
+                                                    class="capture-table">
+                                            </ng-container>
                                             <ng-container *ngSwitchCase="'number'">
                                                 <span style="display: block; text-align: right;">
                                                     {{ row[detailColumn.name] | number: '1.2-2' }}
@@ -179,6 +186,11 @@
                                                 <div class="color-chip" [style.backgroundColor]="row[detailColumn.name]"
                                                     [title]="row[detailColumn.name]">
                                                 </div>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="'estado'">
+                                                <span style="display: block; text-align: center;">
+                                                    <span>row[detailColumn.name]</span>
+                                                </span>
                                             </ng-container>
                                             <ng-container *ngSwitchCase="'text'">
                                                 <span [innerHTML]="row[detailColumn.name]"></span>

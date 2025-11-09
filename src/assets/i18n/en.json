@@ -330,6 +330,18 @@
         "ELIMINARTEXTO": "You are about to permanently delete the Ticket:",
         "ELIMINAREXITOSA": "Deleted successfully",
         "ELIMINARERROR": "The Ticket could not be deleted. Please try again.",
+        "COLOR": "Tag",
+        "FECHACREACION": "Ticket Date",
+        "NOMUSUARIOSENDER": "User Sender",
+        "PRIORIDAD": "Priority",
+        "CODIGOTICKET": "Code",
+        "NOMMAPLICACION": "Aplication",
+        "NOMBRESUITE": "Suite",
+        "NOMBREMODULO": "Module",
+        "FECHAASIGNACION": "Assignment Date",
+        "NOMUSUARIOASIGNADO": "Assignment User",
+        "DEFINICIONREQUERIMIENTO": "Requirement",
+        "CAPTURA": "Capture",
         "GESTION": {
             "TITLE": "Create/Update a Ticket",
             "CREATE": "Create Ticket",
@@ -344,7 +356,12 @@
             "STATUS": "Ticket Status",
             "APLICACION": "Application",
             "PLACEHOLDERAPLICACION": "Select an Application",
-            "REQUERIDOAPLICACION": "This field is required."
+            "REQUERIDOAPLICACION": "This field is required.",
+            "CODE" : "Code",
+            "SUITE" : "Suite",
+            "MODULO" : "Module",
+            "ASIGNACION" : "Assignment Data",
+            "ELEMENTOSTICKET" : "Ticket Elements"
         },
         "FILTROS": {
             "TITULO": "Ticket Filters",
@@ -353,7 +370,12 @@
             "FILTROESTADO": "Status",
             "TODOS": "Show All",
             "NOMBRECHOLDER": "Ticket Name",
-            "DESCRIPCIONCHOLDER": "Ticket Descripction"
+            "DESCRIPCIONCHOLDER": "Ticket Descripction",
+            "FILTROAPLICACION": "aplication",
+            "FILTROSUITE": "Suite",
+            "FILTROMODULO": "Module",
+            "FILTROSENDER": "Sended by",
+            "FILTROASIGNADO": "Assigned to"
         },
         "REQUERIMIENTOS": {
             "TITLE": "Requirements Administration",

@@ -1,15 +1,51 @@
 export interface ColumnMetadata {
   name: string;
   header: string;
-  type: 'number' | 'price' | 'text' | 'date' | 'avatar' | 'image' | 'array_text' | 'array_tags' | 'color_chip' | 'unknown';
+  type:
+    | 'number'
+    | 'price'
+    | 'date'
+    | 'avatar'
+    | 'image'
+    | 'capture'
+    | 'color_chip'
+    | 'text'
+    | 'estado'
+    | 'array_text'
+    | 'array_tags'
+    | 'unknown';
   isSortable?: boolean;
 }
 
-export type ColumnMetadataType = 'number' | 'price' | 'text' | 'date' | 'avatar' | 'image' | 'array_text' | 'array_tags' | 'color_chip' | 'unknown';
+export type ColumnMetadataType =
+  | 'number'
+  | 'price'
+  | 'date'
+  | 'avatar'
+  | 'image'
+  | 'capture'
+  | 'color_chip'
+  | 'text'
+  | 'estado'
+  | 'array_text'
+  | 'array_tags'
+  | 'unknown';
 
 export interface ColumnMetadata {
   name: string;
   header: string;
-  type: 'number' | 'price' | 'text' | 'date' | 'avatar' | 'image' | 'array_text' | 'array_tags' | 'color_chip' | 'unknown';
+  type:
+    | 'number'
+    | 'price'
+    | 'date'
+    | 'avatar'
+    | 'image'
+    | 'capture'
+    | 'color_chip'
+    | 'text'
+    | 'estado'
+    | 'array_text'
+    | 'array_tags'
+    | 'unknown';
   isSortable?: boolean;
 }

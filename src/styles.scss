@@ -872,6 +872,13 @@ body.gradient-dark {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+.capture-table {
+    width: 500px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
 .color-chip {
     width: 50px;
     height: 25px;

@@ -124,7 +124,6 @@ export class DatatableComponent implements OnInit, OnChanges {
         type = 'array_text';
       }
     } else if (key.toLowerCase().includes('color') || key.toLowerCase().includes('hex')) {
-      console.log('is color-chip');
       type = 'color_chip';
     } else if (typeof value === 'number') {
       type = 'number';
@@ -132,6 +131,9 @@ export class DatatableComponent implements OnInit, OnChanges {
       type = 'avatar';
     } else if (key.toLowerCase().includes('imagen') || key.toLowerCase().includes('img')) {
       type = 'image';
+    } else if (key.toLowerCase().includes('capture')) {
+      console.log('es una captura');
+      type = 'capture';
     } else if (
       value &&
       typeof value === 'string' &&
@@ -147,7 +149,7 @@ export class DatatableComponent implements OnInit, OnChanges {
       name: key,
       header: key,
       type: type,
-      isSortable: type !== 'avatar' && type !== 'image' && type !== 'array_text' && type !== 'array_tags'
+      isSortable: type !== 'avatar' && type !== 'image' && type !== 'capture' && type !== 'array_text' && type !== 'array_tags'
     };
   }
 
@@ -157,7 +159,7 @@ export class DatatableComponent implements OnInit, OnChanges {
     }
 
     const lowerKey = key.toLowerCase();
-    if (lowerKey.includes('avatar') || lowerKey.includes('foto') || lowerKey.includes('image')) {
+    if (lowerKey.includes('avatar') || lowerKey.includes('foto') || lowerKey.includes('image') || lowerKey.includes('capture')) {
       return 'avatar';
     }
 
