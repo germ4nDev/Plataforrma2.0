@@ -16,7 +16,7 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'TICKETS.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title text-center">{{ 'TICKETS.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
                         <small>{{ 'TICKETS.FILTROS.FILTROAPLICACION' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer;"
@@ -77,7 +77,7 @@
                         <small>{{ 'TICKETS.FILTROS.FILTROESTADO' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer;"
                             (change)="onFiltroEstadoChangeClick($event)">
-                            <option value="TODOS">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="esta.siglaEstado" *ngFor="let esta of estadosTicket">
                                 {{ esta.nombreEstado }}</option>
                         </select>

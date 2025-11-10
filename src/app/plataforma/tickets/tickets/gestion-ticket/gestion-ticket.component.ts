@@ -14,7 +14,8 @@ import {
   PtlSuitesAPService,
   PTLEstadosService,
   UploadFilesService,
-  SwalAlertService
+  SwalAlertService,
+  PtllogActividadesService
 } from 'src/app/theme/shared/service';
 import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -23,17 +24,17 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { v4 as uuidv4 } from 'uuid';
-import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
-import { PtlusuariosScService } from '../../../../theme/shared/service/ptlusuarios-sc.service';
-import { PTLUsuariosService } from '../../../../theme/shared/service/ptlusuarios.service';
+import { PtlusuariosScService } from 'src/app/theme/shared/service/ptlusuarios-sc.service';
+import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
 import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclasesticket.service';
 import { PTLClaseTicketModel } from 'src/app/theme/shared/_helpers/models/PTLClaseTicket.model';
+import { v4 as uuidv4 } from 'uuid';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestion-ticket',
@@ -100,7 +101,8 @@ export class GestionTicketComponent {
     private _registrosService: PTLTicketsService,
     private _estadosTicketService: PTLEstadosService,
     private _uploadService: UploadFilesService,
-    private _swalService: SwalAlertService
+    private _logActividadesService: PtllogActividadesService,
+    private _swalAlertService: SwalAlertService
   ) {
     this.isSubmit = false;
     this.route.queryParams.subscribe((params) => {
@@ -383,7 +385,7 @@ export class GestionTicketComponent {
           this.FormRegistro.capturaTicket = path.nombreArchivo;
         },
         error: () => {
-          this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
         }
       });
     } else {
@@ -397,9 +399,6 @@ export class GestionTicketComponent {
     if (!form.valid) {
       return;
     }
-    console.log('form', form.value);
-    console.log('formRegistro', this.FormRegistro);
-
     const registroData = form.value as PTLTicketAPModel;
     // registroData = this.FormRegistro as PTLTicketAPModel;
     registroData.codigoUsuarioSender = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
@@ -416,24 +415,32 @@ export class GestionTicketComponent {
       this._registrosService.putModificarRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
             this.router.navigate(['/tickets/tickets/']);
           } else {
             Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
           }
         },
         error: (err: any) => {
-          console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
         }
       });
     } else {
       console.log('nuevo formregistro', this.FormRegistro);
       registroData.codigoTicket = uuidv4();
       registroData.fechaTicket = new Date().toISOString();
-      //   registroData.codigoAplicacion = this.FormRegistro.codigoAplicacion;
-      //   //   registroData.codigoSuite = this.FormRegistro.codigoSuite || '';
-      //   //   registroData.codigoModulo = this.FormRegistro.codigoModulo || '';
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaCreacion = new Date().toISOString();
       registroData.codigoUsuarioSender = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
@@ -445,15 +452,26 @@ export class GestionTicketComponent {
       this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
             this.router.navigate(['/tickets/tickets/']);
           }
         },
         error: (err: any) => {
-          console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err);
         }
       });
     }

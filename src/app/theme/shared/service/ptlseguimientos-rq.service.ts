@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PTLSeguimientoRQModel } from '../_helpers/models/PTLSeguimientoRQ.model';
+import { PTLSeguimientoRQModel } from '../_helpers/models/PTLSeguimientoTK.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 
 const base_url = environment.apiUrl;

@@ -13,6 +13,9 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { GradientConfig } from 'src/app/app-config';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
+import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import {
@@ -30,9 +33,6 @@ import { environment } from 'src/environments/environment';
 
 const base_url = environment.apiUrl;
 import Swal from 'sweetalert2';
-import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
-import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
-import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 
 @Component({
   selector: 'app-tickets',
