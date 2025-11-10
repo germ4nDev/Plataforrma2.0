@@ -81,13 +81,14 @@ export class GestionSeguimientoComponent {
     this.isSubmit = false;
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
-      if (registroId) {
+      if (registroId !== 'nuevo') {
         // console.log('me llena el Id', registroId);
         this.modoEdicion = true;
         this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
             this.FormRegistro = resp.seguimiento;
+            this.selectedFileUrl = this._uploadService.getFilePath('tickets', resp.seguimiento.capturaSeguimiento);
             const fechaString = this.FormRegistro.fechaSeguimiento;
             if (fechaString) {
               const fechaAsig = new Date(fechaString);
@@ -102,6 +103,11 @@ export class GestionSeguimientoComponent {
       } else {
         // console.log('no llena el Id', registroId);
         this.modoEdicion = false;
+        console.log('modo edicion', this.modoEdicion);
+        // this.FormRegistro.codigoSeguimiento = uuidv4();
+        // this.FormRegistro.estadoSeguimiento = '';
+        // this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
+        console.log('FormRegistro', this.FormRegistro);
       }
     });
   }
@@ -126,11 +132,16 @@ export class GestionSeguimientoComponent {
     }
     if (!this.modoEdicion) {
       console.log('modo edicion', this.modoEdicion);
-      this.FormRegistro.estadoSeguimiento = '';
-      this.selectedFileUrl = this._uploadService.getFilePath('seguimientos', 'no-foto.png');
+      this.FormRegistro.codigoSeguimiento = uuidv4();
+      this.FormRegistro.codigoTicket = '';
+      this.FormRegistro.estadoSeguimiento = 'PE';
       this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
       console.log('FormRegistro', this.FormRegistro);
     }
+  }
+
+  onDateChange(): void {
+    console.log('Fecha NgbDateStruct seleccionada:', this.FormRegistro.fecha);
   }
 
   setFechaRiesgo(fecha: Date) {
@@ -189,10 +200,10 @@ export class GestionSeguimientoComponent {
     }
   }
 
-  onRequerimientochangeClick(event: any) {
+  onCodigoTicketChangeClick(event: any) {
     const value = event.target.value;
-    const requerimiento = this.requerimientos.filter((x) => x.requerimientoId == value)[0];
-    this.FormRegistro.codigoSeguimiento = requerimiento.codigoRequerimiento;
+    const ticket = this.tickets.filter((x) => x.codigoTicket == value)[0];
+    this.FormRegistro.codigoTicket = ticket.codigoTicket;
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -247,7 +258,6 @@ export class GestionSeguimientoComponent {
       registroData.capturaSeguimiento = this.FormRegistro.capturaSeguimiento;
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaModificacion = new Date().toISOString();
-
       this._registrosService.putModificarRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
@@ -301,7 +311,7 @@ export class GestionSeguimientoComponent {
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/help-desk/seguimientos/']);
+    this.router.navigate(['/tickets/seguimientos/']);
   }
   toggleNav(): void {
     this.toggleSidebar.emit();
