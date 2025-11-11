@@ -102,11 +102,18 @@
                     [showViewButton]="false"
                     [showEditButton]="true"
                     [showDeleteButton]="true"
+                    [showOption1Button]="true"
+                    [showOption2Button]="false"
+                    [showOption3Button]="false"
                     [newButtonLabel]="'TICKETS.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (viewRecord)="OnViewRegistroClick($event)"
                     (newRecord)="OnNuevoRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)"
-                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                    (deleteRecord)="OnEliminarRegistroClick($event)"
+                    (option1Record)="OnOption1Click($event)"
+                    (option2Record)="OnOption2Click($event)"
+                    (option3Record)="OnOption3Click($event)">
                 </app-data-table>
             </div>
         </div>

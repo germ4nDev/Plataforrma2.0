@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs';
 
 const base_url = environment.apiUrl;
 
@@ -9,9 +10,7 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class UploadFilesService {
-
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   uploadUserPhoto(file: File, objUpload: any) {
     const formData = new FormData();
@@ -24,5 +23,19 @@ export class UploadFilesService {
     const pathUrl = `${base_url}/upload/${type}/${fileName}`;
     console.log('path de la imagen', pathUrl);
     return pathUrl;
+  }
+
+  deleteFilePath(type: string, fileName: string) {
+    const pathUrl = `${base_url}/upload/delete/${type}/${fileName}`;
+    console.log('path de la imagen', pathUrl);
+    return this.http.delete(pathUrl).pipe(
+      map((resp: any) => {
+        console.log('data de usuario eliminado', resp);
+        return {
+          ok: true,
+          mensaje: resp.mensaje
+        };
+      })
+    );
   }
 }

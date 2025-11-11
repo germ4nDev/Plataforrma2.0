@@ -1,6 +1,6 @@
 import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
 
-export class PTLSeguimientoRQModel {
+export class PTLSeguimientoTKModel {
   constructor(
     public seguimientoId?: number,
     public codigoSeguimiento?: string,
@@ -11,6 +11,7 @@ export class PTLSeguimientoRQModel {
     public estadoSeguimiento?: string,
     public estadoTicket?: string,
     public capturaSeguimiento?: string,
+    public definicionRequerimiento?: string,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,
     public codigoUsuarioModificacion?: string,

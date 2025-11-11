@@ -59,21 +59,27 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoTicket">{{
                                     'TICKETS.SEGUIMIENTOS.GESTION.CODIGOTICKET' | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer;" name="codigoTicket"
+                                <select class="form-control form-input" style="cursor: pointer;" name="codigoTicket" [disabled]="ticketId !== ''"
                                     id="codigoTicket"
                                     [ngClass]="{ 'is-invalid': !codigoTicket.valid && (codigoTicket.dirty || codigoTicket.touched || isSubmit) }"
                                     #codigoTicket="ngModel" required [(ngModel)]="FormRegistro.codigoTicket"
                                     (change)="onCodigoTicketChangeClick($event)">
-                                    <option value="">{{'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERCODIGOTICKET'| translate
-                                        }}</option>
-                                    <option [value]="FormRegistro.codigoTicket" *ngFor="let tic of tickets">{{
-                                        tic.nombreTicket }}</option>
+                                    <option value="">{{'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERCODIGOTICKET'| translate }}</option>
+                                    <option [value]="tic.codigoTicket" *ngFor="let tic of tickets">{{ tic.nombreTicket }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoTicket.valid && (codigoTicket.dirty || codigoTicket.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'PLATAFORMA.REQUIRED | translate }}
                                 </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-control-label" for="fecha">
+                                    {{ 'TICKETS.SEGUIMIENTOS.GESTION.DEFINICIONREQUERIMIENTO' | translate }}
+                                </label><br>
+                                <label class="form-control-label" [innerHTML]="FormRegistro.definicionRequerimiento"></label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -103,10 +109,8 @@
                                     [ngClass]="{ 'is-invalid': !estadoSeguimiento.valid && (estadoSeguimiento.dirty || estadoSeguimiento.touched || isSubmit) }"
                                     #estadoSeguimiento="ngModel" required [(ngModel)]="FormRegistro.estadoSeguimiento"
                                     (change)="onEstadoChangeClick($event)">
-                                    <option value="">{{ 'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERESTADO' | translate }}
-                                    </option>
-                                    <option [value]="esta.siglaEstado" *ngFor="let esta of estados">
-                                        {{ esta.nombreEstado }}</option>
+                                    <option value="">{{ 'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERESTADO' | translate }}</option>
+                                    <option [value]="esta.siglaEstado" *ngFor="let esta of estados">{{ esta.nombreEstado }}</option>
                                 </select>
                                 <label
                                     *ngIf="!estadoSeguimiento.valid && (estadoSeguimiento.dirty || estadoSeguimiento.touched || isSubmit)"

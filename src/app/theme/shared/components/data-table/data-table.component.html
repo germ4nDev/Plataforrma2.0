@@ -16,6 +16,11 @@
                 {{ exportLabel | translate }}
                 <i class="feather ms-2 icon-download"></i>
             </button>
+            <button *ngIf="showBackButton" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="onBackClick()">
+                {{ backButtonLabel | translate }}
+                            <i class="feather icon-arrow-left"></i>
+                        </button>
             <button *ngIf="showNewButton" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                 (click)="onNewRecord()">
                 {{ newButtonLabel | translate }}
@@ -114,7 +119,7 @@
                                     </ng-container>
                                 </ng-container>
                             </td>
-                            <td style="width: 120px; text-align: center;" *ngIf="showActions">
+                            <td style="text-align: center; white-space: nowrap;" *ngIf="showActions">
                                 <button *ngIf="showViewButton" class="btn btn-sm btn-outline-primary me-1"
                                     (click)="onView(row)" title="{{ 'PLATAFORMA.DATATABLE.VIEW' | translate }}">
                                     <i class="feather icon-eye"></i>
@@ -123,8 +128,20 @@
                                     (click)="onEdit(row)" title="{{ 'PLATAFORMA.DATATABLE.EDIT' | translate }}">
                                     <i class="feather icon-edit"></i>
                                 </button>
-                                <button *ngIf="showDeleteButton" class="btn btn-sm btn-outline-danger"
+                                <button *ngIf="showDeleteButton" class="btn btn-sm btn-outline-danger me-1"
                                     (click)="onDelete(row)" title="{{ 'PLATAFORMA.DATATABLE.DELETE' | translate }}">
+                                    <i class="feather icon-trash"></i>
+                                </button>
+                                <button *ngIf="showOption1Button" class="btn btn-sm btn-outline-success me-1"
+                                    (click)="onOption1(row)" title="{{ 'PLATAFORMA.DATATABLE.DELETE' | translate }}">
+                                    <i class="feather icon-file"></i>
+                                </button>
+                                <button *ngIf="showOption2Button" class="btn btn-sm btn-outline-danger me-1"
+                                    (click)="onOption2(row)" title="{{ 'PLATAFORMA.DATATABLE.DELETE' | translate }}">
+                                    <i class="feather icon-trash"></i>
+                                </button>
+                                <button *ngIf="showOption3Button" class="btn btn-sm btn-outline-danger me-1"
+                                    (click)="onOption3(row)" title="{{ 'PLATAFORMA.DATATABLE.DELETE' | translate }}">
                                     <i class="feather icon-trash"></i>
                                 </button>
                             </td>

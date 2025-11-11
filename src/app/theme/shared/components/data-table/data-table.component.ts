@@ -18,42 +18,51 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class DatatableComponent implements OnInit, OnChanges {
   @Input() data: any[] = [];
+  @Input() idField: string = 'id';
   @Input() metadataColumns: any[] = [];
   @Input() metadataDetailColumns: any[] = [];
   @Input() columnTitles: string[] = [];
   @Input() detailColumns: string[] = [];
   @Input() detailTitles: string[] = [];
+  @Input() tableTitle: string = '';
+  @Input() showDetail: boolean = false;
 
-  @Input() exportLabel: string = 'Exportar';
-  @Input() newButtonLabel: string = 'Nueva Aplicación';
+  @Input() exportLabel: string = 'Exportar Excel';
+  @Input() newButtonLabel: string = 'Nuevo Registro';
+  @Input() backButtonLabel: string = 'Regresar';
+
+  @Input() showSearchBox: boolean = true;
   @Input() showAvatar: boolean = false;
   @Input() showImage: boolean = false;
   @Input() showActions: boolean = true;
-  @Input() idField: string = 'id';
-  @Input() showSearchBox: boolean = true;
-  @Input() tableTitle: string = '';
+  @Input() showBackButton: boolean = false;
   @Input() showNewButton: boolean = false;
   @Input() showViewButton: boolean = false;
   @Input() showEditButton: boolean = false;
   @Input() showDeleteButton: boolean = false;
-  @Input() showDetail: boolean = false;
+  @Input() showOption1Button: boolean = false;
+  @Input() showOption2Button: boolean = false;
+  @Input() showOption3Button: boolean = false;
+
   @Input() buttonsClass: string = 'btn btn-primary';
 
+  @Output() backRecord = new EventEmitter<void>();
   @Output() viewRecord = new EventEmitter<void>();
   @Output() newRecord = new EventEmitter<void>();
   @Output() editRecord = new EventEmitter<any>();
   @Output() deleteRecord = new EventEmitter<any>();
   @Output() excelExport = new EventEmitter<void>();
+  @Output() option1Record = new EventEmitter<void>();
+  @Output() option2Record = new EventEmitter<void>();
+  @Output() option3Record = new EventEmitter<void>();
 
   public finalColumns: ColumnMetadata[] = [];
-
   public filteredData: any[] = [];
   public paginatedData: any[] = [];
   public currentPage: number = 1;
   public itemsPerPage: number = 10;
   public totalPages: number = 1;
   public filterValues: { [key: string]: string } = {};
-
   public sortByColumn: string | null = null;
   public sortDirection: 'asc' | 'desc' = 'asc';
   public registroId: number | null = null;
@@ -294,6 +303,15 @@ export class DatatableComponent implements OnInit, OnChanges {
     this.editRecord.emit(row[this.idField]);
   }
 
+  onBackClick() {
+    this.backRecord.emit();
+  }
+
+  OnViewRegistroClick(row: any): void {
+    console.log('fieldId', this.idField);
+    this.viewRecord.emit(row[this.idField]);
+  }
+
   onDelete(row: any): void {
     this.deleteRecord.emit({ id: row[this.idField] });
   }
@@ -307,6 +325,19 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   onNewRecord(): void {
     this.newRecord.emit();
+  }
+
+  onOption1(row: any): void {
+    console.log('fieldId', this.idField);
+    this.option1Record.emit(row[this.idField]);
+  }
+
+  onOption2(row: any): void {
+    this.option2Record.emit(row[this.idField]);
+  }
+
+  onOption3(row: any): void {
+    this.option3Record.emit(row[this.idField]);
   }
 
   onExcelExport(): void {

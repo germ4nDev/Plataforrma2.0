@@ -181,6 +181,8 @@ export class GestionVersionComponent implements OnInit {
     if (!form.valid) {
       return;
     }
+    console.log('======= modo edicion', this.modoEdicion);
+
     const registroData = form.value as PTLVersionAP;
     if (this.FormRegistro.fecha) {
       const { year, month, day } = this.FormRegistro.fecha;

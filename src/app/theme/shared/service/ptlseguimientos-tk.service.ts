@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PTLSeguimientoRQModel } from '../_helpers/models/PTLSeguimientoTK.model';
+import { PTLSeguimientoTKModel } from '../_helpers/models/PTLSeguimientoTK.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 
 const base_url = environment.apiUrl;
@@ -10,7 +11,7 @@ const base_url = environment.apiUrl;
 @Injectable({
   providedIn: 'root'
 })
-export class PTLSeguimientosRqService {
+export class PTLSeguimientosTKService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
   constructor(private http: HttpClient) {}
@@ -42,7 +43,21 @@ export class PTLSeguimientosRqService {
     );
   }
 
-  getRegistroById(id: number) {
+  getRegistrosByTicket(id: string) {
+    const url = `${base_url}/seguimientos-tk/ticket/${id}`;
+    return this.http.get(url)
+    .pipe(
+      map((resp: any) => {
+        console.log('servicio de seguimiento by ticket', resp);
+        return {
+          ok: true,
+          seguimientos: resp.seguimientos
+        };
+      })
+    );
+  }
+
+  getRegistroById(id: string) {
     const url = `${base_url}/seguimientos-tk/${id}`;
     return this.http.get(url)
     .pipe(
@@ -56,13 +71,20 @@ export class PTLSeguimientosRqService {
     );
   }
 
-  postCrearRegistro(seguimiento: PTLSeguimientoRQModel) {
+  postCrearRegistro(data: PTLSeguimientoTKModel) {
     const url = `${base_url}/seguimientos-tk`;
-    return this.http.post(url, seguimiento);
+    return this.http.post(url, data).pipe(
+      map((resp: any) => {
+        return {
+          ok: true,
+          seguimiento: resp.seguimiento
+        };
+      })
+    );
   }
 
-  putModificarRegistro(seguimiento: PTLSeguimientoRQModel) {
-    const url = `${base_url}/seguimientos-tk/${seguimiento.seguimientoId}`;
+  putModificarRegistro(seguimiento: PTLSeguimientoTKModel) {
+    const url = `${base_url}/seguimientos-tk/${seguimiento.codigoSeguimiento}`;
     return this.http.put(url, seguimiento)
     .pipe(
       map((resp: any) => {
@@ -75,7 +97,7 @@ export class PTLSeguimientosRqService {
     );
   }
 
-  deleteEliminarRegistro(_id: number) {
+  deleteEliminarRegistro(_id: string) {
     const url = `${base_url}/seguimientos-tk/${_id}`;
     return this.http.delete(url)
     .pipe(

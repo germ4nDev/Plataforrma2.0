@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLTicketAPModel } from '../_helpers/models/PTLTicketAP.model';
+import { PTLSeguimientosTKService } from './ptlseguimientos-tk.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,7 +15,7 @@ const base_url = environment.apiUrl;
 export class PTLTicketsService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private _seguimientosService: PTLSeguimientosTKService) {}
 
   get token(): string {
     this.user = JSON.parse(localStorage.getItem('currentUser') || '');
@@ -34,7 +35,7 @@ export class PTLTicketsService {
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de ticket', resp);
+        console.log('servicio de ticket', resp.tickets);
         return {
           ok: true,
           tickets: resp.tickets
@@ -43,7 +44,7 @@ export class PTLTicketsService {
     );
   }
 
-  getRegistroById(id: number) {
+  getRegistroById(id: string) {
     const url = `${base_url}/tickets-ap/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
@@ -82,11 +83,15 @@ export class PTLTicketsService {
     );
   }
 
-  deleteEliminarRegistro(_id: number) {
+  deleteEliminarRegistro(_id: string) {
+    const segs = this._seguimientosService.getRegistros();
+    console.log('codigo ticket', _id);
+    console.log('seguimeitnos ticket', segs);
     const url = `${base_url}/tickets-ap/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de ticket eliminado', resp);
+
         return {
           ok: true,
           ticket: resp.ticket

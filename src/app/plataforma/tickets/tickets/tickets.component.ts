@@ -27,7 +27,9 @@ import {
   PTLTicketsService,
   PtlSuitesAPService,
   PtlmodulosApService,
-  PTLUsuariosService
+  PTLUsuariosService,
+  UploadFilesService,
+  PTLSeguimientosTKService
 } from 'src/app/theme/shared/service';
 import { environment } from 'src/environments/environment';
 
@@ -77,6 +79,8 @@ export class TicketsComponent implements OnInit {
     private _modulosService: PtlmodulosApService,
     private _suitesService: PtlSuitesAPService,
     private _usuariosService: PTLUsuariosService,
+    private _uploadService: UploadFilesService,
+    private _seguimientosService: PTLSeguimientosTKService,
     private _estadosTicketService: PTLEstadosService
   ) {
     this.gradientConfig = GradientConfig;
@@ -102,9 +106,7 @@ export class TicketsComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            console.log('todos los estados', resp.estados);
             this.estadosTicket = resp.estados;
-            console.log('Todos las estados padre', this.estadosTicket);
             return;
           }
         }),
@@ -140,7 +142,6 @@ export class TicketsComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             this.suites = resp.suites;
-            console.log('Todos las suites', this.suites);
             return;
           }
         }),
@@ -159,7 +160,6 @@ export class TicketsComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             this.modulos = resp.modulos;
-            console.log('Todos las modulos padre', this.modulos);
             return;
           }
         }),
@@ -177,9 +177,7 @@ export class TicketsComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            console.log('todos los usuarios', resp.usuarios);
             this.usuarios = resp.usuarios;
-            console.log('Todos las usuarios padre', this.usuarios);
             return;
           }
         }),
@@ -309,16 +307,7 @@ export class TicketsComponent implements OnInit {
       .subscribe();
   }
 
-  OnNuevoRegistroClick() {
-    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: 'nuevo' } });
-  }
-
-  OnEditarRegistroClick(id: number) {
-    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: id } });
-  }
-
   onFiltroAplicacionChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
@@ -327,7 +316,6 @@ export class TicketsComponent implements OnInit {
   }
 
   onFiltroSuiteChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
@@ -336,7 +324,6 @@ export class TicketsComponent implements OnInit {
   }
 
   onFiltroModuloChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
@@ -345,7 +332,6 @@ export class TicketsComponent implements OnInit {
   }
 
   onFiltroSenderChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
@@ -354,7 +340,6 @@ export class TicketsComponent implements OnInit {
   }
 
   onFiltroAsignadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
@@ -363,18 +348,15 @@ export class TicketsComponent implements OnInit {
   }
 
   onFiltroNombreChangeClick(evento: any) {
-    console.log('filtrar el NOMBRE ', evento.target.value);
     const textoFiltro = evento.target.value.toLowerCase();
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
       this.registrosFiltrado = this.registrosFiltrado.filter((ticket) => (ticket.nombreTicket || '').toLowerCase().includes(textoFiltro));
-      console.log('filtrados', this.registrosFiltrado);
     }
   }
 
   onFiltroDescripcionChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
     const textoFiltro = evento.target.value.toLowerCase();
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
@@ -382,17 +364,27 @@ export class TicketsComponent implements OnInit {
       this.registrosFiltrado = this.registrosFiltrado.filter((ticket) =>
         (ticket.descripcionTicket || '').toLowerCase().includes(textoFiltro)
       );
-      console.log('filtrados', this.registrosFiltrado);
     }
   }
 
   onFiltroEstadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
       this.registrosFiltrado = this.registrosFiltrado.filter((x) => x.estadoTicket == evento.target.value);
     }
+  }
+
+  OnNuevoRegistroClick() {
+    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: 'nuevo' } });
+  }
+
+  OnEditarRegistroClick(id: any) {
+    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: id } });
+  }
+
+  OnViewRegistroClick(id: any) {
+    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(id: any) {
@@ -407,8 +399,7 @@ export class TicketsComponent implements OnInit {
       if (result.isConfirmed) {
         console.log('id', id.id);
         const ticket = this.registros.filter((x) => x.codigoTicket == id.id)[0];
-        ticket.estadoTicket = 'EL';
-        this._ticketsService.putModificarRegistro(ticket).subscribe({
+        this._ticketsService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             const logData = {
               codigoTipoLog: '',
@@ -416,6 +407,22 @@ export class TicketsComponent implements OnInit {
               descripcionLog: this.translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            if (ticket.capturaTicket != 'no-imagen.png') {
+              console.log('esta es la captura del ticket', ticket.capturaTicket);
+              const captura = ticket.capturaTicket || '';
+              this._uploadService.deleteFilePath('tickets', captura).subscribe((data: any) => {
+                console.log('mensaje', data.mensaje);
+              });
+            }
+            this._seguimientosService.getRegistrosByTicket(id.id).subscribe((segs) => {
+              if (segs.seguimientos.length > 0) {
+                segs.seguimientos.forEach((segui: any) => {
+                  this._seguimientosService
+                    .deleteEliminarRegistro(segui.codigoSeguimiento)
+                    .subscribe(() => console.log('seguimiento eliminado'));
+                });
+              }
+            });
             this._swalService.getAlertSuccess(this.translate.instant('TICKETS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
             this.consultarRegistros();
           },
@@ -432,6 +439,19 @@ export class TicketsComponent implements OnInit {
         });
       }
     });
+  }
+
+  OnOption1Click(event: any) {
+    console.log('ejecutando opcion 1 Seguimientos', event);
+    this.router.navigate(['tickets/seguimientos'], { queryParams: { regId: event } });
+  }
+
+  OnOption2Click(event: any) {
+    console.log('ejecutando opcion 2', event);
+  }
+
+  OnOption3Click(event: any) {
+    console.log('ejecutando opcion 3', event);
   }
 
   toggleNav(): void {

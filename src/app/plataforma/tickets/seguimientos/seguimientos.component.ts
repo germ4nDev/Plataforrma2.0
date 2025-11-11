@@ -1,13 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
 import { Subscription, tap, catchError, of, Observable } from 'rxjs';
-import { PTLSeguimientoRQModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoTK.model';
-import { NavigationService, PTLTicketsService } from 'src/app/theme/shared/service';
-import { PTLSeguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
+import { PTLSeguimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoTK.model';
+import {
+  NavigationService,
+  PtllogActividadesService,
+  PTLTicketsService,
+  SwalAlertService,
+  UploadFilesService
+} from 'src/app/theme/shared/service';
+import { PTLSeguimientosTKService } from 'src/app/theme/shared/service/ptlseguimientos-tk.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -16,13 +22,12 @@ import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation
 import { GradientConfig } from 'src/app/app-config';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
-import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
-import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
-import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
+import { environment } from 'src/environments/environment';
 const base_url = environment.apiUrl;
 
 @Component({
@@ -37,15 +42,16 @@ export class SeguimientosComponent implements OnInit {
 
   //#region VARIABLES
   registrosSub?: Subscription;
-  registros: PTLSeguimientoRQModel[] = [];
+  registros: PTLSeguimientoTKModel[] = [];
   ticketsSub?: Subscription;
   tickets: PTLTicketAPModel[] = [];
   estadosSub?: Subscription;
   estados: PTLEstadoModel[] = [];
-  registrosFiltrado: PTLSeguimientoRQModel[] = [];
+  registrosFiltrado: PTLSeguimientoTKModel[] = [];
   requerimientos: PTLRequerimientoTKModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
+  codigoRegistro: string = '';
 
   gradientConfig;
   hasFiltersSlot: boolean = false;
@@ -57,14 +63,25 @@ export class SeguimientosComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private translate: TranslateService,
     private _navigationService: NavigationService,
-    private _seguimientosService: PTLSeguimientosRqService,
+    private _seguimientosService: PTLSeguimientosTKService,
     private _estadosService: PTLEstadosService,
     private _ticketsService: PTLTicketsService,
-    private _requerimientoService: PTLRequerimientosTkService
+    private _swalService: SwalAlertService,
+    private _uploadService: UploadFilesService,
+    private _logActividadesService: PtllogActividadesService
   ) {
     this.gradientConfig = GradientConfig;
+    this.route.queryParams.subscribe((params) => {
+      this.codigoRegistro = params['regId'] || '';
+      if (this.codigoRegistro !== 'nuevo') {
+        // console.log('me llena el Id', registroId);
+      } else {
+        // console.log('no llena el Id', registroId);
+      }
+    });
   }
 
   ngOnInit() {
@@ -73,7 +90,9 @@ export class SeguimientosComponent implements OnInit {
     this.hasFiltersSlot = true;
     this.consultarEstados();
     this.consultarTickets();
-    this.consultarRegistros();
+    setTimeout(() => {
+      this.consultarRegistros();
+    }, 1000);
   }
 
   columnasRegistros: ColumnMetadata[] = [
@@ -106,7 +125,7 @@ export class SeguimientosComponent implements OnInit {
       type: 'text'
     },
     {
-      name: 'captura',
+      name: 'capturaSeguimiento',
       header: 'TICKETS.SEGUIMIENTOS.CAPTURASEGUIMIENTO',
       type: 'capture'
     }
@@ -149,19 +168,27 @@ export class SeguimientosComponent implements OnInit {
       .subscribe();
   }
 
-  consultarRegistros() {
+  consultarRegistros(idReg?: string) {
     this.registrosSub = this._seguimientosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
             resp.seguimientos.forEach((seguimiento: any) => {
+              console.log('datos del seguimiento', seguimiento);
+              console.log('todos los ticket', this.tickets);
               const ticket = this.tickets.filter((x) => x.codigoTicket == seguimiento.codigoTicket)[0];
+              console.log('datos del ticket', ticket);
               seguimiento.nomTicket = ticket.nombreTicket;
-              seguimiento.captura = `${base_url}/upload/tickets/${seguimiento.capturaSeguimiento}`;
+              seguimiento.capturaSeguimiento = `${base_url}/upload/seguimientos/${seguimiento.capturaSeguimiento}`;
             });
-            this.registros = resp.seguimientos;
-            this.registrosFiltrado = resp.seguimientos;
+            if (idReg) {
+              this.registros = resp.seguimientos.filter((x: { codigoTicket: string }) => x.codigoTicket == idReg);
+              this.registrosFiltrado = this.registros;
+            } else {
+              this.registros = resp.seguimientos;
+              this.registrosFiltrado = resp.seguimientos;
+            }
             console.log('Todos las seguimientos', this.registrosFiltrado);
             return;
           }
@@ -174,8 +201,16 @@ export class SeguimientosComponent implements OnInit {
       .subscribe();
   }
 
+  OnBackRegistroClick() {
+    this.router.navigate(['/tickets/tickets/']);
+  }
+
   OnNuevoRegistroClick() {
-    this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { regId: 'nuevo' } });
+    if (this.codigoRegistro != '') {
+      this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { tickId: this.codigoRegistro } });
+    } else {
+      this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { regId: 'nuevo' } });
+    }
   }
 
   OnEditarRegistroClick(id: number) {
@@ -194,11 +229,28 @@ export class SeguimientosComponent implements OnInit {
       if (result.isConfirmed) {
         this._seguimientosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('SEGUIMIENTOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.seguimientoId !== id.id);
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            const segui = this.registros.filter((x) => x.codigoSeguimiento == id.id)[0];
+            if (segui.capturaSeguimiento != 'no-imagen.png') {
+              const captura = segui.capturaSeguimiento || '';
+              this._uploadService.deleteFilePath('seguimientos', captura);
+            }
+            this._swalService.getAlertSuccess(this.translate.instant('SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
+            this.consultarRegistros();
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('SEGUIMIENTOS.ELIMINARERROR'), 'error');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertError(this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje);
             console.error('Error eliminando', err);
           }
         });

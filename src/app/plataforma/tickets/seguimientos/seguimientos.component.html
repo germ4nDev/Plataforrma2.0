@@ -21,7 +21,6 @@
                         <small>{{ 'TICKETS.SEGUIMIENTOS.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
                             placeholder="{{ 'TICKETS.SEGUIMIENTOS.FILTROS.NOMBRECHOLDER' | translate }}" />
-
                     </div>
                     <div class="filtro">
                         <small>{{ 'TICKETS.SEGUIMIENTOS.FILTROS.FILTRODECRIPCION' | translate }}</small>
@@ -51,6 +50,7 @@
                     [metadataColumns]="columnasRegistros"
                     [metadataDetailColumns]="columnasDetailRegistros"
                     [showActions]="true"
+                    [showBackButton]="codigoRegistro !== ''"
                     [showNewButton]="true"
                     [showViewButton]="false"
                     [showEditButton]="true"
@@ -59,6 +59,7 @@
                     [newButtonLabel]="'TICKETS.SEGUIMIENTOS.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     (newRecord)="OnNuevoRegistroClick()"
+                    (backRecord)="OnBackRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)"
                     (deleteRecord)="OnEliminarRegistroClick($event)">
                 </app-data-table>

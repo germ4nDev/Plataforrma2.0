@@ -32,7 +32,7 @@ export * from './ptlpaquetes.service';
 export * from './ptlpaquetes-sc.service';
 export * from './ptlrequerimientos-tk.service';
 export * from './ptlroles-ap.service';
-export * from './ptlseguimientos-rq.service';
+export * from './ptlseguimientos-tk.service';
 export * from './ptlservidor.service';
 export * from './ptlsitios-ap.service';
 export * from './ptlsuites-ap.service';

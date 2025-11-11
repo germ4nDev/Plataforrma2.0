@@ -6,10 +6,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
-import { PTLSeguimientoRQModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoTK.model';
+import { PTLSeguimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoTK.model';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
-import { PTLRequerimientosTkService } from 'src/app/theme/shared/service/ptlrequerimientos-tk.service';
-import { PTLSeguimientosRqService } from 'src/app/theme/shared/service/ptlseguimientos-rq.service';
+import { PTLSeguimientosTKService } from 'src/app/theme/shared/service/ptlseguimientos-tk.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -39,7 +38,7 @@ import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.m
 export class GestionSeguimientoComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
   menuItems!: Observable<NavigationItem[]>;
-  FormRegistro: PTLSeguimientoRQModel = new PTLSeguimientoRQModel();
+  FormRegistro: PTLSeguimientoTKModel = new PTLSeguimientoTKModel();
   requerimientos: PTLRequerimientoTKModel[] = [];
   ticketsSub?: Subscription;
   tickets: PTLTicketAPModel[] = [];
@@ -47,6 +46,7 @@ export class GestionSeguimientoComponent {
   estados: PTLEstadoModel[] = [];
   registrosSub?: Subscription;
   form: undefined;
+  ticketId: string = '';
 
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
@@ -70,8 +70,7 @@ export class GestionSeguimientoComponent {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _localStorageService: LocalStorageService,
-    private _registrosService: PTLSeguimientosRqService,
-    private _requerimientoService: PTLRequerimientosTkService,
+    private _registrosService: PTLSeguimientosTKService,
     private _ticketsService: PTLTicketsService,
     private _uploadService: UploadFilesService,
     private _estadosService: PTLEstadosService,
@@ -80,8 +79,9 @@ export class GestionSeguimientoComponent {
   ) {
     this.isSubmit = false;
     this.route.queryParams.subscribe((params) => {
-      const registroId = params['regId'];
-      if (registroId !== 'nuevo') {
+      const registroId = params['regId'] || '';
+      this.ticketId = params['tickId'] || '';
+      if (registroId !== 'nuevo' && this.ticketId == '') {
         // console.log('me llena el Id', registroId);
         this.modoEdicion = true;
         this._registrosService.getRegistroById(registroId).subscribe({
@@ -100,7 +100,7 @@ export class GestionSeguimientoComponent {
             Swal.fire('Error', 'No se pudo obtener el seguimiento', 'error');
           }
         });
-      } else {
+      } else if (registroId === 'nuevo' && this.ticketId == '') {
         // console.log('no llena el Id', registroId);
         this.modoEdicion = false;
         console.log('modo edicion', this.modoEdicion);
@@ -130,13 +130,26 @@ export class GestionSeguimientoComponent {
       this.FormRegistro = form;
       this._localStorageService.removeFormRegistro();
     }
-    if (!this.modoEdicion) {
+    if (!this.modoEdicion && this.ticketId == '') {
       console.log('modo edicion', this.modoEdicion);
       this.FormRegistro.codigoSeguimiento = uuidv4();
       this.FormRegistro.codigoTicket = '';
       this.FormRegistro.estadoSeguimiento = 'PE';
       this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
+      this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
       console.log('FormRegistro', this.FormRegistro);
+    }
+    if (this.ticketId != '' && !this.modoEdicion) {
+      console.log('===============este es el ticketId', this.ticketId);
+      this.FormRegistro.codigoSeguimiento = uuidv4();
+      this.FormRegistro.codigoTicket = this.ticketId;
+      this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
+      this.FormRegistro.estadoSeguimiento = 'PE';
+      this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
+      setTimeout(() => {
+        const ticket = this.tickets.filter((x) => x.codigoTicket == this.ticketId)[0];
+        this.FormRegistro.definicionRequerimiento = ticket.definicionRequerimiento;
+      }, 1000);
     }
   }
 
@@ -163,7 +176,7 @@ export class GestionSeguimientoComponent {
         tap((resp: any) => {
           if (resp.ok) {
             this.tickets = resp.tickets;
-            console.log('Estados:', this.tickets);
+            console.log('tickets:', this.tickets);
           }
         }),
         catchError((err) => {
@@ -204,6 +217,7 @@ export class GestionSeguimientoComponent {
     const value = event.target.value;
     const ticket = this.tickets.filter((x) => x.codigoTicket == value)[0];
     this.FormRegistro.codigoTicket = ticket.codigoTicket;
+    this.FormRegistro.definicionRequerimiento = ticket.definicionRequerimiento;
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -218,7 +232,7 @@ export class GestionSeguimientoComponent {
     const objUpload = {
       suscriptor: '0',
       aplicacion: this._localStorageService.getAplicaicionLocalStorage().nombreAplicacion,
-      tipo: 'tickets'
+      tipo: 'seguimientos'
     };
     if (file) {
       const reader = new FileReader();
@@ -248,12 +262,13 @@ export class GestionSeguimientoComponent {
     if (!form.valid) {
       return;
     }
-    const registroData = form.value as PTLSeguimientoRQModel;
+    const registroData = form.value as PTLSeguimientoTKModel;
     if (registroData.fecha) {
       const { year, month, day } = registroData.fecha;
       const fecha = new Date(year, month - 1, day).toISOString();
       registroData.fechaSeguimiento = fecha;
     }
+    registroData.estadoTicket = this.FormRegistro.estadoSeguimiento;
     if (this.modoEdicion) {
       registroData.capturaSeguimiento = this.FormRegistro.capturaSeguimiento;
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
@@ -272,8 +287,6 @@ export class GestionSeguimientoComponent {
                 };
                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                 this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-
-                Swal.fire('', this.translate.instant('PLATAFORMA.MODIFICAR'), 'success');
                 this.router.navigate(['/tickets/seguimientos/']);
               },
               error: (err) => {
@@ -293,13 +306,21 @@ export class GestionSeguimientoComponent {
       });
     } else {
       //   console.log('formregistro', this.FormRegistro);
-      this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
+      console.log('nuevo formregistro', this.FormRegistro);
+      registroData.codigoSeguimiento = uuidv4();
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioModificacion = '';
+      registroData.fechaModificacion = '';
+      registroData.capturaSeguimiento = this.FormRegistro.capturaSeguimiento;
+      console.log('insertar registro', registroData);
+      this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
             form.resetForm();
             this.isSubmit = false;
-            this.router.navigate(['/help-desk/seguimientos/']);
+            this.router.navigate(['/tickets/seguimientos/']);
           }
         },
         error: (err: any) => {
@@ -311,8 +332,10 @@ export class GestionSeguimientoComponent {
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/tickets/seguimientos/']);
+    console.log('codigo ticket', this.ticketId);
+    this.router.navigate(['/tickets/seguimientos/'], { queryParams: { regId: this.ticketId } });
   }
+
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
