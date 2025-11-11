@@ -45,12 +45,12 @@
             <div class="card-body">
                 <app-data-table
                     [data]="registrosFiltrado"
-                    [idField]="'seguimientoId'"
+                    [idField]="'codigoSeguimiento'"
                     [tableTitle]="'TICKETS.SEGUIMIENTOS.TITLE' | translate"
                     [metadataColumns]="columnasRegistros"
                     [metadataDetailColumns]="columnasDetailRegistros"
                     [showActions]="true"
-                    [showBackButton]="codigoRegistro !== ''"
+                    [showBackButton]="codigoRegistro !== '0'"
                     [showNewButton]="true"
                     [showViewButton]="false"
                     [showEditButton]="true"

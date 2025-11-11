@@ -17,10 +17,10 @@
                 <i class="feather ms-2 icon-download"></i>
             </button>
             <button *ngIf="showBackButton" class="btn btn-primary btn-NuevoRegistro btn-animacion"
-                            (click)="onBackClick()">
+                (click)="onBackClick()">
                 {{ backButtonLabel | translate }}
-                            <i class="feather icon-arrow-left"></i>
-                        </button>
+                <i class="feather icon-arrow-left"></i>
+            </button>
             <button *ngIf="showNewButton" class="btn btn-primary btn-NuevoRegistro btn-animacion"
                 (click)="onNewRecord()">
                 {{ newButtonLabel | translate }}
@@ -28,11 +28,10 @@
             </button>
         </div>
     </div>
-
     <div class="content-g67">
         <div class="tableFixHead">
             <table id="datatable-component" class="row-border hover table nowrap w-100">
-                <thead>
+                <thead *ngIf="paginatedData.length > 0">
                     <tr>
                         <th *ngIf="showDetail" class="detail-col"></th>
                         <th *ngFor="let column of finalColumns" (click)="onSort(column.name)"
@@ -51,7 +50,7 @@
                 <tbody>
                     <tr *ngIf="paginatedData.length === 0">
                         <td [attr.colspan]="finalColumns.length + (showActions ? 1 : 0) + (showDetail ? 1 : 0)"
-                            class="text-center py-4">
+                            class="text-center py-4"><br><br>
                             {{ 'PLATAFORMA.DATATABLE.NODATA' | translate }}
                         </td>
                     </tr>

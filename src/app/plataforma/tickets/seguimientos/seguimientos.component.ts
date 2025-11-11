@@ -75,11 +75,16 @@ export class SeguimientosComponent implements OnInit {
   ) {
     this.gradientConfig = GradientConfig;
     this.route.queryParams.subscribe((params) => {
-      this.codigoRegistro = params['regId'] || '';
-      if (this.codigoRegistro !== 'nuevo') {
-        // console.log('me llena el Id', registroId);
+      if (params['regId']) {
+        console.log('=============parametros', params);
+        this.codigoRegistro = params['regId'] || '';
+        // if (this.codigoRegistro !== 'nuevo') {
+        //   console.log('me llena el Id', registroId);
+        // } else {
+        //   console.log('no llena el Id', registroId);
+        // }
       } else {
-        // console.log('no llena el Id', registroId);
+        this.codigoRegistro = '0';
       }
     });
   }
@@ -92,7 +97,7 @@ export class SeguimientosComponent implements OnInit {
     this.consultarTickets();
     setTimeout(() => {
       this.consultarRegistros();
-    }, 1000);
+    }, 500);
   }
 
   columnasRegistros: ColumnMetadata[] = [
@@ -125,7 +130,7 @@ export class SeguimientosComponent implements OnInit {
       type: 'text'
     },
     {
-      name: 'capturaSeguimiento',
+      name: 'captura',
       header: 'TICKETS.SEGUIMIENTOS.CAPTURASEGUIMIENTO',
       type: 'capture'
     }
@@ -168,7 +173,7 @@ export class SeguimientosComponent implements OnInit {
       .subscribe();
   }
 
-  consultarRegistros(idReg?: string) {
+  consultarRegistros() {
     this.registrosSub = this._seguimientosService
       .getRegistros()
       .pipe(
@@ -179,11 +184,12 @@ export class SeguimientosComponent implements OnInit {
               console.log('todos los ticket', this.tickets);
               const ticket = this.tickets.filter((x) => x.codigoTicket == seguimiento.codigoTicket)[0];
               console.log('datos del ticket', ticket);
-              seguimiento.nomTicket = ticket.nombreTicket;
-              seguimiento.capturaSeguimiento = `${base_url}/upload/seguimientos/${seguimiento.capturaSeguimiento}`;
+              seguimiento.nomTicket = ticket ? ticket.nombreTicket : '';
+              seguimiento.captura = `${base_url}/upload/seguimientos/${seguimiento.capturaSeguimiento}`;
             });
-            if (idReg) {
-              this.registros = resp.seguimientos.filter((x: { codigoTicket: string }) => x.codigoTicket == idReg);
+            console.log('========================== Codigo seguimiento', this.codigoRegistro);
+            if (this.codigoRegistro != '0') {
+              this.registros = resp.seguimientos.filter((x: { codigoTicket: string }) => x.codigoTicket == this.codigoRegistro);
               this.registrosFiltrado = this.registros;
             } else {
               this.registros = resp.seguimientos;
@@ -207,13 +213,13 @@ export class SeguimientosComponent implements OnInit {
 
   OnNuevoRegistroClick() {
     if (this.codigoRegistro != '') {
-      this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { tickId: this.codigoRegistro } });
+      this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { regId: 'nuevo', tickId: this.codigoRegistro } });
     } else {
-      this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { regId: 'nuevo' } });
+      this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { regId: 'nuevo', tickId: '0' } });
     }
   }
 
-  OnEditarRegistroClick(id: number) {
+  OnEditarRegistroClick(id: string) {
     this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { regId: id } });
   }
 
@@ -236,9 +242,13 @@ export class SeguimientosComponent implements OnInit {
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             const segui = this.registros.filter((x) => x.codigoSeguimiento == id.id)[0];
+            console.log('========== datos del segui', segui);
             if (segui.capturaSeguimiento != 'no-imagen.png') {
               const captura = segui.capturaSeguimiento || '';
-              this._uploadService.deleteFilePath('seguimientos', captura);
+              console.log('========== eliminar captura', captura);
+              this._uploadService.deleteFilePath('seguimientos', captura).subscribe((data: any) => {
+                console.log('mensaje', data.mensaje);
+              });
             }
             this._swalService.getAlertSuccess(this.translate.instant('SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
             this.consultarRegistros();
@@ -256,6 +266,47 @@ export class SeguimientosComponent implements OnInit {
         });
       }
     });
+  }
+
+  actualizarEstadoTicket() {
+    const segIndice = this.obtenerUltimoEstado(this.registros);
+    if (segIndice != -1) {
+      const seguimiento = this.registros[segIndice];
+      const codigoTicket = seguimiento.codigoTicket || '';
+      const estado = seguimiento.estadoTicket || '';
+      this._ticketsService.getRegistroById(codigoTicket).subscribe((tic: any) => {
+        const ticket = tic.ticket;
+        ticket.estadoTicket = estado;
+        this._ticketsService.putModificarRegistro(ticket).subscribe(() => console.log('ticket actualizado'));
+      });
+    }
+  }
+
+  obtenerUltimoEstado(regs: PTLSeguimientoTKModel[]): number {
+    if (regs.length === 0) {
+      return -1;
+    }
+    const registrosOrdenados = [...regs];
+    registrosOrdenados.sort((a, b) => {
+      const dateA = a.fechaCreacion ? new Date(a.fechaCreacion).getTime() : null;
+      const dateB = b.fechaCreacion ? new Date(b.fechaCreacion).getTime() : null;
+      if (dateA && dateB) {
+        return dateB - dateA;
+      }
+      if (!dateA && dateB) {
+        return 1;
+      }
+      if (dateA && !dateB) {
+        return -1;
+      }
+      return 0;
+    });
+    const seguimientoMasReciente = registrosOrdenados[0];
+    if (!seguimientoMasReciente.fechaCreacion) {
+      return -1;
+    }
+    const segIndice = this.registros.findIndex((r) => r === seguimientoMasReciente);
+    return segIndice;
   }
 
   onFiltroNombreChangeClick(evento: any) {

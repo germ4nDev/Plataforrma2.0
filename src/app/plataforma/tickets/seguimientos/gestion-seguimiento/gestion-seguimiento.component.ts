@@ -42,11 +42,13 @@ export class GestionSeguimientoComponent {
   requerimientos: PTLRequerimientoTKModel[] = [];
   ticketsSub?: Subscription;
   tickets: PTLTicketAPModel[] = [];
+  ticket: PTLTicketAPModel = new PTLTicketAPModel();
   estadosSub?: Subscription;
   estados: PTLEstadoModel[] = [];
   registrosSub?: Subscription;
   form: undefined;
   ticketId: string = '';
+  codigoRegistro: string = '';
 
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
@@ -79,12 +81,14 @@ export class GestionSeguimientoComponent {
   ) {
     this.isSubmit = false;
     this.route.queryParams.subscribe((params) => {
-      const registroId = params['regId'] || '';
+      this.codigoRegistro = params['regId'] || '';
       this.ticketId = params['tickId'] || '';
-      if (registroId !== 'nuevo' && this.ticketId == '') {
+      console.log('============ registroId', this.codigoRegistro);
+      console.log('============ ticketId', this.ticketId);
+      if (this.codigoRegistro !== 'nuevo' && this.ticketId == '') {
         // console.log('me llena el Id', registroId);
         this.modoEdicion = true;
-        this._registrosService.getRegistroById(registroId).subscribe({
+        this._registrosService.getRegistroById(this.codigoRegistro).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
             this.FormRegistro = resp.seguimiento;
@@ -94,20 +98,13 @@ export class GestionSeguimientoComponent {
               const fechaAsig = new Date(fechaString);
               this.FormRegistro.fecha = this.setFechaRiesgo(fechaAsig);
             }
+            this.selectedFileUrl = this._uploadService.getFilePath('seguimientos', resp.seguimiento.capturaSeguimiento);
             // console.log('datos del FormRegistro', this.FormRegistro);
           },
           error: () => {
             Swal.fire('Error', 'No se pudo obtener el seguimiento', 'error');
           }
         });
-      } else if (registroId === 'nuevo' && this.ticketId == '') {
-        // console.log('no llena el Id', registroId);
-        this.modoEdicion = false;
-        console.log('modo edicion', this.modoEdicion);
-        // this.FormRegistro.codigoSeguimiento = uuidv4();
-        // this.FormRegistro.estadoSeguimiento = '';
-        // this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
-        console.log('FormRegistro', this.FormRegistro);
       }
     });
   }
@@ -130,27 +127,17 @@ export class GestionSeguimientoComponent {
       this.FormRegistro = form;
       this._localStorageService.removeFormRegistro();
     }
-    if (!this.modoEdicion && this.ticketId == '') {
-      console.log('modo edicion', this.modoEdicion);
-      this.FormRegistro.codigoSeguimiento = uuidv4();
-      this.FormRegistro.codigoTicket = '';
-      this.FormRegistro.estadoSeguimiento = 'PE';
-      this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
-      this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
-      console.log('FormRegistro', this.FormRegistro);
-    }
-    if (this.ticketId != '' && !this.modoEdicion) {
-      console.log('===============este es el ticketId', this.ticketId);
-      this.FormRegistro.codigoSeguimiento = uuidv4();
-      this.FormRegistro.codigoTicket = this.ticketId;
-      this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
-      this.FormRegistro.estadoSeguimiento = 'PE';
-      this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
-      setTimeout(() => {
-        const ticket = this.tickets.filter((x) => x.codigoTicket == this.ticketId)[0];
-        this.FormRegistro.definicionRequerimiento = ticket.definicionRequerimiento;
-      }, 1000);
-    }
+    if (this.codigoRegistro == 'nuevo' && (this.ticketId == '0' || this.ticketId == undefined || this.ticketId == null)) {
+        console.log('============= no llena el Id', this.codigoRegistro);
+        this.FormRegistro.codigoSeguimiento = uuidv4();
+        this.FormRegistro.codigoTicket = '';
+        this.FormRegistro.estadoSeguimiento = 'PE';
+        this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
+        this.selectedFileUrl = this._uploadService.getFilePath('tickets', 'no-imagen.png');
+        this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
+        this.modoEdicion = false;
+        console.log('============= FormRegistro', this.FormRegistro);
+      }
   }
 
   onDateChange(): void {
@@ -176,6 +163,16 @@ export class GestionSeguimientoComponent {
         tap((resp: any) => {
           if (resp.ok) {
             this.tickets = resp.tickets;
+            if (this.ticketId != '0' && !this.modoEdicion) {
+              this.ticket = this.tickets.filter((x) => x.codigoTicket == this.ticketId)[0];
+              this.FormRegistro.codigoTicket = this.ticketId;
+              this.FormRegistro.definicionRequerimiento = this.ticket.definicionRequerimiento;
+              this.FormRegistro.codigoSeguimiento = uuidv4();
+              this.FormRegistro.estadoSeguimiento = 'PE';
+              this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
+              this.selectedFileUrl = this._uploadService.getFilePath('tickets', 'no-imagen.png');
+              this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
+            }
             console.log('tickets:', this.tickets);
           }
         }),
@@ -268,11 +265,16 @@ export class GestionSeguimientoComponent {
       const fecha = new Date(year, month - 1, day).toISOString();
       registroData.fechaSeguimiento = fecha;
     }
+    if (this.ticketId != '') {
+      registroData.codigoTicket = this.ticketId;
+    }
     registroData.estadoTicket = this.FormRegistro.estadoSeguimiento;
     if (this.modoEdicion) {
       registroData.capturaSeguimiento = this.FormRegistro.capturaSeguimiento;
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaModificacion = new Date().toISOString();
+      registroData.codigoTicket = this.FormRegistro.codigoTicket || '';
+      registroData.estadoTicket = this.FormRegistro.estadoSeguimiento;
       this._registrosService.putModificarRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
@@ -280,6 +282,7 @@ export class GestionSeguimientoComponent {
             ticket.estadoTicket = registroData.estadoSeguimiento;
             this._ticketsService.putModificarRegistro(ticket).subscribe({
               next: () => {
+                this._ticketsService.putModificarRegistro(registroData).subscribe(() => console.log('ticket actualizado'));
                 const logData = {
                   codigoTipoLog: '',
                   codigoRespuesta: '201',
@@ -291,21 +294,38 @@ export class GestionSeguimientoComponent {
               },
               error: (err) => {
                 console.error('Error al actualizar requerimiento', err);
-                Swal.fire('Error', this.translate.instant('SEGUIMIENTOS.GESTION.NOMODIFICOREQUERIMIENTO'), 'warning');
+                const logData = {
+                  codigoTipoLog: '',
+                  codigoRespuesta: '501',
+                  descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+                };
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
                 this.router.navigate(['/tickets/seguimientos/']);
               }
             });
           } else {
-            Swal.fire('Error', resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + resp.mensaje);
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOMODIFICO'), 'error');
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
         }
       });
     } else {
-      //   console.log('formregistro', this.FormRegistro);
       console.log('nuevo formregistro', this.FormRegistro);
       registroData.codigoSeguimiento = uuidv4();
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
@@ -313,11 +333,21 @@ export class GestionSeguimientoComponent {
       registroData.codigoUsuarioModificacion = '';
       registroData.fechaModificacion = '';
       registroData.capturaSeguimiento = this.FormRegistro.capturaSeguimiento;
+      registroData.codigoTicket = this.FormRegistro.codigoTicket || '';
+      registroData.estadoTicket = this.FormRegistro.estadoSeguimiento;
       console.log('insertar registro', registroData);
       this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', this.translate.instant('PLATAFORMA.INSERTAR'), 'success');
+            //   this.actualizarEstadoTicket(registroData);
+            this._ticketsService.putModificarRegistro(registroData).subscribe(() => console.log('ticket actualizado'));
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
             this.router.navigate(['/tickets/seguimientos/']);
@@ -325,7 +355,13 @@ export class GestionSeguimientoComponent {
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', this.translate.instant('PLATAFORMA.NOINSERTO'), 'error');
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
         }
       });
     }

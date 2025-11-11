@@ -15,14 +15,6 @@ const routes: Routes = [
             loadComponent: () => import('./tickets/gestion-ticket/gestion-ticket.component').then(m => m.GestionTicketComponent)
         },
         {
-            path: 'requerimientos',
-            loadComponent: () => import('./requerimientos/requerimientos.component').then(m => m.RequerimientosComponent)
-        },
-        {
-            path: 'gestion-requerimiento',
-            loadComponent: () => import('./requerimientos/gestion-requerimiento/gestion-requerimiento.component').then(m => m.GestionRequerimientoComponent)
-        },
-        {
             path: 'seguimientos',
             loadComponent: () => import('./seguimientos/seguimientos.component').then(m => m.SeguimientosComponent)
         },

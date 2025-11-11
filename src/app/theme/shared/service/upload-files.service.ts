@@ -27,10 +27,10 @@ export class UploadFilesService {
 
   deleteFilePath(type: string, fileName: string) {
     const pathUrl = `${base_url}/upload/delete/${type}/${fileName}`;
-    console.log('path de la imagen', pathUrl);
+    console.log('path de la rutaAPI', pathUrl);
     return this.http.delete(pathUrl).pipe(
       map((resp: any) => {
-        console.log('data de usuario eliminado', resp);
+        console.log('data del archivo eliminado', resp);
         return {
           ok: true,
           mensaje: resp.mensaje

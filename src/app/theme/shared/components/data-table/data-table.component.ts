@@ -18,19 +18,20 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class DatatableComponent implements OnInit, OnChanges {
   @Input() data: any[] = [];
-  @Input() idField: string = 'id';
   @Input() metadataColumns: any[] = [];
   @Input() metadataDetailColumns: any[] = [];
   @Input() columnTitles: string[] = [];
   @Input() detailColumns: string[] = [];
   @Input() detailTitles: string[] = [];
-  @Input() tableTitle: string = '';
-  @Input() showDetail: boolean = false;
 
+  @Input() idField: string = 'id';
+  @Input() tableTitle: string = '';
   @Input() exportLabel: string = 'Exportar Excel';
   @Input() newButtonLabel: string = 'Nuevo Registro';
   @Input() backButtonLabel: string = 'Regresar';
+  @Input() buttonsClass: string = 'btn btn-primary';
 
+  @Input() showDetail: boolean = false;
   @Input() showSearchBox: boolean = true;
   @Input() showAvatar: boolean = false;
   @Input() showImage: boolean = false;
@@ -43,8 +44,6 @@ export class DatatableComponent implements OnInit, OnChanges {
   @Input() showOption1Button: boolean = false;
   @Input() showOption2Button: boolean = false;
   @Input() showOption3Button: boolean = false;
-
-  @Input() buttonsClass: string = 'btn btn-primary';
 
   @Output() backRecord = new EventEmitter<void>();
   @Output() viewRecord = new EventEmitter<void>();
