@@ -68,7 +68,7 @@ export class GestionUsuarioComponent implements OnInit {
           next: (resp: any) => {
             this.FormRegistro = resp.usuario;
             this.claveUsuario = resp.usuario.claveUsuario;
-            this.selectedFileUrl = this._uploadService.getFilePath('usuarios', resp.usuario.fotoUsuario);
+            this.selectedFileUrl = this._uploadService.getFilePath('0', 'usuarios', resp.usuario.fotoUsuario);
             this.FormRegistro.claveNew = '';
             this.FormRegistro.claveConfirm = '';
             // this.codeRegistro = resp.aplicacion.codigoAplicacion;
@@ -106,7 +106,7 @@ export class GestionUsuarioComponent implements OnInit {
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];
     const objUpload = {
-      suscriptor: '0',
+      susc: '0',
       aplicacion: this._localStorageService.getAplicaicionLocalStorage().nombreAplicacion,
       tipo: 'usuarios'
     };

@@ -73,7 +73,7 @@ export class PerfilComponent implements OnInit {
           next: (resp: any) => {
             this.FormRegistro = resp.usuario;
             this.claveUsuario = resp.usuario.claveUsuario;
-            this.selectedFileUrl = this._uploadService.getFilePath('usuarios', resp.usuario.fotoUsuario);
+            this.selectedFileUrl = this._uploadService.getFilePath('0', 'usuarios', resp.usuario.fotoUsuario);
             this.FormRegistro.claveNew = '';
             this.FormRegistro.claveConfirm = '';
             // this.codeRegistro = resp.aplicacion.codigoAplicacion;

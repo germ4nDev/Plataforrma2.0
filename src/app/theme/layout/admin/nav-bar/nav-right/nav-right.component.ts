@@ -82,7 +82,7 @@ export class NavRightComponent implements DoCheck, OnInit {
   ngOnInit(): void {
     this.consultarColorsettings();
     this.usuario = this._localstorageService.getUsuarioLocalStorage();
-    this.avatarUsuario = this._uploadService.getFilePath('usuarios', this.usuario.fotoUsuario || '');
+    this.avatarUsuario = this._uploadService.getFilePath('0', 'usuarios', this.usuario.fotoUsuario || '');
     this.nombreUsuario = this.usuario.nombreUsuario || '';
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;

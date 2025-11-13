@@ -79,9 +79,9 @@ export class SuscriptoresComponent implements OnInit {
 
   columnasRegistros: ColumnMetadata[] = [
     {
-      name: 'codigoSuscriptor',
+      name: 'logoSuscriptor',
       header: 'SUSCRIPTORES.CODE',
-      type: 'text'
+      type: 'image'
     },
     {
       name: 'nombreSuscriptor',
@@ -89,8 +89,13 @@ export class SuscriptoresComponent implements OnInit {
       type: 'text'
     },
     {
-      name: 'identificacion',
+      name: 'identificacionSuscriptor',
       header: 'SUSCRIPTORES.IDENTIFICATION',
+      type: 'text'
+    },
+    {
+      name: 'correoSuscriptor',
+      header: 'SUSCRIPTORES.STATUS',
       type: 'text'
     },
     {
@@ -102,6 +107,36 @@ export class SuscriptoresComponent implements OnInit {
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
+      name: 'codigoSuscriptor',
+      header: 'SUSCRIPTORES.CODE',
+      type: 'text'
+    },
+    {
+      name: 'direccionSuscriptor',
+      header: 'SUSCRIPTORES.CODE',
+      type: 'text'
+    },
+    {
+      name: 'telefonoContacto',
+      header: 'SUSCRIPTORES.CODE',
+      type: 'text'
+    },
+    {
+      name: 'numeroEmpresas',
+      header: 'SUSCRIPTORES.CODE',
+      type: 'text'
+    },
+    {
+      name: 'numeroUsuarios',
+      header: 'SUSCRIPTORES.CODE',
+      type: 'text'
+    },
+    {
+      name: 'usuarioAdministrador',
+      header: 'SUSCRIPTORES.CODE',
+      type: 'text'
+    },
+    {
       name: 'descripcionSuscriptor',
       header: 'SUSCRIPTORES.DESCRIPTION',
       type: 'text'
@@ -109,7 +144,7 @@ export class SuscriptoresComponent implements OnInit {
   ];
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['/suscriptor/gestion-suscriptor']);
+    this.router.navigate(['/suscriptor/gestion-suscriptor'], { queryParams: { regId: 'nuevo' } });
   }
 
   OnEditarRegistroClick(id: number) {
@@ -159,7 +194,7 @@ export class SuscriptoresComponent implements OnInit {
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) => suscriptor.identificacion || 0);
+      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) => suscriptor.identificacionSuscriptor || 0);
       console.log('filtrados', this.registrosFiltrado);
     }
   }

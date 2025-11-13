@@ -83,7 +83,7 @@ export class GestionAplicacionComponent implements OnInit {
             next: (resp: any) => {
               this.FormRegistro = resp.aplicacion;
               this.codeAplicacion = resp.aplicacion.codigoAplicacion;
-              this.selectedFileUrl = this._uploadService.getFilePath('aplicaciones', resp.aplicacion.imagenInicio);
+              this.selectedFileUrl = this._uploadService.getFilePath('0', 'aplicaciones', resp.aplicacion.imagenInicio);
             },
             error: () => {
               Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error');
@@ -129,7 +129,7 @@ export class GestionAplicacionComponent implements OnInit {
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];
     const objUpload = {
-      id: '0',
+      susc: '0',
       tipo: 'aplicaciones'
     };
     if (file) {

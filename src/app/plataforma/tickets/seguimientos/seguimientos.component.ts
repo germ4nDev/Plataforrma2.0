@@ -246,7 +246,7 @@ export class SeguimientosComponent implements OnInit {
             if (segui.capturaSeguimiento != 'no-imagen.png') {
               const captura = segui.capturaSeguimiento || '';
               console.log('========== eliminar captura', captura);
-              this._uploadService.deleteFilePath('seguimientos', captura).subscribe((data: any) => {
+              this._uploadService.deleteFilePath('0', 'seguimientos', captura).subscribe((data: any) => {
                 console.log('mensaje', data.mensaje);
               });
             }

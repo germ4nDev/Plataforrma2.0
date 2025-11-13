@@ -92,13 +92,13 @@ export class GestionSeguimientoComponent {
           next: (resp: any) => {
             console.log('resp', resp);
             this.FormRegistro = resp.seguimiento;
-            this.selectedFileUrl = this._uploadService.getFilePath('tickets', resp.seguimiento.capturaSeguimiento);
+            this.selectedFileUrl = this._uploadService.getFilePath('0', 'tickets', resp.seguimiento.capturaSeguimiento);
             const fechaString = this.FormRegistro.fechaSeguimiento;
             if (fechaString) {
               const fechaAsig = new Date(fechaString);
               this.FormRegistro.fecha = this.setFechaRiesgo(fechaAsig);
             }
-            this.selectedFileUrl = this._uploadService.getFilePath('seguimientos', resp.seguimiento.capturaSeguimiento);
+            this.selectedFileUrl = this._uploadService.getFilePath('0', 'seguimientos', resp.seguimiento.capturaSeguimiento);
             // console.log('datos del FormRegistro', this.FormRegistro);
           },
           error: () => {
@@ -133,7 +133,7 @@ export class GestionSeguimientoComponent {
         this.FormRegistro.codigoTicket = '';
         this.FormRegistro.estadoSeguimiento = 'PE';
         this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
-        this.selectedFileUrl = this._uploadService.getFilePath('tickets', 'no-imagen.png');
+        this.selectedFileUrl = this._uploadService.getFilePath('0', 'tickets', 'no-imagen.png');
         this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
         this.modoEdicion = false;
         console.log('============= FormRegistro', this.FormRegistro);
@@ -170,7 +170,7 @@ export class GestionSeguimientoComponent {
               this.FormRegistro.codigoSeguimiento = uuidv4();
               this.FormRegistro.estadoSeguimiento = 'PE';
               this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
-              this.selectedFileUrl = this._uploadService.getFilePath('tickets', 'no-imagen.png');
+              this.selectedFileUrl = this._uploadService.getFilePath('0', 'tickets', 'no-imagen.png');
               this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
             }
             console.log('tickets:', this.tickets);

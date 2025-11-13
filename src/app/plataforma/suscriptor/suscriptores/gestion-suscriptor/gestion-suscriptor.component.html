@@ -2,18 +2,10 @@
 <div class="layout-wrapper">
     <aside class="aside-left">
         <div class="card">
-            <div class="nav-tabs-custom">
-                <button>
-                    {{ 'PLATAFORMA.MENU' | translate }}
-                </button>
-            </div>
-
-            <ng-container>
-                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
-            </ng-container>
+            <div class="nav-tabs-custom"><button>{{ 'PLATAFORMA.MENU' | translate }}</button></div>
+            <ng-container><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></ng-container>
         </div>
     </aside>
-
     <div class="form-area">
         <div class="card">
             <div class="card-header card-header-sticky">
@@ -23,19 +15,22 @@
                         <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'SITIOS.UPDATE' | translate }}</h4>
                     </div>
                     <div class="d-flex">
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnRegresarClick()">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                        <button *ngIf="!modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SUSCRIPTORES.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SUSCRIPTORES.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
-                        </button>
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
                         </button>
                     </div>
                 </div>
@@ -43,6 +38,21 @@
             <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'TICKETS.GESTION.CODE' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="codigoSuscriptor"
+                                    placeholder="{{ 'SUSCRIPTORES.GESTION.PLACEHOLDERCODE' | translate }}"
+                                    [ngClass]="{'is-invalid': !codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit) }"
+                                    #codigoSuscriptor="ngModel" required [(ngModel)]="FormRegistro.codigoSuscriptor"
+                                    readonly />
+                                <label
+                                    *ngIf="!codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                </label>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreSuscriptor">
@@ -63,9 +73,11 @@
                                 <label class="form-control-label" for="identificacion">{{
                                     'SUSCRIPTORES.GESTION.IDENTIFICATION' | translate }}</label>
                                 <input class="form-control form-input" id="identificacion" name="identificacion"
-                                    type="text" placeholder="{{ 'SUSCRIPTORES.GESTION.PLACEHOLDERIDENTIFICACION' | translate }}"
+                                    type="text"
+                                    placeholder="{{ 'SUSCRIPTORES.GESTION.PLACEHOLDERIDENTIFICACION' | translate }}"
                                     [ngClass]="{ 'is-invalid': !identificacion.valid && (identificacion.dirty || identificacion.touched || isSubmit) }"
-                                    #identificacion="ngModel" required [(ngModel)]="FormRegistro.identificacion" />
+                                    #identificacion="ngModel" required
+                                    [(ngModel)]="FormRegistro.identificacionSuscriptor" />
                                 <label
                                     *ngIf="!identificacion.valid && (identificacion.dirty || identificacion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
@@ -73,17 +85,110 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoSuscriptor">{{ 'SUSCRIPTORES.GESTION.CODE' |
+                                <label class="form-control-label" for="direccionSuscriptor">{{
+                                    'SUSCRIPTORES.GESTION.ADDRESS' |
                                     translate }}</label>
-                                <input class="form-control form-input" id="codigoSuscriptor" name="codigoSuscriptor"
-                                    type="text" placeholder="{{ 'SUSCRIPTORES.GESTION.PHCODE' | translate }}"
-                                    [ngClass]="{ 'is-invalid': !codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit) }"
-                                    #codigoSuscriptor="ngModel" required [(ngModel)]="FormRegistro.codigoSuscriptor"
-                                    readonly />
+                                <input class="form-control form-input" id="direccionSuscriptor"
+                                    name="direccionSuscriptor" type="text"
+                                    placeholder="{{ 'SUSCRIPTORES.GESTION.ADDRESS' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !direccionSuscriptor.valid && (direccionSuscriptor.dirty || direccionSuscriptor.touched || isSubmit) }"
+                                    #direccionSuscriptor="ngModel" required
+                                    [(ngModel)]="FormRegistro.direccionSuscriptor" />
                                 <label
-                                    *ngIf="!codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit)"
+                                    *ngIf="!direccionSuscriptor.valid && (direccionSuscriptor.dirty || direccionSuscriptor.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.REGRESAR' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="telefonoContacto">{{ 'SUSCRIPTORES.GESTION.PHONE'
+                                    |
+                                    translate }}</label>
+                                <input class="form-control form-input" id="telefonoContacto" name="telefonoContacto"
+                                    type="text" placeholder="{{ 'SUSCRIPTORES.GESTION.PHONE' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !telefonoContacto.valid && (telefonoContacto.dirty || telefonoContacto.touched || isSubmit) }"
+                                    #telefonoContacto="ngModel" required [(ngModel)]="FormRegistro.telefonoContacto"
+                                    />
+                                <label
+                                    *ngIf="!telefonoContacto.valid && (telefonoContacto.dirty || telefonoContacto.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.REGRESAR' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="numeroEmpresas">{{
+                                    'SUSCRIPTORES.GESTION.NUMEMPRESAS' |
+                                    translate }}</label>
+                                <input class="form-control form-input" id="numeroEmpresas" name="numeroEmpresas"
+                                    type="number" placeholder="{{ 'SUSCRIPTORES.GESTION.NUMEMPRESAS' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !numeroEmpresas.valid && (numeroEmpresas.dirty || numeroEmpresas.touched || isSubmit) }"
+                                    #numeroEmpresas="ngModel" required [(ngModel)]="FormRegistro.numeroEmpresas"
+                                    />
+                                <label
+                                    *ngIf="!numeroEmpresas.valid && (numeroEmpresas.dirty || numeroEmpresas.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.REGRESAR' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="numeroUsuarios">{{
+                                    'SUSCRIPTORES.GESTION.NUMUSERS' |
+                                    translate }}</label>
+                                <input class="form-control form-input" id="numeroUsuarios" name="numeroUsuarios"
+                                    type="number" placeholder="{{ 'SUSCRIPTORES.GESTION.NUMUSERS' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !numeroUsuarios.valid && (numeroUsuarios.dirty || numeroUsuarios.touched || isSubmit) }"
+                                    #numeroUsuarios="ngModel" required [(ngModel)]="FormRegistro.numeroUsuarios"
+                                    />
+                                <label
+                                    *ngIf="!numeroUsuarios.valid && (numeroUsuarios.dirty || numeroUsuarios.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.REGRESAR' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="usuarioAdministrador">{{
+                                    'SUSCRIPTORES.GESTION.ADMINUSER' |
+                                    translate }}</label>
+                                <input class="form-control form-input" id="usuarioAdministrador"
+                                    name="usuarioAdministrador" type="text"
+                                    placeholder="{{ 'SUSCRIPTORES.GESTION.ADMINUSER' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !usuarioAdministrador.valid && (usuarioAdministrador.dirty || usuarioAdministrador.touched || isSubmit) }"
+                                    #usuarioAdministrador="ngModel" required
+                                    [(ngModel)]="FormRegistro.usuarioAdministrador" />
+                                <label
+                                    *ngIf="!usuarioAdministrador.valid && (usuarioAdministrador.dirty || usuarioAdministrador.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.REGRESAR' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="claveAdministrador">{{
+                                    'SUSCRIPTORES.GESTION.ADMINPASSWORD' |
+                                    translate }}</label>
+                                <div class="input-group mb-4">
+                                    <input class="form-control form-input" id="claveAdministrador"
+                                        name="claveAdministrador" type="password"
+                                        placeholder="{{ 'SUSCRIPTORES.GESTION.ADMINPASSWORD' | translate }}"
+                                        [ngClass]="{ 'is-invalid': !claveAdministrador.valid && (claveAdministrador.dirty || claveAdministrador.touched || isSubmit) }"
+                                        #claveAdministrador="ngModel" required
+                                        [(ngModel)]="FormRegistro.claveAdministrador" />
+                                    <span class="input-group-text form-input"><i class="feather icon-eye"
+                                            style="cursor: pointer;" id="togglePassword"></i></span>
+                                </div>
+                                <label
+                                    *ngIf="!claveAdministrador.valid && (claveAdministrador.dirty || claveAdministrador.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'PLATAFORMA.REGRESAR' | translate }}
                                 </label>
@@ -92,18 +197,15 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SUSCRIPTORES.DESCRIPTION' | translate }}</label>
-                                <app-text-editor
-                                    [toolbarType]="tipoEditorTexto"
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcionSuscriptor ?? ''"
                                     (contentHtmlChange)="actualizarDescripcionSuscriptor($event)"
-                                    name="descripcionSuscriptor"
-                                    [(ngModel)]="FormRegistro.descripcionSuscriptor"
+                                    name="descripcionSuscriptor" [(ngModel)]="FormRegistro.descripcionSuscriptor"
                                     [ngClass]="{'is-invalid': !descripcionSuscriptor.valid && (descripcionSuscriptor.dirty || descripcionSuscriptor.touched || isSubmit)}"
-                                    #descripcionSuscriptor="ngModel"
-                                    required
-                                    rows="5">
+                                    #descripcionSuscriptor="ngModel" required rows="5">
                                 </app-text-editor>
-                                <label     *ngIf="!descripcionSuscriptor.valid && (descripcionSuscriptor.dirty || descripcionSuscriptor.touched || isSubmit)"
+                                <label
+                                    *ngIf="!descripcionSuscriptor.valid && (descripcionSuscriptor.dirty || descripcionSuscriptor.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SUSCRIPTORES.GESTION.REQUERIDODESCRIPCION' | translate }}
                                 </label>
@@ -111,16 +213,87 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
+                                <label class="form-label">{{ 'SUSCRIPTORES.GESTION.LOGO' | translate }}</label>
+                                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview">
+                                <div class="file-input-wrapper">
+                                    <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
+                                        {{ 'Seleccionar archivo' | translate }}
+                                    </label>
+                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
+                                        id="fileUploadInput" class="form-control form-input d-none"
+                                        name="capturaTicket">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'SUSCRIPTORES.SENDMAILS' | translate }}</label>
+                                <div class="radio-buttons">
+                                    <label class="radio-button">
+                                        <input name="envioCorreosSuscriptor" type="radio" [value]="true"
+                                            [(ngModel)]="FormRegistro.envioCorreosSuscriptor" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input name="envioCorreosSuscriptor" type="radio" [value]="false"
+                                            [(ngModel)]="FormRegistro.envioCorreosSuscriptor" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'SUSCRIPTORES.SENDMESSAGES' | translate }}</label>
+                                <div class="radio-buttons">
+                                    <label class="radio-button">
+                                        <input name="envioMensajesSuscriptor" type="radio" [value]="true"
+                                            [(ngModel)]="FormRegistro.envioMensajesSuscriptor" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input name="envioMensajesSuscriptor" type="radio" [value]="false"
+                                            [(ngModel)]="FormRegistro.envioMensajesSuscriptor" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'SUSCRIPTORES.SENDPUBLICITY' | translate }}</label>
+                                <div class="radio-buttons">
+                                    <label class="radio-button">
+                                        <input name="envioPublicidadSuscriptor" type="radio" [value]="true"
+                                            [(ngModel)]="FormRegistro.envioPublicidadSuscriptor" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
+                                    </label>
+                                    <label class="radio-button">
+                                        <input name="envioPublicidadSuscriptor" type="radio" [value]="false"
+                                            [(ngModel)]="FormRegistro.envioMensajesSuscriptor" />
+                                        <div class="radio-circle"></div>
+                                        <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label class="form-label">{{ 'SUSCRIPTORES.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
-                                        <input name="option" type="radio" [value]="true"
+                                        <input name="estadoSuscriptor" type="radio" [value]="true"
                                             [(ngModel)]="FormRegistro.estadoSuscriptor" />
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
                                     </label>
                                     <label class="radio-button">
-                                        <input name="option" type="radio" [value]="false"
+                                        <input name="estadoSuscriptor" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoSuscriptor" />
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>

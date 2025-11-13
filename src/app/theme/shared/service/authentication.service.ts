@@ -15,6 +15,7 @@ export class AuthenticationService {
   // eslint-disable-next-line
   private currentUserSubject: BehaviorSubject<PTLUsuarioModel | any>;
   public currentUser: Observable<PTLUsuarioModel>;
+  isValid: boolean = false;
 
   constructor(
     private router: Router,

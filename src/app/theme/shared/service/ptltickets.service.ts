@@ -91,7 +91,6 @@ export class PTLTicketsService {
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de ticket eliminado', resp);
-
         return {
           ok: true,
           ticket: resp.ticket

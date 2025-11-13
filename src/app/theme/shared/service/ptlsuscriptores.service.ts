@@ -32,10 +32,11 @@ export class PTLSuscriptoresService {
   }
 
   getSuscriptores() {
-    return this.http.get<PTLSuscriptorModel>(`${environment.apiUrl}/suscriptores`)
+    const url = `${base_url}/suscriptores`;
+    return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('respuesta servicio', resp);
+        console.log('respuesta servicio suscriptores', resp);
         return {
           ok: true,
           suscriptores: resp.suscriptores
@@ -58,9 +59,17 @@ export class PTLSuscriptoresService {
     );
   }
 
-  crearSuscriptor(suscriptor: PTLSuscriptorModel) {
+  crearSuscriptor(data: PTLSuscriptorModel) {
+    console.log('data servicio', data);
     const url = `${base_url}/suscriptores`;
-    return this.http.post(url, suscriptor);
+    return this.http.post(url, data).pipe(
+      map((resp: any) => {
+        return {
+          ok: true,
+          suscriptor: resp.suscriptor
+        };
+      })
+    );
   }
 
   actualizarSuscriptor(suscriptor: PTLSuscriptorModel) {
@@ -83,6 +92,7 @@ export class PTLSuscriptoresService {
     .pipe(
       map((resp: any) => {
         console.log('data de suscriptor modificacda', resp);
+        //TODO al eliminar el suscriptor se debe eliminar toda su descendencia, usuariosSC, empresas, paquetes...
         return {
           ok: true,
           suscriptor: resp.suscriptor

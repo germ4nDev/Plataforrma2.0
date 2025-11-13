@@ -7,6 +7,7 @@ import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
 import { BaseSessionModel } from '../_helpers/models/BaseSession.model';
 import { ThemeSettingsModel } from '../_helpers/models/ThemeSettings.model';
 import { NavSettings } from '../_helpers/models/navSettings.model';
+import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,12 @@ export class LocalStorageService {
   DataModel: BaseSessionModel = new BaseSessionModel();
   navsettings: NavSettings = new NavSettings();
   public usuario: any;
+  public token: any;
   public currentUser: any;
   public aplicacion: any;
   public suite: any;
   public modulo: any;
+  public suscriptor: any;
   public FormRegistro: any;
   public lang: string = 'en';
   public themeSettings: any;
@@ -26,9 +29,16 @@ export class LocalStorageService {
   constructor() {}
 
   // #region SETTERS
-  setUsuarioLocalStorage(user: PTLUsuarioModel) {
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    this.usuario = user;
+  setUsuarioLocalStorage(usuario: PTLUsuarioModel) {
+    this.currentUser.usuario = usuario;
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+    this.usuario = usuario;
+  }
+
+  setTokenLocalStorage(token: any) {
+    this.currentUser.token = token;
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+    this.token = token;
   }
 
   setNavSettingsLocalStorage(navsettings: NavSettings) {
@@ -52,6 +62,12 @@ export class LocalStorageService {
     this.navsettings.modulo = modulo;
     localStorage.setItem('navsettings', JSON.stringify(this.navsettings));
     this.modulo = modulo;
+  }
+
+  setSuscriptorLocalStorage(data: PTLSuscriptorModel) {
+    this.currentUser.suscrptor = data;
+    localStorage.setItem('navsettings', JSON.stringify(this.navsettings));
+    this.suscriptor = data;
   }
 
   setThemeSettingsLocalStorage(settings: ThemeSettingsModel) {
@@ -78,6 +94,11 @@ export class LocalStorageService {
   // #endregion SETTERS
 
   // #region GETTERS
+getCurrentUserLocalStorage() {
+    this.usuario = JSON.parse(localStorage.getItem('currentUser') || '');
+    return this.usuario.usuario;
+  }
+
   getUsuarioLocalStorage() {
     this.usuario = JSON.parse(localStorage.getItem('currentUser') || '');
     return this.usuario.usuario;
@@ -101,6 +122,11 @@ export class LocalStorageService {
   getModuloLocalStorage(): PTLModuloAP {
     const modulo = this.getNavSettingsLocalStorage().modulo || new PTLModuloAP();
     return modulo;
+  }
+
+  getSuscriptorLocalStorage(): PTLSuscriptorModel {
+    const suscriptor = this.getUsuarioLocalStorage().suscriptor || new PTLAplicacionModel();
+    return suscriptor;
   }
 
   getDataModelsLocalStorage() {

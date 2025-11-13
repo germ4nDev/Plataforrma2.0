@@ -15,7 +15,8 @@ import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { Observable, Subscription } from 'rxjs';
-import { LocalStorageService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtllogActividadesService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-gestion-suscriptor',
@@ -28,6 +29,7 @@ export class GestionSuscriptorComponent {
   // private props
   @Output() toggleSidebar = new EventEmitter<void>();
   FormRegistro: PTLSuscriptorModel = new PTLSuscriptorModel();
+  classList!: { toggle: (arg0: string) => void };
   menuItems!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
@@ -42,19 +44,29 @@ export class GestionSuscriptorComponent {
   isLocked: boolean = false;
   lockMessage: string = '';
 
+  selectedFile: File | null = null;
+  previewUrl: string | ArrayBuffer | null = null;
+  userPhotoUrl: string = '';
+  fileName: string | null = null;
+  selectedFileUrl: string | null = null;
+
   // constructor
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private translate: TranslateService,
     private _suscriptoresService: PTLSuscriptoresService,
     private _navigationService: NavigationService,
-    private _localStorageService: LocalStorageService
+    private _localStorageService: LocalStorageService,
+    private _uploadService: UploadFilesService,
+    private _logActividadesService: PtllogActividadesService,
+    private _swalAlertService: SwalAlertService
   ) {
     this.isSubmit = false;
     this.route.queryParams.subscribe((params) => {
       const id = params['regId'];
       console.log('me llena el Id', id);
-      if (id) {
+      if (id != 'nuevo') {
         this.modoEdicion = true;
         this._suscriptoresService.getSuscriptorById(id).subscribe({
           next: (resp: any) => {
@@ -88,6 +100,32 @@ export class GestionSuscriptorComponent {
       this.FormRegistro = form;
       this._localStorageService.removeFormRegistro();
     }
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#claveAdministrador');
+
+    togglePassword?.addEventListener('click', () => {
+      // toggle the type attribute
+      const type = password?.getAttribute('type') === 'password' ? 'text' : 'password';
+      password?.setAttribute('type', type);
+      this.classList.toggle('icon-eye-off');
+    });
+    if (!this.modoEdicion) {
+      console.log('modo edicion', this.modoEdicion);
+              this.FormRegistro.codigoSuscriptor = uuidv4();
+
+      //   this.FormRegistro.codigoAplicacion = '';
+      //   this.FormRegistro.codigoSuite = '';
+      //   this.FormRegistro.codigoModulo = '';
+      //   this.FormRegistro.codigoUsuarioAsignado = '';
+      //   this.FormRegistro.codigoClase = '';
+      //   this.FormRegistro.estadoTicket = '';
+      //   this.FormRegistro.prioridad = '';
+      //   this.FormRegistro.capturaTicket = 'no-imagen.png';
+      //   this.FormRegistro.codigoTicket = uuidv4();
+      //   this.selectedFileUrl = this._uploadService.getFilePath('tickets', 'no-foto.png');
+      //   this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
+      // console.log('FormRegistro', this.FormRegistro);
+    }
   }
 
   actualizarDescripcionSuscriptor(nuevoContenido: string): void {
@@ -95,6 +133,34 @@ export class GestionSuscriptorComponent {
     console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionSuscriptor);
     // if (this.validationForm && this.isSubmit) {
     // }
+  }
+
+  onFileSelectedClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      susc: this.FormRegistro.codigoSuscriptor,
+      tipo: 'tickets'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrl = e.target.result;
+      };
+      this.FormRegistro.logoSuscriptor = '';
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+          this.userPhotoUrl = path.nombreArchivo;
+          this.FormRegistro.logoSuscriptor = path.nombreArchivo;
+        },
+        error: () => {
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+        }
+      });
+    } else {
+      this.selectedFileUrl = null;
+      this.userPhotoUrl = '';
+    }
   }
 
   btnGestionarRegistroClick(form: any) {
@@ -118,6 +184,7 @@ export class GestionSuscriptorComponent {
         }
       });
     } else {
+        console.log('FormRegistro', this.FormRegistro);
       this._suscriptoresService.crearSuscriptor(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {

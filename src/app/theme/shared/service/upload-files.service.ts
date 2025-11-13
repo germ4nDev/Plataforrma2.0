@@ -15,18 +15,18 @@ export class UploadFilesService {
   uploadUserPhoto(file: File, objUpload: any) {
     const formData = new FormData();
     formData.append('foto', file);
-    const url = `${base_url}/upload/${objUpload.tipo}/${objUpload.id}`;
+    const url = `${base_url}/upload/${objUpload.susc}/${objUpload.tipo}/${objUpload.id}`;
     return this.http.put(url, formData);
   }
 
-  getFilePath(type: string, fileName: string) {
-    const pathUrl = `${base_url}/upload/${type}/${fileName}`;
+  getFilePath(susc: string, type: string, fileName: string) {
+    const pathUrl = `${base_url}/upload/${susc}/${type}/${fileName}`;
     console.log('path de la imagen', pathUrl);
     return pathUrl;
   }
 
-  deleteFilePath(type: string, fileName: string) {
-    const pathUrl = `${base_url}/upload/delete/${type}/${fileName}`;
+  deleteFilePath(susc: string, type: string, fileName: string) {
+    const pathUrl = `${base_url}/upload/delete/${susc}/${type}/${fileName}`;
     console.log('path de la rutaAPI', pathUrl);
     return this.http.delete(pathUrl).pipe(
       map((resp: any) => {

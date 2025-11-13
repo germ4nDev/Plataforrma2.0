@@ -24,7 +24,7 @@ const routes: Routes = [
       },
       {
         path: 'estadisticas',
-        loadComponent: () => import('./suscriptores/estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent)
+        loadComponent: () => import('./estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent)
       },
       {
         path: 'empresas',

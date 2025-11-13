@@ -119,7 +119,7 @@ export class GestionTicketComponent {
               const fechaAsig = new Date(fechaString);
               this.FormRegistro.fecha = this.setFechaRiesgo(fechaAsig);
             }
-            this.selectedFileUrl = this._uploadService.getFilePath('tickets', resp.ticket.capturaTicket);
+            this.selectedFileUrl = this._uploadService.getFilePath('0', 'tickets', resp.ticket.capturaTicket);
             // console.log('datos del FormRegistro', this.FormRegistro);
           },
           error: () => {
@@ -167,7 +167,7 @@ export class GestionTicketComponent {
       this.FormRegistro.prioridad = '';
       this.FormRegistro.capturaTicket = 'no-imagen.png';
       this.FormRegistro.codigoTicket = uuidv4();
-      this.selectedFileUrl = this._uploadService.getFilePath('tickets', 'no-foto.png');
+      this.selectedFileUrl = this._uploadService.getFilePath('0', 'tickets', 'no-foto.png');
       this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
       // console.log('FormRegistro', this.FormRegistro);
     }
@@ -367,7 +367,7 @@ export class GestionTicketComponent {
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];
     const objUpload = {
-      suscriptor: '0',
+      susc: '0',
       aplicacion: this._localStorageService.getAplicaicionLocalStorage().nombreAplicacion,
       tipo: 'tickets'
     };

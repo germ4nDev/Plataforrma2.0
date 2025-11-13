@@ -4,15 +4,28 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, tap } from 'rxjs/operators';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
-import { of, Subscription } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
-import Swal from 'sweetalert2';
-import { ThemeService } from 'src/app/theme/shared/service';
 import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
+import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
+import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
+import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model';
+import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
+import { of, Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
+import {
+  AuthenticationService,
+  LocalStorageService,
+  PtlEmpresasScService,
+  PtllogActividadesService,
+  PTLSuscriptoresService,
+  PtlusuariosScService,
+  PTLUsuariosService,
+  SwalAlertService,
+  ThemeService
+} from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +37,14 @@ import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fulls
 export class LoginComponent implements OnInit {
   //#region VARIABLES
   classList!: { toggle: (arg0: string) => void };
+  registrosSub?: Subscription;
+  registros: PTLSuscriptorModel[] = [];
+  usuariosSCSub?: Subscription;
+  usuariosSC: PTLUsuarioSCModel[] = [];
+  usuariosSub?: Subscription;
+  usuarios: PTLUsuarioModel[] = [];
+  empresasSCSub?: Subscription;
+  empresasSC: PTLEmpresaSCModel[] = [];
   loginForm!: FormGroup;
   loginSub?: Subscription;
   usernameValue: string = '';
@@ -39,32 +60,40 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private translate: TranslateService,
+    private _logActividadesService: PtllogActividadesService,
+    private _swalService: SwalAlertService,
     private _themeService: ThemeService,
-    private authenticationService: AuthenticationService
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _usuariosSCService: PtlusuariosScService,
+    private _empresasSCService: PtlEmpresasScService,
+    private _usuariosService: PTLUsuariosService,
+    private _localStorageService: LocalStorageService,
+    private _authenticationService: AuthenticationService
   ) {
     // redirect to home if already logged in
-    if (this.authenticationService.currentUserValue) {
+    if (this._authenticationService.currentUserValue) {
       //    this.router.navigate(['/dashboard/analytics']);
     }
   }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
+      suscriptor: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
-
+    this.consultarUsuarios();
+    this.consultarUsuariosSC();
+    this.consultarEmpresasSC();
+      this.consultarRegistros();
     const togglePassword = document.querySelector('#togglePassword');
     const password = document.querySelector('#password');
-
     togglePassword?.addEventListener('click', () => {
-      // toggle the type attribute
       const type = password?.getAttribute('type') === 'password' ? 'text' : 'password';
       password?.setAttribute('type', type);
       this.classList.toggle('icon-eye-off');
     });
-
-    // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
   }
 
@@ -76,12 +105,92 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
+  get suscriptorControl() {
+    return this.loginForm.get('suscriptor');
+  }
+
   get usernameControl() {
     return this.loginForm.get('username');
   }
 
   get passwordControl() {
     return this.loginForm.get('password');
+  }
+
+  consultarUsuarios() {
+    this.usuariosSub = this._usuariosService
+      .getUsuarios()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.usuarios = resp.usuarios;
+            console.log('Todos los Suscriptores', this.usuarios);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarUsuariosSC() {
+    this.usuariosSCSub = this._usuariosSCService
+      .getUsuariosSC()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.registros = resp.usuarios;
+            console.log('Todos los Suscriptores', this.registros);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarEmpresasSC() {
+    this.empresasSCSub = this._empresasSCService
+      .getEmpresasSC()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.empresasSC = resp.empresasSC;
+            console.log('Todos los Suscriptores', this.empresasSC);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
+  consultarRegistros() {
+    this.registrosSub = this._suscriptoresService
+      .getSuscriptores()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.registros = resp.suscriptor;
+            console.log('Todos los Suscriptores', this.registros);
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   onLoginUserClick(): void {
@@ -91,34 +200,64 @@ export class LoginComponent implements OnInit {
     }
     this.error = '';
     this.loading = true;
-    const email = this.formValues?.['username']?.value;
+    const suscriptor = this.formValues?.['suscriptor']?.value;
+    const userName = this.formValues?.['username']?.value;
     const password = this.formValues?.['password']?.value;
-
-    this.loginSub = this.authenticationService
-      .login(email, password)
-      .pipe(
-        tap((resp: any) => {
-          this.loading = false;
-          if (!resp.ok) {
-            Swal.fire({
-              title: resp.msg,
-              text: 'La dirección de correo electrónico ingresada no se encuentra registrada en nuestro sistema!',
-              icon: 'error',
-              showCloseButton: true
-            });
-            return;
-          }
-          console.log('Login exitoso:', resp);
-          this.router.navigate(['/frontal/inicio']);
-        }),
-        catchError((err) => {
-          this.loading = false;
-          this.error = err;
-          Swal.fire('Error', err, 'error');
-          return of(null);
-        })
-      )
-      .subscribe();
+    const dataSuscriptor = this.registros.filter(x => x.codigoSuscriptor == suscriptor)[0];
+    const userSuscriptor = this.usuariosSC.filter((x) => x.codigoSuscriptor == suscriptor)[0];
+    const usuairoBD = this.usuarios.filter((x) => x.codigoUsuario == userSuscriptor.codigoUsuario)[0];
+    if (userSuscriptor && usuairoBD) {
+      if (usuairoBD.userNameUsuario == userName) {
+        this.loginSub = this._authenticationService
+          .login(userName, password)
+          .pipe(
+            tap((resp: any) => {
+              this.loading = false;
+              if (!resp.ok) {
+                const logData = {
+                  codigoTipoLog: '',
+                  codigoRespuesta: '501',
+                  descripcionLog: this.translate.instant('PLATAFORMA.USERNOTFOUND')
+                };
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTFOUND'));
+                Swal.fire({
+                  title: resp.msg,
+                  text: 'La dirección de correo electrónico ingresada no se encuentra registrada en nuestro sistema!',
+                  icon: 'error',
+                  showCloseButton: true
+                });
+                return;
+              }
+              console.log('Login exitoso:', resp);
+              this._localStorageService.setSuscriptorLocalStorage(dataSuscriptor);
+              this.router.navigate(['/frontal/inicio']);
+            }),
+            catchError((err) => {
+              this.loading = false;
+              this.error = err;
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '501',
+                descripcionLog: this.translate.instant('PLATAFORMA.LOGINFAILED') + ' ' + err.mensaje
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+              this._swalService.getAlertError(this.translate.instant('PLATAFORMA.LOGINFAILED') + ' ' + err.mensaje);
+              Swal.fire('Error', err, 'error');
+              return of(null);
+            })
+          )
+          .subscribe();
+      }
+    } else {
+      const logData = {
+        codigoTipoLog: '',
+        codigoRespuesta: '501',
+        descripcionLog: this.translate.instant('PLATAFORMA.USERNOTSUPSCRIPTOR')
+      };
+      this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+      this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTSUPSCRIPTOR'));
+    }
   }
 
   toggleTheme() {

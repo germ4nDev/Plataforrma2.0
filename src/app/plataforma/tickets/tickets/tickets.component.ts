@@ -410,7 +410,7 @@ export class TicketsComponent implements OnInit {
             if (ticket.capturaTicket != 'no-imagen.png') {
               console.log('esta es la captura del ticket', ticket.capturaTicket);
               const captura = ticket.capturaTicket || '';
-              this._uploadService.deleteFilePath('tickets', captura).subscribe((data: any) => {
+              this._uploadService.deleteFilePath('0', 'tickets', captura).subscribe((data: any) => {
                 console.log('mensaje', data.mensaje);
               });
             }
