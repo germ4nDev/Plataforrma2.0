@@ -12,7 +12,6 @@ import { PTLSeguimientosTKService } from 'src/app/theme/shared/service/ptlseguim
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
@@ -27,6 +26,7 @@ import {
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-gestion-seguimiento',

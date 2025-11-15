@@ -9,7 +9,6 @@ import { Observable, Subscription, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
@@ -24,6 +23,7 @@ import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { environment } from 'src/environments/environment';
 import { PtllogActividadesService } from 'src/app/theme/shared/service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 const base_url = environment.apiUrl;
 

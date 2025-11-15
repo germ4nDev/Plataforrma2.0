@@ -14,7 +14,6 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 import { GradientConfig } from 'src/app/app-config';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -22,6 +21,7 @@ import { DatatableComponent } from 'src/app/theme/shared/components/data-table/d
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-sites',

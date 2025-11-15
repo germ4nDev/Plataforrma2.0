@@ -13,7 +13,6 @@ import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
 import { catchError, Observable, tap } from 'rxjs';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { of, Subscription } from 'rxjs';
@@ -23,6 +22,7 @@ import { PTLSlierInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSli
 import { PtlSlidersInicioService } from 'src/app/theme/shared/service/ptlsliders-inicio.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { environment } from 'src/environments/environment';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 const base_url = environment.apiUrl;
 //#endregion IMPORTS

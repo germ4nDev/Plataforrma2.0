@@ -18,7 +18,6 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { GradientConfig } from 'src/app/app-config';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
@@ -28,6 +27,7 @@ import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.m
 import Swal from 'sweetalert2';
 
 import { environment } from 'src/environments/environment';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 const base_url = environment.apiUrl;
 
 @Component({

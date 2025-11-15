@@ -14,13 +14,13 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PTLSitiosAPModel } from 'src/app/theme/shared/_helpers/models/PTLSitioAP.model';
 import { GradientConfig } from 'src/app/app-config';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-home',
@@ -61,6 +61,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
+    console.log('menu items', this.menuItems$);
     // this.menuSubscription = this.menuItems$.subscribe(items => {
     //   // Este console.log se ejecutará CADA VEZ que el servicio emita nuevos datos.
     //   console.log('✅ Datos del menú recibidos:', items);

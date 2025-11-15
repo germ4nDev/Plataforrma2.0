@@ -10,7 +10,6 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { GradientConfig } from 'src/app/app-config';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
@@ -35,6 +34,7 @@ import { environment } from 'src/environments/environment';
 
 const base_url = environment.apiUrl;
 import Swal from 'sweetalert2';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-tickets',

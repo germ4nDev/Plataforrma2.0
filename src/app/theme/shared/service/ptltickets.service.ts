@@ -71,7 +71,7 @@ export class PTLTicketsService {
   }
 
   putModificarRegistro(ticket: PTLTicketAPModel) {
-    const url = `${base_url}/tickets-ap/${ticket.ticketId}`;
+    const url = `${base_url}/tickets-ap/${ticket.codigoTicket}`;
     return this.http.put(url, ticket).pipe(
       map((resp: any) => {
         console.log('data de ticket modificacda', resp);

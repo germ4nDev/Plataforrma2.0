@@ -35,8 +35,7 @@ export class PtlusuariosScService {
   getUsuariosSC() {
     return this.http.get<PTLUsuarioSCModel>(`${environment.apiUrl}/usuarios-sc`).pipe(
       map((resp: any) => {
-        console.log('respuesta servicio', resp);
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        console.log('respuesta servicio usuariosSC', resp);
         return {
           ok: true,
           usuarios: resp.usuariosSC

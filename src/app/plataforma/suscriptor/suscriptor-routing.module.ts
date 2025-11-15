@@ -32,7 +32,11 @@ const routes: Routes = [
       },
       {
         path: 'usuarios-empresa',
-        loadComponent: () => import('./empresas/usuarios-empresa/usuarios-empresa.component').then((m) => m.UsuariosEmpresaComponent)
+        loadComponent: () => import('./usuarios-empresa/usuarios-empresa.component').then((m) => m.UsuariosEmpresaComponent)
+      },
+      {
+        path: 'gestion-usuarios-empresa',
+        loadComponent: () => import('./usuarios-empresa/gestion-usuario-empresa/gestion-usuario-empresa.component').then((m) => m.GestionUsuarioEmpresaComponent)
       },
       {
         path: 'gestion-empresa',

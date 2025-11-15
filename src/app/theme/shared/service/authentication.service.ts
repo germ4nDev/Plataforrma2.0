@@ -79,7 +79,8 @@ export class AuthenticationService {
   }
 
   private setSession(user: PTLUsuarioModel): void {
-    this._localstorageService.setUsuarioLocalStorage(user);
+    console.log('subir usuario al localstorage', user);
+    this._localstorageService.setCurrentUserLocalStorage(user);
     this.currentUserSubject.next(user);
   }
 

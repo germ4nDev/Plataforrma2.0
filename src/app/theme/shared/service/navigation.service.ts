@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/contextual-lifecycle */
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { NavigationItem } from '../../layout/admin/navigation/navigation';
 import { PtlAplicacionesService } from './ptlaplicaciones.service';
 import { PtlSuitesAPService } from './ptlsuites-ap.service';
 import { PtlmodulosApService } from './ptlmodulos-ap.service';
@@ -13,6 +12,7 @@ import { LocalStorageService } from './local-storage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from './lenguage.service';
 import { Router } from '@angular/router';
+import { NavigationItem } from '../_helpers/models/Navigation.model';
 
 @Injectable({
   providedIn: 'root'

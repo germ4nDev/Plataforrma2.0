@@ -10,7 +10,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
@@ -21,6 +20,7 @@ import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetad
 import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
 import Swal from 'sweetalert2';
 import { PtllogActividadesService } from 'src/app/theme/shared/service/ptllog-actividades.service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-paquetes',

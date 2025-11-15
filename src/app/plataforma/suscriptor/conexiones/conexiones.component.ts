@@ -8,7 +8,6 @@ import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PtlAplicacionesService, PtllogActividadesService } from 'src/app/theme/shared/service';
@@ -19,6 +18,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import Swal from 'sweetalert2';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-conexciones',

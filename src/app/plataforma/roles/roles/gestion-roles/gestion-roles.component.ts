@@ -14,9 +14,9 @@ import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.se
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 //#endregion IMPORTS
 
 @Component({

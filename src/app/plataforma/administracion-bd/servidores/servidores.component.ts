@@ -8,7 +8,6 @@ import { Subscription, tap, catchError, of, Observable } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLServidorModel } from 'src/app/theme/shared/_helpers/models/PTLServidor.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLServidorService } from 'src/app/theme/shared/service/ptlservidor.service';
@@ -17,6 +16,7 @@ import { DatatableComponent } from 'src/app/theme/shared/components/data-table/d
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PtllogActividadesService } from 'src/app/theme/shared/service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-servidores',

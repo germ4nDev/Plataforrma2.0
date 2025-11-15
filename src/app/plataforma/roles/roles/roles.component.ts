@@ -17,12 +17,12 @@ import { catchError, Observable, Subject, tap } from 'rxjs';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 //#endregion IMPORTS
 
 @Component({

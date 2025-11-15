@@ -35,7 +35,7 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
         const newImage = {
             nombreslider: 'Ner Image',
             urlSlider: 'imagen-inicio.png',
-            imageSlider: `${base_url}/upload/sliders/imagen-inicio.png`
+            imageSlider: `${base_url}/upload/plataforma/sliders/imagen-inicio.png`
         }
         this.images.push(newImage);
     }
@@ -53,7 +53,7 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
         tap((resp: any) => {
           if (resp.ok) {
             resp.slidersInicio.forEach((slider: any) => {
-              slider.imageSlider = `${base_url}/upload/sliders/${slider.urlSlider}`;
+              slider.imageSlider = `${base_url}/upload/plataforma/sliders/${slider.urlSlider}`;
             });
             console.warn('FullscreenSliderComponent: No se proporcionaron imágenes. Se mostrará un placeholder.');
             this.images = resp.slidersInicio;

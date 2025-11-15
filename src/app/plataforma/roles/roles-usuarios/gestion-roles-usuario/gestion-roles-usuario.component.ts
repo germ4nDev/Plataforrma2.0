@@ -19,11 +19,11 @@ import {
   PTLUsuariosService
 } from 'src/app/theme/shared/service';
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 // import Swal from 'sweetalert2';
 //#endregion IMPORTS
 

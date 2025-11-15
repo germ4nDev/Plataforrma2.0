@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLLogActividadAPModel } from './../_helpers/models/PTLlogActividadAP.model';
+// import { PTLLogActividadAPModel } from './../_helpers/models/PTLlogActividadAP.model';
 import { NavSettings } from '../_helpers/models/navSettings.model';
 import { LocalStorageService } from './local-storage.service';
 import { PTLTiposLogsService } from './ptltipos-logs.service';
@@ -33,23 +33,31 @@ export class PtllogActividadesService {
   }
 
   get getLogBody() {
+    let codigoAplicacion: string = '';
+    let codigoSuite: string = '';
+    let codigoModulo: string = '';
+    let codigoSuscriptor: string = '';
     const navs = this._localStorageSercice.getNavSettingsLocalStorage();
-    const codigoAplicacion = navs.aplicacion ? navs.aplicacion.codigoAplicacion : '';
-    const codigoSuite = navs.suite ? navs.suite.codigoSuite : '';
-    const codigoModulo = navs.modulo ? navs.modulo.codigoModulo : '';
-    const usuario = this._localStorageSercice.getUsuarioLocalStorage();
+    if (navs) {
+      codigoAplicacion = navs.aplicacion?.codigoAplicacion ?? '';
+      codigoSuite = navs.suite?.codigoSuite ?? '';
+      codigoModulo = navs.modulo?.codigoModulo ?? '';
+      codigoSuscriptor = navs.modulo?.codigoModulo ?? '';
+    }
     const dataLog = {
       codigoAplicacion: codigoAplicacion,
       codigoSuite: codigoSuite,
       codigoModulo: codigoModulo,
-      codigoSuscriptor: '',
+      codigoSuscriptor: codigoSuscriptor,
       codigoTipoLog: '',
       codigoRespuesta: '',
       descripcionLog: '',
-      codigoUsuarioCreacion: usuario.codigoUsuario,
+      codigoUsuarioCreacion: '',
       fechaLog: new Date().toISOString(),
       fechaCreacion: new Date().toISOString()
     };
+    console.log('body del log antes', dataLog);
+
     return dataLog;
   }
 
@@ -57,8 +65,7 @@ export class PtllogActividadesService {
     private http: HttpClient,
     private _localStorageSercice: LocalStorageService,
     private _tiposLogsService: PTLTiposLogsService
-  ) {
-  }
+  ) {}
 
   getRegistros() {
     const url = `${base_url}/logs-actividades`;
@@ -87,23 +94,61 @@ export class PtllogActividadesService {
   }
 
   postCrearRegistro(data: any) {
+    // console.log('data inicio', data);
     // console.log('tipos logs', this.TiposLog);
-    // AQUI ES DONDE NECESITARIA TENER LA LISTA DE TIPOS DE LOGS <-------------------
-    const body = this.getLogBody;
-    body.codigoTipoLog = data.codigoTipoLog || '';
-    body.codigoRespuesta = data.codigoRespuesta || '';
-    body.descripcionLog = data.descripcionLog || '';
-    console.log('log actividad', data);
-    const logactividad = body as PTLLogActividadAPModel;
+    // const body = this.getLogBody;
+    // console.log('body del log', body);
+    let codigoAplicacion: string = '';
+    let codigoSuite: string = '';
+    let codigoModulo: string = '';
+    let codigoSuscriptor: string = '';
+    const navs = this._localStorageSercice.getNavSettingsLocalStorage();
+    const usu = this._localStorageSercice.getUsuarioLocalStorage();
+    console.log('navsettings', navs);
+    if (navs) {
+      codigoAplicacion = navs.aplicacion?.codigoAplicacion ?? '';
+      codigoSuite = navs.suite?.codigoSuite ?? '';
+      codigoModulo = navs.modulo?.codigoModulo ?? '';
+      codigoSuscriptor = navs.modulo?.codigoModulo ?? '';
+    }
+    const dataLog = {
+      codigoAplicacion: codigoAplicacion,
+      codigoSuite: codigoSuite,
+      codigoModulo: codigoModulo,
+      codigoSuscriptor: codigoSuscriptor,
+      codigoTipoLog: '',
+      codigoRespuesta: data.codigoRespuesta,
+      descripcionLog: data.descripcionLog,
+      codigoUsuarioCreacion: usu.codigoUsuario,
+      fechaLog: new Date().toISOString(),
+      fechaCreacion: new Date().toISOString()
+    };
+
+    // body.codigoTipoLog = data.codigoTipoLog || '';
+    // dataLog.codigoRespuesta = data.codigoRespuesta || '';
+    // dataLog.codigoUsuarioCreacion = data.codigoUsuario || '';
+    // dataLog.descripcionLog = data.descripcionLog || '';
+    console.log('log actividad', dataLog);
+    // const logactividad = dataLog as PTLLogActividadAPModel;
     const url = `${base_url}/logs-actividades`;
     // return this.http.post(url, log_actividad);
-    return this.http.post(url, logactividad).pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
+        console.log('servicio de log_actividads', resp);
         return {
           ok: true,
-          logActividad: resp.log
+          log_actividades: resp.log_actividades
         };
       })
     );
+    // return this.http.post(url, dataLog).pipe(
+    //   map((resp: any) => {
+    //     console.log('respuesta creacion de log', resp);
+    //     return {
+    //       ok: true,
+    //       logActividad: resp.log
+    //     };
+    //   })
+    // );
   }
 }

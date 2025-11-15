@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GradientConfig } from 'src/app/app-config';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -21,6 +20,7 @@ import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-va
 import { PTLTiposValoresModel } from '../../../theme/shared/_helpers/models/PTLTiposValores.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { SwalAlertService } from 'src/app/theme/shared/service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-precios-unitarios',

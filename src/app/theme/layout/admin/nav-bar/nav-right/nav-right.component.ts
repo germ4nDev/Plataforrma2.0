@@ -7,7 +7,13 @@ import { GradientConfig } from 'src/app/app-config';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
-import { AuthenticationService, LanguageService, NavigationService, PtlColoresSettingsService, UploadFilesService } from 'src/app/theme/shared/service';
+import {
+  AuthenticationService,
+  LanguageService,
+  NavigationService,
+  PtlColoresSettingsService,
+  UploadFilesService
+} from 'src/app/theme/shared/service';
 import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 import { ChatMsgComponent } from './chat-msg/chat-msg.component';
 import { ThemeService } from 'src/app/theme/shared/service/theme.service';
@@ -16,6 +22,9 @@ import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { catchError, Observable, of, Subject, Subscription, tap } from 'rxjs';
 import { PTLColorSettingModel } from 'src/app/theme/shared/_helpers/models/PTLColorSetting.model';
+import { environment } from 'src/environments/environment';
+
+const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-nav-right',
@@ -81,8 +90,9 @@ export class NavRightComponent implements DoCheck, OnInit {
 
   ngOnInit(): void {
     this.consultarColorsettings();
-    this.usuario = this._localstorageService.getUsuarioLocalStorage();
-    this.avatarUsuario = this._uploadService.getFilePath('0', 'usuarios', this.usuario.fotoUsuario || '');
+    const currentUser = this._localstorageService.getCurrentUserLocalStorage();
+    console.log('datos del usuario', currentUser.usuario.fotoUsuario);
+    this.avatarUsuario = `${base_url}/upload/plataforma/usuarios/${currentUser.usuario.fotoUsuario}`;
     this.nombreUsuario = this.usuario.nombreUsuario || '';
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
@@ -170,11 +180,11 @@ export class NavRightComponent implements DoCheck, OnInit {
   }
 
   homeScreen() {
-    this.router.navigate(['/frontal/inicio']);
+    this.router.navigate(['/frontal/inicio-aplicaciones']);
   }
 
   suiteScreen() {
-    this.router.navigate(['/frontal/launcher']);
+    this.router.navigate(['/frontal/inicio-suites']);
   }
 
   logout() {

@@ -13,11 +13,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import Swal from 'sweetalert2';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-gestion-enlace',

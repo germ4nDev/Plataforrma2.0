@@ -7,12 +7,16 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        path: 'inicio',
-        loadComponent: () => import('./inicio/inicio.component').then((m) => m.InicioComponent)
+        path: 'inicio-aplicaciones',
+        loadComponent: () => import('./inicio-aplicaciones/inicio-aplicaciones.component').then((m) => m.InicioAplicacionesComponent)
       },
       {
-        path: 'launcher',
-        loadComponent: () => import('./launcher/launcher.component').then((m) => m.LauncherComponent)
+        path: 'inicio-suites',
+        loadComponent: () => import('./inicio-suites/inicio-suites.component').then((m) => m.InicioSuitesComponent)
+      },
+      {
+        path: 'inicio-suscriptores',
+        loadComponent: () => import('./inicio-suscriptores/inicio-suscriptores.component').then((m) => m.InicioSuscriptoresComponent)
       },
       {
         path: 'home',
@@ -29,18 +33,6 @@ const routes: Routes = [
       {
         path: 'unlock-screen',
         loadComponent: () => import('./lock-screen/unlock-screen/unlock-screen.component').then((m) => m.UnlockScreenComponent)
-      },
-      {
-        path: 'gestion-inicio',
-        loadComponent: () => import('./inicio/gestion-inicio/gestion-inicio.component').then((m) => m.GestionInicioComponent)
-      },
-      {
-        path: 'gestion-home',
-        loadComponent: () => import('./home/gestion-home/gestion-home.component').then((m) => m.GestionHomeComponent)
-      },
-      {
-        path: 'gestion-launcher',
-        loadComponent: () => import('./launcher/gestion-launcher/gestion-launcher.component').then((m) => m.GestionLauncherComponent)
       }
     ]
   }

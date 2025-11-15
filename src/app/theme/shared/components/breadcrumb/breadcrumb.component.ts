@@ -3,9 +3,9 @@ import { Component, Input } from '@angular/core';
 
 import { NavigationEnd, Router, RouterModule, Event } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { NavigationItem } from '../../_helpers/models/Navigation.model';
 
 // project import
-import { NavigationItem } from '../../../layout/admin/navigation/navigation';
 
 interface titleType {
   // eslint-disable-next-line

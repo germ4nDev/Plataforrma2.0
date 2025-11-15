@@ -17,12 +17,12 @@ import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaci
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { PTLRolesAPService } from 'src/app/theme/shared/service';
 // import Swal from 'sweetalert2';
 import { GradientConfig } from 'src/app/app-config';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 //#endregion IMPORTS
 
 @Component({

@@ -9,7 +9,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GradientConfig } from 'src/app/app-config';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -19,6 +18,7 @@ import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLVal
 import { PtlvaloresUnitariosService } from 'src/app/theme/shared/service/ptlvalores-unitarios.service';
 import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
 import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-gestion-precio',

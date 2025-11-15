@@ -35,7 +35,7 @@ export class PtlEmpresasScService {
   getEmpresasSC() {
     return this.http.get<PTLEmpresaSCModel>(`${environment.apiUrl}/empresas-sc`).pipe(
       map((resp: any) => {
-        console.log('respuesta servicio', resp);
+        console.log('respuesta servicio empresas', resp);
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         return {
           ok: true,

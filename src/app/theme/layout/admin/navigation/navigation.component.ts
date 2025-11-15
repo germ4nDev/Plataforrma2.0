@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { GradientConfig } from 'src/app/app-config';
-import { NavigationItem } from '../../admin/navigation/navigation';
 import { NavigationService } from '../../../shared/service/navigation.service';
 import { CommonModule } from '@angular/common';
 import { NavContentComponent } from './nav-content/nav-content.component';
 import { Observable } from 'rxjs';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-navigation',
@@ -16,9 +16,9 @@ import { Observable } from 'rxjs';
 export class NavigationComponent implements OnInit {
   // public props
   @Output() NavMobCollapse = new EventEmitter();
+  navigationItems!: Observable<NavigationItem[]>;
   windowWidth: number;
   gradientConfig;
-  navigationItems!: Observable<NavigationItem[]>;
 
   constructor(private _navigationService: NavigationService) {
     this.gradientConfig = GradientConfig;
@@ -28,7 +28,7 @@ export class NavigationComponent implements OnInit {
   ngOnInit(): void {
     this._navigationService.getNavigationItems();
     this.navigationItems = this._navigationService.menuItems$ || [];
-    console.log('navigationItems', this.navigationItems);
+    console.log('navigationItems full', this.navigationItems);
   }
 
   navMobCollapse() {

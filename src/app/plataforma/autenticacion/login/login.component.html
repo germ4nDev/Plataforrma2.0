@@ -13,27 +13,24 @@
             <h3 class="filtros-title">{{ 'LOGIN.TITLE' | translate }}</h3>
         </div><br><br>
         <form [formGroup]="loginForm" (ngSubmit)="onLoginUserClick()">
-            <div class="col-md-6">
-                <div class="input-group mb-3">
-                    <span class="input-group-text form-input" id="basic-addon1"><i
-                            class="feather icon-users"></i></span>
-                    <select class="form-control form-input" style="cursor: pointer;" formControlName="suscriptor"
-                        class="form-control form-input"
-                        [ngClass]="{ 'is-invalid': usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched) }">
-                        <option value="">{{ 'LOGIN.SUSCRIPTOR' | translate }}
-                        </option>
-                        <option [value]="susc.codigoSuscriptor" *ngFor="let susc of registros">
-                            {{ susc.nombreSuscriptor }}</option>
-                    </select>
-                    @if (usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched)) {
-                    <div class="invalid-feedback">
-                        @if (usernameControl?.errors?.['required']) {
-                        <div>{{ 'LOGIN.SUSC_REQ' | translate }}</div>
-                        }
-                    </div>
+            <!-- <div class="input-group mb-3">
+                <span class="input-group-text form-input" id="basic-addon1"><i class="feather icon-users"></i></span>
+                <select class="form-control form-input" style="cursor: pointer;" formControlName="suscriptor"
+                    class="form-control form-input"
+                    [ngClass]="{ 'is-invalid': suscriptorControl?.invalid && (suscriptorControl?.dirty || suscriptorControl?.touched) }">
+                    <option value="">{{ 'LOGIN.SUSCRIPTOR' | translate }}
+                    </option>
+                    <option [value]="susc.codigoSuscriptor" *ngFor="let susc of registros">
+                        {{ susc.nombreSuscriptor }}</option>
+                </select>
+                @if (suscriptorControl?.invalid && (suscriptorControl?.dirty || suscriptorControl?.touched)) {
+                <div class="invalid-feedback">
+                    @if (usernameControl?.errors?.['required']) {
+                    <div>{{ 'LOGIN.SUSC_REQ' | translate }}</div>
                     }
                 </div>
-            </div>
+                }
+            </div> -->
             <div class="input-group mb-3">
                 <span class="input-group-text form-input" id="basic-addon1"><i class="feather icon-user"></i></span>
                 <input type="text" placeholder="{{ 'LOGIN.USERNAME' | translate }}" formControlName="username"

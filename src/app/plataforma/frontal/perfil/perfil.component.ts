@@ -12,7 +12,6 @@ import { UploadFilesService } from 'src/app/theme/shared/service/upload-files.se
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { NavigationItem } from 'src/app/theme/layout/admin/navigation/navigation';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
 import { AuthenticationService, PtllogActividadesService } from 'src/app/theme/shared/service';
@@ -21,6 +20,7 @@ import Swal from 'sweetalert2';
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { Observable, Subscription } from 'rxjs';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-perfil',

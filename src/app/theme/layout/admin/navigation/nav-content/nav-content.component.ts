@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, ViewChild } from '@angular/core';
-import { NavigationItem } from '../navigation';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { GradientConfig } from 'src/app/app-config';
 import { NavigationService } from '../../../../shared/service/navigation.service';
@@ -8,6 +7,7 @@ import { NavGroupComponent } from './nav-group/nav-group.component';
 import { NavItemComponent } from './nav-item/nav-item.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { Observable, Subscription } from 'rxjs';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-nav-content',
