@@ -84,7 +84,7 @@ export class GestionSuiteComponent implements OnInit {
           next: (resp: any) => {
             this.FormRegistro = resp.suite;
             this.codigosuite = resp.suite.codigoAplicacion;
-            this.selectedFileUrl = this._uploadService.getFilePath('0', 'suites', resp.suite.imagenInicio);
+            this.selectedFileUrl = this._uploadService.getFilePath('suites', 'suites', resp.suite.imagenInicio);
           },
           error: () => {
             Swal.fire('Error', 'No se pudo obtener la suite por, ', 'error');

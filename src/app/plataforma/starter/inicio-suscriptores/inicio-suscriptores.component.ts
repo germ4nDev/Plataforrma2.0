@@ -75,8 +75,7 @@ export class InicioSuscriptoresComponent implements OnInit {
   ingresarPlataforma(susc: PTLSuscriptorModel) {
     //TODO Validar las suscriptores con los suscriptores y los usuarios
     console.log('ingresar a', susc);
-            this._localStorage.setSuscriptorLocalStorage(susc);
-    this.router.navigate(['/frontal/inicio-aplicaciones']);
+    this._localStorage.setSuscriptorLocalStorage(susc);
+    this.router.navigate(['/starter/inicio-aplicaciones']);
   }
 }
-

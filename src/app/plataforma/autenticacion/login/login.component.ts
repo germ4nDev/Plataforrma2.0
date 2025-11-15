@@ -237,7 +237,7 @@ export class LoginComponent implements OnInit {
         //   this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           //   this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.LOGINSUCCESS'));
           //   this._localStorageService.setSuscriptorLocalStorage(dataSuscriptor);
-          this.router.navigate(['/frontal/inicio-suscriptores']);
+          this.router.navigate(['/starter/inicio-suscriptores']);
         }),
         catchError((err) => {
           this.loading = false;

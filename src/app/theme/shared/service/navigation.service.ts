@@ -818,6 +818,7 @@ export class NavigationService implements OnInit, OnDestroy {
     this.aplicacion = this._localStorageService.getAplicaicionLocalStorage();
     this.suite = this._localStorageService.getSuiteLocalStorage();
     const codigoApp = this.aplicacion.codigoAplicacion;
+    console.log('==============codigo aplicacion', codigoApp);
     switch (codigoApp) {
       case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
         this._modulosService.getRegistros().subscribe((data) => {
@@ -853,19 +854,19 @@ export class NavigationService implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  navigateNodoMenu(url: string, id?: string) {
-    // console.log('todos los modulos', this.modulos);
-    // console.log('navegar a otro mnodulo', url);
+  navigateNodoMenu(url: any) {
+    console.log('todos los modulos', this.modulos);
+    console.log('navegar a otro mnodulo', url);
     // console.log('id', id);
-    const modulo = this.modulos.filter((x) => x.rutaModulo == url)[0];
+    const modulo = this.modulos.filter((x) => x.codigoModulo == url.id)[0];
     console.log('modulo', modulo);
     if (modulo) {
       this._localStorageService.setModuloLocalStorage(modulo);
     }
-    if (id !== undefined) {
-      this.router.navigate([url], { queryParams: { regId: id } });
+    if (modulo.codigoModulo !== undefined) {
+      this.router.navigate([modulo.rutaModulo], { queryParams: { regId: modulo.codigoModulo } });
     } else {
-      this.router.navigate([url]);
+      this.router.navigate([modulo.rutaModulo]);
     }
   }
 }

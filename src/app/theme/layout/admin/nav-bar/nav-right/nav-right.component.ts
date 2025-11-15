@@ -163,7 +163,7 @@ export class NavRightComponent implements DoCheck, OnInit {
   perfilUsuario() {
     const user = this._localstorageService.getUsuarioLocalStorage();
     console.log('ver perfil del usuario', user.usuarioId);
-    this.router.navigate(['frontal/perfil'], { queryParams: { regId: user.usuarioId } });
+    this.router.navigate(['starter/perfil'], { queryParams: { regId: user.usuarioId } });
   }
 
   ngDoCheck() {
@@ -176,15 +176,15 @@ export class NavRightComponent implements DoCheck, OnInit {
     console.log('ruta actual de navegacion', currentUrl);
     this._navigationService.emitLockScreen('saveForm');
     sessionStorage.setItem('locked_url', currentUrl);
-    this.router.navigate(['/frontal/lock-screen']);
+    this.router.navigate(['/starter/lock-screen']);
   }
 
   homeScreen() {
-    this.router.navigate(['/frontal/inicio-aplicaciones']);
+    this.router.navigate(['/starter/inicio-aplicaciones']);
   }
 
   suiteScreen() {
-    this.router.navigate(['/frontal/inicio-suites']);
+    this.router.navigate(['/starter/inicio-suites']);
   }
 
   logout() {

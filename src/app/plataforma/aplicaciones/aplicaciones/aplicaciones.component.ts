@@ -18,13 +18,13 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { environment } from 'src/environments/environment';
+// import { environment } from 'src/environments/environment';
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
-import { LocalStorageService, PtllogActividadesService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
-const base_url = environment.apiUrl;
+// const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-aplicaciones',
@@ -54,7 +54,8 @@ export class AplicacionesComponent implements OnInit {
     private _navigationService: NavigationService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
-    private _aplicacionesService: PtlAplicacionesService
+    private _aplicacionesService: PtlAplicacionesService,
+    private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -64,7 +65,7 @@ export class AplicacionesComponent implements OnInit {
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Aplicaciones' : 'List of Aplications';
-    this.DataModel = this._localStorageService.getDataModelsLocalStorage();
+    // this.DataModel = this._localStorageService.getDataModelsLocalStorage();
     this.consultarAplicaciones();
   }
 
@@ -74,9 +75,10 @@ export class AplicacionesComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
+            console.log('respuesta aplicaciones', resp);
             resp.aplicaciones.forEach((app: any) => {
               app.nomEstado = app.estadoAplicacion ? 'Activo' : 'Inactivo';
-              app.imagenInicio = `${base_url}/upload/aplicaciones/${app.imagenInicio}`;
+              app.captura = this._uploadService.getFilePath('plataforma', 'aplicaciones', app.imagenInicio);
             });
             this.aplicaciones = resp.aplicaciones;
             this.aplicacionesFiltrado = resp.aplicaciones;
@@ -92,7 +94,7 @@ export class AplicacionesComponent implements OnInit {
 
   columnasAplicaciopnes: ColumnMetadata[] = [
     {
-      name: 'imagenInicio',
+      name: 'captura',
       header: 'APLICACIONES.FOTO',
       type: 'image',
       isSortable: false
@@ -119,6 +121,11 @@ export class AplicacionesComponent implements OnInit {
       name: 'descripcionAplicacion',
       header: 'APLICACIONES.DESCRIPTION',
       type: 'text'
+    },
+    {
+      name: 'captura',
+      header: 'APLICACIONES.IMAGENINICIO',
+      type: 'capture'
     }
   ];
 
@@ -171,11 +178,11 @@ export class AplicacionesComponent implements OnInit {
   }
 
   OnNuevaAplicaicionClick(): void {
-    this._navigationService.navigateNodoMenu('/aplicaciones/gestion-aplicacion', 'nuevo');
+    this.router.navigate(['aplicaciones/gestion-aplicacion'], { queryParams: { regId: 'nuevo' } });
   }
 
   OnEditarAplicaicionClick(id: string): void {
-    this._navigationService.navigateNodoMenu('/aplicaciones/gestion-aplicacion', id);
+    this.router.navigate(['aplicaciones/gestion-aplicacion'], { queryParams: { regId: id } });
   }
 
   OnEliminarAplicaicionClick(id: string): void {

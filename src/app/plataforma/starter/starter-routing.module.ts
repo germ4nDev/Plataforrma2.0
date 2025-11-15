@@ -42,4 +42,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class FrontalRoutingModule {}
+export class StarterRoutingModule {}

@@ -21,11 +21,8 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { environment } from 'src/environments/environment';
-import { PtllogActividadesService } from 'src/app/theme/shared/service';
+import { PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-
-const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-registros',
@@ -51,13 +48,13 @@ export class SuitesComponent implements OnInit {
 
   constructor(
     private _router: Router,
-    private translate: TranslateService,
+    private _translate: TranslateService,
     private _navigationService: NavigationService,
     private _aplicacionesService: PtlAplicacionesService,
     private _registrosService: PtlSuitesAPService,
     private _localstorageService: LocalStorageService,
     private _logActividadesService: PtllogActividadesService,
-    private _translate: TranslateService
+    private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -101,7 +98,7 @@ export class SuitesComponent implements OnInit {
             resp.suites.forEach((reg: any) => {
               reg.nomEstado = reg.estadoSuite ? 'Activo' : 'Inactivo';
               reg.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion;
-              reg.imagenInicio = `${base_url}/upload/suites/${reg.imagenInicio}`;
+              reg.imagenInicio = this._uploadService.getFilePath('plataforma', 'suites', reg.imagenInicio);
             });
             this.registros = resp.suites;
             this.registrosFiltrado = resp.suites;
@@ -136,11 +133,6 @@ export class SuitesComponent implements OnInit {
       name: 'nomAplicacion',
       header: 'SUITES.APLICACION',
       type: 'text'
-    },
-    {
-      name: 'nomEstado',
-      header: 'SUITE.STATUS',
-      type: 'text'
     }
   ];
 
@@ -149,6 +141,11 @@ export class SuitesComponent implements OnInit {
       name: 'descripcionSuite',
       header: 'SUITES.DESCRIPTION',
       type: 'text'
+    },
+    {
+      name: 'imagenInicio',
+      header: 'SUITE.STATUS',
+      type: 'capture'
     }
   ];
 

@@ -84,9 +84,9 @@ const routes: Routes = [
                 loadChildren: () => import('./plataforma/autenticacion/autenticacion.module').then((module) => module.AutenticacionModule)
             },
             {
-                path: 'frontal',
+                path: 'starter',
                 loadChildren: () =>
-                    import('./plataforma/frontal/frontal.module').then((module) => module.FrontalModule)
+                    import('./plataforma//starter/starter.module').then((module) => module.StarterModule)
             },
             {
                 path: 'logs',

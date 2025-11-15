@@ -50,10 +50,9 @@ export class InicioSuitesComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.suites.forEach((suite: any) => {
-              // suite.imagenInicio = this._uploadService.getFilePath('aplicaciones', suite.imagenInicio);
               suite.imagenInicio = `${base_url}/upload/plataforma/suites/${suite.imagenInicio}`;
             });
-            console.log('aplicaciones', resp.aplicaciones);
+            console.log('suites', resp.suites);
             this.suites = resp.suites;
           }
         }),
@@ -75,7 +74,7 @@ export class InicioSuitesComponent implements OnInit {
     //   if (suites.length < 2) {
     //     this._localStorage.setSuiteLocalStorage(suites[0]);
     //   } else {
-    //     this.router.navigate(['/frontal/inicio-suites']);
+    //     this.router.navigate(['/starter/inicio-suites']);
     //   }
     // });
   }

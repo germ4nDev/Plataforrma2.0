@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FrontalRoutingModule } from './frontal-routing.module';
+import { StarterRoutingModule } from './/starter-routing.module';
 
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule, FrontalRoutingModule
+    CommonModule, StarterRoutingModule
   ]
 })
-export class FrontalModule { }
+export class StarterModule { }

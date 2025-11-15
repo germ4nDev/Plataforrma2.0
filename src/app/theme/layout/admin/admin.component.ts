@@ -1,8 +1,7 @@
 // Angular Import
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { GradientConfig } from 'src/app/app-config';
-import { LanguageService } from '../../shared/service/lenguage.service';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -21,10 +20,8 @@ export class AdminComponent implements OnInit {
 
   // constructor
   constructor(
-    private zone: NgZone,
     private location: Location,
-    private locationStrategy: LocationStrategy,
-    private languageService: LanguageService
+    private locationStrategy: LocationStrategy
   ) {
     this.gradientConfig = GradientConfig;
     let current_url = this.location.path();

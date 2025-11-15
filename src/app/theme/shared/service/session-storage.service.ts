@@ -5,14 +5,13 @@ import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
 import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
 import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
 import { BaseSessionModel } from '../_helpers/models/BaseSession.model';
-import { ThemeSettingsModel } from '../_helpers/models/ThemeSettings.model';
 import { NavSettings } from '../_helpers/models/navSettings.model';
 import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocalStorageService {
+export class SessionStorageService {
   DataModel: BaseSessionModel = new BaseSessionModel();
   navsettings: NavSettings = new NavSettings();
   public usuario: any = {};
@@ -40,11 +39,6 @@ export class LocalStorageService {
     this.currentUser = current;
   }
 
-  setThemeSettingsLocalStorage(settings: ThemeSettingsModel) {
-    localStorage.setItem('themeSettings', JSON.stringify(settings));
-    this.themeSettings = settings;
-  }
-
   setUsuarioLocalStorage(usuario: PTLUsuarioModel) {
     this.currentUser.usuario = usuario;
     this.setCurrentUserLocalStorage(this.currentUser);
@@ -58,7 +52,6 @@ export class LocalStorageService {
   }
 
   setAplicacionLocalStorage(aplicacion: PTLAplicacionModel) {
-    this.navsettings.aplicacion = aplicacion;
     this.navsettings = {
         aplicacion: aplicacion,
         suite: this.suite,
@@ -79,12 +72,14 @@ export class LocalStorageService {
   }
 
   setModuloLocalStorage(modulo: PTLModuloAP) {
+    console.log('aplicacion', this.aplicacion);
+    console.log('suite', this.suite);
+    console.log('modulo', modulo);
     this.navsettings = {
         aplicacion: this.aplicacion,
         suite: this.suite,
         modulo: modulo
     }
-    this.navsettings.modulo = modulo;
     this.setNavSettingsLocalStorage(this.navsettings);
     this.modulo = modulo;
   }
@@ -95,19 +90,9 @@ export class LocalStorageService {
     this.suscriptor = data;
   }
 
-  setLanguage(lang: string) {
-    localStorage.setItem('lang', lang);
-    this.lang = lang;
-  }
-
   setFormRegistro(FormRegistro: any) {
     sessionStorage.setItem('FormRegistro', JSON.stringify(FormRegistro));
     this.FormRegistro = FormRegistro;
-  }
-
-  setLogOut() {
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('navsettings');
   }
   // #endregion SETTERS
 
@@ -210,10 +195,6 @@ export class LocalStorageService {
     return modelo;
   }
 
-  getLanguage(): string {
-    return this.lang;
-  }
-
   getFormRegistro() {
     this.FormRegistro = [];
     if (sessionStorage.getItem('FormRegistro')) {
@@ -221,29 +202,14 @@ export class LocalStorageService {
     }
     return this.FormRegistro;
   }
-
-  getThemeSettings() {
-    if (localStorage.getItem('app-theme-settings')) {
-      this.themeSettings = JSON.parse(localStorage.getItem('themeSettings') || '');
-    } else {
-      const settings: ThemeSettingsModel = {
-        isDarkTheme: false,
-        navbarColor: '#346BA6',
-        iconosColor: '#f6f4f4',
-        textoColor: '#f6f4f4',
-        buttonsHoverColor: '#346BA6'
-      };
-      this.themeSettings = settings;
-    }
-    return this.themeSettings;
-  }
-
-  getLanguageUrl() {
-    return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${this.lang === 'es' ? 'Spanish' : 'English'}.json`;
-  }
   // #endregion GETTERS
 
   // #region REMOVERS
+  setLogOut() {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('navsettings');
+  }
+
   removeFormRegistro() {
     sessionStorage.removeItem('FormRegistro');
   }

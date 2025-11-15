@@ -12,14 +12,6 @@ const routes: Routes = [
         loadComponent: () => import('./aplicaciones/aplicaciones.component').then((m) => m.AplicacionesComponent)
       },
       {
-        path: 'log-actividades',
-        loadComponent: () => import('./log-actividades/log-actividades.component').then((m) => m.LogActividadesComponent)
-      },
-      {
-        path: 'log-excepciones',
-        loadComponent: () => import('./log-excepciones/log-excepciones.component').then((m) => m.LogExcepcionesComponent)
-      },
-      {
         path: 'gestion-aplicacion',
         loadComponent: () =>
           import('./aplicaciones/gestion-aplicacion/gestion-aplicacion.component').then((m) => m.GestionAplicacionComponent)

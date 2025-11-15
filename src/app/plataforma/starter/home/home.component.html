@@ -3,14 +3,11 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
-                </button>
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">{{ 'PLATAFORMA.MENU' |
+                    translate }}</button>
             </div>
-
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content *ngIf="menuItems$ | async as menuItems" [navigationItems]="menuItems"></app-nav-content>
-            </ng-container>
+            <ng-container *ngIf="activeTab === 'menu'"><app-nav-content *ngIf="menuItems$ | async as menuItems"
+                    [navigationItems]="menuItems"></app-nav-content></ng-container>
         </div>
     </aside>
 
@@ -22,4 +19,3 @@
         </div>
     </div>
 </div>
-

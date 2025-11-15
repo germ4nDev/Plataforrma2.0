@@ -70,11 +70,8 @@ export class InicioAplicacionesComponent implements OnInit {
 
   ingresarPlataforma(app: PTLAplicacionModel) {
     //TODO Validar las aplicaciones con los suscriptores y los usuarios
-    // const navSettings = this._localStorage.getNavSettingsLocalStorage();
-    // navSettings.aplicacion = app;
-    // console.log('ingresar a navSettings', navSettings);
     this._localStorage.setAplicacionLocalStorage(app);
     // this._localStorage.setNavSettingsLocalStorage(navSettings);
-    this.router.navigate(['/frontal/inicio-suites']);
+    this.router.navigate(['/starter/inicio-suites']);
   }
 }
