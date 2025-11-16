@@ -51,25 +51,28 @@
   <div class="content-area">
     <div class="card card-table content-scroll-wrapper">
       <div class="card-body">
-        <app-data-table
-          [data]="registrosFiltrado"
-          [idField]="'suscriptorId'"
-          [tableTitle]="'SUSCRIPTORES.TITLE' | translate"
-          [metadataColumns]="columnasRegistros"
-          [metadataDetailColumns]="columnasDetailRegistros"
-          [showActions]="true"
-          [showNewButton]="true"
-          [showViewButton]="false"
-          [showEditButton]="true"
-          [showDeleteButton]="true"
-          [showDetail]="true"
-          [newButtonLabel]="'SUSCRIPTORES.NEW' | translate"
-          [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-          (newRecord)="OnNuevoRegistroClick()"
-          (editRecord)="OnEditarRegistroClick($event)"
-          (deleteRecord)="OnEliminarRegistroClick($event)"
-        >
-        </app-data-table>
+        <ng-container *ngIf="registrosFiltrados$ | async as dataFiltrada">
+            <app-data-table
+                [data]="dataFiltrada"
+                [idField]="'suscriptorId'"
+                [tableTitle]="'SUSCRIPTORES.TITLE' | translate"
+                [metadataColumns]="columnasRegistros"
+                [metadataDetailColumns]="columnasDetailRegistros"
+                [showActions]="true"
+                [showNewButton]="true"
+                [showViewButton]="false"
+                [showEditButton]="true"
+                [showDeleteButton]="true"
+                [showDetail]="true"
+                [newButtonLabel]="'SUSCRIPTORES.NEW' | translate"
+                [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                (newRecord)="OnNuevoRegistroClick()"
+                (editRecord)="OnEditarRegistroClick($event)"
+                (deleteRecord)="OnEliminarRegistroClick($event)"
+                >
+            </app-data-table>
+        </ng-container>
+        <ng-template #loading></ng-template>
       </div>
     </div>
   </div>

@@ -2,7 +2,7 @@ export class PTLSuscriptorModel {
   constructor(
     public suscriptorId?: number,
     public codigoSuscriptor?: string,
-    public identificacionSuscriptor?: number,
+    public identificacionSuscriptor?: string,
     public nombreSuscriptor?: string,
     public direccionSuscriptor?: string,
     public telefonoContacto?: string,

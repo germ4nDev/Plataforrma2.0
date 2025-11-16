@@ -271,30 +271,23 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
   DataModel: BaseSessionModel = new BaseSessionModel();
   DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
+  subscriptions = new Subscription();
 
-  // Observables para los filtros (BehaviorSubject inicializados con valor por defecto)
-  private filtroCodigoSubject = new BehaviorSubject<string>('todos');
-  private filtroNombreSubject = new BehaviorSubject<string>('todos');
-  private filtroDescripcionSubject = new BehaviorSubject<string>('');
-  private filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  filtroCodigoSubject = new BehaviorSubject<string>('todos');
+  filtroNombreSubject = new BehaviorSubject<string>('todos');
+  filtroDescripcionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-  // Fuente de datos principal (Aplicaciones transformadas) - Inicializada para evitar errores de TypeScript
   aplicacionesTransformadas$: Observable<PTLAplicacionModel[]> = of([]);
-
-  // Observable final que alimenta la tabla (Aplicaciones transformadas + Filtros) - Inicializada para evitar errores de TypeScript
   aplicacionesFiltradas$: Observable<PTLAplicacionModel[]> = of([]);
-
-  // El array se mantiene para las opciones de los filtros SELECT
   aplicaciones: PTLAplicacionModel[] = [];
 
-  // Variables auxiliares
   moduloTituloExcel: string = '';
   hasFiltersSlot: boolean = false;
   gradientConfig;
   lang = localStorage.getItem('lang');
   menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  private subscriptions = new Subscription(); // Contenedor de suscripciones
 
   constructor(
     private router: Router,
@@ -312,12 +305,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
-
-    // 1. Configuración del flujo reactivo
     this.setupAplicacionesStream();
-
-    // 2. Cargar las aplicaciones (dispara la obtención de datos)
-    // Se suscribe para asegurar que los datos se carguen y estén disponibles en el servicio
     this.subscriptions.add(
       this._aplicacionesService.cargarAplicaciones().subscribe(
         () => console.log('Aplicaciones cargadas y guardadas en el servicio'),
@@ -330,27 +318,16 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  /**
-   * Configura el flujo reactivo completo de las aplicaciones (Transformación + Filtros).
-   */
   setupAplicacionesStream(): void {
-    // 1. Stream de Aplicaciones Transformadas (Fuente de Datos Maestra)
     this.aplicacionesTransformadas$ = this._aplicacionesService.aplicaciones$.pipe(
-      // switchMap para reaccionar a los cambios en el servicio (si usa un BehaviorSubject interno)
       switchMap((apps: PTLAplicacionModel[]) => {
         if (!apps) return of([]);
-
-        // Aplica la transformación de datos (nomEstado, captura)
         const transformedApps = apps.map((app: any) => {
           app.nomEstado = app.estadoAplicacion ? 'Activo' : 'Inactivo';
           app.captura = this._uploadService.getFilePath('plataforma', 'aplicaciones', app.imagenInicio);
           return app as PTLAplicacionModel;
         });
-
-        // Se actualiza la variable local para que los <select> de filtros tengan opciones
-        // Esta es la única parte imperativa necesaria para poblar las opciones de los SELECT
         this.aplicaciones = transformedApps;
-
         return of(transformedApps);
       }),
       catchError((err) => {
@@ -400,7 +377,6 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Los métodos de filtro ahora solo actualizan el BehaviorSubject correspondiente
   onFiltroCodigoChangeClick(evento: any): void {
     const value = evento.target.value;
     this.filtroCodigoSubject.next(value);
@@ -420,8 +396,6 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     const value = evento.target.value;
     this.filtroEstadoSubject.next(value);
   }
-
-  // --- El resto de métodos y metadatos se mantienen ---
 
   columnasAplicaciopnes: ColumnMetadata[] = [
     {

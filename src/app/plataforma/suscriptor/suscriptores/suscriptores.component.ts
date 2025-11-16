@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
-import { Subscription, tap, catchError, of, Observable } from 'rxjs';
+import { Subscription, catchError, of, Observable, BehaviorSubject, switchMap, startWith, combineLatest, map } from 'rxjs';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -16,6 +16,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { UploadFilesService } from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-suscriptores',
@@ -24,12 +25,19 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
   templateUrl: './suscriptores.component.html',
   styleUrl: './suscriptores.component.scss'
 })
-export class SuscriptoresComponent implements OnInit {
+export class SuscriptoresComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
   //#region VARIABLES
-  registrosSub?: Subscription;
+  subscriptions = new Subscription();
+//   filtroCodigoSubject = new BehaviorSubject<string>('todos');
+  filtroNombreSubject = new BehaviorSubject<string>('');
+  filtroIdentificacionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
+
+  registrosTransformadas$: Observable<PTLSuscriptorModel[]> = of([]);
+  registrosFiltrados$: Observable<PTLSuscriptorModel[]> = of([]);
   registros: PTLSuscriptorModel[] = [];
-  registrosFiltrado: PTLSuscriptorModel[] = [];
+
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   gradientConfig;
@@ -42,7 +50,8 @@ export class SuscriptoresComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private _suscriptoresService: PTLSuscriptoresService,
-    private _navigationService: NavigationService
+    private _navigationService: NavigationService,
+    private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -51,32 +60,80 @@ export class SuscriptoresComponent implements OnInit {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
-    this.consultarRegistros();
+    this.setupRegistrosStream();
+    this.subscriptions.add(
+      this._suscriptoresService.getRegistros().subscribe(
+        () => console.log('Aplicaciones cargadas y guardadas en el servicio'),
+        (err) => console.error('Error al cargar aplicaciones:', err)
+      )
+    );
   }
 
-  consultarRegistros() {
-    this.registrosSub = this._suscriptoresService
-      .getSuscriptores()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            console.log('respuesta componente', resp);
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
-            resp.suscriptores.forEach((regs: any) => {
-              regs.nomEstado = regs.estadoSuscriptor == true ? 'Activo' : 'Inactivo';
-            });
-            this.registros = resp.suscriptores;
-            this.registrosFiltrado = resp.suscriptores;
-            console.log('Todos los Suscriptores', this.registros);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('error', err);
-          return of(null);
-        })
-      )
-      .subscribe();
+  setupRegistrosStream(): void {
+    this.registrosTransformadas$ = this._suscriptoresService.suscriptores$.pipe(
+      switchMap((regs: PTLSuscriptorModel[]) => {
+        if (!regs) return of([]);
+        const transformedRegs = regs.map((reg: any) => {
+          reg.nomEstado = reg.estadoAplicacion ? 'Activo' : 'Inactivo';
+          reg.logoSuscriptor = this._uploadService.getFilePath('plataforma', 'suscriptores', reg.logoSuscriptor);
+          return reg as PTLSuscriptorModel;
+        });
+        this.registros = transformedRegs;
+        console.log('registros', this.registros);
+        return of(transformedRegs);
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de aplicaciones:', err);
+        return of([]);
+      })
+    );
+    this.registrosFiltrados$ = combineLatest([
+      this.registrosTransformadas$.pipe(startWith([])),
+    //   this.filtroCodigoSubject,
+      this.filtroNombreSubject,
+      this.filtroIdentificacionSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([regs, nombre, identificacion, estado]) => {
+        let filteredRegs = regs;
+        console.log('quien putas es estado', estado);
+        // if (codigo !== 'todos') {
+        //   filteredRegs = filteredRegs.filter((app) => app.codigoAplicacion === codigo);
+        // }
+        if (nombre) {
+          const textoFiltro = nombre.toLowerCase();
+          filteredRegs = filteredRegs.filter((reg) => (reg.nombreSuscriptor || '').toLowerCase().includes(textoFiltro));
+        }
+        if (identificacion) {
+          filteredRegs = filteredRegs.filter((reg) => (reg.identificacionSuscriptor || '').toLowerCase().includes(identificacion));
+        }
+        if (estado !== 'todos') {
+          const estadoBoolean = estado === 'true';
+          filteredRegs = filteredRegs.filter(app => app.estadoSuscriptor === estadoBoolean);
+        }
+        console.log('filtrado2s', filteredRegs);
+        return filteredRegs;
+      })
+    );
+  }
+
+  onFiltroNombreChangeClick(evento: any) {
+    console.log('filtrar el NOMBRE ', evento.target.value);
+    this.filtroNombreSubject.next(evento.target.value);
+  }
+
+  onFiltroIdentificacionChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    this.filtroIdentificacionSubject.next(evento.target.value);
+  }
+
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+    this.filtroEstadoSubject.next(evento.target.value);
   }
 
   columnasRegistros: ColumnMetadata[] = [
@@ -103,7 +160,7 @@ export class SuscriptoresComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'SUSCRIPTORES.STATUS',
-      type: 'text'
+      type: 'estado'
     }
   ];
 
@@ -175,40 +232,6 @@ export class SuscriptoresComponent implements OnInit {
         });
       }
     });
-  }
-
-  onFiltroNombreChangeClick(evento: any) {
-    console.log('filtrar el NOMBRE ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
-        (suscriptor.nombreSuscriptor || '').toLowerCase().includes(textoFiltro)
-      );
-      console.log('filtrados', this.registrosFiltrado);
-    }
-  }
-
-  onFiltroIdentificacionChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) => suscriptor.identificacionSuscriptor || 0);
-      console.log('filtrados', this.registrosFiltrado);
-    }
-  }
-
-  onFiltroEstadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      const estado = evento.target.value == 'true' ? true : false;
-      this.registrosFiltrado = this.registros.filter((x) => x.estadoSuscriptor == estado);
-    }
   }
 
   toggleNav(): void {

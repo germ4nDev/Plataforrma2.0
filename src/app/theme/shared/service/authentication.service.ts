@@ -9,6 +9,7 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { LocalStorageService } from './local-storage.service';
+import { CurrentUserModel } from '../_helpers/models/CurrentUser.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -45,8 +46,8 @@ export class AuthenticationService {
     }
   }
 
-  login(username: string, password: string): Observable<PTLUsuarioModel> {
-    return this.http.post<PTLUsuarioModel>(`${environment.apiUrl}/auth`, { username, password }).pipe(
+  login(username: string, password: string): Observable<CurrentUserModel> {
+    return this.http.post<CurrentUserModel>(`${environment.apiUrl}/auth`, { username, password }).pipe(
       tap((user) => {
         if (!user) {
           throw new Error('Usuario no válido');
@@ -78,7 +79,7 @@ export class AuthenticationService {
     );
   }
 
-  private setSession(user: PTLUsuarioModel): void {
+  private setSession(user: CurrentUserModel): void {
     // console.log('subir usuario al localstorage', user);
     this._localstorageService.setCurrentUserLocalStorage(user);
     this.currentUserSubject.next(user);

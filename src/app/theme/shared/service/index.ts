@@ -11,6 +11,7 @@ export * from './upload-files.service';
 export * from './local-storage.service';
 export * from './swal-alert.service';
 export * from './theme-storage.service';
+export * from './sockets.service';
 
 export * from './ptladministracion-bd.service';
 export * from './ptlaplicaciones.service';
@@ -52,4 +53,3 @@ export * from './ptltextos-id.service';
 export * from './ptlcolores-settings.service';
 export * from './ptlsliders-inicio.service';
 export * from './ptlusuarios-empresas-sc.service';
-export * from './sockets.service';
