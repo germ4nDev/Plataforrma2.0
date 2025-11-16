@@ -78,7 +78,8 @@
             "TIPOSVALOR": "Tipos Precio",
             "ADMINBD": "Conexiones",
             "TICKETS": "Tickets",
-            "SEGUIMIENTOS": "Seguimientos"
+            "SEGUIMIENTOS": "Seguimientos",
+            "ROLES": "Roles"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notificaciones",

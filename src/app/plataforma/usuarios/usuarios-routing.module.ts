@@ -18,6 +18,14 @@ const routes: Routes = [
         path: 'gestion-password',
         loadComponent: () => import('./usuarios/gestion-password/gestion-password.component').then(m => m.GestionPasswordComponent)
       },
+      {
+        path: 'roles-usuarios',
+        loadComponent: () => import('./roles-usuarios/roles-usuarios.component').then(m => m.RolesUsuariosComponent)
+      },
+      {
+        path: 'gestion-roles-usuario',
+        loadComponent: () => import('./roles-usuarios/gestion-roles-usuario/gestion-roles-usuario.component').then(m => m.GestionRolesUsuarioComponent)
+      }
     ]
   }
 ];

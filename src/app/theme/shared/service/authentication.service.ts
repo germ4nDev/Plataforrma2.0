@@ -79,7 +79,7 @@ export class AuthenticationService {
   }
 
   private setSession(user: PTLUsuarioModel): void {
-    console.log('subir usuario al localstorage', user);
+    // console.log('subir usuario al localstorage', user);
     this._localstorageService.setCurrentUserLocalStorage(user);
     this.currentUserSubject.next(user);
   }
@@ -97,7 +97,7 @@ export class AuthenticationService {
 
   refreshToken() {}
 
-  saveTokens(tokenm: string, refreshToken: string) {
-    console.log('tokens', tokenm, refreshToken);
+  saveTokens(token: string, refreshToken: string) {
+    console.log('tokens', token, refreshToken);
   }
 }

@@ -22,9 +22,6 @@ import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { catchError, Observable, of, Subject, Subscription, tap } from 'rxjs';
 import { PTLColorSettingModel } from 'src/app/theme/shared/_helpers/models/PTLColorSetting.model';
-import { environment } from 'src/environments/environment';
-
-const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-nav-right',
@@ -82,7 +79,7 @@ export class NavRightComponent implements DoCheck, OnInit {
     private _navigationService: NavigationService,
     private languageService: LanguageService
   ) {
-    console.log('isDarkTheme', this.isDarkTheme);
+    // console.log('isDarkTheme', this.isDarkTheme);
     this.isDarkTheme = this.themeService.isDarkThemeEnabled();
     this.iconoTema = this.isDarkTheme ? 'icon feather icon-sun' : 'icon feather icon-moon';
     this.themeTextKey = this.isDarkTheme ? 'PLATAFORMA.NAVBAR.THEME_LIGHT' : 'PLATAFORMA.NAVBAR.THEME_DARK';
@@ -90,9 +87,8 @@ export class NavRightComponent implements DoCheck, OnInit {
 
   ngOnInit(): void {
     this.consultarColorsettings();
-    const currentUser = this._localstorageService.getCurrentUserLocalStorage();
-    console.log('datos del usuario', currentUser.usuario.fotoUsuario);
-    this.avatarUsuario = `${base_url}/upload/plataforma/usuarios/${currentUser.usuario.fotoUsuario}`;
+    const currentUser = this._localstorageService.getUsuarioLocalStorage();
+    this.avatarUsuario = this._uploadService.getFilePath('plataforma', 'usuarios', currentUser.fotoUsuario);
     this.nombreUsuario = this.usuario.nombreUsuario || '';
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
@@ -123,7 +119,7 @@ export class NavRightComponent implements DoCheck, OnInit {
               }
             });
             this.colorsettings = resp.coloresNav;
-            console.log('Todos las colorSettings', this.colorPalette);
+            // console.log('Todos las colorSettings', this.colorPalette);
             return;
           }
         }),
@@ -162,7 +158,7 @@ export class NavRightComponent implements DoCheck, OnInit {
 
   perfilUsuario() {
     const user = this._localstorageService.getUsuarioLocalStorage();
-    console.log('ver perfil del usuario', user.usuarioId);
+    // console.log('ver perfil del usuario', user.usuarioId);
     this.router.navigate(['starter/perfil'], { queryParams: { regId: user.usuarioId } });
   }
 
@@ -173,7 +169,7 @@ export class NavRightComponent implements DoCheck, OnInit {
 
   lockscreen() {
     const currentUrl = this.router.url;
-    console.log('ruta actual de navegacion', currentUrl);
+    // console.log('ruta actual de navegacion', currentUrl);
     this._navigationService.emitLockScreen('saveForm');
     sessionStorage.setItem('locked_url', currentUrl);
     this.router.navigate(['/starter/lock-screen']);

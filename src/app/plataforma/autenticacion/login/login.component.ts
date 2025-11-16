@@ -228,7 +228,7 @@ export class LoginComponent implements OnInit {
             this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTFOUND'));
             return;
           }
-          console.log('Login exitoso:', resp.usuario.codigoUsuario);
+          // console.log('Login exitoso:', resp.usuario.codigoUsuario);
         //   const logData = {
         //     codigoTipoLog: '',
         //     codigoRespuesta: '201',

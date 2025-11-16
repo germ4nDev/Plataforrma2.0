@@ -74,7 +74,8 @@
             "TIPOSVALOR": "Prices Types",
             "ADMINBD": "Connections",
             "TICKETS": "Tickets",
-            "SEGUIMIENTOS": "Follow-ups"
+            "SEGUIMIENTOS": "Follow-ups",
+            "ROLES": "Roles"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notifications",

@@ -8,6 +8,7 @@ import { BaseSessionModel } from '../_helpers/models/BaseSession.model';
 import { ThemeSettingsModel } from '../_helpers/models/ThemeSettings.model';
 import { NavSettings } from '../_helpers/models/navSettings.model';
 import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
+import { CurrentUserModel } from '../_helpers/models/CurrentUser.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,13 +31,13 @@ export class LocalStorageService {
 
   // #region SETTERS
   setNavSettingsLocalStorage(navsettings: NavSettings) {
-    localStorage.setItem('navsettings', JSON.stringify(navsettings));
+    sessionStorage.setItem('navsettings', JSON.stringify(navsettings));
     this.navsettings = navsettings;
   }
 
   setCurrentUserLocalStorage(current: PTLUsuarioModel) {
     this.currentUser = current;
-    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+    sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     this.currentUser = current;
   }
 
@@ -58,40 +59,51 @@ export class LocalStorageService {
   }
 
   setAplicacionLocalStorage(aplicacion: PTLAplicacionModel) {
-    this.navsettings.aplicacion = aplicacion;
-    this.navsettings = {
-        aplicacion: aplicacion,
-        suite: this.suite,
-        modulo: this.modulo
-    }
-    this.setNavSettingsLocalStorage(this.navsettings);
+    let navSetts = this.getNavSettingsLocalStorage();
+    console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
+    navSetts = {
+      aplicacion: aplicacion,
+      suite: navSetts.suite,
+      modulo: navSetts.modulo
+    };
+    this.setNavSettingsLocalStorage(navSetts);
     this.aplicacion = aplicacion;
   }
 
   setSuiteLocalStorage(suite: PTLSuiteAPModel) {
-    this.navsettings = {
-        aplicacion: this.aplicacion,
-        suite: suite,
-        modulo: this.modulo
-    }
-    this.setNavSettingsLocalStorage(this.navsettings);
+    let navSetts = this.getNavSettingsLocalStorage();
+    console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
+    navSetts = {
+      aplicacion: navSetts.aplicacion,
+      suite: suite,
+      modulo: navSetts.modulo
+    };
+    this.setNavSettingsLocalStorage(navSetts);
     this.suite = suite;
   }
 
   setModuloLocalStorage(modulo: PTLModuloAP) {
-    this.navsettings = {
-        aplicacion: this.aplicacion,
-        suite: this.suite,
-        modulo: modulo
-    }
-    this.navsettings.modulo = modulo;
-    this.setNavSettingsLocalStorage(this.navsettings);
+    let navSetts = this.getNavSettingsLocalStorage();
+    console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
+    navSetts = {
+      aplicacion: navSetts.aplicacion,
+      suite: navSetts.suite,
+      modulo: modulo
+    };
+    this.setNavSettingsLocalStorage(navSetts);
     this.modulo = modulo;
   }
 
   setSuscriptorLocalStorage(data: PTLSuscriptorModel) {
-    this.currentUser.suscrptor = data;
-    this.setCurrentUserLocalStorage(this.currentUser);
+    let currentUser = this.getCurrentUserLocalStorage();
+    console.log('===CURRENTUSER HIJUEPUTAAAAAAAAAAAAAAAAAA', currentUser);
+    currentUser = {
+      suscriptor: data,
+      ok: currentUser.ok,
+      token: currentUser.token,
+      usuario: currentUser.usuario
+    };
+    this.setCurrentUserLocalStorage(currentUser);
     this.suscriptor = data;
   }
 
@@ -104,49 +116,75 @@ export class LocalStorageService {
     sessionStorage.setItem('FormRegistro', JSON.stringify(FormRegistro));
     this.FormRegistro = FormRegistro;
   }
-
-  setLogOut() {
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('navsettings');
-  }
   // #endregion SETTERS
 
   // #region GETTERS
   getCurrentUserLocalStorage() {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.currentUser;
+    const curentUser = sessionStorage.getItem('curentUser');
+    if (!curentUser) {
+      return new CurrentUserModel();
+    }
+    try {
+      const currenttJson = JSON.parse(curentUser);
+      const obj = currenttJson;
+      // console.log('&&&&&&&&&&& Datos de la aplicacion:', obj);
+      return obj;
+    } catch (e) {
+      console.error('Error al parsear JSON desde sessionStorage:', e);
+      return new CurrentUserModel();
+    }
   }
 
   getUsuarioLocalStorage() {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '');
-    console.log('currentUser', this.currentUser);
-    return this.currentUser.usurio;
+    const curentUser = sessionStorage.getItem('currentUser');
+    if (!curentUser) {
+      return new PTLUsuarioModel();
+    }
+    try {
+      const currenttJson = JSON.parse(curentUser);
+      const obj = currenttJson.usuario;
+      // console.log('&&&&&&&&&&& Datos de la aplicacion:', obj);
+      return obj;
+    } catch (e) {
+      console.error('Error al parsear JSON desde sessionStorage:', e);
+      return new PTLUsuarioModel();
+    }
   }
 
   getNavSettingsLocalStorage(): NavSettings {
-    const navsettings = localStorage.getItem('navsettings') || '';
-    this.navsettings = JSON.parse(navsettings);
-    return this.navsettings;
+    const navsettings = sessionStorage.getItem('navsettings');
+    if (!navsettings) {
+      return new NavSettings();
+    }
+    try {
+      const navSettJson = JSON.parse(navsettings);
+      const obj = navSettJson;
+      // console.log('&&&&&&&&&&& Datos de la aplicacion:', obj);
+      return obj;
+    } catch (e) {
+      console.error('Error al parsear JSON desde sessionStorage:', e);
+      return new NavSettings();
+    }
   }
 
   getAplicaicionLocalStorage(): PTLAplicacionModel {
-    const navSetts = localStorage.getItem('navsettings');
+    const navSetts = sessionStorage.getItem('navsettings');
     if (!navSetts) {
       return new PTLAplicacionModel();
     }
     try {
       const navSettJson = JSON.parse(navSetts);
       const obj = navSettJson.aplicacion;
-      console.log('&&&&&&&&&&& Datos de la aplicacion:', obj);
+      // console.log('&&&&&&&&&&& Datos de la aplicacion:', obj);
       return obj;
     } catch (e) {
-      console.error('Error al parsear JSON desde localStorage:', e);
+      console.error('Error al parsear JSON desde sessionStorage:', e);
       return new PTLAplicacionModel();
     }
   }
 
   getSuiteLocalStorage(): PTLSuiteAPModel {
-    const navSetts = localStorage.getItem('navsettings');
+    const navSetts = sessionStorage.getItem('navsettings');
     if (!navSetts) {
       return new PTLSuiteAPModel();
     }
@@ -155,13 +193,14 @@ export class LocalStorageService {
       const obj = navSettJson.suite;
       return obj;
     } catch (e) {
-      console.error('Error al parsear JSON desde localStorage:', e);
+      console.error('Error al parsear JSON desde sessionStorage:', e);
       return new PTLSuiteAPModel();
     }
   }
 
   getModuloLocalStorage(): PTLModuloAP {
-    const navSetts = localStorage.getItem('navsettings');
+    const navSetts = sessionStorage.getItem('navsettings');
+    console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
     if (!navSetts) {
       return new PTLModuloAP();
     }
@@ -170,13 +209,13 @@ export class LocalStorageService {
       const obj = navSettJson.modulo;
       return obj;
     } catch (e) {
-      console.error('Error al parsear JSON desde localStorage:', e);
+      console.error('Error al parsear JSON desde sessionStorage:', e);
       return new PTLModuloAP();
     }
   }
 
   getSuscriptorLocalStorage(): PTLSuscriptorModel | null {
-    const navSetts = localStorage.getItem('navsettings');
+    const navSetts = sessionStorage.getItem('navsettings');
     if (!navSetts) {
       return null;
     }
@@ -185,14 +224,14 @@ export class LocalStorageService {
       const obj = navSettJson.suscriptor;
       return obj;
     } catch (e) {
-      console.error('Error al parsear JSON desde localStorage:', e);
+      console.error('Error al parsear JSON desde sessionStorage:', e);
       return null;
     }
   }
 
   getDataModelsLocalStorage() {
     this.usuario = this.getUsuarioLocalStorage().aplicacion || new PTLUsuarioModel();
-    console.log('datos del usuario', this.usuario);
+    // console.log('datos del usuario', this.usuario);
     this.aplicacion = this.getNavSettingsLocalStorage().aplicacion || new PTLAplicacionModel();
     this.suite = this.getNavSettingsLocalStorage().suite || new PTLSuiteAPModel();
     this.modulo = this.getNavSettingsLocalStorage().modulo || new PTLModuloAP();
@@ -206,7 +245,7 @@ export class LocalStorageService {
       fechaModificacion: new Date(),
       dataLog: []
     };
-    console.log('datamodel local', modelo);
+    // console.log('datamodel local', modelo);
     return modelo;
   }
 
@@ -223,7 +262,7 @@ export class LocalStorageService {
   }
 
   getThemeSettings() {
-    if (localStorage.getItem('app-theme-settings')) {
+    if (sessionStorage.getItem('app-theme-settings')) {
       this.themeSettings = JSON.parse(localStorage.getItem('themeSettings') || '');
     } else {
       const settings: ThemeSettingsModel = {
@@ -246,6 +285,11 @@ export class LocalStorageService {
   // #region REMOVERS
   removeFormRegistro() {
     sessionStorage.removeItem('FormRegistro');
+  }
+
+  setLogOut() {
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('navsettings');
   }
   // #endregion  REMOVERS
 }

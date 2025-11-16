@@ -22,6 +22,7 @@ import { SharedModule } from './theme/shared/shared.module';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { ErrorInterceptor } from 'src/app/theme/shared/_helpers/error.interceptor';
 import { BasicAuthInterceptor } from 'src/app/theme/shared/_helpers/basic-auth.interceptor';
+import { environment } from 'src/environments/environment';
 
 // third party
 import { ToastrModule } from 'ngx-toastr';
@@ -29,6 +30,9 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageSelectorComponent } from './theme/shared/components/language-selector/language-selector.component';
 import { NavContentComponent } from './theme/layout/admin/navigation/nav-content/nav-content.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -63,7 +67,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    })
+    }),
+    SocketIoModule.forRoot(config)
   ],
   exports: [
     NavContentComponent,

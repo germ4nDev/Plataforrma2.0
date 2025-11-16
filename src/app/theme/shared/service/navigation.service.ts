@@ -66,7 +66,7 @@ export class NavigationService implements OnInit, OnDestroy {
   }
 
   emitLockScreen(message: string): void {
-    console.log('Navigation: Emitiendo evento de bloqueo:', message);
+    // console.log('Navigation: Emitiendo evento de bloqueo:', message);
     this.lockScreenSubject.next(message);
   }
 
@@ -814,11 +814,11 @@ export class NavigationService implements OnInit, OnDestroy {
   }
 
   getNavigationItems(): void {
-    //console.log('2');
+    //// console.log('2');
     this.aplicacion = this._localStorageService.getAplicaicionLocalStorage();
     this.suite = this._localStorageService.getSuiteLocalStorage();
     const codigoApp = this.aplicacion.codigoAplicacion;
-    console.log('==============codigo aplicacion', codigoApp);
+    // console.log('==============codigo aplicacion', codigoApp);
     switch (codigoApp) {
       case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
         this._modulosService.getRegistros().subscribe((data) => {
@@ -855,11 +855,11 @@ export class NavigationService implements OnInit, OnDestroy {
   }
 
   navigateNodoMenu(url: any) {
-    console.log('todos los modulos', this.modulos);
-    console.log('navegar a otro mnodulo', url);
-    // console.log('id', id);
+    // console.log('todos los modulos', this.modulos);
+    // console.log('navegar a otro mnodulo', url);
+    // // console.log('id', id);
     const modulo = this.modulos.filter((x) => x.codigoModulo == url.id)[0];
-    console.log('modulo', modulo);
+    // console.log('modulo', modulo);
     if (modulo) {
       this._localStorageService.setModuloLocalStorage(modulo);
     }

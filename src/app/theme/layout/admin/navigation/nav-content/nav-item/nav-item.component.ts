@@ -26,7 +26,7 @@ export class NavItemComponent {
     private _registrosService: PtlmodulosApService,
     private _navigationService: NavigationService
   ) {
-    console.log('item nav item', this.item);
+    // console.log('item nav item', this.item);
 
     this.gradientConfig = GradientConfig;
     this.themeLayout = GradientConfig.layout;
@@ -78,7 +78,7 @@ export class NavItemComponent {
   }
 
   onNavigareClick(url: any) {
-    console.log('navegar a esta mierda', url);
+    // console.log('navegar a esta mierda', url);
     this._navigationService.navigateNodoMenu(url);
   }
 }

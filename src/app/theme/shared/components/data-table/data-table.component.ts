@@ -101,7 +101,7 @@ export class DatatableComponent implements OnInit, OnChanges {
         if (typeof col === 'string') {
           return this.generateMetadata(col, this.data[0][col]);
         }
-        console.log('****************** ColumnMetadata', col);
+        // console.log('****************** ColumnMetadata', col);
         return col as ColumnMetadata;
       });
     } else {
