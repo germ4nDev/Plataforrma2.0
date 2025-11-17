@@ -3,83 +3,65 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>
-                    {{ 'PLATAFORMA.MENU' | translate }}
-                </button>
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
             </div>
-
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
             </ng-container>
         </div>
     </aside>
 
-    <div class="content-area">
+    <div class="form-area">
         <div class="card">
             <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4>{{ 'ROLES.GESTION.TITLE' | translate }}</h4>
+                <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                        <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'APLICACIONES.NEW' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'APLICACIONES.UPDATE' | translate }}</h4>
                     </div>
-                    <div class="col-sm-6 justify-content-end d-flex gap-3">
-                        <button *ngIf="!modoEdicion" type="button" class="btn-NuevoRegistro"
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
+                            {{ 'PLATAFORMA.REGRESAR' | translate }}
+                            <i class="feather icon-arrow-left ms-2"></i>
+                        </button>
+                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'ROLES.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn-NuevoRegistro"
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'ROLES.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button type="button" class="btn-NuevoRegistro" (click)="btnRegresarClick()">
-                            {{ 'PLATAFORMA.REGRESAR' | translate }}
-                            <i class="feather icon-arrow-left ms-2"></i>
-                        </button>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-header">
-                <h4 *ngIf="!modoEdicion">{{ 'ROLES.GESTION.NEW' | translate }}</h4>
-                <h4 *ngIf="modoEdicion">{{ 'ROLES.GESTION.UPDATE' | translate }}</h4>
-            </div>
-            <div class="card-body">
+            <div class="card-body form-scroll-wrapper">
                 <form #validationForm="ngForm" class="editForm" novalidate>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoAplicacion">{{
-                                    'ROLES.GESTION.APLICACION' |
-                                    translate }}</label>
-                                <select class="form-control input-md" name="codigoAplicacion" id="codigoAplicacion"
-                                    [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
-                                    #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
-                                    (change)="onAplicacionchangeClick($event)">
-                                    <option value="">{{ 'ROLES.GESTION.APLICACIONHOLDER' | translate }}</option>
-                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{
-                                        app.nombreAplicacion }}</option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
+                                <label class="form-label">{{ 'ROLES.GESTION.CODE' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="codigoRole"
+                                    placeholder="{{'ROLES.GESTION.CODEHOLDER' | translate }}"
+                                    [ngClass]="{'is-invalid': !codigoRole.valid && (codigoRole.dirty || codigoRole.touched || isSubmit) }"
+                                    #codigoRole="ngModel" required [(ngModel)]="FormRegistro.codigoRole" readonly />
+                                <label *ngIf="!codigoRole.valid && (codigoRole.dirty || codigoRole.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'PLATAFORMA.REQUIRED | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoSuite">{{
-                                    'ROLES.GESTION.SUITE' | translate }}</label>
-                                <select class="form-control input-md" name="codigoSuite" id="codigoSuite"
-                                    [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
-                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite"
-                                    (change)="onSuiteChangeClick($event)">
-                                    <option value="">{{ 'ROLES.GESTION.SUITEHOLDER' | translate }}</option>
-                                    <option [value]="suite.codigoSuite" *ngFor="let suite of suitesApp">{{
-                                        suite.nombreSuite }}</option>
+                                <label class="form-control-label" for="codigoAplicacion">{{'ROLES.GESTION.APLICACION' | translate }}</label>
+                                <select class="form-control input-md" name="codigoAplicacion" id="codigoAplicacion"
+                                    [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
+                                    #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
+                                    (change)="onAplicacionchangeClick($event)">
+                                    <option value="">{{ 'ROLES.GESTION.APLICACIONHOLDER' | translate }}</option>
+                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{ app.nombreAplicacion }}</option>
                                 </select>
                                 <label
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
@@ -105,18 +87,21 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'ROLES.GESTION.DESCRIPTION' | translate }}</label>
-                                <textarea class="form-control"
-                                    placeholder="{{ 'ROLES.GESTION.DESCRIPTIONHOLDER' | translate }}"
+                                <app-text-editor
+                                    [toolbarType]="tipoEditorTexto"
+                                    [contentHtml]="FormRegistro.descripcionRole ?? ''"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)"
                                     name="descripcionRole"
-                                    [ngClass]="{
-                                    'is-invalid': !descripcionRole.valid && (descripcionRole.dirty || descripcionRole.touched || isSubmit)}"
-                                    #descripcionRole="ngModel" required [(ngModel)]="FormRegistro.descripcionRole"
+                                    [(ngModel)]="FormRegistro.descripcionRole"
+                                    [ngClass]="{'is-invalid': !descripcionRole.valid && (descripcionRole.dirty || descripcionRole.touched || isSubmit)}"
+                                    #descripcionRole="ngModel"
+                                    required
                                     rows="5">
-                                </textarea>
+                                </app-text-editor>
                                 <label
                                     *ngIf="!descripcionRole.valid && (descripcionRole.dirty || descripcionRole.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'P;ATAFORMA.REQUIRED | translate }}
                                 </label>
                             </div>
                         </div>
@@ -125,14 +110,14 @@
                                 <label class="form-label">{{ 'ROLES.GESTION.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
                                     <label class="radio-button">
-                                        <input name="option" type="radio" [value]="true"
-                                            [(ngModel)]="FormRegistro.estadoRole" />
+                                        <input name="estadoRole" type="radio" [value]="true"
+                                            [(ngModel)]="FormRegistro.estadoRole">
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
-                                    </label><br />
+                                    </label>
                                     <label class="radio-button">
-                                        <input name="option" type="radio" [value]="false"
-                                            [(ngModel)]="FormRegistro.estadoRole" />
+                                        <input name="estadoRole" type="radio" [value]="false"
+                                            [(ngModel)]="FormRegistro.estadoRole">
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
                                     </label>
@@ -145,3 +130,4 @@
         </div>
     </div>
 </div>
+

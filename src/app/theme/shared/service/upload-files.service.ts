@@ -21,16 +21,16 @@ export class UploadFilesService {
 
   getFilePath(susc: string, type: string, fileName: string) {
     const pathUrl = `${base_url}/upload/${susc}/${type}/${fileName}`;
-    console.log('path de la imagen', pathUrl);
+    // console.log('path de la imagen', pathUrl);
     return pathUrl;
   }
 
   deleteFilePath(susc: string, type: string, fileName: string) {
     const pathUrl = `${base_url}/upload/delete/${susc}/${type}/${fileName}`;
-    console.log('path de la rutaAPI', pathUrl);
+    // console.log('path de la rutaAPI', pathUrl);
     return this.http.delete(pathUrl).pipe(
       map((resp: any) => {
-        console.log('data del archivo eliminado', resp);
+        // console.log('data del archivo eliminado', resp);
         return {
           ok: true,
           mensaje: resp.mensaje

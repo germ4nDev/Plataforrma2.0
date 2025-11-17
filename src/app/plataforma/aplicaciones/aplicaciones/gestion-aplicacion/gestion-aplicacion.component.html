@@ -45,20 +45,6 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreAplicacion">{{ 'APLICACIONES.NAME' | translate }}</label>
-                                <input class="form-control form-input" id="nombreAplicacion" name="nombreAplicacion"
-                                    type="text" placeholder="{{ 'APLICACIONES.NAME' | translate }}"
-                                    [ngClass]="{'is-invalid': !nombreAplicacion.valid && (nombreAplicacion.dirty || nombreAplicacion.touched || isSubmit)}"
-                                    #nombreAplicacion="ngModel" required [(ngModel)]="FormRegistro.nombreAplicacion" />
-                                <label
-                                    *ngIf="!nombreAplicacion.valid && (nombreAplicacion.dirty || nombreAplicacion.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'APLICACIONES.NAMEHOLDER' | translate }}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
                                 <label class="form-label">{{ 'APLICACIONES.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigoAplicacion"
                                     placeholder="Código de la Aplicación"
@@ -69,6 +55,20 @@
                                     *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'APLICACIONES.CODEHOLDER' | translate }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="nombreAplicacion">{{ 'APLICACIONES.NAME' | translate }}</label>
+                                <input class="form-control form-input" id="nombreAplicacion" name="nombreAplicacion"
+                                    type="text" placeholder="{{ 'APLICACIONES.NAME' | translate }}"
+                                    [ngClass]="{'is-invalid': !nombreAplicacion.valid && (nombreAplicacion.dirty || nombreAplicacion.touched || isSubmit)}"
+                                    #nombreAplicacion="ngModel" required [(ngModel)]="FormRegistro.nombreAplicacion" />
+                                <label
+                                    *ngIf="!nombreAplicacion.valid && (nombreAplicacion.dirty || nombreAplicacion.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'APLICACIONES.NAMEHOLDER' | translate }}
                                 </label>
                             </div>
                         </div>

@@ -42,7 +42,7 @@ export class PtlColoresSettingsService {
     return this.http.get(url)
     .pipe(
       map((resp: any) => {
-        console.log('servicio de colores', resp);
+        // console.log('servicio de colores', resp);
         return {
           ok: true,
           coloresNav: resp.coloresNav
@@ -55,7 +55,7 @@ export class PtlColoresSettingsService {
      const url = `${base_url}/colores/${id}`;
      return this.http.get(url).pipe(
        map((resp: any) => {
-         console.log('data de colorNav', resp);
+         // console.log('data de colorNav', resp);
          return {
            ok: true,
            colorNav: resp.colorNav
@@ -73,7 +73,7 @@ export class PtlColoresSettingsService {
      const url = `${base_url}/colores/${settingId}`;
      return this.http.put(url, colorNav).pipe(
        map((resp: any) => {
-         console.log('data de colorNav modificacda', resp);
+         // console.log('data de colorNav modificacda', resp);
          return {
            ok: true,
            colorNav: resp.colorNav
@@ -86,7 +86,7 @@ export class PtlColoresSettingsService {
      const url = `${base_url}/colores/${_id}`;
      return this.http.delete(url).pipe(
        map((resp: any) => {
-         console.log('data de colorNav eliminado', resp);
+         // console.log('data de colorNav eliminado', resp);
          return {
            ok: true,
            colorNav: resp.colorNav

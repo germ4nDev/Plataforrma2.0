@@ -33,7 +33,7 @@ export class LocalStorageService {
   getCurrentUserLocalStorage(): any {
     const currentUserSession = sessionStorage.getItem('currentUser');
     if (!currentUserSession) {
-      console.log('No existe currentUser en la sesión o está vacío.');
+      // console.log('No existe currentUser en la sesión o está vacío.');
       return null;
     }
     try {
@@ -48,12 +48,12 @@ export class LocalStorageService {
   getUsuarioLocalStorage() {
     const currentUserSession = sessionStorage.getItem('currentUser');
     if (!currentUserSession) {
-      console.log('No existe currentUser en la sesión o está vacío.');
+      // console.log('No existe currentUser en la sesión o está vacío.');
       return null;
     }
     try {
       const currentUser = JSON.parse(currentUserSession);
-      console.log('Datos de la currentUser', currentUser);
+      // console.log('Datos de la currentUser', currentUser);
       return currentUser.usuario;
     } catch (e) {
       console.error('Error al parsear JSON desde sessionStorage:', e);
@@ -110,7 +110,7 @@ export class LocalStorageService {
 
   getModuloLocalStorage(): PTLModuloAP {
     const navSetts = sessionStorage.getItem('navsettings');
-    console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
+    // console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
     if (!navSetts) {
       return new PTLModuloAP();
     }
@@ -223,7 +223,7 @@ export class LocalStorageService {
 
   setAplicacionLocalStorage(aplicacion: PTLAplicacionModel) {
     let navSetts = this.getNavSettingsLocalStorage();
-    console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
+    // console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
     navSetts = {
       aplicacion: aplicacion,
       suite: navSetts.suite,
@@ -235,7 +235,7 @@ export class LocalStorageService {
 
   setSuiteLocalStorage(suite: PTLSuiteAPModel) {
     let navSetts = this.getNavSettingsLocalStorage();
-    console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
+    // console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
     navSetts = {
       aplicacion: navSetts.aplicacion,
       suite: suite,
@@ -247,7 +247,7 @@ export class LocalStorageService {
 
   setModuloLocalStorage(modulo: PTLModuloAP) {
     let navSetts = this.getNavSettingsLocalStorage();
-    console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
+    // console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
     navSetts = {
       aplicacion: navSetts.aplicacion,
       suite: navSetts.suite,
@@ -259,7 +259,7 @@ export class LocalStorageService {
 
   setSuscriptorLocalStorage(data: PTLSuscriptorModel) {
     let currentUser = this.getCurrentUserLocalStorage();
-    console.log('===CURRENTUSER HIJUEPUTAAAAAAAAAAAAAAAAAA', currentUser);
+    // console.log('===CURRENTUSER HIJUEPUTAAAAAAAAAAAAAAAAAA', currentUser);
     currentUser = {
       suscriptor: data,
       ok: currentUser.ok,

@@ -5,6 +5,8 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { PTLRoleAPModel } from '../_helpers/models/PTLRoleAP.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { SocketService } from './sockets.service';
 
 const base_url = environment.apiUrl;
 
@@ -12,9 +14,29 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLRolesAPService {
+  private socket: any;
   user: PTLUsuarioModel = new PTLUsuarioModel();
+  private _roles = new BehaviorSubject<PTLRoleAPModel[]>([]);
+  private _rolesChange = new Subject<any>();
+  rolesChange$ = this._rolesChange.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private socketService: SocketService
+  ) {
+    this.socketService.listen('aplicaciones-actualizadas').subscribe({
+      next: (payload) => {
+        console.log('Evento de Socket.IO recibido:', payload.msg);
+        this._rolesChange.next(payload);
+        this.cargarRegistros().subscribe();
+      },
+      error: (err) => console.error('Error en la escucha de sockets:', err)
+    });
+  }
+
+  get roles$(): Observable<PTLRoleAPModel[]> {
+    return this._roles.asObservable();
+  }
 
   get token(): string {
     this.user = JSON.parse(localStorage.getItem('currentUser') || '');
@@ -29,9 +51,24 @@ export class PTLRolesAPService {
     };
   }
 
-  getRegistros() {
+//   getRegistros() {
+//     const url = `${base_url}/roles`;
+//     return this.http.get(url).pipe(
+//       map((resp: any) => {
+//         console.log('servicio de roles', resp);
+//         return {
+//           ok: true,
+//           roles: resp.roles
+//         };
+//       })
+//     );
+//   }
+
+  cargarRegistros() {
+    console.log('Consultando y ordenando roles del servidor...');
     const url = `${base_url}/roles`;
-    return this.http.get(url).pipe(
+    return this.http.get(url)
+    .pipe(
       map((resp: any) => {
         console.log('servicio de roles', resp);
         return {
@@ -55,9 +92,17 @@ export class PTLRolesAPService {
     );
   }
 
-  postCrearRegistro(role: PTLRoleAPModel) {
+  postCrearRegistro(data: PTLRoleAPModel) {
     const url = `${base_url}/roles`;
-    return this.http.post(url, role);
+    console.log('servicio tickets', data);
+        return this.http.post(url, data).pipe(
+          map((resp: any) => {
+            return {
+              ok: true,
+              role: resp.role
+            };
+          })
+        );
   }
 
   putModificarRegistro(role: PTLRoleAPModel) {
@@ -73,7 +118,7 @@ export class PTLRolesAPService {
     );
   }
 
-  deleteEliminarRegistro(_id: number) {
+  deleteEliminarRegistro(_id: string) {
     const url = `${base_url}/roles/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {

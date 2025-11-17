@@ -1,25 +1,25 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
-  <aside class="aside-left">
-    <div class="card">
-      <div class="nav-tabs-custom">
-        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-          {{ 'PLATAFORMA.MENU' | translate }}
-        </button>
-        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-          {{ 'PLATAFORMA.FILTERS' | translate }}
-        </button>
-      </div>
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
 
-      <ng-container *ngIf="activeTab === 'menu'">
-        <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
-      </ng-container>
-      <ng-container *ngIf="activeTab === 'filters'">
-        <div class="p-3 filtros-scroll-wrapper">
-          <DIV class="text-center">
-            <h6 class="filtros-title">{{ 'ROLES.FILTROS.TITULO' | translate }}</h6>
-          </DIV>
-          <!-- <div class="filtro">
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3 filtros-scroll-wrapper">
+                    <DIV class="text-center">
+                        <h6 class="filtros-title">{{ 'ROLES.FILTROS.TITULO' | translate }}</h6>
+                    </DIV>
+                    <!-- <div class="filtro">
                         <small>{{ 'ROLES.FILTROS.IDENTIFICACION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)" class="form-control"
                             placeholder="{{ 'ROLES.FILTROS.IDENTIFICACIONCHOLDER' | translate }}" />
@@ -52,36 +52,28 @@
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
                         </select>
                     </div> -->
+                </div>
+            </ng-container>
         </div>
-      </ng-container>
-    </div>
-  </aside>
+    </aside>
 
-  <div class="content-area">
-    <div class="card card-table content-scroll-wrapper">
-      <div class="card-body">
-        <app-data-table
-          [data]="registrosFiltrado"
-          [metadataColumns]="columnasRegistros"
-          [detailColumns]="['descripcionRole']"
-          [detailTitles]="['ROLES.DESCRIPCIONROL' | translate]"
-          [showDetail]="true"
-          [idField]="'roleId'"
-          [tableTitle]="'ROLES.TITLE' | translate"
-          [showAvatar]="false"
-          [showActions]="true"
-          [showNewButton]="true"
-          [showViewButton]="false"
-          [showEditButton]="true"
-          [showDeleteButton]="true"
-          [newButtonLabel]="'ROLES.NEW' | translate"
-          [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-          (newRecord)="OnNuevoRegistroClick()"
-          (editRecord)="OnEditarRegistroClick($event)"
-          (deleteRecord)="OnEliminarRegistroClick($event)"
-        >
-        </app-data-table>
-      </div>
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
+                    <app-data-table [data]="dataFiltrada" [idField]="'codigoAplicacion'"
+                        [tableTitle]="'APLICACIONES.TITLE' | translate" [metadataColumns]="columnasRegistros"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
+                        [showDeleteButton]="true" [newButtonLabel]="'APLICACIONES.NEW' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                    </app-data-table>
+                </ng-container>
+                <ng-template #loading>
+                    <!-- TODO mostrar un indicador de carga -->
+                </ng-template>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

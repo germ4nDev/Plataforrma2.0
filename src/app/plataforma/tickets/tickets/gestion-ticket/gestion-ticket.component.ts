@@ -49,6 +49,9 @@ export class GestionTicketComponent {
   menuItems!: Observable<NavigationItem[]>;
   registrosSub?: Subscription;
   form: undefined;
+  lockScreenSubscription: Subscription | undefined;
+  isLocked: boolean = false;
+  lockMessage: string = '';
 
   estadosTicketSub?: Subscription;
   estadosTicket: PTLEstadoModel[] = [];
@@ -74,9 +77,6 @@ export class GestionTicketComponent {
   modoEdicion: boolean = false;
   codeRegistro = uuidv4();
   tipoEditorTexto = 'basica';
-  lockScreenSubscription: Subscription | undefined;
-  isLocked: boolean = false;
-  lockMessage: string = '';
 
   prioridades = [
     { prioridad: 'Mejora', color: '#2738F5' },
@@ -93,7 +93,6 @@ export class GestionTicketComponent {
     private _navigationService: NavigationService,
     private _modulosService: PtlmodulosApService,
     private _suitesService: PtlSuitesAPService,
-    private _localStorageService: LocalStorageService,
     private _usuariosService: PTLUsuariosService,
     private _usuariosScService: PtlusuariosScService,
     private _clasesTicketService: PtlclasesticketService,
@@ -101,6 +100,7 @@ export class GestionTicketComponent {
     private _registrosService: PTLTicketsService,
     private _estadosTicketService: PTLEstadosService,
     private _uploadService: UploadFilesService,
+    private _localStorageService: LocalStorageService,
     private _logActividadesService: PtllogActividadesService,
     private _swalAlertService: SwalAlertService
   ) {

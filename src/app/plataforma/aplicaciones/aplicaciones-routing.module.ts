@@ -21,7 +21,7 @@ const routes: Routes = [
         loadComponent: () => import('./roles/roles.component').then((m) => m.RolesComponent)
       },
       {
-        path: 'gestion-role',
+        path: 'gestion-roles',
         loadComponent: () =>
           import('./roles/gestion-roles/gestion-roles.component').then((m) => m.GestionRolesComponent)
       },

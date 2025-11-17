@@ -271,8 +271,14 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
   DataModel: BaseSessionModel = new BaseSessionModel();
   DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
-  subscriptions = new Subscription();
+  moduloTituloExcel: string = '';
+  hasFiltersSlot: boolean = false;
+  gradientConfig;
+  lang = localStorage.getItem('lang');
+  menuItems$!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
+  subscriptions = new Subscription();
   filtroCodigoSubject = new BehaviorSubject<string>('todos');
   filtroNombreSubject = new BehaviorSubject<string>('todos');
   filtroDescripcionSubject = new BehaviorSubject<string>('');
@@ -281,13 +287,6 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
   aplicacionesTransformadas$: Observable<PTLAplicacionModel[]> = of([]);
   aplicacionesFiltradas$: Observable<PTLAplicacionModel[]> = of([]);
   aplicaciones: PTLAplicacionModel[] = [];
-
-  moduloTituloExcel: string = '';
-  hasFiltersSlot: boolean = false;
-  gradientConfig;
-  lang = localStorage.getItem('lang');
-  menuItems$!: Observable<NavigationItem[]>;
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   constructor(
     private router: Router,
@@ -336,7 +335,6 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
       })
     );
 
-    // 2. Stream de Aplicaciones Filtradas (Combina Datos Transformados + Filtros)
     this.aplicacionesFiltradas$ = combineLatest([
       this.aplicacionesTransformadas$.pipe(startWith([])), // Usa la fuente de datos transformada
       this.filtroCodigoSubject,
@@ -345,26 +343,21 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
       this.filtroEstadoSubject
     ]).pipe(
       map(([apps, codigo, nombre, descripcion, estado]) => {
-        // Lógica de filtrado combinada
         let filteredApps = apps;
 
-        // Filtro por Código
         if (codigo !== 'todos') {
           filteredApps = filteredApps.filter(app => app.codigoAplicacion === codigo);
         }
 
-        // Filtro por Nombre
         if (nombre !== 'todos') {
           filteredApps = filteredApps.filter(app => app.nombreAplicacion === nombre);
         }
 
-        // Filtro por Estado
         if (estado !== 'todos') {
           const estadoBoolean = estado === 'true';
           filteredApps = filteredApps.filter(app => app.estadoAplicacion === estadoBoolean);
         }
 
-        // Filtro por Descripción (Búsqueda de texto libre)
         if (descripcion) {
           const textoFiltro = descripcion.toLowerCase();
           filteredApps = filteredApps.filter(app =>

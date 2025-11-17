@@ -252,33 +252,33 @@ export class GestionRolesUsuarioComponent implements OnInit {
   private async consultarRolesBySuiteId(suiteId: number) {
     try {
       this.rolesAplicacion = [];
-      const resp = await firstValueFrom(
-        this._rolesAPService.getRegistros().pipe(
-          tap((resp: any) => {
-            if (resp.ok) {
-              const rolesApp = resp.roles.filter((x: { suiteId: number }) => x.suiteId == suiteId);
-              console.log('rolesUsuaris', this.rolesUsuarios);
-              rolesApp.forEach((role: any) => {
-                const usuRole = this.rolesUsuarios.find((ur: any) => ur.roleId === role.roleId);
-                if (usuRole) {
-                  role.checked = true;
-                  role.usuarioRoleId = usuRole.usuarioRoleId;
-                  this.rolesSeleccionados.push(role);
-                } else {
-                  role.checked = false;
-                  role.usuarioRoleId = null;
-                }
-              });
-              this.rolesAplicacion = rolesApp;
-            }
-          }),
-          catchError((err) => {
-            console.log(err);
-            return of(null);
-          })
-        )
-      );
-      return resp?.ok ?? false;
+    //   const resp = await firstValueFrom(
+    //     this._rolesAPService.getRegistros().pipe(
+    //       tap((resp: any) => {
+    //         if (resp.ok) {
+    //           const rolesApp = resp.roles.filter((x: { suiteId: number }) => x.suiteId == suiteId);
+    //           console.log('rolesUsuaris', this.rolesUsuarios);
+    //           rolesApp.forEach((role: any) => {
+    //             const usuRole = this.rolesUsuarios.find((ur: any) => ur.roleId === role.roleId);
+    //             if (usuRole) {
+    //               role.checked = true;
+    //               role.usuarioRoleId = usuRole.usuarioRoleId;
+    //               this.rolesSeleccionados.push(role);
+    //             } else {
+    //               role.checked = false;
+    //               role.usuarioRoleId = null;
+    //             }
+    //           });
+    //           this.rolesAplicacion = rolesApp;
+    //         }
+    //       }),
+    //       catchError((err) => {
+    //         console.log(err);
+    //         return of(null);
+    //       })
+    //     )
+    //   );
+      return  false;
     } catch (error) {
       console.error('Error inesperado en consultarUsuariosRoles:', error);
       return false;
