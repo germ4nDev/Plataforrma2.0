@@ -152,8 +152,9 @@ export class GestionSuiteComponent implements OnInit {
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];
     const objUpload = {
-      id: '0',
-      tipo: 'suites'
+      suc: 'plataforma',
+      tipo: 'suites',
+      id: '0'
     };
     if (file) {
       const reader = new FileReader();

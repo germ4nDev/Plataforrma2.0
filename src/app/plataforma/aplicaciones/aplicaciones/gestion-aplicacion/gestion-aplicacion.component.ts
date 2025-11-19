@@ -129,8 +129,9 @@ export class GestionAplicacionComponent implements OnInit {
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];
     const objUpload = {
-      susc: '0',
-      tipo: 'aplicaciones'
+      susc: 'plataforma',
+      tipo: 'aplicaciones',
+      id: '0'
     };
     if (file) {
       const reader = new FileReader();

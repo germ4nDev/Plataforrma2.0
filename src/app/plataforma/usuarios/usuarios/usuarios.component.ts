@@ -9,21 +9,24 @@ import { GradientConfig } from 'src/app/app-config';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
-import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
-import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
-import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap } from 'rxjs';
-import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { of, Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
-import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
+import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
+import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap } from 'rxjs';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import {
+  NavigationService,
+  SwalAlertService,
+  UploadFilesService,
+  PTLUsuariosService,
+  LocalStorageService
+} from 'src/app/theme/shared/service';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { of, Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 //#endregion IMPORTS
 
 @Component({
@@ -45,6 +48,7 @@ export class UsuariosComponent implements OnInit {
   menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   tituloPagina: string = '';
+  suscPlataforma: string = '';
 
   subscriptions = new Subscription();
   filtroIdentificacionSubject = new BehaviorSubject<string>('');
@@ -66,7 +70,8 @@ export class UsuariosComponent implements OnInit {
     private _navigationService: NavigationService,
     private _swalService: SwalAlertService,
     private _usuariosService: PTLUsuariosService,
-    private _languageService: LanguageService
+    private _localStorageService: LocalStorageService,
+    private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -95,7 +100,7 @@ export class UsuariosComponent implements OnInit {
     {
       name: 'fotoUsuario',
       header: 'USUARIOS.FOTO',
-      type: 'avatar', // 👈 ¡CLAVE! Esto le dice al datatable que renderice la imagen.
+      type: 'avatar',
       isSortable: false
     },
     {
@@ -123,8 +128,6 @@ export class UsuariosComponent implements OnInit {
       header: 'USUARIOS.STATUS',
       type: 'text'
     }
-    // Si tuvieras una columna de precio, usarías:
-    // { name: 'costo', header: 'USUARIOS.COSTO', type: 'number' }
   ];
 
   columnasDetailRegistros: ColumnMetadata[] = [
@@ -148,13 +151,14 @@ export class UsuariosComponent implements OnInit {
   }
 
   setupRegistrosStream(): void {
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
     this.registrosTransformados$ = this._usuariosService.usuarios$.pipe(
       switchMap((users: PTLUsuarioModel[]) => {
-        console.log('================== usuarios 1', users);
         if (!users) return of([]);
         this.usuairos = users;
         const transformedApps = users.map((user: any) => {
           user.nomEstado = user.estadoAplicacion ? 'Activo' : 'Inactivo';
+          user.fotoUsuario = this._uploadService.getFilePath(this.suscPlataforma, 'usuarios', user.fotoUsuario);
           return user as PTLUsuarioModel;
         });
         this.registros = transformedApps;
@@ -165,7 +169,6 @@ export class UsuariosComponent implements OnInit {
         return of([]);
       })
     );
-
     this.registrosFiltrado$ = combineLatest([
       this.registrosTransformados$.pipe(startWith([])), // Usa la fuente de datos transformada
       this.filtroIdentificacionSubject,
@@ -228,10 +231,10 @@ export class UsuariosComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this._usuariosService.eliminarUsuairo(id).subscribe({
+        this._usuariosService.eliminarUsuairo(id.id).subscribe({
           next: (resp: any) => {
             this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje);
-            this.registros = this.registros.filter((s) => s.usuarioId !== id);
+            this.setupRegistrosStream();
           },
           error: (err: any) => {
             this._swalService.getAlertError(this.translate.instant('USUARIOS.ELIMINARERROR') + ', ' + err);

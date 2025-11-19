@@ -113,9 +113,9 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.GESTION.CLAVEACTUAL' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="claveActual" (ngModelChange)="validarClaveActual($event)"
+                                <input type="text" class="form-control form-input" name="claveUsuario" (ngModelChange)="validarClaveActual($event)"
                                     placeholder="{{ 'USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}"
-                                    #claveActual="ngModel" required [(ngModel)]="FormRegistro.claveActual" />
+                                    #claveUsuario="ngModel" required [(ngModel)]="FormRegistro.claveUsuario" />
                             </div>
                         </div>
                         <div class="col-md-6">

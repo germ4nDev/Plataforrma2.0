@@ -14,23 +14,30 @@ export class UploadFilesService {
 
   uploadUserPhoto(file: File, objUpload: any) {
     const formData = new FormData();
-    formData.append('foto', file);
+    formData.append('file', file);
     const url = `${base_url}/upload/${objUpload.susc}/${objUpload.tipo}/${objUpload.id}`;
     return this.http.put(url, formData);
   }
 
   getFilePath(susc: string, type: string, fileName: string) {
     const pathUrl = `${base_url}/upload/${susc}/${type}/${fileName}`;
-    // console.log('path de la imagen', pathUrl);
     return pathUrl;
   }
 
-  deleteFilePath(susc: string, type: string, fileName: string) {
-    const pathUrl = `${base_url}/upload/delete/${susc}/${type}/${fileName}`;
-    // console.log('path de la rutaAPI', pathUrl);
+  setFolderSuscriptor(susc: string) {
+    const url = `${base_url}/upload/folder/${susc}`;
+    return this.http.get(url);
+  }
+
+  deleteFilePath(objUpload: any) {
+    console.log('susc',objUpload. susc);
+    console.log('tipo', objUpload.tipo);
+    console.log('foto', objUpload.file);
+    const pathUrl = `${base_url}/upload/delete/${objUpload.susc}/${objUpload.tipo}/${objUpload.file}`;
+    console.log('path de la rutaAPI', pathUrl);
     return this.http.delete(pathUrl).pipe(
       map((resp: any) => {
-        // console.log('data del archivo eliminado', resp);
+        console.log('data del archivo eliminado', resp);
         return {
           ok: true,
           mensaje: resp.mensaje

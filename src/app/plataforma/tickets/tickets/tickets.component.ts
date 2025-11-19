@@ -27,8 +27,8 @@ import {
   PtlSuitesAPService,
   PtlmodulosApService,
   PTLUsuariosService,
-  UploadFilesService,
-  PTLSeguimientosTKService
+  PTLSeguimientosTKService,
+  LocalStorageService
 } from 'src/app/theme/shared/service';
 import { environment } from 'src/environments/environment';
 
@@ -67,6 +67,7 @@ export class TicketsComponent implements OnInit {
   hasFiltersSlot: boolean = false;
   menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
+  suscPlataforma: string = '';
 
   constructor(
     private router: Router,
@@ -79,11 +80,12 @@ export class TicketsComponent implements OnInit {
     private _modulosService: PtlmodulosApService,
     private _suitesService: PtlSuitesAPService,
     private _usuariosService: PTLUsuariosService,
-    private _uploadService: UploadFilesService,
     private _seguimientosService: PTLSeguimientosTKService,
+    private _localStorageService: LocalStorageService,
     private _estadosTicketService: PTLEstadosService
   ) {
     this.gradientConfig = GradientConfig;
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
   }
 
   ngOnInit() {
@@ -409,10 +411,10 @@ export class TicketsComponent implements OnInit {
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             if (ticket.capturaTicket != 'no-imagen.png') {
               console.log('esta es la captura del ticket', ticket.capturaTicket);
-              const captura = ticket.capturaTicket || '';
-              this._uploadService.deleteFilePath('0', 'tickets', captura).subscribe((data: any) => {
-                console.log('mensaje', data.mensaje);
-              });
+              //   const captura = ticket.capturaTicket || '';
+              //   this._uploadService.deleteFilePath('0', 'tickets', captura).subscribe((data: any) => {
+              //     console.log('mensaje', data.mensaje);
+              //   });
             }
             this._seguimientosService.getRegistrosByTicket(id.id).subscribe((segs) => {
               if (segs.seguimientos.length > 0) {

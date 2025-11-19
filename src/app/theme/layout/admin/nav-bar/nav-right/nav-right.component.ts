@@ -50,24 +50,25 @@ import { PTLColorSettingModel } from 'src/app/theme/shared/_helpers/models/PTLCo
   ]
 })
 export class NavRightComponent implements DoCheck, OnInit {
-  public usuario: PTLUsuarioModel = new PTLUsuarioModel();
-  public colorsettings: PTLColorSettingModel[] = [];
-  public visibleUserList: boolean = false;
-  public chatMessage: boolean = false;
-  public friendId!: number;
-  public gradientConfig = GradientConfig;
-  public isDarkTheme: boolean = false;
-  public themeSettings: any;
-  public iconoTema: string = '';
-  public avatarUsuario: string = '';
-  public nombreUsuario: string = '';
-  public navbarColor: string = '';
-  public currentLanguage: string = 'es';
-  public registrosSub?: Subscription;
-  public themeTextKey: string = 'PLATAFORMA.NAVBAR.CHANGE_TO_DARK';
-  public colorPalette: any[] = [];
-  public lockScreenSubject = new Subject<string>();
-  public lockScreenEvent$: Observable<string> = this.lockScreenSubject.asObservable();
+  usuario: PTLUsuarioModel = new PTLUsuarioModel();
+  colorsettings: PTLColorSettingModel[] = [];
+  visibleUserList: boolean = false;
+  chatMessage: boolean = false;
+  friendId!: number;
+  gradientConfig = GradientConfig;
+  isDarkTheme: boolean = false;
+  themeSettings: any;
+  iconoTema: string = '';
+  avatarUsuario: string = '';
+  nombreUsuario: string = '';
+  navbarColor: string = '';
+  currentLanguage: string = 'es';
+  registrosSub?: Subscription;
+  themeTextKey: string = 'PLATAFORMA.NAVBAR.CHANGE_TO_DARK';
+  colorPalette: any[] = [];
+  lockScreenSubject = new Subject<string>();
+  lockScreenEvent$: Observable<string> = this.lockScreenSubject.asObservable();
+  suscriptorPlataforma: string = '';
 
   constructor(
     private router: Router,
@@ -87,9 +88,11 @@ export class NavRightComponent implements DoCheck, OnInit {
 
   ngOnInit(): void {
     this.consultarColorsettings();
-    const currentUser = this._localstorageService.getUsuarioLocalStorage();
-    this.avatarUsuario = this._uploadService.getFilePath('plataforma', 'usuarios', currentUser.fotoUsuario);
-    this.nombreUsuario = this.usuario.nombreUsuario || '';
+    this.suscriptorPlataforma = this._localstorageService.getSuscriptorPlataformaLocalStorage();
+    const userLogg = this._localstorageService.getUsuarioLocalStorage();
+    console.log('no hay suscriptor suscriptor');
+    this.avatarUsuario = this._uploadService.getFilePath(this.suscriptorPlataforma, 'usuarios', userLogg.fotoUsuario);
+    this.nombreUsuario = userLogg.nombreUsuario || '';
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
     });

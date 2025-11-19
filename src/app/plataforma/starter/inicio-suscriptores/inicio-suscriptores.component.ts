@@ -20,9 +20,9 @@ import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fulls
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import { PTLSuscriptoresService, PtlSuitesAPService, UploadFilesService, LocalStorageService } from 'src/app/theme/shared/service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { environment } from 'src/environments/environment';
+// import { environment } from 'src/environments/environment';
 
-const base_url = environment.apiUrl;
+// const base_url = environment.apiUrl;
 
 @Component({
   selector: 'app-inicio-suscriptores',
@@ -35,15 +35,25 @@ export class InicioSuscriptoresComponent implements OnInit {
   public suscCode: string = '';
   suscriptoresSub?: Subscription;
   suscriptores: PTLSuscriptorModel[] = [];
+  suscriptor: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private _suscriptoresService: PTLSuscriptoresService,
     private _suitesService: PtlSuitesAPService,
     private _uploadService: UploadFilesService,
-    private _localStorage: LocalStorageService,
+    private _localStorageService: LocalStorageService,
     private router: Router
-  ) {}
+  ) {
+    // const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
+    // if (suscriptor) {
+    //   this.suscriptor = this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '';
+    //   console.log('datos del suscriptor', suscriptor);
+    // } else {
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    console.log('no hay suscriptor suscriptor');
+    // }
+  }
 
   ngOnInit(): void {
     console.log('ingresa a la plataforma');
@@ -58,7 +68,8 @@ export class InicioSuscriptoresComponent implements OnInit {
           if (resp.ok) {
             resp.suscriptores.forEach((susc: any) => {
               // susc.imagenInicio = this._uploadService.getFilePath('suscriptores', susc.imagenInicio);
-              susc.logoSusucriptor = `${base_url}/upload/plataforma/suscriptores/${susc.logoSusucriptor}`;
+              susc.logoSusucriptor = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', susc.logoSusucriptor);
+              //   susc.logoSusucriptor = `${base_url}/upload/${this.suscriptor}/suscriptores/${susc.logoSusucriptor}`;
             });
             console.log('suscriptores', resp.suscriptores);
             this.suscriptores = resp.suscriptores;
@@ -75,7 +86,7 @@ export class InicioSuscriptoresComponent implements OnInit {
   ingresarPlataforma(susc: PTLSuscriptorModel) {
     //TODO Validar las suscriptores con los suscriptores y los usuarios
     console.log('ingresar a', susc);
-    this._localStorage.setSuscriptorLocalStorage(susc);
+    this._localStorageService.setSuscriptorLocalStorage(susc);
     this.router.navigate(['/starter/inicio-aplicaciones']);
   }
 }

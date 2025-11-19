@@ -124,13 +124,18 @@ export class LocalStorageService {
     }
   }
 
+  getSuscriptorPlataformaLocalStorage() {
+    return 'e1a8fa99-15db-479b-a0a4-9c2be72273c9';
+  }
+
   getSuscriptorLocalStorage(): PTLSuscriptorModel | null {
-    const navSetts = sessionStorage.getItem('navsettings');
+    const navSetts = sessionStorage.getItem('currentUser');
     if (!navSetts) {
       return null;
     }
     try {
       const navSettJson = JSON.parse(navSetts);
+      console.log('============ navSettJson', navSettJson);
       const obj = navSettJson.suscriptor;
       return obj;
     } catch (e) {

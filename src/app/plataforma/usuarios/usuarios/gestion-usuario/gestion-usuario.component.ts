@@ -28,6 +28,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 })
 export class GestionUsuarioComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
+  usuario: PTLUsuarioModel = new PTLUsuarioModel();
   FormRegistro: PTLUsuarioModel = new PTLUsuarioModel();
   form: undefined;
   isSubmit: boolean = false;
@@ -38,7 +39,7 @@ export class GestionUsuarioComponent implements OnInit {
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
   userPhotoUrl: string = '';
-  fileName: string | null = null;
+  fileName: string = '';
   selectedFileUrl: string | null = null;
   isClaveActual: boolean = true;
   claveActual: string = '';
@@ -46,6 +47,7 @@ export class GestionUsuarioComponent implements OnInit {
   lockScreenSubscription: Subscription | undefined;
   isLocked: boolean = false;
   lockMessage: string = '';
+  suscPlataforma: string = '';
 
   constructor(
     private router: Router,
@@ -61,6 +63,8 @@ export class GestionUsuarioComponent implements OnInit {
     private _uploadService: UploadFilesService
   ) {
     this.isSubmit = false;
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    console.log('datos del suscriptor', this.suscPlataforma);
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
@@ -68,9 +72,11 @@ export class GestionUsuarioComponent implements OnInit {
         this.modoEdicion = true;
         this._registrosService.getUsuarioById(registroId).subscribe({
           next: (resp: any) => {
+            this.usuario = resp.usuario;
             this.FormRegistro = resp.usuario;
             this.claveUsuario = resp.usuario.claveUsuario;
-            this.selectedFileUrl = this._uploadService.getFilePath('plataforma', 'usuarios', resp.usuario.fotoUsuario);
+            this.selectedFileUrl = this._uploadService.getFilePath(this.suscPlataforma, 'usuarios', resp.usuario.fotoUsuario);
+            this.FormRegistro.claveUsuario = '';
             this.FormRegistro.claveNew = '';
             this.FormRegistro.claveConfirm = '';
             // this.codeRegistro = resp.aplicacion.codigoAplicacion;
@@ -105,34 +111,8 @@ export class GestionUsuarioComponent implements OnInit {
     }
     if (!this.modoEdicion) {
       this.FormRegistro.codigoUsuario = uuidv4();
-    }
-  }
-
-  onFileSelectedClick(event: any) {
-    const file: File = event.target.files[0];
-    const objUpload = {
-      susc: '0',
-      aplicacion: this._localStorageService.getAplicaicionLocalStorage().nombreAplicacion,
-      tipo: 'usuarios'
-    };
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.selectedFileUrl = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
-        next: (path: any) => {
-          console.log('resultado', path);
-          this.userPhotoUrl = path.nombreArchivo;
-        },
-        error: () => {
-          this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
-        }
-      });
-    } else {
-      this.selectedFileUrl = null;
-      this.userPhotoUrl = '';
+      this.FormRegistro.fotoUsuario = 'no-imagen.jpg';
+      console.log('formRegistro original', this.FormRegistro);
     }
   }
 
@@ -163,16 +143,48 @@ export class GestionUsuarioComponent implements OnInit {
     // }
   }
 
+  onFileSelectedClick(event: any) {
+    const file: File = event.target.files[0];
+    const objUpload = {
+      susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+      tipo: 'usuarios',
+      id: '0'
+    };
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedFileUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+        next: (path: any) => {
+          console.log('resultado', path);
+          this.fileName = path.nombreArchivo;
+          this.FormRegistro.fotoUsuario = path.nombreArchivo;
+        },
+        error: () => {
+          this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+        }
+      });
+    } else {
+      this.selectedFileUrl = null;
+      this.userPhotoUrl = '';
+    }
+  }
+
   btnGestionarUsuarioClick(form: any) {
     this.isSubmit = true;
-    if (!form.valid) {
-      return;
-    }
+    console.log('insertar formRegistro', form.value);
+    // if (!form.valid) {
+    //   return;
+    // }
     const registroData = form.value as PTLUsuarioModel;
     if (this.modoEdicion) {
-      if (this.FormRegistro.claveNew != '') {
+      // MODIFICAR REGISTRO
+      if (this.FormRegistro.claveUsuario != '') {
         if (this.FormRegistro.claveNew == this.FormRegistro.claveConfirm) {
           registroData.claveUsuario = this.FormRegistro.claveNew;
+          registroData.fotoUsuario = this.FormRegistro.fotoUsuario;
           registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
           registroData.fechaModificacion = new Date().toISOString();
           this._registrosService.actualizarUsuarioClave(registroData).subscribe({
@@ -217,6 +229,10 @@ export class GestionUsuarioComponent implements OnInit {
           this._swalService.getAlertError(this._translate.instant('PLATAFORMA.PASSWORDSERROR'));
         }
       } else {
+        if (this.FormRegistro.claveUsuario == '') {
+          this.FormRegistro.claveUsuario = this.claveUsuario;
+        }
+        registroData.claveUsuario = this.FormRegistro.claveUsuario;
         registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
         registroData.fechaModificacion = new Date().toISOString();
         this._registrosService.actualizarUsuarioDatos(registroData).subscribe({
@@ -228,6 +244,13 @@ export class GestionUsuarioComponent implements OnInit {
                 descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
               };
               this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+              const fotoUsuairo = this.usuario.fotoUsuario || '';
+              const objUpload = {
+                susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+                tipo: 'usuarios',
+                file: fotoUsuairo
+              };
+              this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
               this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'));
               this.router.navigate(['/usuarios/usuarios']);
             }
@@ -245,10 +268,11 @@ export class GestionUsuarioComponent implements OnInit {
         });
       }
     } else {
-      this.FormRegistro.claveUsuario = this.FormRegistro.identificacionUsuario?.toString().trimEnd();
-      this.FormRegistro.fotoUsuario = this.userPhotoUrl != '' ? this.userPhotoUrl : 'no-photo.png';
+      // INSERTAR REGISTRO
       console.log('formResgistro', this.FormRegistro);
+      registroData.claveUsuario = this.FormRegistro.claveUsuario;
       registroData.codigoUsuario = uuidv4();
+      registroData.fotoUsuario = this.fileName !== '' ? this.fileName : 'no-imagen.png';
       registroData.fechaCreacion = new Date().toISOString();
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       console.log('registroData', registroData);
@@ -261,6 +285,13 @@ export class GestionUsuarioComponent implements OnInit {
               descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            const fotoUsuairo = this.usuario.fotoUsuario || '';
+            const objUpload = {
+              susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+              tipo: 'usuarios',
+              file: fotoUsuairo
+            };
+            this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
             this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTUSERSUCCESS'));
             form.resetForm();
             this.isSubmit = false;
@@ -275,6 +306,13 @@ export class GestionUsuarioComponent implements OnInit {
             descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.mensaje
           };
           this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'));
+          console.log('============fileName', this.fileName);
+          const objUpload = {
+            susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+            tipo: 'usuarios',
+            file: this.fileName
+          };
+          this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
           this._swalService.getAlertError(this._translate.instant('PLATAFORMA.INSERTUSERERROR'));
         }
       });

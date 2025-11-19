@@ -6,6 +6,7 @@ import { of, Subscription } from 'rxjs';
 import { PTLSlierInicioModel } from '../../_helpers/models/PTLSliderInicio.model';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { LocalStorageService, UploadFilesService } from '../../service';
 
 const base_url = environment.apiUrl;
 
@@ -25,19 +26,26 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
   images: PTLSlierInicioModel[] = [];
   private readonly defaultPlaceholder = `${base_url}/upload/sliders/imagen-inicio.png`;
   private intervalId: any;
+  suscPlataforma: string = '';
 
-  constructor(private _sliderService: PtlSlidersInicioService) {}
+  constructor(
+    private _sliderService: PtlSlidersInicioService,
+    private _localStorageService: LocalStorageService,
+    private _uploadService: UploadFilesService
+  ) {
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  }
 
   ngOnInit(): void {
     if (this.tipoSlider == 1) {
       this.consultarRegistros();
     } else if (this.tipoSlider == 2) {
-        const newImage = {
-            nombreslider: 'Ner Image',
-            urlSlider: 'imagen-inicio.png',
-            imageSlider: `${base_url}/upload/plataforma/sliders/imagen-inicio.png`
-        }
-        this.images.push(newImage);
+      const newImage = {
+        nombreslider: 'Ner Image',
+        urlSlider: 'imagen-inicio.png',
+        imageSlider: this._uploadService.getFilePath(this.suscPlataforma, 'sliders', 'imagen-inicio.png')
+      };
+      this.images.push(newImage);
     }
   }
 
@@ -53,12 +61,9 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
         tap((resp: any) => {
           if (resp.ok) {
             resp.slidersInicio.forEach((slider: any) => {
-              slider.imageSlider = `${base_url}/upload/plataforma/sliders/${slider.urlSlider}`;
+              slider.imageSlider = this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider);
             });
-            console.warn('FullscreenSliderComponent: No se proporcionaron imágenes. Se mostrará un placeholder.');
             this.images = resp.slidersInicio;
-            console.log('slider images', this.images);
-            console.log('Todos las sliders', this.images);
             this.startAutoSlide();
             return;
           }

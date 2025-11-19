@@ -33,13 +33,23 @@ export class InicioAplicacionesComponent implements OnInit {
   public appCode: string = '';
   aplicacionesSub?: Subscription;
   aplicaciones: PTLAplicacionModel[] = [];
+  suscriptor: string = '';
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private _aplicacionesService: PtlAplicacionesService,
-    private _localStorage: LocalStorageService,
-    private router: Router
-  ) {}
+    private _localStorageService: LocalStorageService,
+  ) {
+    // const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
+    // if (suscriptor) {
+    //   this.suscriptor = this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '';
+    //   console.log('datos del suscriptor', suscriptor);
+    // } else {
+      this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+      console.log('no hay suscriptor suscriptor');
+    // }
+  }
 
   ngOnInit(): void {
     console.log('ingresa a la plataforma');
@@ -54,7 +64,7 @@ export class InicioAplicacionesComponent implements OnInit {
           if (resp.ok) {
             resp.aplicaciones.forEach((app: any) => {
               // app.imagenInicio = this._uploadService.getFilePath('aplicaciones', app.imagenInicio);
-              app.imagenInicio = `${base_url}/upload/plataforma/aplicaciones/${app.imagenInicio}`;
+              app.imagenInicio = `${base_url}/upload/${this.suscriptor}/aplicaciones/${app.imagenInicio}`;
             });
             console.log('aplicaciones', resp.aplicaciones);
             this.aplicaciones = resp.aplicaciones;
@@ -70,8 +80,8 @@ export class InicioAplicacionesComponent implements OnInit {
 
   ingresarPlataforma(app: PTLAplicacionModel) {
     //TODO Validar las aplicaciones con los suscriptores y los usuarios
-    this._localStorage.setAplicacionLocalStorage(app);
-    // this._localStorage.setNavSettingsLocalStorage(navSettings);
+    this._localStorageService.setAplicacionLocalStorage(app);
+    // this._localStorageService.setNavSettingsLocalStorage(navSettings);
     this.router.navigate(['/starter/inicio-suites']);
   }
 }

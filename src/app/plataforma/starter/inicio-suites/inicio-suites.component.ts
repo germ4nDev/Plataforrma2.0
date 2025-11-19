@@ -11,7 +11,7 @@ import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.se
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import { environment } from 'src/environments/environment';
-import { FullScreenSliderComponent } from "src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component";
+import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
 import { ThemeService } from 'src/app/theme/shared/service';
 
 const base_url = environment.apiUrl;
@@ -28,16 +28,26 @@ export class InicioSuitesComponent implements OnInit {
   app: PTLAplicacionModel = new PTLAplicacionModel();
   suitesSub?: Subscription;
   suites: PTLSuiteAPModel[] = [];
+  suscriptor: string = '';
 
   constructor(
     private router: Router,
-    private _localStorage: LocalStorageService,
+    private _localStorageService: LocalStorageService,
     private _themeStorage: ThemeService,
     private _suitesService: PtlSuitesAPService
-  ) {}
+  ) {
+    // const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
+    // if (suscriptor) {
+    //   this.suscriptor = this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '';
+    //   console.log('datos del suscriptor', suscriptor);
+    // } else {
+      this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+      console.log('no hay suscriptor suscriptor');
+    // }
+  }
 
   ngOnInit(): void {
-    this.app = this._localStorage.getAplicaicionLocalStorage();
+    this.app = this._localStorageService.getAplicaicionLocalStorage();
     console.log('aplicacion storage', this.app);
     this.nomAplicacion = this.app.nombreAplicacion || '';
     this.consultarSuites();
@@ -50,7 +60,7 @@ export class InicioSuitesComponent implements OnInit {
         tap((resp: any) => {
           if (resp.ok) {
             resp.suites.forEach((suite: any) => {
-              suite.imagenInicio = `${base_url}/upload/plataforma/suites/${suite.imagenInicio}`;
+              suite.imagenInicio = `${base_url}/upload/${this.suscriptor}/suites/${suite.imagenInicio}`;
             });
             console.log('suites', resp.suites);
             this.suites = resp.suites;
@@ -66,17 +76,16 @@ export class InicioSuitesComponent implements OnInit {
 
   ingresaSuiteaplicacion(suite: PTLSuiteAPModel) {
     console.log('ingresar a la suite', suite);
-    this._localStorage.setSuiteLocalStorage(suite);
+    this._localStorageService.setSuiteLocalStorage(suite);
     this._themeStorage.saveThemeSettings();
     this.router.navigate([suite.rutaInicio]);
     // this._suitesService.geSuitesAP().subscribe((resp) => {
     //   const suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == app.codigoAplicacion);
     //   if (suites.length < 2) {
-    //     this._localStorage.setSuiteLocalStorage(suites[0]);
+    //     this._localStorageService.setSuiteLocalStorage(suites[0]);
     //   } else {
     //     this.router.navigate(['/starter/inicio-suites']);
     //   }
     // });
   }
 }
-

@@ -111,7 +111,7 @@ export class GestionSuscriptorComponent {
     });
     if (!this.modoEdicion) {
       console.log('modo edicion', this.modoEdicion);
-              this.FormRegistro.codigoSuscriptor = uuidv4();
+      this.FormRegistro.codigoSuscriptor = uuidv4();
 
       //   this.FormRegistro.codigoAplicacion = '';
       //   this.FormRegistro.codigoSuite = '';
@@ -184,10 +184,11 @@ export class GestionSuscriptorComponent {
         }
       });
     } else {
-        console.log('FormRegistro', this.FormRegistro);
+      console.log('FormRegistro', this.FormRegistro);
       this._suscriptoresService.crearSuscriptor(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            // todo, hacer el serFoldersuscriptor desde upload-files.service
             Swal.fire('', 'El suscriptor se insertó correctamente', 'success');
             form.resetForm();
             this.isSubmit = false;
