@@ -2,11 +2,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { PTLRoleAPModel } from '../_helpers/models/PTLRoleAP.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SocketService } from './sockets.service';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,7 +15,6 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLRolesAPService {
-  private socket: any;
   user: PTLUsuarioModel = new PTLUsuarioModel();
   private _roles = new BehaviorSubject<PTLRoleAPModel[]>([]);
   private _rolesChange = new Subject<any>();
@@ -22,8 +22,10 @@ export class PTLRolesAPService {
 
   constructor(
     private http: HttpClient,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private _localStorageService: LocalStorageService
   ) {
+    console.log('******* Servicio de roles iniciado correctamente');
     this.socketService.listen('aplicaciones-actualizadas').subscribe({
       next: (payload) => {
         console.log('Evento de Socket.IO recibido:', payload.msg);
@@ -39,42 +41,32 @@ export class PTLRolesAPService {
   }
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
     return {
       headers: {
-        'x-token': this.token
+        // 'x-token': this.token
+        'Content-Type': 'application/json'
       }
     };
   }
 
-//   getRegistros() {
-//     const url = `${base_url}/roles`;
-//     return this.http.get(url).pipe(
-//       map((resp: any) => {
-//         console.log('servicio de roles', resp);
-//         return {
-//           ok: true,
-//           roles: resp.roles
-//         };
-//       })
-//     );
-//   }
-
   cargarRegistros() {
     console.log('Consultando y ordenando roles del servidor...');
     const url = `${base_url}/roles`;
-    return this.http.get(url)
-    .pipe(
-      map((resp: any) => {
-        console.log('servicio de roles', resp);
-        return {
-          ok: true,
-          roles: resp.roles
-        };
+    return this.http.get(url, this.headers).pipe(
+      map((resp: any) => resp.roles as PTLRoleAPModel[]),
+      map((roles: PTLRoleAPModel[]) => {
+        return roles.sort((a: any, b: any) => a.nombreRole.localeCompare(b.nombreRole));
+      }),
+      tap((RolesOrdenadas) => {
+        this._roles.next(RolesOrdenadas);
       })
     );
   }
@@ -95,14 +87,14 @@ export class PTLRolesAPService {
   postCrearRegistro(data: PTLRoleAPModel) {
     const url = `${base_url}/roles`;
     console.log('servicio tickets', data);
-        return this.http.post(url, data).pipe(
-          map((resp: any) => {
-            return {
-              ok: true,
-              role: resp.role
-            };
-          })
-        );
+    return this.http.post(url, data).pipe(
+      map((resp: any) => {
+        return {
+          ok: true,
+          role: resp.role
+        };
+      })
+    );
   }
 
   putModificarRegistro(role: PTLRoleAPModel) {

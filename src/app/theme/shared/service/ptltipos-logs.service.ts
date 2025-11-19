@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLTiposLogsModel } from '../_helpers/models/PTLTiposLogs.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,11 +15,17 @@ const base_url = environment.apiUrl;
 export class PTLTiposLogsService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -31,8 +38,7 @@ export class PTLTiposLogsService {
 
   getRegistros() {
     const url = `${base_url}/tipos-log`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de tiposlogs', resp);
         return {
@@ -45,8 +51,7 @@ export class PTLTiposLogsService {
 
   getRegistroById(id: number) {
     const url = `${base_url}/tipos-logs/${id}`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de tiposlogs', resp);
         return {
@@ -64,8 +69,7 @@ export class PTLTiposLogsService {
 
   putModificarRegistro(tipoLog: PTLTiposLogsModel) {
     const url = `${base_url}/tipos-logs/${tipoLog.codigoTipoLog}`;
-    return this.http.put(url, tipoLog)
-    .pipe(
+    return this.http.put(url, tipoLog).pipe(
       map((resp: any) => {
         console.log('data de tiposlogs modificacda', resp);
         return {
@@ -78,8 +82,7 @@ export class PTLTiposLogsService {
 
   deleteEliminarRegistro(_id: string) {
     const url = `${base_url}/tipos-logs/${_id}`;
-    return this.http.delete(url)
-    .pipe(
+    return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de tiposlogs eliminado', resp);
         return {
@@ -89,5 +92,4 @@ export class PTLTiposLogsService {
       })
     );
   }
-
 }

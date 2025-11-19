@@ -19,9 +19,18 @@ export class PtllogActividadesService {
   navSettings: NavSettings = new NavSettings();
   tipos: any[] = [];
 
+  constructor(
+    private http: HttpClient,
+    private _localStorageSercice: LocalStorageService,
+    private _tiposLogsService: PTLTiposLogsService
+  ) {}
+
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageSercice.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -60,12 +69,6 @@ export class PtllogActividadesService {
 
     return dataLog;
   }
-
-  constructor(
-    private http: HttpClient,
-    private _localStorageSercice: LocalStorageService,
-    private _tiposLogsService: PTLTiposLogsService
-  ) {}
 
   getRegistros() {
     const url = `${base_url}/logs-actividades`;

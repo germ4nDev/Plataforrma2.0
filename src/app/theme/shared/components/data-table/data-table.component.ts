@@ -87,7 +87,7 @@ export class DatatableComponent implements OnInit, OnChanges {
     }
   }
 
-  private processDataAndColumns(): void {
+  processDataAndColumns(): void {
     if (!this.data || this.data.length === 0) {
       this.finalColumns = [];
       this.filteredData = [];
@@ -101,7 +101,6 @@ export class DatatableComponent implements OnInit, OnChanges {
         if (typeof col === 'string') {
           return this.generateMetadata(col, this.data[0][col]);
         }
-        // console.log('****************** ColumnMetadata', col);
         return col as ColumnMetadata;
       });
     } else {
@@ -140,7 +139,6 @@ export class DatatableComponent implements OnInit, OnChanges {
     } else if (key.toLowerCase().includes('imagen') || key.toLowerCase().includes('img')) {
       type = 'image';
     } else if (key.toLowerCase().includes('capture')) {
-      console.log('es una captura');
       type = 'capture';
     } else if (
       value &&
@@ -161,30 +159,30 @@ export class DatatableComponent implements OnInit, OnChanges {
     };
   }
 
-  private inferColumnType(key: string, value: any): ColumnMetadata['type'] {
-    if (value === null || value === undefined) {
-      return 'unknown';
-    }
+//   private inferColumnType(key: string, value: any): ColumnMetadata['type'] {
+//     if (value === null || value === undefined) {
+//       return 'unknown';
+//     }
 
-    const lowerKey = key.toLowerCase();
-    if (lowerKey.includes('avatar') || lowerKey.includes('foto') || lowerKey.includes('image') || lowerKey.includes('capture')) {
-      return 'avatar';
-    }
+//     const lowerKey = key.toLowerCase();
+//     if (lowerKey.includes('avatar') || lowerKey.includes('foto') || lowerKey.includes('image') || lowerKey.includes('capture')) {
+//       return 'avatar';
+//     }
 
-    if (typeof value === 'number' || (typeof value === 'string' && !isNaN(Number(value)) && value.trim() !== '')) {
-      return 'number';
-    }
+//     if (typeof value === 'number' || (typeof value === 'string' && !isNaN(Number(value)) && value.trim() !== '')) {
+//       return 'number';
+//     }
 
-    if (typeof value === 'string' && !isNaN(Date.parse(value)) && value.length >= 8) {
-      return 'date';
-    }
+//     if (typeof value === 'string' && !isNaN(Date.parse(value)) && value.length >= 8) {
+//       return 'date';
+//     }
 
-    return 'text';
-  }
+//     return 'text';
+//   }
 
-  private formatHeader(key: string): string {
-    return key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
-  }
+//   private formatHeader(key: string): string {
+//     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+//   }
 
   applyFiltersAndPagination(): void {
     let tempFilteredData = this.data.filter((row) => {
@@ -359,9 +357,5 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   toggleDetails(row: any): void {
     this.registroId = this.registroId === row[this.idField] ? null : row[this.idField];
-  }
-
-  emptyMethod() {
-    // console.log('Metodo vacio');
   }
 }

@@ -19,25 +19,28 @@
                     <DIV class="text-center">
                         <h6 class="filtros-title">{{ 'ROLES.FILTROS.TITULO' | translate }}</h6>
                     </DIV>
-                    <!-- <div class="filtro">
-                        <small>{{ 'ROLES.FILTROS.IDENTIFICACION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)" class="form-control"
-                            placeholder="{{ 'ROLES.FILTROS.IDENTIFICACIONCHOLDER' | translate }}" />
+                    <div class="filtro">
+                        <small>{{ 'ROLES.FILTROS.FILTROCODIGOROLE' | translate }}</small>
+                        <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="reg.codigoRole" *ngFor="let reg of roles">
+                                {{ reg.nombreRole }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'ROLES.FILTROS.FILTROCODIGOAPLICACION' | translate }}</small>
+                        <select (change)="onFiltroCodigoAplicacionChangeClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="reg.codigoAplicacion" *ngFor="let reg of aplicaciones">
+                                {{ reg.nombreAplicacion }}
+                            </option>
+                        </select>
                     </div>
                     <div class="filtro">
                         <small>{{ 'ROLES.FILTROS.NOMBRE' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control"
                             placeholder="{{ 'ROLES.FILTROS.NOMBREHOLDER' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'ROLES.FILTROS.CORREO' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroCorreoChangeClick($event)" class="form-control"
-                            placeholder="{{ 'ROLES.FILTROS.CORREOHOLDER' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'ROLES.FILTROS.USERNAME' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroUsernameChangeClick($event)" class="form-control"
-                            placeholder="{{ 'ROLES.FILTROS.USERNAMEHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'ROLES.FILTROS.DECRIPCION' | translate }}</small>
@@ -51,7 +54,7 @@
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
                         </select>
-                    </div> -->
+                    </div>
                 </div>
             </ng-container>
         </div>
@@ -61,7 +64,7 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoAplicacion'"
+                    <app-data-table [data]="dataFiltrada" [idField]="'codigoRole'"
                         [tableTitle]="'APLICACIONES.TITLE' | translate" [metadataColumns]="columnasRegistros"
                         [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
                         [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"

@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 @Injectable({
@@ -12,11 +14,17 @@ const base_url = environment.apiUrl;
 export class PtlusuariosRolesApService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -86,7 +94,7 @@ export class PtlusuariosRolesApService {
     );
   }
 
-  deleteTodosRolesByAppIsSuiteId(usId:number, apId: number, suId: number) {
+  deleteTodosRolesByAppIsSuiteId(usId: number, apId: number, suId: number) {
     const url = `${base_url}/usuarios-roles/clean/${usId}/${apId}/${suId}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {

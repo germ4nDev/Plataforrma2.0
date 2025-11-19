@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { environment } from 'src/environments/environment';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { SocketService } from './sockets.service';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -11,14 +14,31 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLUsuariosService {
-  user: PTLUsuarioModel = new PTLUsuarioModel(0, '',  0, '', '', '', '', '', '', '', false, '');
+  user: PTLUsuarioModel = new PTLUsuarioModel();
+  private _registros = new BehaviorSubject<PTLUsuarioModel[]>([]);
+  private _registrosChange = new Subject<any>();
+  _registrosChange$ = this._registrosChange.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private socketService: SocketService,
+    private _localStorageService: LocalStorageService
+  ) {
+    console.log('******* Servicio de usuarios iniciado correctamente');
+    this.socketService.listen('usuarios-actualizada=os').subscribe({
+      next: (payload) => {
+        console.log('Evento de Socket.IO recibido:', payload.msg);
+        this._registrosChange.next(payload);
+        this.cargarRegistros().subscribe();
+      },
+      error: (err) => console.error('Error en la escucha de sockets:', err)
+    });
+  }
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    if (this.user.serviceToken !== '') {
-      return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
     }
     return '';
   }
@@ -26,9 +46,29 @@ export class PTLUsuariosService {
   get headers() {
     return {
       headers: {
-        'x-token': this.token
+        // 'x-token': this.token
+        'Content-Type': 'application/json'
       }
     };
+  }
+
+  get usuarios$(): Observable<PTLUsuarioModel[]> {
+    return this._registros.asObservable();
+  }
+
+  cargarRegistros() {
+    console.log('Consultando y ordenando usuarios del servidor...');
+    const url = `${base_url}/usuarios`;
+    return this.http.get(url, this.headers).pipe(
+      map((resp: any) => resp.usuarios as PTLUsuarioModel[]),
+      map((regs: PTLUsuarioModel[]) => {
+        console.log('respuesta usuarios', regs);
+        return regs.sort((a: any, b: any) => a.nombreUsuario.localeCompare(b.nombreUsuario));
+      }),
+      tap((RegistrosOrdenadas) => {
+        this._registros.next(RegistrosOrdenadas);
+      })
+    );
   }
 
   getUsuarios() {
@@ -57,9 +97,17 @@ export class PTLUsuariosService {
     );
   }
 
-  crearUsuario(usuario: PTLUsuarioModel) {
+  crearUsuario(data: PTLUsuarioModel) {
     const url = `${base_url}/usuarios`;
-    return this.http.post(url, usuario);
+    console.log('servicio tickets', data);
+    return this.http.post(url, data).pipe(
+      map((resp: any) => {
+        return {
+          ok: true,
+          usurio: resp.usurio
+        };
+      })
+    );
   }
 
   actualizarUsuario(usuario: PTLUsuarioModel) {

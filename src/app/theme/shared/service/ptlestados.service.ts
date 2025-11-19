@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLEstadoModel } from '../_helpers/models/PTLEstado.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,11 +15,17 @@ const base_url = environment.apiUrl;
 export class PTLEstadosService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -31,8 +38,7 @@ export class PTLEstadosService {
 
   getRegistros() {
     const url = `${base_url}/estados`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de estado', resp);
         return {
@@ -45,8 +51,7 @@ export class PTLEstadosService {
 
   getRegistroById(id: number) {
     const url = `${base_url}/estados/${id}`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de estado', resp);
         return {
@@ -64,8 +69,7 @@ export class PTLEstadosService {
 
   putModificarRegistro(estado: PTLEstadoModel) {
     const url = `${base_url}/estados/${estado.estadoId}`;
-    return this.http.put(url, estado)
-    .pipe(
+    return this.http.put(url, estado).pipe(
       map((resp: any) => {
         console.log('data de estado modificacda', resp);
         return {
@@ -78,8 +82,7 @@ export class PTLEstadosService {
 
   deleteEliminarRegistro(_id: number) {
     const url = `${base_url}/estados/${_id}`;
-    return this.http.delete(url)
-    .pipe(
+    return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de estado eliminado', resp);
         return {

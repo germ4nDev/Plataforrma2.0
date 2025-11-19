@@ -18,11 +18,14 @@ export class PtlusuariosEmpresasScService {
   constructor(
     private http: HttpClient,
     private _localStorageService: LocalStorageService
-) {}
+  ) {}
 
   get token(): string {
-    this.curentUser = this._localStorageService.getCurrentUserLocalStorage();
-    return this.curentUser.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -35,8 +38,7 @@ export class PtlusuariosEmpresasScService {
 
   getRegistros() {
     const url = `${base_url}/usuarios-empresas-sc`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de usuariosEmpresas', resp.usuariosEmpresas);
         return {
@@ -98,5 +100,4 @@ export class PtlusuariosEmpresasScService {
       })
     );
   }
-
 }

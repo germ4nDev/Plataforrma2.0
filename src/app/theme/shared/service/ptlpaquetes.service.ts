@@ -18,11 +18,14 @@ export class PTLPaquetesService {
   constructor(
     private http: HttpClient,
     private _localStorageService: LocalStorageService
-) {}
+  ) {}
 
   get token(): string {
-    this.user = this._localStorageService.getUsuarioLocalStorage() || '';
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -35,8 +38,7 @@ export class PTLPaquetesService {
 
   getRegistros() {
     const url = `${base_url}/paquetes`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de paquetes', resp);
         return {

@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLTicketAPModel } from '../_helpers/models/PTLTicketAP.model';
 import { PTLSeguimientosTKService } from './ptlseguimientos-tk.service';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -15,11 +16,18 @@ const base_url = environment.apiUrl;
 export class PTLTicketsService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient, private _seguimientosService: PTLSeguimientosTKService) {}
+  constructor(
+    private http: HttpClient,
+    private _seguimientosService: PTLSeguimientosTKService,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -32,8 +40,7 @@ export class PTLTicketsService {
 
   getRegistros() {
     const url = `${base_url}/tickets-ap`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de ticket', resp.tickets);
         return {

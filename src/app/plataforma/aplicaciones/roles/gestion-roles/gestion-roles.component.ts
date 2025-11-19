@@ -49,23 +49,23 @@ export class GestionRolesComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslateService,
+    private _logActividadesService: PtllogActividadesService,
     private _navigationService: NavigationService,
     private _registrosService: PTLRolesAPService,
     private _aplicacionesService: PtlAplicacionesService,
     private _localStorageService: LocalStorageService,
-    private _logActividadesService: PtllogActividadesService,
     private _swalAlertService: SwalAlertService
   ) {
     this.isSubmit = false;
     this.route.queryParams.subscribe((params) => {
       const registroId = params['regId'];
       if (registroId) {
-        // console.log('me llena el Id', registroId);
+        console.log('me llena el Id', registroId);
         this.modoEdicion = true;
         this._registrosService.getRegistroById(registroId).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
-            this.suitesApp = this.suites.filter((x) => x.aplicacionId == resp.role.aplicacionId);
+            // this.suitesApp = this.suites.filter((x) => x.aplicacionId == resp.role.aplicacionId);
             this.FormRegistro = resp.role;
             console.log('datos del FormRegistro', this.FormRegistro);
           },

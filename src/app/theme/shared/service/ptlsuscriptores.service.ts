@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { SocketService } from './sockets.service';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 @Injectable({
@@ -20,7 +21,8 @@ export class PTLSuscriptoresService {
 
   constructor(
     private http: HttpClient,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private _localStorageService: LocalStorageService
   ) {
     this.socketService.listen('suscriptores-actualizados').subscribe({
       next: (payload) => {
@@ -33,9 +35,9 @@ export class PTLSuscriptoresService {
   }
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    if (this.user.serviceToken !== '') {
-      return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
     }
     return '';
   }

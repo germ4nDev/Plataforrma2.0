@@ -5,20 +5,26 @@ import { map } from 'rxjs';
 import { PTLConexionBDModel } from '../_helpers/models/PTLConexionBD.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { environment } from 'src/environments/environment';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 @Injectable({
   providedIn: 'root'
 })
 export class PTLConexionesBDSTService {
-
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -31,8 +37,7 @@ export class PTLConexionesBDSTService {
 
   getRegistros() {
     const url = `${base_url}/conexiones-bd`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de conexion', resp);
         return {
@@ -87,4 +92,3 @@ export class PTLConexionesBDSTService {
     );
   }
 }
-

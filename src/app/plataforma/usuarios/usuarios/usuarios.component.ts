@@ -5,13 +5,14 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
+import { GradientConfig } from 'src/app/app-config';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
-import { catchError, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap } from 'rxjs';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
@@ -20,10 +21,9 @@ import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { environment } from 'src/environments/environment';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-
-const base_url = environment.apiUrl;
+import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 //#endregion IMPORTS
 
 @Component({
@@ -36,13 +36,28 @@ const base_url = environment.apiUrl;
 export class UsuariosComponent implements OnInit {
   //#region VARIABLES
   @Output() toggleSidebar = new EventEmitter<void>();
-  registrosSub?: Subscription;
+  DataModel: BaseSessionModel = new BaseSessionModel();
+  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
+  moduloTituloExcel: string = '';
+  hasFiltersSlot: boolean = false;
+  gradientConfig;
+  lang = localStorage.getItem('lang');
+  menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  menuItems!: Observable<NavigationItem[]>;
-  registros: PTLUsuarioModel[] = [];
-  registrosFiltrado: PTLUsuarioModel[] = [];
-  lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
+
+  subscriptions = new Subscription();
+  filtroIdentificacionSubject = new BehaviorSubject<string>('');
+  filtroNombreSubject = new BehaviorSubject<string>('');
+  filtroCorreoSubject = new BehaviorSubject<string>('');
+  filtroUsernameSubject = new BehaviorSubject<string>('');
+  filtroDescripcionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
+
+  registrosTransformados$: Observable<PTLUsuarioModel[]> = of([]);
+  registrosFiltrado$: Observable<PTLUsuarioModel[]> = of([]);
+  usuairos: PTLUsuarioModel[] = [];
+  registros: PTLUsuarioModel[] = [];
   //#endregion VARIABLES
 
   constructor(
@@ -52,41 +67,28 @@ export class UsuariosComponent implements OnInit {
     private _swalService: SwalAlertService,
     private _usuariosService: PTLUsuariosService,
     private _languageService: LanguageService
-  ) {}
+  ) {
+    this.gradientConfig = GradientConfig;
+  }
 
   ngOnInit() {
     this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
-    console.log('elementos menu componente', this.menuItems);
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.hasFiltersSlot = true;
     this.consultarRegistros();
+    setTimeout(() => {
+      this.setupRegistrosStream();
+    }, 100);
+    this.subscriptions.add(
+      this._usuariosService.cargarRegistros().subscribe(
+        () => console.log('Usuarios cargados y guardados en el servicio'),
+        (err) => console.error('Error al cargar usuarios:', err)
+      )
+    );
   }
 
   ngOnDestroy(): void {
-    console.log('entrando a componente usuarios');
-  }
-
-  consultarRegistros() {
-    this.registrosSub = this._usuariosService
-      .getUsuarios()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            resp.usuarios.forEach((user: any) => {
-              user.nomEstado = user.estadoUsuario == true ? 'Activo' : 'Inactivo';
-              user.fotoUsuario = `${base_url}/upload/usuarios/${user.fotoUsuario}`;
-            });
-            this.registros = resp.usuarios;
-            this.registrosFiltrado = resp.usuarios;
-            console.log('Todos las usuarios', this.registros);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
-        })
-      )
-      .subscribe();
+    this.subscriptions.unsubscribe();
   }
 
   columnasUsuarios: ColumnMetadata[] = [
@@ -133,6 +135,76 @@ export class UsuariosComponent implements OnInit {
     }
   ];
 
+  consultarRegistros() {
+    this.subscriptions.add(
+      this._usuariosService.getUsuarios().subscribe((resp: any) => {
+        if (resp.ok) {
+          this.usuairos = resp.usuarios;
+          console.log('Todos las usuarios', this.usuairos);
+          return;
+        }
+      })
+    );
+  }
+
+  setupRegistrosStream(): void {
+    this.registrosTransformados$ = this._usuariosService.usuarios$.pipe(
+      switchMap((users: PTLUsuarioModel[]) => {
+        console.log('================== usuarios 1', users);
+        if (!users) return of([]);
+        this.usuairos = users;
+        const transformedApps = users.map((user: any) => {
+          user.nomEstado = user.estadoAplicacion ? 'Activo' : 'Inactivo';
+          return user as PTLUsuarioModel;
+        });
+        this.registros = transformedApps;
+        return of(transformedApps);
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de aplicaciones:', err);
+        return of([]);
+      })
+    );
+
+    this.registrosFiltrado$ = combineLatest([
+      this.registrosTransformados$.pipe(startWith([])), // Usa la fuente de datos transformada
+      this.filtroIdentificacionSubject,
+      this.filtroNombreSubject,
+      this.filtroCorreoSubject,
+      this.filtroUsernameSubject,
+      this.filtroDescripcionSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([users, identificacion, nombre, correo, username, descripcion, estado]) => {
+        console.log('================== roles 2', users);
+        let filteredRegistros = users;
+        if (identificacion) {
+          filteredRegistros = filteredRegistros.filter((app) =>
+            (app.identificacionUsuario?.toString() || '').toLowerCase().includes(identificacion)
+          );
+        }
+        if (nombre) {
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.nombreUsuario?.toString() || '').toLowerCase().includes(nombre));
+        }
+        if (correo) {
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.correoUsuario?.toString() || '').toLowerCase().includes(correo));
+        }
+        if (username) {
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.userNameUsuario?.toString() || '').toLowerCase().includes(username));
+        }
+        if (estado !== 'todos') {
+          const estadoBoolean = estado === 'true';
+          filteredRegistros = filteredRegistros.filter((reg) => reg.estadoUsuario === estadoBoolean);
+        }
+        if (descripcion) {
+          const textoFiltro = descripcion.toLowerCase();
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.descripcionUsuario || '').toLowerCase().includes(textoFiltro));
+        }
+        return filteredRegistros;
+      })
+    );
+  }
+
   getEstado(estado: boolean): string {
     return estado ? 'Activo' : 'Inactivo';
   }
@@ -145,11 +217,11 @@ export class UsuariosComponent implements OnInit {
     this.router.navigate(['usuarios/gestion-usuario'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: number) {
-    const nombre = this.registrosFiltrado.filter((x) => x.usuarioId == id)[0];
+  OnEliminarRegistroClick(id: any) {
+    const usuario = this.usuairos.filter((x) => x.codigoUsuario == id.id)[0];
     Swal.fire({
       title: this.translate.instant('USUARIOS.ELIMINARTITULO'),
-      text: `this.translate.instant('USUARIOS.ELIMINARTEXTO') + "${nombre.nombreUsuario}".`,
+      text: `this.translate.instant('USUARIOS.ELIMINARTEXTO') + "${usuario.nombreUsuario}".`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -171,76 +243,36 @@ export class UsuariosComponent implements OnInit {
   }
 
   onFiltroIdentificacionChangeClick(evento: any) {
-    console.log('filtrar el nombre ', evento.target.value);
-    const textoFiltro = evento.target.value;
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) => String(usuario.identificacionUsuario || 0).includes(textoFiltro));
-    }
+    const value = evento.target.value;
+    this.filtroIdentificacionSubject.next(value);
   }
 
   onFiltroNombreChangeClick(evento: any) {
-    console.log('filtrar el nombre ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
-        (usuario.nombreUsuario || '').toLowerCase().includes(textoFiltro)
-      );
-    }
+    const value = evento.target.value;
+    this.filtroNombreSubject.next(value);
   }
 
   onFiltroCorreoChangeClick(evento: any) {
-    console.log('filtrar el correo ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
-        (usuario.correoUsuario || '').toLowerCase().includes(textoFiltro)
-      );
-    }
+    const value = evento.target.value;
+    this.filtroCorreoSubject.next(value);
   }
 
   onFiltroUsernameChangeClick(evento: any) {
-    console.log('filtrar el username ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
-        (usuario.userNameUsuario || '').toLowerCase().includes(textoFiltro)
-      );
-    }
+    const value = evento.target.value;
+    this.filtroUsernameSubject.next(value);
   }
 
   onFiltroDescripcionChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((usuario) =>
-        (usuario.descripcionUsuario || '').toLowerCase().includes(textoFiltro)
-      );
-    }
+    const value = evento.target.value;
+    this.filtroDescripcionSubject.next(value);
   }
 
   onFiltroEstadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      const estado = evento.target.value == 'true' ? true : false;
-      console.log('Usuarios', this.registrosFiltrado);
-      this.registrosFiltrado = this.registros.filter((x) => (x.estadoUsuario = estado));
-    }
+    const value = evento.target.value;
+    this.filtroEstadoSubject.next(value);
   }
 
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
 }
-

@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { PTLEmpresaSCModel } from '../_helpers/models/PTLEmpresaSC.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,12 +15,15 @@ const base_url = environment.apiUrl;
 export class PtlEmpresasScService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    if (this.user.serviceToken !== '') {
-      return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
     }
     return '';
   }

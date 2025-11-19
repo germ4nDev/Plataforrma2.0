@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { map } from "rxjs";
-import { environment } from "src/environments/environment";
-import { PTLServidorModel } from "../_helpers/models/PTLServidor.model";
-import { PTLUsuarioModel } from "../_helpers/models/PTLUsuario.model";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { map } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { PTLServidorModel } from '../_helpers/models/PTLServidor.model';
+import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,11 +15,17 @@ const base_url = environment.apiUrl;
 export class PTLServidorService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -31,8 +38,7 @@ export class PTLServidorService {
 
   getRegistros() {
     const url = `${base_url}/servidores`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de servidores', resp);
         return {
@@ -45,8 +51,7 @@ export class PTLServidorService {
 
   getRegistroById(id: number) {
     const url = `${base_url}/servidores/${id}`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de servidor', resp);
         return {
@@ -64,8 +69,7 @@ export class PTLServidorService {
 
   putModificarRegistro(servidor: PTLServidorModel) {
     const url = `${base_url}/servidores/${servidor.servidorId}`;
-    return this.http.put(url, servidor)
-    .pipe(
+    return this.http.put(url, servidor).pipe(
       map((resp: any) => {
         console.log('data de servidor modificacda', resp);
         return {
@@ -78,8 +82,7 @@ export class PTLServidorService {
 
   deleteEliminarRegistro(_id: number) {
     const url = `${base_url}/servidores/${_id}`;
-    return this.http.delete(url)
-    .pipe(
+    return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de servidor eliminado', resp);
         return {

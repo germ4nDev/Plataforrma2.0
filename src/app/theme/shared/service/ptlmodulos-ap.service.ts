@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -12,14 +13,19 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PtlmodulosApService {
-
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -31,12 +37,11 @@ export class PtlmodulosApService {
   }
 
   getRegistros() {
-            // console.log('4');
+    // console.log('4');
     const url = `${base_url}/modulos`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
-                // console.log('5');
+        // console.log('5');
         // console.log('servicio de modulos', resp);
         return {
           ok: true,

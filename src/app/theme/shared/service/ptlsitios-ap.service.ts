@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLSitiosAPModel } from '../_helpers/models/PTLSitioAP.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -15,12 +16,15 @@ const base_url = environment.apiUrl;
 export class PTLSitiosAPService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    if (this.user.serviceToken !== '') {
-      return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
     }
     return '';
   }
@@ -35,8 +39,7 @@ export class PTLSitiosAPService {
 
   getRegistros() {
     const url = `${base_url}/sitios-ap`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         return {
           ok: true,
@@ -46,7 +49,7 @@ export class PTLSitiosAPService {
     );
   }
 
- getRegistroById(id: number) {
+  getRegistroById(id: number) {
     const url = `${base_url}/sitios-ap/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {

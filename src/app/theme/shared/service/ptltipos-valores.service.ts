@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLTiposValoresModel } from '../_helpers/models/PTLTiposValores.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,11 +15,17 @@ const base_url = environment.apiUrl;
 export class PtltiposValoresService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -31,8 +38,7 @@ export class PtltiposValoresService {
 
   getRegistros() {
     const url = `${base_url}/tipos-valor`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de tipoValor', resp);
         return {
@@ -45,8 +51,7 @@ export class PtltiposValoresService {
 
   getRegistroById(id: number) {
     const url = `${base_url}/tipos-valor/${id}`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de tipoValor', resp);
         return {
@@ -64,8 +69,7 @@ export class PtltiposValoresService {
 
   putModificarRegistro(tipoValor: PTLTiposValoresModel) {
     const url = `${base_url}/tipos-valor/${tipoValor.tipoValorId}`;
-    return this.http.put(url, tipoValor)
-    .pipe(
+    return this.http.put(url, tipoValor).pipe(
       map((resp: any) => {
         console.log('data de tipoValor modificacda', resp);
         return {
@@ -78,8 +82,7 @@ export class PtltiposValoresService {
 
   deleteEliminarRegistro(_id: number) {
     const url = `${base_url}/tipos-valor/${_id}`;
-    return this.http.delete(url)
-    .pipe(
+    return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de tipoValor eliminado', resp);
         return {
@@ -89,5 +92,4 @@ export class PtltiposValoresService {
       })
     );
   }
-
 }

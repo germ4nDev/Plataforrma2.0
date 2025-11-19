@@ -10,7 +10,7 @@ import { UploadFilesService } from 'src/app/theme/shared/service/upload-files.se
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { AuthenticationService } from 'src/app/theme/shared/service';
+import { AuthenticationService, PtllogActividadesService } from 'src/app/theme/shared/service';
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -50,6 +50,8 @@ export class GestionUsuarioComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private translate: TranslateService,
+    private _logActividadesService: PtllogActividadesService,
     private _navigationService: NavigationService,
     private _registrosService: PTLUsuariosService,
     private _authService: AuthenticationService,
@@ -68,7 +70,7 @@ export class GestionUsuarioComponent implements OnInit {
           next: (resp: any) => {
             this.FormRegistro = resp.usuario;
             this.claveUsuario = resp.usuario.claveUsuario;
-            this.selectedFileUrl = this._uploadService.getFilePath('0', 'usuarios', resp.usuario.fotoUsuario);
+            this.selectedFileUrl = this._uploadService.getFilePath('plataforma', 'usuarios', resp.usuario.fotoUsuario);
             this.FormRegistro.claveNew = '';
             this.FormRegistro.claveConfirm = '';
             // this.codeRegistro = resp.aplicacion.codigoAplicacion;
@@ -100,6 +102,9 @@ export class GestionUsuarioComponent implements OnInit {
     if (form != undefined) {
       this.FormRegistro = form;
       this._localStorageService.removeFormRegistro();
+    }
+    if (!this.modoEdicion) {
+      this.FormRegistro.codigoUsuario = uuidv4();
     }
   }
 
@@ -158,44 +163,83 @@ export class GestionUsuarioComponent implements OnInit {
     // }
   }
 
-  btnGestionarAplicacionClick(form: any) {
+  btnGestionarUsuarioClick(form: any) {
     this.isSubmit = true;
     if (!form.valid) {
       return;
     }
+    const registroData = form.value as PTLUsuarioModel;
     if (this.modoEdicion) {
       if (this.FormRegistro.claveNew != '') {
         if (this.FormRegistro.claveNew == this.FormRegistro.claveConfirm) {
-          this.FormRegistro.claveUsuario = this.FormRegistro.claveNew;
-          this._registrosService.actualizarUsuarioClave(this.FormRegistro).subscribe({
+          registroData.claveUsuario = this.FormRegistro.claveNew;
+          registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+          registroData.fechaModificacion = new Date().toISOString();
+          this._registrosService.actualizarUsuarioClave(registroData).subscribe({
             next: (resp: any) => {
               if (resp.ok) {
+                const logData = {
+                  codigoTipoLog: '',
+                  codigoRespuesta: '201',
+                  descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR') + ', ' + resp.mensaje
+                };
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                 this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'));
                 this.router.navigate(['/autenticacion/login']);
               } else {
+                const logData = {
+                  codigoTipoLog: '',
+                  codigoRespuesta: '501',
+                  descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + resp.mensaje
+                };
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                 this._swalService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
               }
             },
             error: (err: any) => {
               console.error(err);
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '501',
+                descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.mensaje
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
               this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
             }
           });
         } else {
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           this._swalService.getAlertError(this._translate.instant('PLATAFORMA.PASSWORDSERROR'));
         }
       } else {
-        this._registrosService.actualizarUsuarioDatos(this.FormRegistro).subscribe({
+        registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+        registroData.fechaModificacion = new Date().toISOString();
+        this._registrosService.actualizarUsuarioDatos(registroData).subscribe({
           next: (resp: any) => {
             if (resp.ok) {
+              const logData = {
+                codigoTipoLog: '',
+                codigoRespuesta: '201',
+                descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+              };
+              this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
               this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'));
-              this.router.navigate(['/frontal/home']);
-            } else {
-              this._swalService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
+              this.router.navigate(['/usuarios/usuarios']);
             }
           },
           error: (err: any) => {
             console.error(err);
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'));
             this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPDATEUSERERROR'));
           }
         });
@@ -203,10 +247,21 @@ export class GestionUsuarioComponent implements OnInit {
     } else {
       this.FormRegistro.claveUsuario = this.FormRegistro.identificacionUsuario?.toString().trimEnd();
       this.FormRegistro.fotoUsuario = this.userPhotoUrl != '' ? this.userPhotoUrl : 'no-photo.png';
-      this._registrosService.crearUsuario(this.FormRegistro).subscribe({
+      console.log('formResgistro', this.FormRegistro);
+      registroData.codigoUsuario = uuidv4();
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      console.log('registroData', registroData);
+      this._registrosService.crearUsuario(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', 'El Usuario se insertó correctamente', 'success');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTUSERSUCCESS'));
             form.resetForm();
             this.isSubmit = false;
             this.router.navigate(['/usuarios/usuarios']);
@@ -214,7 +269,13 @@ export class GestionUsuarioComponent implements OnInit {
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo insertar el Usuairo', 'error');
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.mensaje
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'));
+          this._swalService.getAlertError(this._translate.instant('PLATAFORMA.INSERTUSERERROR'));
         }
       });
     }

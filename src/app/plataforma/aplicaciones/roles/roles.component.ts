@@ -5,27 +5,22 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GradientConfig } from 'src/app/app-config';
 import { Router } from '@angular/router';
+import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap } from 'rxjs';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
-import { PTLRolesAPService } from 'src/app/theme/shared/service/ptlroles-ap.service';
-import { LanguageService } from 'src/app/theme/shared/service/lenguage.service';
-import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap, tap } from 'rxjs';
-import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { of, Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
+import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
-import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
-import { PtllogActividadesService, SwalAlertService } from 'src/app/theme/shared/service';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { NavigationService, PtlAplicacionesService, LanguageService } from 'src/app/theme/shared/service';
+import { of, Subscription } from 'rxjs';
+import Swal from 'sweetalert2';import { PtllogActividadesService, PTLRolesAPService, SwalAlertService } from 'src/app/theme/shared/service';
 //#endregion IMPORTS
 
 @Component({
@@ -46,11 +41,7 @@ export class RolesComponent implements OnInit {
   lang = localStorage.getItem('lang');
   menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
-
   tituloPagina: string = '';
-  suitesSub?: Subscription;
-  suites: any[] = [];
-  aplicaciones: PTLAplicacionModel[] = [];
 
   subscriptions = new Subscription();
   filtroCodigoRoleSubject = new BehaviorSubject<string>('todos');
@@ -61,7 +52,9 @@ export class RolesComponent implements OnInit {
 
   registrosTransformados$: Observable<PTLRoleAPModel[]> = of([]);
   registrosFiltrado$: Observable<PTLRoleAPModel[]> = of([]);
+  roles: PTLRoleAPModel[] = [];
   registros: PTLRoleAPModel[] = [];
+  aplicaciones: PTLAplicacionModel[] = [];
   //#endregion VARIABLES
 
   constructor(
@@ -69,7 +62,6 @@ export class RolesComponent implements OnInit {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _aplicacionesService: PtlAplicacionesService,
-    private _suitesService: PtlSuitesAPService,
     private _rolesAPService: PTLRolesAPService,
     private _logActividadesService: PtllogActividadesService,
     private _swalService: SwalAlertService,
@@ -83,7 +75,9 @@ export class RolesComponent implements OnInit {
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.consultarAplicaciones();
-    this.setupRolesStream();
+    setTimeout(() => {
+      this.setupRolesStream();
+    }, 100);
     this.subscriptions.add(
       this._rolesAPService.cargarRegistros().subscribe(
         () => console.log('Roles cargados y guardados en el servicio'),
@@ -110,13 +104,8 @@ export class RolesComponent implements OnInit {
 
   columnasRegistros: ColumnMetadata[] = [
     {
-      name: 'nombreAplicacion',
+      name: 'nomAplicacion',
       header: 'ROLES.NOMBREAPLICACION',
-      type: 'text'
-    },
-    {
-      name: 'nombreSuite',
-      header: 'ROLES.NOMBRESUITE',
       type: 'text'
     },
     {
@@ -133,23 +122,21 @@ export class RolesComponent implements OnInit {
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
-      name: 'descripcionAplicacion',
+      name: 'descripcionRole',
       header: 'APLICACIONES.DESCRIPTION',
       type: 'text'
-    },
-    {
-      name: 'captura',
-      header: 'APLICACIONES.IMAGENINICIO',
-      type: 'capture'
     }
   ];
 
   setupRolesStream(): void {
     this.registrosTransformados$ = this._rolesAPService.roles$.pipe(
       switchMap((roles: PTLRoleAPModel[]) => {
+        console.log('================== roles 1', roles);
         if (!roles) return of([]);
+        this.roles = roles
         const transformedApps = roles.map((role: any) => {
           role.nomEstado = role.estadoAplicacion ? 'Activo' : 'Inactivo';
+          role.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == role.codigoAplicacion)[0].nombreAplicacion || '';
           return role as PTLRoleAPModel;
         });
         this.registros = transformedApps;
@@ -170,6 +157,8 @@ export class RolesComponent implements OnInit {
       this.filtroEstadoSubject
     ]).pipe(
       map(([roles, codigorol, codigoapp, nombre, descripcion, estado]) => {
+        console.log('================== roles 2', roles);
+
         let filteredRegistros = roles;
         if (codigorol !== 'todos') {
           filteredRegistros = filteredRegistros.filter((reg) => reg.codigoRole === codigorol);
@@ -191,25 +180,6 @@ export class RolesComponent implements OnInit {
         return filteredRegistros;
       })
     );
-  }
-
-  consultarSuites() {
-    this.suitesSub = this._suitesService
-      .geSuitesAP()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            this.suites = resp.suites;
-            console.log('Todos las suites', this.suites);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
-        })
-      )
-      .subscribe();
   }
 
   onFiltroCodigoAplicacionChangeClick(evento: any): void {
@@ -245,8 +215,9 @@ export class RolesComponent implements OnInit {
     this.router.navigate(['aplicaciones/gestion-roles'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick(id: string) {
-    const nombre = this.registros.filter((x) => x.codigoRole == id)[0];
+  OnEliminarRegistroClick(id: any) {
+    console.log('Eliminar registro', id.id);
+    const nombre = this.registros.filter((x) => x.codigoRole == id.id)[0];
     Swal.fire({
       title: this.translate.instant('ROLES.ELIMINARTITULO'),
       text: this.translate.instant('ROLES.ELIMINARTEXTO') + `"${nombre.nombreRole}".!`,
@@ -256,7 +227,7 @@ export class RolesComponent implements OnInit {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this._rolesAPService.deleteEliminarRegistro(id).subscribe({
+        this._rolesAPService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
             const logData = {
               codigoTipoLog: '',
@@ -274,6 +245,7 @@ export class RolesComponent implements OnInit {
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalService.getAlertSuccess(this.translate.instant('ROLES.ELIMINARERROR') + ' ' + err.mensaje);
+            this.setupRolesStream();
             console.error('Error eliminando', err);
           }
         });

@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLRequerimientoTKModel } from '../_helpers/models/PTLRequerimientoTK.model';
+import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,11 +15,17 @@ const base_url = environment.apiUrl;
 export class PTLRequerimientosTkService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private _localStorageService: LocalStorageService
+  ) {}
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
+    }
+    return '';
   }
 
   get headers() {
@@ -31,8 +38,7 @@ export class PTLRequerimientosTkService {
 
   getRegistros() {
     const url = `${base_url}/requerimientos-tk`;
-    return this.http.get(url)
-    .pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de requerimiento', resp);
         return {
@@ -75,15 +81,14 @@ export class PTLRequerimientosTkService {
   }
 
   putModificarEstadoRequerimiento(requerimientoId: string, nuevoEstado: string) {
-  const url = `${base_url}/requerimientos-tk/${requerimientoId}`;
-  return this.http.patch(url, { estadoRequerimiento: nuevoEstado }).pipe(
-    map((resp: any) => {
-      console.log('Estado de requerimiento actualizado', resp);
-      return { ok: true };
-    })
-  );
-}
-
+    const url = `${base_url}/requerimientos-tk/${requerimientoId}`;
+    return this.http.patch(url, { estadoRequerimiento: nuevoEstado }).pipe(
+      map((resp: any) => {
+        console.log('Estado de requerimiento actualizado', resp);
+        return { ok: true };
+      })
+    );
+  }
 
   deleteEliminarRegistro(_id: number) {
     const url = `${base_url}/requerimientos-tk/${_id}`;

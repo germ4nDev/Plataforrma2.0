@@ -12,7 +12,7 @@
             </div>
 
             <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
@@ -21,7 +21,8 @@
                     </DIV>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.FILTROS.IDENTIFICACION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)" class="form-control form-input"
+                        <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)"
+                            class="form-control form-input"
                             placeholder="{{ 'USUARIOS.FILTROS.IDENTIFICACIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
@@ -41,7 +42,8 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.FILTROS.DECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
+                            class="form-control form-input"
                             placeholder="{{ 'USUARIOS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
@@ -60,24 +62,19 @@
     <div class="content-area">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <app-data-table
-                    [data]="registrosFiltrado"
-                    [idField]="'usuarioId'"
-                    [tableTitle]="'USUARIOS.TITLE' | translate"
-                    [metadataColumns]="columnasUsuarios"
-                    [metadataDetailColumns]="columnasDetailRegistros"
-                    [showDetail]="true"
-                    [showActions]="true"
-                    [showNewButton]="true"
-                    [showViewButton]="false"
-                    [showEditButton]="true"
-                    [showDeleteButton]="true"
-                    [newButtonLabel]="'USUARIOS.NEW' | translate"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                    (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick($event)"
-                    (deleteRecord)="OnEliminarRegistroClick($event)">
-                </app-data-table>
+                <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
+                    <app-data-table [data]="dataFiltrada" [idField]="'codigoUsuario'"
+                        [tableTitle]="'USUARIOS.TITLE' | translate" [metadataColumns]="columnasUsuarios"
+                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
+                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
+                        [showDeleteButton]="true" [newButtonLabel]="'USUARIOS.NEW' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                    </app-data-table>
+                </ng-container>
+                <ng-template #loading>
+                    <!-- TODO mostrar un indicador de carga -->
+                </ng-template>
             </div>
         </div>
     </div>

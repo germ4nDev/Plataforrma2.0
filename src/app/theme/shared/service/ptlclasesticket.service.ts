@@ -22,9 +22,9 @@ export class PtlclasesticketService {
 ) {}
 
   get token(): string {
-    this.user = JSON.parse(this._localStorageService.getUsuarioLocalStorage() || '');
-    if (this.user.serviceToken !== '') {
-      return this.user.serviceToken || '';
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
     }
     return '';
   }

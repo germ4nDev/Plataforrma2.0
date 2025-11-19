@@ -3,26 +3,25 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { map, tap } from 'rxjs/operators';
-import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SocketService } from './sockets.service';
+import { LocalStorageService } from './local-storage.service';
 const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
 export class PtlAplicacionesService {
-  private socket: any;
-  user: PTLUsuarioModel = new PTLUsuarioModel();
   private _aplicaciones = new BehaviorSubject<PTLAplicacionModel[]>([]);
   private _aplicacionesChange = new Subject<any>();
   aplicacionesChange$ = this._aplicacionesChange.asObservable();
 
   constructor(
     private http: HttpClient,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private _localstorageService: LocalStorageService
   ) {
     this.socketService.listen('aplicaciones-actualizadas').subscribe({
       next: (payload) => {
@@ -39,9 +38,9 @@ export class PtlAplicacionesService {
   }
 
   get token(): string {
-    this.user = JSON.parse(localStorage.getItem('currentUser') || '');
-    if (this.user.serviceToken !== '') {
-      return this.user.serviceToken || '';
+    const current = this._localstorageService.getCurrentUserLocalStorage();
+    if (current.token !== '') {
+      return current.token || '';
     }
     return '';
   }

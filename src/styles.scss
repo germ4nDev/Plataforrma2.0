@@ -857,8 +857,8 @@ body.gradient-dark {
 }
 
 .avatar-table {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid #ddd;
@@ -921,7 +921,7 @@ body.gradient-dark {
 .avatar-preview {
     display: block;
     width: 200px;
-    border-radius: 50px;
+    border-radius: 50%;
     margin: 1rem;
     // object-fit: contain;
 }
@@ -1030,46 +1030,6 @@ body.gradient-dark {
         }
     }
 }
-
-/* Estilos Base para SweetAlert2 (Se aplican siempre) */
-// .swal2-custom-container {
-//     /* Define la fuente o el tamaño base si es necesario */
-// }
-
-// /* ---------------------------------------------------- */
-// /* TEMA CLARO (SWAL) */
-// /* ---------------------------------------------------- */
-// .swal2-custom-container .swal2-popup {
-//     /* Usa las variables del tema claro (por defecto) */
-//     background: var(--panel-bg, #fff);
-//     color: var(--panel-text, #333);
-//     border: 1px solid var(--scrollbar-thumb-color, #ccc);
-//     /* Borde sutil */
-//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-// }
-
-// .swal2-custom-container .swal2-title,
-// .swal2-custom-container .swal2-html-container {
-//     color: var(--panel-text, #333);
-// }
-
-// /* ---------------------------------------------------- */
-// /* TEMA OSCURO (SWAL) */
-// /* ---------------------------------------------------- */
-// body.dark-theme .swal2-custom-container .swal2-popup {
-//     /* Sobrescribe los colores para el modo oscuro */
-//     background: var(--panel-bg, #1e1e2d);
-//     /* Fondo oscuro */
-//     color: var(--panel-text, #fff);
-//     /* Texto blanco */
-//     border: 1px solid var(--scrollbar-thumb-color, #444);
-//     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-// }
-
-// body.dark-theme .swal2-custom-container .swal2-title,
-// body.dark-theme .swal2-custom-container .swal2-html-container {
-//     color: var(--panel-text, #fff);
-// }
 
 .swal2-light-theme-container .swal2-popup {
     background: var(--panel-bg, #fff);
@@ -1243,13 +1203,6 @@ Estilos del Título Principal
     margin-bottom: 30px;
     padding: 0 20px;
 }
-
-// .login-container {
-//     // El fondo de la página de login (gradiente) no cambiaría si ya está fijo.
-//     // Si quieres cambiar el gradiente, tendrías que definir el color en una variable CSS.
-
-//     // ... estilos para centrar el formulario ...
-// }
 
 .login-card {
     background-color: var(--card-background);
