@@ -7,14 +7,16 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SocketService } from './sockets.service';
 import { LocalStorageService } from './local-storage.service';
-
+import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
+import { PtlusuariosRolesApService } from './ptlusuarios-roles-ap.service';
+import { UploadFilesService } from './upload-files.service';
 const base_url = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
 export class PTLUsuariosService {
-  user: PTLUsuarioModel = new PTLUsuarioModel();
+  usuario: PTLUsuarioModel = new PTLUsuarioModel();
   private _registros = new BehaviorSubject<PTLUsuarioModel[]>([]);
   private _registrosChange = new Subject<any>();
   _registrosChange$ = this._registrosChange.asObservable();
@@ -22,9 +24,12 @@ export class PTLUsuariosService {
   constructor(
     private http: HttpClient,
     private socketService: SocketService,
-    private _localStorageService: LocalStorageService
+    private _localStorageService: LocalStorageService,
+    private _usuairosRolesService: PtlusuariosRolesApService,
+    private _uploadService: UploadFilesService
   ) {
     console.log('******* Servicio de usuarios iniciado correctamente');
+    this.usuario = this._localStorageService.getUsuarioLocalStorage();
     this.socketService.listen('usuarios-actualizada=os').subscribe({
       next: (payload) => {
         console.log('Evento de Socket.IO recibido:', payload.msg);
@@ -84,7 +89,7 @@ export class PTLUsuariosService {
     );
   }
 
-  getUsuarioById(id: number) {
+  getUsuarioById(id: string) {
     const url = `${base_url}/usuarios/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
@@ -102,6 +107,14 @@ export class PTLUsuariosService {
     console.log('servicio tickets', data);
     return this.http.post(url, data).pipe(
       map((resp: any) => {
+        const usuarioRole: PTLUsuarioRoleAP = {
+          codigoUsuaio: resp.usuario.codigoUsuario,
+          codigoRole: 'aa5901bc-9c7d-45e8-bf68-4a0a286e9b99',
+          estadoUsuarioRole: true,
+          codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
+          fechaCreacion: new Date().toISOString()
+        };
+        this._usuairosRolesService.postCrearRegistro(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
         return {
           ok: true,
           usurio: resp.usurio
@@ -111,7 +124,23 @@ export class PTLUsuariosService {
   }
 
   actualizarUsuario(usuario: PTLUsuarioModel) {
-    const url = `${base_url}/usuarios/${usuario.usuarioId}`;
+    const codigoUser = usuario.codigoUsuario || '';
+    this.getUsuarioById(codigoUser).subscribe((usu: any) => {
+        let imagenUsuario = '';
+        if (usu.fotoUsuario !== '') {
+            imagenUsuario = usu.fotoUsuario;
+            if (imagenUsuario !== usuario.fotoUsuario) {
+                const fotoUsuairo = this.usuario.fotoUsuario || '';
+                const objUpload = {
+                  susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+                  tipo: 'usuarios',
+                  file: fotoUsuairo
+                };
+                this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
+            }
+        }
+    });
+    const url = `${base_url}/usuarios/${usuario.codigoUsuario}`;
     return this.http.put(url, usuario).pipe(
       map((resp: any) => {
         console.log('data de usuario modificacda', resp);

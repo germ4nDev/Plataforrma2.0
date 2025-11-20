@@ -71,7 +71,7 @@ export class PTLRolesAPService {
     );
   }
 
-  getRegistroById(id: number) {
+  getRegistroById(id: string) {
     const url = `${base_url}/roles/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
@@ -79,6 +79,19 @@ export class PTLRolesAPService {
         return {
           ok: true,
           role: resp.role
+        };
+      })
+    );
+  }
+
+  getRegistroByCodeApp(id: string) {
+    const url = `${base_url}/roles/app/${id}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('data de roles app', resp);
+        return {
+          ok: true,
+          roles: resp.roles
         };
       })
     );

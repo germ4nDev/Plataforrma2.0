@@ -10,7 +10,7 @@ import { UploadFilesService } from 'src/app/theme/shared/service/upload-files.se
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { AuthenticationService, PtllogActividadesService } from 'src/app/theme/shared/service';
+import { AuthenticationService, PtllogActividadesService, PtlusuariosRolesApService } from 'src/app/theme/shared/service';
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -60,6 +60,7 @@ export class GestionUsuarioComponent implements OnInit {
     private _swalService: SwalAlertService,
     private _translate: TranslateService,
     private _localStorageService: LocalStorageService,
+    private _rolesService: PtlusuariosRolesApService,
     private _uploadService: UploadFilesService
   ) {
     this.isSubmit = false;
@@ -285,13 +286,21 @@ export class GestionUsuarioComponent implements OnInit {
               descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            const fotoUsuairo = this.usuario.fotoUsuario || '';
-            const objUpload = {
-              susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
-              tipo: 'usuarios',
-              file: fotoUsuairo
-            };
-            this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
+            // const usuarioRole: PTLUsuarioRoleAP = {
+            //     codigoUsuaio: resp.usuario.codigoUsuario,
+            //     codigoRole: 'aa5901bc-9c7d-45e8-bf68-4a0a286e9b99',
+            //     estadoUsuarioRole: true,
+            //     codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
+            //     fechaCreacion: new Date().toISOString()
+            // }
+            // this._rolesService.postCrearRegistro(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
+            // const fotoUsuairo = this.usuario.fotoUsuario || '';
+            // const objUpload = {
+            //   susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+            //   tipo: 'usuarios',
+            //   file: fotoUsuairo
+            // };
+            // this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
             this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTUSERSUCCESS'));
             form.resetForm();
             this.isSubmit = false;

@@ -48,7 +48,7 @@ export class PtlusuariosScService {
     );
   }
 
-  getUsuarioById(id: number) {
+  getUsuarioById(id: string) {
     const url = `${base_url}/usuarios-sc/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
