@@ -203,9 +203,10 @@ export class LocalStorageService {
     this.navsettings = navsettings;
   }
 
-  setCurrentUserLocalStorage(current: CurrentUserModel) {
-    this.currentUser = current;
-    sessionStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+  setCurrentUserLocalStorage(data: CurrentUserModel) {
+    let current = this.getCurrentUserLocalStorage();
+    current = data;
+    sessionStorage.setItem('currentUser', JSON.stringify(current));
     this.currentUser = current;
   }
 
@@ -215,14 +216,16 @@ export class LocalStorageService {
   }
 
   setUsuarioLocalStorage(usuario: PTLUsuarioModel) {
-    this.currentUser.usuario = usuario;
-    this.setCurrentUserLocalStorage(this.currentUser);
+    const current = this.getCurrentUserLocalStorage();
+    current.usuario = usuario;
+    this.setCurrentUserLocalStorage(current);
     this.usuario = usuario;
   }
 
   setTokenLocalStorage(token: any) {
-    this.currentUser.token = token;
-    this.setCurrentUserLocalStorage(this.currentUser);
+    const current = this.getCurrentUserLocalStorage();
+    current.token = token;
+    this.setCurrentUserLocalStorage(current);
     this.token = token;
   }
 

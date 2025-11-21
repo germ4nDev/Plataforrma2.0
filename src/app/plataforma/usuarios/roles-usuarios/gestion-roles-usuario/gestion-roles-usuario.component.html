@@ -1,4 +1,4 @@
-<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<!-- <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
     <aside class="aside-left">
         <div class="card">
@@ -47,18 +47,18 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-control-label" for="usuarioId">{{
+                                <label class="form-control-label" for="codigoUsuaio">{{
                                     'ROLES.ROLESUSUARIOS.GESTION.USUARIO' | translate }}</label>
-                                <select class="form-control input-md" name="usuarioId" id="usuarioId"
-                                    [ngClass]="{ 'is-invalid': !usuarioId.valid && (usuarioId.dirty || usuarioId.touched || isSubmit) }"
-                                    #usuarioId="ngModel" required [(ngModel)]="FormRegistro.usuarioId"
+                                <select class="form-control input-md" name="codigoUsuaio" id="codigoUsuaio"
+                                    [ngClass]="{ 'is-invalid': !codigoUsuaio.valid && (codigoUsuaio.dirty || codigoUsuaio.touched || isSubmit) }"
+                                    #codigoUsuaio="ngModel" required [(ngModel)]="FormRegistro.codigoUsuaio"
                                     (change)="onUsuarioChangeClick($event)">
                                     <option value="">{{ 'ROLES.ROLESUSUARIOS.GESTION.USUARIOHOLDER' | translate }}
                                     </option>
-                                    <option [value]="user.usuarioId" *ngFor="let user of usuarios">{{ user.nombreUsuario
+                                    <option [value]="user.codigoUsuario" *ngFor="let user of usuarios">{{ user.nombreUsuario
                                         }}</option>
                                 </select>
-                                <label *ngIf="!usuarioId.valid && (usuarioId.dirty || usuarioId.touched || isSubmit)"
+                                <label *ngIf="!codigoUsuaio.valid && (codigoUsuaio.dirty || codigoUsuaio.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'PLATAFORMA.REQUIRED' | translate }}
                                 </label>
@@ -66,39 +66,19 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="aplicacionId">{{
+                                <label class="form-control-label" for="codigoAplicacionm">{{
                                     'ROLES.ROLESUSUARIOS.GESTION.APLICACION' | translate }}</label>
-                                <select class="form-control input-md" name="aplicacionId" id="aplicacionId"
-                                    [ngClass]="{ 'is-invalid': !aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit) }"
-                                    #aplicacionId="ngModel" required [(ngModel)]="FormRegistro.aplicacionId"
+                                <select class="form-control input-md" name="codigoAplicacionm" id="codigoAplicacionm"
+                                    [ngClass]="{ 'is-invalid': !codigoAplicacionm.valid && (codigoAplicacionm.dirty || codigoAplicacionm.touched || isSubmit) }"
+                                    #codigoAplicacionm="ngModel" required [(ngModel)]="codigoAplicacionm"
                                     (change)="onAplicacionChangeClick($event)">
                                     <option value="">{{ 'ROLES.ROLESUSUARIOS.GESTION.APLICACIONHOLDER' | translate }}
                                     </option>
-                                    <option [value]="app.aplicacionId" *ngFor="let app of aplicaciones">{{
+                                    <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{
                                         app.nombreAplicacion }}</option>
                                 </select>
                                 <label
-                                    *ngIf="!aplicacionId.valid && (aplicacionId.dirty || aplicacionId.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-control-label" for="codigoSuite">{{
-                                    'ROLES.ROLESUSUARIOS.GESTION.SUITE' | translate }}</label>
-                                <select class="form-control input-md" name="codigoSuite" id="codigoSuite"
-                                    [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
-                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.suiteId"
-                                    (change)="onSuiteChangeClick($event)">
-                                    <option value="">{{ 'ROLES.ROLESUSUARIOS.GESTION.SUITEHOLDER' | translate }}
-                                    </option>
-                                    <option [value]="suite.suiteId" *ngFor="let suite of suitesApp">{{ suite.nombreSuite
-                                        }}</option>
-                                </select>
-                                <label
-                                    *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)"
+                                    *ngIf="!codigoAplicacionm.valid && (codigoAplicacionm.dirty || codigoAplicacionm.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'PLATAFORMA.REQUIRED' | translate }}
                                 </label>
@@ -123,4 +103,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->

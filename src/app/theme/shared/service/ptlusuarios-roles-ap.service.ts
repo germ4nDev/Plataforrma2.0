@@ -2,22 +2,42 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
 import { LocalStorageService } from './local-storage.service';
-
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { SocketService } from './sockets.service';
 const base_url = environment.apiUrl;
+
 @Injectable({
   providedIn: 'root'
 })
 export class PtlusuariosRolesApService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
+  private _usuariosRoles = new BehaviorSubject<PTLUsuarioRoleAP[]>([]);
+  private _usuariosRolesChange = new Subject<any>();
+  _usuariosRolesChange$ = this._usuariosRolesChange.asObservable();
 
   constructor(
     private http: HttpClient,
+    private _socketService: SocketService,
     private _localStorageService: LocalStorageService
-  ) {}
+  ) {
+    console.log('******* Servicio de usuariosRoles iniciado correctamente');
+    this._socketService.listen('usuarios-roles-actualizadas').subscribe({
+      next: (payload) => {
+        console.log('Evento de Socket.IO recibido:', payload.msg);
+        this._usuariosRolesChange.next(payload);
+        this.cargarRegistros().subscribe();
+      },
+      error: (err) => console.error('Error en la escucha de sockets:', err)
+    });
+  }
+
+  get _usuariosRoles$(): Observable<PTLUsuarioRoleAP[]> {
+    return this._usuariosRoles.asObservable();
+  }
 
   get token(): string {
     const current = this._localStorageService.getCurrentUserLocalStorage();
@@ -30,9 +50,22 @@ export class PtlusuariosRolesApService {
   get headers() {
     return {
       headers: {
-        'x-token': this.token
+        // 'x-token': this.token
+        'Content-Type': 'application/json'
       }
     };
+  }
+
+  cargarRegistros() {
+    console.log('Consultando y ordenando usuariosRoles del servidor...');
+    const url = `${base_url}/usuarios-roles`;
+    return this.http.get(url, this.headers).pipe(
+      map((resp: any) => resp.usuariosRoles as PTLUsuarioRoleAP[]),
+      tap((RolesOrdenadas) => {
+        console.log(`Roles cargados: ${RolesOrdenadas.length}`);
+        this._usuariosRoles.next(RolesOrdenadas);
+      })
+    );
   }
 
   getRegistros() {
@@ -61,9 +94,19 @@ export class PtlusuariosRolesApService {
     );
   }
 
-  postCrearRegistro(role: PTLUsuarioRoleAP) {
+  postUsuarioRole(data: PTLUsuarioRoleAP) {
+    console.log('********** crear el usuarioRp;e', data);
+
     const url = `${base_url}/usuarios-roles`;
-    return this.http.post(url, role);
+    return this.http.post(url, data).pipe(
+      map((resp: any) => {
+        console.log('respuesta servicio usuarioRoles', resp);
+        return {
+          ok: true,
+          usuarioRole: resp.usuarioRole
+        };
+      })
+    );
   }
 
   putModificarRegistro(role: PTLUsuarioRoleAP) {

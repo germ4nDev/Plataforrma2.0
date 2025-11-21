@@ -1,7 +1,7 @@
 export class PTLUsuarioRoleAP {
   constructor(
     public usuarioRoleId?: number,
-    public codigoUsuaio?: string,
+    public codigoUsuario?: string,
     public codigoRole?: string,
     public estadoUsuarioRole?: boolean,
     public checked?: boolean,

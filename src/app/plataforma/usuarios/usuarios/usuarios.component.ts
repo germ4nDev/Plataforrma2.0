@@ -234,7 +234,12 @@ export class UsuariosComponent implements OnInit {
         this._usuariosService.eliminarUsuairo(id.id).subscribe({
           next: (resp: any) => {
             this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje);
-            this.setupRegistrosStream();
+            this.subscriptions.add(
+              this._usuariosService.cargarRegistros().subscribe(
+                () => console.log('Usuarios cargados y guardados en el servicio'),
+                (err) => console.error('Error al cargar usuarios:', err)
+              )
+            );
           },
           error: (err: any) => {
             this._swalService.getAlertError(this.translate.instant('USUARIOS.ELIMINARERROR') + ', ' + err);

@@ -17,6 +17,7 @@ import { of, Subscription } from 'rxjs';
 // import Swal from 'sweetalert2';
 import {
   AuthenticationService,
+  LocalStorageService,
   //   LocalStorageService,
   PtllogActividadesService,
   //   PtlEmpresasScService,
@@ -62,6 +63,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private _logActividadesService: PtllogActividadesService,
+    private _localstorageService: LocalStorageService,
     private _swalService: SwalAlertService,
     private _themeService: ThemeService,
     // private _suscriptoresService: PTLSuscriptoresService,
@@ -228,27 +230,37 @@ export class LoginComponent implements OnInit {
             this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTFOUND'));
             return;
           }
-          // console.log('Login exitoso:', resp.usuario.codigoUsuario);
-        //   const logData = {
-        //     codigoTipoLog: '',
-        //     codigoRespuesta: '201',
-        //     descripcionLog: this.translate.instant('PLATAFORMA.LOGINSUCCESS')
-        //   };
-        //   this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+
+          const currentUser = this._localstorageService.getCurrentUserLocalStorage();
+          console.log('++++++++ usuario activo', currentUser);
+            if (currentUser === null) {
+              console.log('el usuario no tiene roles asignados');
+              this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOROLESASIGN'));
+              this._localstorageService.setLogOut();
+            } else {
+              this.router.navigate(['/starter/inicio-suscriptores']);
+            }
+
+          console.log('Login exitoso:', resp.usuario.codigoUsuario);
+          //   const logData = {
+          //     codigoTipoLog: '',
+          //     codigoRespuesta: '201',
+          //     descripcionLog: this.translate.instant('PLATAFORMA.LOGINSUCCESS')
+          //   };
+          //   this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           //   this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.LOGINSUCCESS'));
           //   this._localStorageService.setSuscriptorLocalStorage(dataSuscriptor);
-          this.router.navigate(['/starter/inicio-suscriptores']);
         }),
         catchError((err) => {
           this.loading = false;
           this.error = err;
-        //   const logData = {
-        //     codigoTipoLog: '',
-        //     codigoRespuesta: '501',
-        //     codigoUsuairo: userName,
-        //     descripcionLog: this.translate.instant('PLATAFORMA.LOGINFAILED')
-        //   };
-        //   this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          //   const logData = {
+          //     codigoTipoLog: '',
+          //     codigoRespuesta: '501',
+          //     codigoUsuairo: userName,
+          //     descripcionLog: this.translate.instant('PLATAFORMA.LOGINFAILED')
+          //   };
+          //   this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
           this._swalService.getAlertError(this.translate.instant('PLATAFORMA.LOGINFAILED'));
           return of(null);
         })

@@ -38,7 +38,8 @@ export class SwalAlertService {
     this.fireSwal({
       position: 'center',
       icon: 'error',
-      title: descripcion,
+      title: 'Error',
+      text: descripcion,
       showConfirmButton: true
     });
   }
@@ -48,7 +49,8 @@ export class SwalAlertService {
     this.fireSwal({
       position: 'center',
       icon: 'success',
-      title: descripcion,
+      title: 'Success',
+      text: descripcion,
       showConfirmButton: true
     });
   }
@@ -73,7 +75,8 @@ export class SwalAlertService {
     this.fireSwal({
       position: 'center',
       icon: 'error',
-      title: descripcion,
+      title: 'Error',
+      text: descripcion,
       showConfirmButton: true,
       timer: 9000
     });
@@ -83,7 +86,8 @@ export class SwalAlertService {
     this.fireSwal({
       position: 'center',
       icon: 'success',
-      title: descripcion,
+      title: 'Error',
+      text: descripcion,
       showConfirmButton: true,
       timer: 9000
     });
@@ -93,7 +97,8 @@ export class SwalAlertService {
     this.fireSwal({
       position: 'center',
       icon: 'info',
-      title: descripcion,
+      title: 'Info',
+      text: descripcion,
       showConfirmButton: true,
       timer: 9000
     });
@@ -103,7 +108,8 @@ export class SwalAlertService {
     this.fireSwal({
       position: 'center',
       icon: 'warning',
-      title: descripcion,
+      title: 'Warning',
+      text: descripcion,
       showConfirmButton: true,
       timer: 9000
     });
@@ -113,7 +119,8 @@ export class SwalAlertService {
     this.fireSwal({
       position: 'center',
       icon: 'question',
-      title: descripcion,
+      title: 'Question',
+      text: descripcion,
       showConfirmButton: true,
       timer: 9000
     });
@@ -122,7 +129,8 @@ export class SwalAlertService {
   getAlertQuestionRequest(descripcion: string, confirmButtonText: string, denyButtonText: string) {
     const customClasses = this.getSwalCustomClass();
     return Swal.fire({
-      title: descripcion,
+      title: 'Question',
+      text: descripcion,
       icon: 'question',
       showDenyButton: true,
       confirmButtonText: confirmButtonText,

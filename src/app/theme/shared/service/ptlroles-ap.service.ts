@@ -22,11 +22,11 @@ export class PTLRolesAPService {
 
   constructor(
     private http: HttpClient,
-    private socketService: SocketService,
+    private _socketService: SocketService,
     private _localStorageService: LocalStorageService
   ) {
     console.log('******* Servicio de roles iniciado correctamente');
-    this.socketService.listen('aplicaciones-actualizadas').subscribe({
+    this._socketService.listen('roles-actualizadas').subscribe({
       next: (payload) => {
         console.log('Evento de Socket.IO recibido:', payload.msg);
         this._rolesChange.next(payload);

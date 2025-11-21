@@ -104,17 +104,17 @@ export class PTLUsuariosService {
 
   crearUsuario(data: PTLUsuarioModel) {
     const url = `${base_url}/usuarios`;
-    console.log('servicio tickets', data);
+    console.log('servicio usuarios', data);
     return this.http.post(url, data).pipe(
       map((resp: any) => {
         const usuarioRole: PTLUsuarioRoleAP = {
-          codigoUsuaio: resp.usuario.codigoUsuario,
+          codigoUsuario: data.codigoUsuario,
           codigoRole: 'aa5901bc-9c7d-45e8-bf68-4a0a286e9b99',
           estadoUsuarioRole: true,
           codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
           fechaCreacion: new Date().toISOString()
         };
-        this._usuairosRolesService.postCrearRegistro(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
+        this._usuairosRolesService.postUsuarioRole(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
         return {
           ok: true,
           usurio: resp.usurio
@@ -126,24 +126,25 @@ export class PTLUsuariosService {
   actualizarUsuario(usuario: PTLUsuarioModel) {
     const codigoUser = usuario.codigoUsuario || '';
     this.getUsuarioById(codigoUser).subscribe((usu: any) => {
-        let imagenUsuario = '';
-        if (usu.fotoUsuario !== '') {
-            imagenUsuario = usu.fotoUsuario;
-            if (imagenUsuario !== usuario.fotoUsuario) {
-                const fotoUsuairo = this.usuario.fotoUsuario || '';
-                const objUpload = {
-                  susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
-                  tipo: 'usuarios',
-                  file: fotoUsuairo
-                };
-                this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
-            }
+      let imagenUsuario = '';
+      if (usu.fotoUsuario !== '') {
+        imagenUsuario = usu.fotoUsuario;
+        if (imagenUsuario !== usuario.fotoUsuario) {
+          const fotoUsuairo = this.usuario.fotoUsuario || '';
+          const objUpload = {
+            susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+            tipo: 'usuarios',
+            file: fotoUsuairo
+          };
+          this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
         }
+      }
     });
     const url = `${base_url}/usuarios/${usuario.codigoUsuario}`;
     return this.http.put(url, usuario).pipe(
       map((resp: any) => {
         console.log('data de usuario modificacda', resp);
+        this._localStorageService.setUsuarioLocalStorage(usuario);
         return {
           ok: true,
           usuario: resp.usuario
@@ -153,7 +154,23 @@ export class PTLUsuariosService {
   }
 
   actualizarUsuarioDatos(usuario: PTLUsuarioModel) {
-    const url = `${base_url}/usuarios/datos/${usuario.usuarioId}`;
+    const codigoUser = usuario.codigoUsuario || '';
+    this.getUsuarioById(codigoUser).subscribe((usu: any) => {
+      let imagenUsuario = '';
+      if (usu.usuario.fotoUsuario !== '') {
+        imagenUsuario = usu.usuario.fotoUsuario;
+        if (imagenUsuario !== usuario.fotoUsuario) {
+          const objUpload = {
+            susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+            tipo: 'usuarios',
+            file: imagenUsuario
+          };
+          this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
+        }
+      }
+    });
+    // const url = `${base_url}/usuarios`;
+    const url = `${base_url}/usuarios/datos/${usuario.codigoUsuario}`;
     return this.http.put(url, usuario).pipe(
       map((resp: any) => {
         console.log('data de usuario modificacda', resp);

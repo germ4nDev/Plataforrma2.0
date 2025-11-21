@@ -10,7 +10,12 @@ import { UploadFilesService } from 'src/app/theme/shared/service/upload-files.se
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { AuthenticationService, PtllogActividadesService, PtlusuariosRolesApService } from 'src/app/theme/shared/service';
+import {
+  AuthenticationService,
+  PtllogActividadesService,
+  PTLRolesAPService,
+  PtlusuariosRolesApService
+} from 'src/app/theme/shared/service';
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -46,6 +51,7 @@ export class GestionUsuarioComponent implements OnInit {
   tipoEditorTexto = 'basica';
   lockScreenSubscription: Subscription | undefined;
   isLocked: boolean = false;
+  isUserRole: boolean = true;
   lockMessage: string = '';
   suscPlataforma: string = '';
 
@@ -60,7 +66,8 @@ export class GestionUsuarioComponent implements OnInit {
     private _swalService: SwalAlertService,
     private _translate: TranslateService,
     private _localStorageService: LocalStorageService,
-    private _rolesService: PtlusuariosRolesApService,
+    private _usuariosRolesService: PtlusuariosRolesApService,
+    private _rolesService: PTLRolesAPService,
     private _uploadService: UploadFilesService
   ) {
     this.isSubmit = false;
@@ -95,6 +102,7 @@ export class GestionUsuarioComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.consultarRolesAplicacion();
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
     this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
@@ -113,8 +121,22 @@ export class GestionUsuarioComponent implements OnInit {
     if (!this.modoEdicion) {
       this.FormRegistro.codigoUsuario = uuidv4();
       this.FormRegistro.fotoUsuario = 'no-imagen.jpg';
+      this.FormRegistro.usuarioAdministrador = false;
       console.log('formRegistro original', this.FormRegistro);
     }
+  }
+
+  consultarRolesAplicacion() {
+
+    const navSettings = this._localStorageService.getNavSettingsLocalStorage();
+    const codigo = navSettings.aplicacion?.codigoAplicacion || '';
+    console.log('aca hijuepuuuuuuuuuuuuuuuu', codigo);
+    this._rolesService.getRegistroByCodeApp(codigo).subscribe((resp: any) => {
+        console.log('roles de la aplicacion', resp);
+        if (resp.roles.length > 0) {
+            console.log('yuppppiiiii');
+        }
+    });
   }
 
   validarClaveActual(claveActual: any) {
@@ -159,7 +181,6 @@ export class GestionUsuarioComponent implements OnInit {
       reader.readAsDataURL(file);
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path: any) => {
-          console.log('resultado', path);
           this.fileName = path.nombreArchivo;
           this.FormRegistro.fotoUsuario = path.nombreArchivo;
         },
@@ -175,7 +196,6 @@ export class GestionUsuarioComponent implements OnInit {
 
   btnGestionarUsuarioClick(form: any) {
     this.isSubmit = true;
-    console.log('insertar formRegistro', form.value);
     // if (!form.valid) {
     //   return;
     // }
@@ -185,7 +205,7 @@ export class GestionUsuarioComponent implements OnInit {
       if (this.FormRegistro.claveUsuario != '') {
         if (this.FormRegistro.claveNew == this.FormRegistro.claveConfirm) {
           registroData.claveUsuario = this.FormRegistro.claveNew;
-          registroData.fotoUsuario = this.FormRegistro.fotoUsuario;
+          registroData.fotoUsuario = this.fileName;
           registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
           registroData.fechaModificacion = new Date().toISOString();
           this._registrosService.actualizarUsuarioClave(registroData).subscribe({
@@ -234,6 +254,7 @@ export class GestionUsuarioComponent implements OnInit {
           this.FormRegistro.claveUsuario = this.claveUsuario;
         }
         registroData.claveUsuario = this.FormRegistro.claveUsuario;
+        registroData.fotoUsuario = this.fileName;
         registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
         registroData.fechaModificacion = new Date().toISOString();
         this._registrosService.actualizarUsuarioDatos(registroData).subscribe({
@@ -245,13 +266,6 @@ export class GestionUsuarioComponent implements OnInit {
                 descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
               };
               this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-              const fotoUsuairo = this.usuario.fotoUsuario || '';
-              const objUpload = {
-                susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
-                tipo: 'usuarios',
-                file: fotoUsuairo
-              };
-              this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
               this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.UPDATEUSERSUCCESS'));
               this.router.navigate(['/usuarios/usuarios']);
             }
@@ -270,13 +284,12 @@ export class GestionUsuarioComponent implements OnInit {
       }
     } else {
       // INSERTAR REGISTRO
-      console.log('formResgistro', this.FormRegistro);
       registroData.claveUsuario = this.FormRegistro.claveUsuario;
       registroData.codigoUsuario = uuidv4();
+      console.log('============== filename', this.fileName);
       registroData.fotoUsuario = this.fileName !== '' ? this.fileName : 'no-imagen.png';
       registroData.fechaCreacion = new Date().toISOString();
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-      console.log('registroData', registroData);
       this._registrosService.crearUsuario(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
@@ -293,7 +306,7 @@ export class GestionUsuarioComponent implements OnInit {
             //     codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
             //     fechaCreacion: new Date().toISOString()
             // }
-            // this._rolesService.postCrearRegistro(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
+            // this._usuariosRolesService.postCrearRegistro(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
             // const fotoUsuairo = this.usuario.fotoUsuario || '';
             // const objUpload = {
             //   susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
@@ -315,7 +328,6 @@ export class GestionUsuarioComponent implements OnInit {
             descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.mensaje
           };
           this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado error'));
-          console.log('============fileName', this.fileName);
           const objUpload = {
             susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
             tipo: 'usuarios',
