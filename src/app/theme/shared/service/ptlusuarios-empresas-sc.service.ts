@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLUsuaioEmpresasSCModel } from '../_helpers/models/PTLUsuarioEmpresaSC.model';
 import { LocalStorageService } from './local-storage.service';
+import { SocketService } from './sockets.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,11 +15,29 @@ const base_url = environment.apiUrl;
 })
 export class PtlusuariosEmpresasScService {
   curentUser: PTLUsuarioModel = new PTLUsuarioModel();
+  private _usuariosEmpresas = new BehaviorSubject<PTLUsuaioEmpresasSCModel[]>([]);
+  private _usuariosEmpresasChange = new Subject<any>();
+  _usuariosEmpresasChange$ = this._usuariosEmpresasChange.asObservable();
 
   constructor(
     private http: HttpClient,
+    private _socketService: SocketService,
     private _localStorageService: LocalStorageService
-  ) {}
+  ) {
+    console.log('******* Servicio de usuariosEmpresas iniciado correctamente');
+    this._socketService.listen('usuarios-empresas-actualizadas').subscribe({
+      next: (payload) => {
+        console.log('Evento de Socket.IO recibido:', payload.msg);
+        this._usuariosEmpresasChange.next(payload);
+        this.cargarRegistros().subscribe();
+      },
+      error: (err) => console.error('Error en la escucha de sockets:', err)
+    });
+  }
+
+  get _usuariosEmpresas$(): Observable<PTLUsuaioEmpresasSCModel[]> {
+    return this._usuariosEmpresas.asObservable();
+  }
 
   get token(): string {
     const current = this._localStorageService.getCurrentUserLocalStorage();
@@ -31,20 +50,19 @@ export class PtlusuariosEmpresasScService {
   get headers() {
     return {
       headers: {
-        'x-token': this.token
+        'Content-Type': 'application/json'
       }
     };
   }
 
-  getRegistros() {
+  cargarRegistros() {
+    console.log('Consultando y ordenando usuariosEmpresas del servidor...');
     const url = `${base_url}/usuarios-empresas-sc`;
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        console.log('servicio de usuariosEmpresas', resp.usuariosEmpresas);
-        return {
-          ok: true,
-          usuariosEmpresas: resp.usuariosEmpresas
-        };
+    return this.http.get(url, this.headers).pipe(
+      map((resp: any) => resp.usuariosEmpresas as PTLUsuaioEmpresasSCModel[]),
+      tap((UsuariosEmpresasOrdenadas) => {
+        console.log(`UsuariosEmpresas cargados: ${UsuariosEmpresasOrdenadas.length}`);
+        this._usuariosEmpresas.next(UsuariosEmpresasOrdenadas);
       })
     );
   }

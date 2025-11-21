@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { LocalStorageService } from './local-storage.service';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { SocketService } from './sockets.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,11 +16,29 @@ const base_url = environment.apiUrl;
 })
 export class PtlusuariosScService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
+  private _usuariosSC = new BehaviorSubject<PTLUsuarioSCModel[]>([]);
+  private _usuariosSCChange = new Subject<any>();
+  _usuariosSCChange$ = this._usuariosSCChange.asObservable();
 
   constructor(
     private http: HttpClient,
+    private _socketService: SocketService,
     private _localStorageService: LocalStorageService
-  ) {}
+  ) {
+    console.log('******* Servicio de usuariosSC iniciado correctamente');
+    this._socketService.listen('usuarios-roles-actualizadas').subscribe({
+      next: (payload) => {
+        console.log('Evento de Socket.IO recibido:', payload.msg);
+        this._usuariosSCChange.next(payload);
+        this.cargarRegistros().subscribe();
+      },
+      error: (err) => console.error('Error en la escucha de sockets:', err)
+    });
+  }
+
+  get _usuariosSC$(): Observable<PTLUsuarioSCModel[]> {
+    return this._usuariosSC.asObservable();
+  }
 
   get token(): string {
     const current = this._localStorageService.getCurrentUserLocalStorage();
@@ -31,19 +51,19 @@ export class PtlusuariosScService {
   get headers() {
     return {
       headers: {
-        'x-token': this.token
+        'Content-Type': 'application/json'
       }
     };
   }
 
-  getUsuariosSC() {
-    return this.http.get<PTLUsuarioSCModel>(`${environment.apiUrl}/usuarios-sc`).pipe(
-      map((resp: any) => {
-        console.log('respuesta servicio usuariosSC', resp);
-        return {
-          ok: true,
-          usuarios: resp.usuariosSC
-        };
+  cargarRegistros() {
+    console.log('Consultando y ordenando usuariosSC del servidor...');
+    const url = `${base_url}/usuarios-sc`;
+    return this.http.get(url, this.headers).pipe(
+      map((resp: any) => resp.usuariosSC as PTLUsuarioSCModel[]),
+      tap((RolesOrdenadas) => {
+        console.log(`Roles cargados: ${RolesOrdenadas.length}`);
+        this._usuariosSC.next(RolesOrdenadas);
       })
     );
   }

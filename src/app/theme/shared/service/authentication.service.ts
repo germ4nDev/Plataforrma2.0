@@ -14,6 +14,14 @@ import { PtlusuariosRolesApService } from './ptlusuarios-roles-ap.service';
 import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
 import { PTLRolesAPService } from './ptlroles-ap.service';
 import { PTLRoleAPModel } from '../_helpers/models/PTLRoleAP.model';
+import { PtlEmpresasScService } from './ptlempresas-sc.service';
+import { PTLEmpresaSCModel } from '../_helpers/models/PTLEmpresaSC.model';
+import { PtlusuariosScService } from './ptlusuarios-sc.service';
+import { PtlusuariosEmpresasScService } from './ptlusuarios-empresas-sc.service';
+import { PTLUsuaioEmpresasSCModel } from '../_helpers/models/PTLUsuarioEmpresaSC.model';
+import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model';
+import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
+import { PTLSuscriptoresService } from './ptlsuscriptores.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -23,14 +31,26 @@ export class AuthenticationService {
   isValid: boolean = false;
   roles: PTLRoleAPModel[] = [];
   usuariosRoles: PTLUsuarioRoleAP[] = [];
+  emrpesasSC: PTLEmpresaSCModel[] = [];
+  usuariosSC: PTLUsuarioSCModel[] = [];
+  usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
+  suscriptores: PTLSuscriptorModel[] = [];
   usuariosRolesSubscription: Subscription | undefined;
   rolesSubscription: Subscription | undefined;
+  empresasSCSubscription: Subscription | undefined;
+  usuariosSCSubscription: Subscription | undefined;
+  usuariosEmpresasSCSubscription: Subscription | undefined;
+  suscriptorSubscription: Subscription | undefined;
 
   constructor(
     private router: Router,
     private http: HttpClient,
     private _localstorageService: LocalStorageService,
     private _rolesService: PTLRolesAPService,
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _usuariosSCService: PtlusuariosScService,
+    private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
+    private _empresasSCService: PtlEmpresasScService,
     private _usuarioRolesService: PtlusuariosRolesApService
   ) {
     // eslint-disable-next-line
@@ -79,11 +99,76 @@ export class AuthenticationService {
       next: (userRoles: PTLUsuarioRoleAP[]) => {
         console.log('usuarios roles cargados con éxito:', userRoles.length);
         this.usuariosRoles = userRoles;
+        this.consultarUusuariosSC();
         console.log('usuarios roles:', userRoles);
       },
       error: (err) => {
         console.error('Error al cargar los roles de usuario:', err);
         this.usuariosRoles = [];
+      }
+    });
+  }
+
+  consultarUusuariosSC() {
+    console.log('&&&&&&&& usuariosSC');
+    this.usuariosSCSubscription = this._usuariosSCService._usuariosSC$.subscribe({
+      next: (usuariosSC: PTLUsuarioSCModel[]) => {
+        console.log('usuariosSC cargadas con éxito:', usuariosSC.length);
+        this.usuariosSC = usuariosSC;
+        this.consultarSuscriptores();
+        this.consultarEmpresasSC();
+        console.log('usuariosSC:', usuariosSC);
+      },
+      error: (err) => {
+        console.error('Error al cargar los roles de usuariosSC:', err);
+        this.usuariosSC = [];
+      }
+    });
+  }
+
+  consultarSuscriptores() {
+    console.log('acaaaaaaaaa');
+    this.suscriptorSubscription = this._suscriptoresService._suscriptores.subscribe({
+      next: (suscriptores: PTLSuscriptorModel[]) => {
+        console.log('suscriptores cargadas con éxito:', suscriptores.length);
+        this.suscriptores = suscriptores;
+        this.consultarEmpresasSC();
+        console.log('usuarios roles:', suscriptores);
+      },
+      error: (err) => {
+        console.error('Error al cargar los roles de usuario:', err);
+        this.suscriptores = [];
+      }
+    });
+  }
+
+  consultarEmpresasSC() {
+    console.log('acaaaaaaaaa');
+    this.empresasSCSubscription = this._empresasSCService.empresasSC$.subscribe({
+      next: (empresasSC: PTLEmpresaSCModel[]) => {
+        console.log('empresasSC cargadas con éxito:', empresasSC.length);
+        this.emrpesasSC = empresasSC;
+        console.log('EmpresasSC:', empresasSC);
+        this.consultarUusuariosEmpresasSC();
+      },
+      error: (err) => {
+        console.error('Error al cargar los roles de usuario:', err);
+        this.emrpesasSC = [];
+      }
+    });
+  }
+
+  consultarUusuariosEmpresasSC() {
+    console.log('acaaaaaaaaa');
+    this.usuariosEmpresasSCSubscription = this._usuariosEmpresasSCService._usuariosEmpresas$.subscribe({
+      next: (usuariosEmpresas: PTLUsuarioSCModel[]) => {
+        console.log('usuariosEmpresas cargadas con éxito:', usuariosEmpresas.length);
+        this.usuariosEmpresas = usuariosEmpresas;
+        console.log('usuarios roles:', usuariosEmpresas);
+      },
+      error: (err) => {
+        console.error('Error al cargar los roles de usuario:', err);
+        this.usuariosEmpresas = [];
       }
     });
   }
@@ -124,6 +209,8 @@ export class AuthenticationService {
 
   private setSession(user: CurrentUserModel): void {
     const usuario = user.usuario?.codigoUsuario || '';
+    const usuarioSC: PTLUsuarioSCModel = this.usuariosSC.filter((x) => x.codigoUsuario == usuario)[0] || {};
+    const usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = this.usuariosEmpresas.filter((x) => x.codigoUsuarioSC == usuarioSC.codigoUsuarioSC);
     const rolesUsuario: PTLUsuarioRoleAP[] = this.usuariosRoles.filter((x) => x.codigoUsuario == usuario);
     if (rolesUsuario.length > 0) {
       user.roles = [];
@@ -136,9 +223,22 @@ export class AuthenticationService {
           }
         }
       });
-      this._localstorageService.setCurrentUserLocalStorage(user);
-      this.currentUserSubject.next(user);
     }
+    if (usuariosEmpresas.length > 0) {
+      user.empresas = [];
+      usuariosEmpresas.forEach((empre: any) => {
+        const empresaData = this.emrpesasSC.filter((x) => x.codigoEmpresaSC === empre.codigoEmpresaSC)[0];
+        if (empresaData) {
+          const existe = user.empresas?.filter((x) => x.codigoEmpresaSC === empresaData.codigoEmpresaSC);
+          if (existe?.length === 0) {
+            user.empresas?.push(empresaData);
+          }
+        }
+      });
+    }
+    console.log('======= &&& currentUserFinal', user);
+    this._localstorageService.setCurrentUserLocalStorage(user);
+    this.currentUserSubject.next(user);
   }
 
   logout() {

@@ -9,6 +9,8 @@ import { ThemeSettingsModel } from '../_helpers/models/ThemeSettings.model';
 import { NavSettings } from '../_helpers/models/navSettings.model';
 import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
 import { CurrentUserModel } from '../_helpers/models/CurrentUser.model';
+import { PTLRoleAPModel } from '../_helpers/models/PTLRoleAP.model';
+import { PTLEmpresaSCModel } from '../_helpers/models/PTLEmpresaSC.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +28,8 @@ export class LocalStorageService {
   public FormRegistro: any;
   public lang: string = 'en';
   public themeSettings: any;
+  public roles: PTLRoleAPModel[] = [];
+  public empresas: PTLEmpresaSCModel[] = [];
 
   constructor() {}
 
@@ -203,29 +207,86 @@ export class LocalStorageService {
     this.navsettings = navsettings;
   }
 
-  setCurrentUserLocalStorage(data: CurrentUserModel) {
-    let current = this.getCurrentUserLocalStorage();
-    current = data;
-    sessionStorage.setItem('currentUser', JSON.stringify(current));
-    this.currentUser = current;
-  }
-
   setThemeSettingsLocalStorage(settings: ThemeSettingsModel) {
     localStorage.setItem('themeSettings', JSON.stringify(settings));
     this.themeSettings = settings;
   }
 
+  setCurrentUserLocalStorage(data: CurrentUserModel) {
+    let current = this.getCurrentUserLocalStorage();
+    console.log('********* nuevo current user', data);
+    current = data;
+    sessionStorage.setItem('currentUser', JSON.stringify(current));
+    this.currentUser = current;
+  }
+
   setUsuarioLocalStorage(usuario: PTLUsuarioModel) {
-    const current = this.getCurrentUserLocalStorage();
-    current.usuario = usuario;
-    this.setCurrentUserLocalStorage(current);
+    let currentUser = this.getCurrentUserLocalStorage();
+    currentUser = {
+      suscriptor: currentUser.suscriptor,
+      ok: currentUser.ok,
+      token: currentUser.token,
+      roles: currentUser.roles,
+      empresas: currentUser.empresas,
+      usuario: usuario
+    };
+    this.setCurrentUserLocalStorage(currentUser);
     this.usuario = usuario;
   }
 
+  setSuscriptorLocalStorage(data: PTLSuscriptorModel) {
+    let currentUser = this.getCurrentUserLocalStorage();
+    // console.log('===CURRENTUSER HIJUEPUTAAAAAAAAAAAAAAAAAA', currentUser);
+    currentUser = {
+      suscriptor: data,
+      ok: currentUser.ok,
+      token: currentUser.token,
+      roles: currentUser.roles,
+      empresas: currentUser.empresas,
+      usuario: currentUser.usuario
+    };
+    this.setCurrentUserLocalStorage(currentUser);
+    this.suscriptor = data;
+  }
+
+  setRolesLocalStorage(roles: PTLRoleAPModel[]) {
+    let currentUser = this.getCurrentUserLocalStorage();
+    currentUser = {
+      suscriptor: currentUser.suscriptor,
+      ok: currentUser.ok,
+      token: currentUser.token,
+      roles: roles,
+      empresas: currentUser.empresas,
+      usuario: currentUser.usuario
+    };
+    this.setCurrentUserLocalStorage(currentUser);
+    this.roles = roles;
+  }
+
+  setEmpresasLocalStorage(empresas: PTLEmpresaSCModel[]) {
+    let currentUser = this.getCurrentUserLocalStorage();
+    currentUser = {
+      suscriptor: currentUser.suscriptor,
+      ok: currentUser.ok,
+      token: currentUser.token,
+      roles: currentUser.roles,
+      empresas: empresas,
+      usuario: currentUser.usuario
+    };
+    this.setCurrentUserLocalStorage(currentUser);
+    this.empresas = empresas;
+  }
+
   setTokenLocalStorage(token: any) {
-    const current = this.getCurrentUserLocalStorage();
-    current.token = token;
-    this.setCurrentUserLocalStorage(current);
+    let currentUser = this.getCurrentUserLocalStorage();
+    currentUser = {
+      suscriptor: currentUser.suscriptor,
+      ok: currentUser.ok,
+      token: token,
+      roles: currentUser.roles,
+      usuario: currentUser.usuario
+    };
+    this.setCurrentUserLocalStorage(currentUser);
     this.token = token;
   }
 
@@ -263,19 +324,6 @@ export class LocalStorageService {
     };
     this.setNavSettingsLocalStorage(navSetts);
     this.modulo = modulo;
-  }
-
-  setSuscriptorLocalStorage(data: PTLSuscriptorModel) {
-    let currentUser = this.getCurrentUserLocalStorage();
-    // console.log('===CURRENTUSER HIJUEPUTAAAAAAAAAAAAAAAAAA', currentUser);
-    currentUser = {
-      suscriptor: data,
-      ok: currentUser.ok,
-      token: currentUser.token,
-      usuario: currentUser.usuario
-    };
-    this.setCurrentUserLocalStorage(currentUser);
-    this.suscriptor = data;
   }
 
   setLanguage(lang: string) {

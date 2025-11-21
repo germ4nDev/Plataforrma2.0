@@ -30,7 +30,7 @@ export class PtlvaloresUnitariosService {
   get headers() {
     return {
       headers: {
-        'x-token': this.token
+        'Content-Type': 'application/json'
       }
     };
   }
