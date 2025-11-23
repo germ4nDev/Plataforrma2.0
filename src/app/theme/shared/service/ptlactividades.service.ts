@@ -39,27 +39,10 @@ export class PtlactividadesService {
     return this._actividades.asObservable();
   }
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        // 'x-token': this.token
-        'Content-Type': 'application/json'
-      }
-    };
-  }
-
   cargarRegistros() {
     console.log('Consultando y ordenando actividades del servidor...');
     const url = `${base_url}/actividades`;
-    return this.http.get(url, this.headers).pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => resp.actividades as PTLActividadModel[]),
       map((actividades: PTLActividadModel[]) => {
         return actividades.sort((a: any, b: any) => a.actividad.localeCompare(b.actividad));

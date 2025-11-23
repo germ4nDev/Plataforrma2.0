@@ -19,22 +19,6 @@ export class PtlvaloresUnitariosService {
     private _localStorageService: LocalStorageService
   ) {}
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-  }
-
   getRegistros() {
     const url = `${base_url}/valores-unitarios`;
     return this.http.get(url).pipe(

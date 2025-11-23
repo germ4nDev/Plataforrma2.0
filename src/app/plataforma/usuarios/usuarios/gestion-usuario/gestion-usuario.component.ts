@@ -87,7 +87,6 @@ export class GestionUsuarioComponent implements OnInit {
             this.FormRegistro.claveUsuario = '';
             this.FormRegistro.claveNew = '';
             this.FormRegistro.claveConfirm = '';
-            // this.codeRegistro = resp.aplicacion.codigoAplicacion;
           },
           error: () => {
             Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error');
@@ -286,7 +285,6 @@ export class GestionUsuarioComponent implements OnInit {
       // INSERTAR REGISTRO
       registroData.claveUsuario = this.FormRegistro.claveUsuario;
       registroData.codigoUsuario = uuidv4();
-      console.log('============== filename', this.fileName);
       registroData.fotoUsuario = this.fileName !== '' ? this.fileName : 'no-imagen.png';
       registroData.fechaCreacion = new Date().toISOString();
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
@@ -299,21 +297,6 @@ export class GestionUsuarioComponent implements OnInit {
               descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            // const usuarioRole: PTLUsuarioRoleAP = {
-            //     codigoUsuaio: resp.usuario.codigoUsuario,
-            //     codigoRole: 'aa5901bc-9c7d-45e8-bf68-4a0a286e9b99',
-            //     estadoUsuarioRole: true,
-            //     codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
-            //     fechaCreacion: new Date().toISOString()
-            // }
-            // this._usuariosRolesService.postCrearRegistro(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
-            // const fotoUsuairo = this.usuario.fotoUsuario || '';
-            // const objUpload = {
-            //   susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
-            //   tipo: 'usuarios',
-            //   file: fotoUsuairo
-            // };
-            // this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'));
             this._swalService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTUSERSUCCESS'));
             form.resetForm();
             this.isSubmit = false;

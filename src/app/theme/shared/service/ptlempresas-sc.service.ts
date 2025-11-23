@@ -40,27 +40,10 @@ export class PtlEmpresasScService {
     return this._empresasSC.asObservable();
   }
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        // 'x-token': this.token,
-        'Content-Type': 'application/json'
-      }
-    };
-  }
-
   cargarRegistros() {
     console.log('Consultando y ordenando empresasSC del servidor...');
     const url = `${base_url}/empresas-sc`;
-    return this.http.get(url, this.headers).pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => resp.empresasSC as PTLEmpresaSCModel[]),
       map((empresasSC: PTLEmpresaSCModel[]) => {
         return empresasSC.sort((a: any, b: any) => a.nombreEmpresa.localeCompare(b.nombreEmpresa));

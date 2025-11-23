@@ -20,22 +20,6 @@ export class PtltiposValoresService {
     private _localStorageService: LocalStorageService
   ) {}
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        'x-token': this.token
-      }
-    };
-  }
-
   getRegistros() {
     const url = `${base_url}/tipos-valor`;
     return this.http.get(url).pipe(

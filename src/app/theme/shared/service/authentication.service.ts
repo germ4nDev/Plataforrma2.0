@@ -5,7 +5,6 @@ import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-// import { User } from '../_helpers/user';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { LocalStorageService } from './local-storage.service';
@@ -28,6 +27,18 @@ export class AuthenticationService {
   // eslint-disable-next-line
   private currentUserSubject: BehaviorSubject<PTLUsuarioModel | any>;
   public currentUser: Observable<PTLUsuarioModel>;
+
+  // === PROPIEDAD REQUERIDA POR EL AUTH GUARD (MODIFICACIÓN CLAVE 1) ===
+  // Subject para indicar que la verificación inicial del token ha terminado.
+  private initializedSubject = new BehaviorSubject<boolean>(false);
+  // Observable público que el AuthGuard usa para esperar.
+  public isAuthInitialized$ = this.initializedSubject.asObservable();
+
+  // === MODIFICACIÓN CLAVE 2: Comprobación del token movida al constructor/inicio ===
+  // El hasToken se llama dentro de initializeAuth para asegurar el flujo asíncrono.
+  private loggedInSubject = new BehaviorSubject<boolean>(false);
+  public isLoggedIn$ = this.loggedInSubject.asObservable();
+
   isValid: boolean = false;
   roles: PTLRoleAPModel[] = [];
   usuariosRoles: PTLUsuarioRoleAP[] = [];
@@ -46,17 +57,43 @@ export class AuthenticationService {
     private router: Router,
     private http: HttpClient,
     private _localstorageService: LocalStorageService,
-    private _rolesService: PTLRolesAPService,
     private _suscriptoresService: PTLSuscriptoresService,
     private _usuariosSCService: PtlusuariosScService,
     private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
     private _empresasSCService: PtlEmpresasScService,
+    private _rolesService: PTLRolesAPService,
     private _usuarioRolesService: PtlusuariosRolesApService
   ) {
     // eslint-disable-next-line
     console.log('************ SERVICIO DE AUTENTICACION ACTIVO');
-    this.currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')!));
+    this.currentUserSubject = new BehaviorSubject(this._localstorageService.getCurrentUserLocalStorage());
     this.currentUser = this.currentUserSubject.asObservable();
+
+    // === MODIFICACIÓN CLAVE 3: Iniciar la lógica de comprobación de autenticación ===
+    this.initializeAuth();
+  }
+
+  /**
+   * Lógica de inicialización: Comprueba si existe un token válido al cargar la app.
+   * Esto se ejecuta inmediatamente después del constructor.
+   */
+  private initializeAuth(): void {
+    // Ejecuta la comprobación del token.
+    const isLoggedIn = this.hasToken();
+
+    // Emite el estado de login basado en el token encontrado/validado.
+    this.loggedInSubject.next(isLoggedIn);
+
+    // IMPORTANTE: Marca el servicio como inicializado. Esto desbloquea el AuthGuard.
+    this.initializedSubject.next(true);
+
+    console.log('AuthService: Inicialización completada. Usuario logueado:', isLoggedIn);
+  }
+
+  private hasToken(): boolean {
+    // Utiliza el mismo método de hasToken que ya tenías
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    return !!(currentUser && currentUser.token && !this.isTokenExpired(currentUser.token));
   }
 
   public get currentUserValue() {
@@ -67,15 +104,7 @@ export class AuthenticationService {
     return this.currentUserValue?.token || null;
   }
 
-  public isTokenExpired(token: string): boolean {
-    try {
-      const decoded: any = jwtDecode(token);
-      const now = Math.floor(new Date().getTime() / 1000);
-      return decoded.exp < now;
-    } catch (err) {
-      return true;
-    }
-  }
+  // --- El resto de tus métodos (consultarRoles, login, logout, etc.) siguen igual ---
 
   consultarRoles() {
     console.log('acaaaaaaaaa');
@@ -174,7 +203,6 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string): Observable<CurrentUserModel> {
-    this.consultarRoles();
     return this.http.post<CurrentUserModel>(`${environment.apiUrl}/auth`, { username, password }).pipe(
       tap((user) => {
         if (!user) {
@@ -208,53 +236,27 @@ export class AuthenticationService {
   }
 
   private setSession(user: CurrentUserModel): void {
-    const usuario = user.usuario?.codigoUsuario || '';
-    const usuarioSC: PTLUsuarioSCModel = this.usuariosSC.filter((x) => x.codigoUsuario == usuario)[0] || {};
-    const usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = this.usuariosEmpresas.filter((x) => x.codigoUsuarioSC == usuarioSC.codigoUsuarioSC);
-    const rolesUsuario: PTLUsuarioRoleAP[] = this.usuariosRoles.filter((x) => x.codigoUsuario == usuario);
-    if (rolesUsuario.length > 0) {
-      user.roles = [];
-      rolesUsuario.forEach((role) => {
-        const roleData = this.roles.filter((x) => x.codigoRole === role.codigoRole)[0];
-        if (roleData) {
-          const existe = user.roles?.filter((x) => x.codigoRole === roleData.codigoRole);
-          if (existe?.length === 0) {
-            user.roles?.push(roleData);
-          }
-        }
-      });
-    }
-    if (usuariosEmpresas.length > 0) {
-      user.empresas = [];
-      usuariosEmpresas.forEach((empre: any) => {
-        const empresaData = this.emrpesasSC.filter((x) => x.codigoEmpresaSC === empre.codigoEmpresaSC)[0];
-        if (empresaData) {
-          const existe = user.empresas?.filter((x) => x.codigoEmpresaSC === empresaData.codigoEmpresaSC);
-          if (existe?.length === 0) {
-            user.empresas?.push(empresaData);
-          }
-        }
-      });
-    }
-    console.log('======= &&& currentUserFinal', user);
     this._localstorageService.setCurrentUserLocalStorage(user);
     this.currentUserSubject.next(user);
+    // === MODIFICACIÓN CLAVE 4: Actualizar estado de login ===
+    this.loggedInSubject.next(true);
   }
 
   logout() {
     this._localstorageService.setLogOut();
     this.currentUserSubject.next(null);
+    // === MODIFICACIÓN CLAVE 5: Actualizar estado de login ===
+    this.loggedInSubject.next(false);
     this.router.navigate(['/autenticacion/login']);
   }
 
-  getAccessToken() {
-    const token = '';
-    return token;
-  }
-
-  refreshToken() {}
-
-  saveTokens(token: string, refreshToken: string) {
-    console.log('tokens', token, refreshToken);
+  public isTokenExpired(token: string): boolean {
+    try {
+      const decoded: any = jwtDecode(token);
+      const now = Math.floor(new Date().getTime() / 1000);
+      return decoded.exp < now;
+    } catch (err) {
+      return true;
+    }
   }
 }

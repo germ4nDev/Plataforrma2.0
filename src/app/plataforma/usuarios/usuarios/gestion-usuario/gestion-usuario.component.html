@@ -165,9 +165,6 @@
                                     </label>
                                     <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
                                         id="fileUploadInput" class="form-control form-input d-none" name="fotoUsuario">
-                                    <span class="file-name" [ngClass]="{'has-file': fileName}">
-                                        {{ fileName || ('USUARIOS.GESTION.FOTOHOLDER' | translate) }}
-                                    </span>
                                 </div>
                             </div>
                         </div>

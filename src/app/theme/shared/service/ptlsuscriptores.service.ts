@@ -24,6 +24,7 @@ export class PTLSuscriptoresService {
     private socketService: SocketService,
     private _localStorageService: LocalStorageService
   ) {
+    // TODO hacer la funcion que valida la vigencia de la liciencia del suscriptor
     this.socketService.listen('suscriptores-actualizados').subscribe({
       next: (payload) => {
         console.log('Evento de Socket.IO recibido:', payload.msg);
@@ -32,22 +33,6 @@ export class PTLSuscriptoresService {
       },
       error: (err) => console.error('Error en la escucha de sockets:', err)
     });
-  }
-
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        'x-token': this.token
-      }
-    };
   }
 
   get suscriptores$(): Observable<PTLSuscriptorModel[]> {

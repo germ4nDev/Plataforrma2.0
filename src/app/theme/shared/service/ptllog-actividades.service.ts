@@ -25,22 +25,6 @@ export class PtllogActividadesService {
     private _tiposLogsService: PTLTiposLogsService
   ) {}
 
-  get token(): string {
-    const current = this._localStorageSercice.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        'x-token': this.token
-      }
-    };
-  }
-
   get getLogBody() {
     let codigoAplicacion: string = '';
     let codigoSuite: string = '';

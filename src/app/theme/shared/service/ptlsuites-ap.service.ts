@@ -20,22 +20,6 @@ export class PtlSuitesAPService {
     private _localStorageService: LocalStorageService
   ) {}
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        'x-token': this.token
-      }
-    };
-  }
-
   geSuitesAP() {
     return this.http.get<PTLSuiteAPModel>(`${environment.apiUrl}/suites`).pipe(
       map((resp: any) => {

@@ -21,7 +21,7 @@ import { FriendComponent } from './theme/layout/admin/nav-bar/nav-right/chat-use
 import { SharedModule } from './theme/shared/shared.module';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
 import { ErrorInterceptor } from 'src/app/theme/shared/_helpers/error.interceptor';
-import { BasicAuthInterceptor } from 'src/app/theme/shared/_helpers/basic-auth.interceptor';
+import { JwtInterceptor } from 'src/app/theme/shared/_helpers/jwt-interceptor.interceptor';
 import { environment } from 'src/environments/environment';
 
 // third party
@@ -31,6 +31,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LanguageSelectorComponent } from './theme/shared/components/language-selector/language-selector.component';
 import { NavContentComponent } from './theme/layout/admin/navigation/nav-content/nav-content.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import {  } from './theme/shared/_helpers/jwt-interceptor.interceptor';
+import { AuthInterceptor } from './theme/shared/_helpers/auth.interceptor';
 
 const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
 
@@ -81,7 +83,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     FriendComponent
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]

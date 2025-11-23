@@ -203,16 +203,6 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     const userName = this.formValues?.['username']?.value;
     const password = this.formValues?.['password']?.value;
-    // const suscriptor = this.formValues?.['suscriptor']?.value;
-    // console.log('suscriptor', suscriptor);
-    // const dataSuscriptor = this.registros.filter((x) => x.codigoSuscriptor == suscriptor)[0];
-    // console.log('dataSuscriptor', dataSuscriptor);
-    // const userSuscriptor = this.usuariosSC.filter((x) => x.codigoSuscriptor == dataSuscriptor.codigoSuscriptor)[0];
-    // console.log('userSuscriptor', userSuscriptor);
-    // const usuairoBD = this.usuarios.filter((x) => x.codigoUsuario == userSuscriptor.codigoUsuario)[0];
-    // console.log('usuairoBD', usuairoBD);
-    // if (userSuscriptor && usuairoBD) {
-    //   if (usuairoBD.userNameUsuario == userName) {
     this.loginSub = this._authenticationService
       .login(userName, password)
       .pipe(
@@ -220,13 +210,7 @@ export class LoginComponent implements OnInit {
           this.loading = false;
           console.log('resp login', resp);
           if (!resp.ok) {
-            // const logData = {
-            //   codigoTipoLog: '',
-            //   codigoRespuesta: '501',
-            //   codigoUsuairo: userName,
-            //   descripcionLog: this.translate.instant('PLATAFORMA.USERNOTFOUND')
-            // };
-            // this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._localstorageService.setTokenLocalStorage(resp.token);
             this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTFOUND'));
             return;
           }

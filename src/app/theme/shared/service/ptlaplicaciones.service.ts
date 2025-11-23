@@ -37,23 +37,6 @@ export class PtlAplicacionesService {
     return this._aplicaciones.asObservable();
   }
 
-  get token(): string {
-    const current = this._localstorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        //   'x-token': this.token,
-        'Content-Type': 'application/json'
-      }
-    };
-  }
-
   getAplicaciones() {
     console.log('aca');
     const url = `${base_url}/aplicaciones`;
@@ -70,7 +53,7 @@ export class PtlAplicacionesService {
   cargarAplicaciones() {
     console.log('Consultando y ordenando aplicaciones del servidor...');
     const url = `${base_url}/aplicaciones`;
-    return this.http.get(url, this.headers).pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => resp.aplicaciones as PTLAplicacionModel[]),
       map((aplicaciones: PTLAplicacionModel[]) => {
         return aplicaciones.sort((a: any, b: any) => a.nombreAplicacion.localeCompare(b.nombreAplicacion));

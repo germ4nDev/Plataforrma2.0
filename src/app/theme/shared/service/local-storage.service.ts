@@ -65,6 +65,22 @@ export class LocalStorageService {
     }
   }
 
+  getTokenLocalStorage() {
+    const currentUserSession = sessionStorage.getItem('currentUser');
+    if (!currentUserSession) {
+      // console.log('No existe currentUser en la sesión o está vacío.');
+      return null;
+    }
+    try {
+      const currentUser = JSON.parse(currentUserSession);
+      // console.log('Datos de la currentUser', currentUser);
+      return currentUser.token;
+    } catch (e) {
+      console.error('Error al parsear JSON desde sessionStorage:', e);
+      return null;
+    }
+  }
+
   getNavSettingsLocalStorage(): NavSettings {
     const navsettings = sessionStorage.getItem('navsettings');
     if (!navsettings) {

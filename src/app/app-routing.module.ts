@@ -5,14 +5,14 @@ import { Routes, RouterModule } from '@angular/router';
 // project import
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
-// import { AuthGuard } from './theme/shared/_helpers/auth.guard';
+import { AuthGuard } from './theme/shared/_helpers/auth.guard';
 
 const routes: Routes = [
     {
         path: '',
         component: AdminComponent,
         // canActivateChild: [AuthGuard],
-        // canLoad: [AuthGuard],
+        canLoad: [AuthGuard],
         children: [
             {
                 path: '',

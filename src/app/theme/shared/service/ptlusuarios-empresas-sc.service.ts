@@ -39,26 +39,10 @@ export class PtlusuariosEmpresasScService {
     return this._usuariosEmpresas.asObservable();
   }
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-  }
-
   cargarRegistros() {
     console.log('Consultando y ordenando usuariosEmpresas del servidor...');
     const url = `${base_url}/usuarios-empresas-sc`;
-    return this.http.get(url, this.headers).pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => resp.usuariosEmpresas as PTLUsuaioEmpresasSCModel[]),
       tap((UsuariosEmpresasOrdenadas) => {
         console.log(`UsuariosEmpresas cargados: ${UsuariosEmpresasOrdenadas.length}`);

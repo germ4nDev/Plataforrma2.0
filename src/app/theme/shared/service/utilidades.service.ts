@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { v4 as uuidv4 } from 'uuid';
@@ -47,5 +48,11 @@ export class UtilidadesService {
       dias.push(index);
     }
     return dias;
+  }
+
+  public getRelacional(items: any[], itemsToCompare: any[], relationKey: string): any[] {
+    const relationValuesSet = new Set(itemsToCompare.map((item) => item[relationKey]));
+    const commonElements = items.filter((item) => relationValuesSet.has(item[relationKey]));
+    return commonElements;
   }
 }

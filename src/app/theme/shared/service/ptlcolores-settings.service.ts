@@ -21,22 +21,6 @@ export class PtlColoresSettingsService {
     private _localStorageService: LocalStorageService
 ) {}
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        'x-token': this.token
-      }
-    };
-  }
-
   getRegistros() {
     const url = `${base_url}/colores`;
     return this.http.get(url)

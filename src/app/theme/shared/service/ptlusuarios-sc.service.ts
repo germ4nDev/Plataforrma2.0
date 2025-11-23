@@ -40,26 +40,10 @@ export class PtlusuariosScService {
     return this._usuariosSC.asObservable();
   }
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-  }
-
   cargarRegistros() {
     console.log('Consultando y ordenando usuariosSC del servidor...');
     const url = `${base_url}/usuarios-sc`;
-    return this.http.get(url, this.headers).pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => resp.usuariosSC as PTLUsuarioSCModel[]),
       tap((RolesOrdenadas) => {
         console.log(`Roles cargados: ${RolesOrdenadas.length}`);

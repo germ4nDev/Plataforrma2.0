@@ -7,9 +7,12 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SocketService } from './sockets.service';
 import { LocalStorageService } from './local-storage.service';
-import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
 import { PtlusuariosRolesApService } from './ptlusuarios-roles-ap.service';
 import { UploadFilesService } from './upload-files.service';
+import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model';
+import { v4 as uuidv4 } from 'uuid';
+import { PtlusuariosScService } from './ptlusuarios-sc.service';
+import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
 const base_url = environment.apiUrl;
 
 @Injectable({
@@ -26,6 +29,7 @@ export class PTLUsuariosService {
     private socketService: SocketService,
     private _localStorageService: LocalStorageService,
     private _usuairosRolesService: PtlusuariosRolesApService,
+    private _usuairosSCService: PtlusuariosScService,
     private _uploadService: UploadFilesService
   ) {
     console.log('******* Servicio de usuarios iniciado correctamente');
@@ -40,23 +44,6 @@ export class PTLUsuariosService {
     });
   }
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        // 'x-token': this.token
-        'Content-Type': 'application/json'
-      }
-    };
-  }
-
   get usuarios$(): Observable<PTLUsuarioModel[]> {
     return this._registros.asObservable();
   }
@@ -64,7 +51,7 @@ export class PTLUsuariosService {
   cargarRegistros() {
     console.log('Consultando y ordenando usuarios del servidor...');
     const url = `${base_url}/usuarios`;
-    return this.http.get(url, this.headers).pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => resp.usuarios as PTLUsuarioModel[]),
       map((regs: PTLUsuarioModel[]) => {
         console.log('respuesta usuarios', regs);
@@ -77,7 +64,8 @@ export class PTLUsuariosService {
   }
 
   getUsuarios() {
-    return this.http.get<PTLUsuarioModel>(`${environment.apiUrl}/usuarios`).pipe(
+    const url = `${base_url}/usuarios/`;
+    return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('respuesta servicio', resp);
         // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -107,18 +95,39 @@ export class PTLUsuariosService {
     console.log('servicio usuarios', data);
     return this.http.post(url, data).pipe(
       map((resp: any) => {
+        this.crearUsuarioSCPlataforma(resp.usuario);
+
+        // this._usuairosRolesService.postUsuarioRole(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
+        return {
+          ok: true,
+          usurio: resp.usurio
+        };
+      })
+    );
+  }
+
+  crearUsuarioSCPlataforma(data: PTLUsuarioModel) {
+    const usuarioSC: PTLUsuarioSCModel = {
+      codigoUsuarioSC: uuidv4(),
+      codigoUsuario: data.codigoUsuario,
+      codigoSuscriptor: 'e1a8fa99-15db-479b-a0a4-9c2be72273c9',
+      estadoUsuario: true,
+      codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
+      fechaCreacion: new Date().toISOString()
+    };
+    const url = `${base_url}/usuarios-sc`;
+    console.log('servicio usuarios roles', data);
+    return this.http.post(url, usuarioSC).pipe(
+      map((resp: any) => {
         const usuarioRole: PTLUsuarioRoleAP = {
-          codigoUsuario: data.codigoUsuario,
+          codigoUsuarioSC: resp.usurioSC.codigoUsuarioSC,
+          codigoEmpresaSC: 'e1a8fa99-15db-479b-a0a4-9c2be72273e9',
           codigoRole: 'aa5901bc-9c7d-45e8-bf68-4a0a286e9b99',
           estadoUsuarioRole: true,
           codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
           fechaCreacion: new Date().toISOString()
         };
         this._usuairosRolesService.postUsuarioRole(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
-        return {
-          ok: true,
-          usurio: resp.usurio
-        };
       })
     );
   }

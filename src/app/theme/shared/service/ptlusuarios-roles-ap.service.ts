@@ -39,30 +39,13 @@ export class PtlusuariosRolesApService {
     return this._usuariosRoles.asObservable();
   }
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        // 'x-token': this.token
-        'Content-Type': 'application/json'
-      }
-    };
-  }
-
   cargarRegistros() {
     console.log('Consultando y ordenando usuariosRoles del servidor...');
     const url = `${base_url}/usuarios-roles`;
-    return this.http.get(url, this.headers).pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => resp.usuariosRoles as PTLUsuarioRoleAP[]),
       tap((RolesOrdenadas) => {
-        console.log(`Roles cargados: ${RolesOrdenadas.length}`);
+        console.log(`usuariosRoles cargados: ${RolesOrdenadas.length}`);
         this._usuariosRoles.next(RolesOrdenadas);
       })
     );

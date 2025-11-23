@@ -40,27 +40,10 @@ export class PTLRolesAPService {
     return this._roles.asObservable();
   }
 
-  get token(): string {
-    const current = this._localStorageService.getCurrentUserLocalStorage();
-    if (current.token !== '') {
-      return current.token || '';
-    }
-    return '';
-  }
-
-  get headers() {
-    return {
-      headers: {
-        // 'x-token': this.token
-        'Content-Type': 'application/json'
-      }
-    };
-  }
-
   cargarRegistros() {
     console.log('Consultando y ordenando roles del servidor...');
     const url = `${base_url}/roles`;
-    return this.http.get(url, this.headers).pipe(
+    return this.http.get(url).pipe(
       map((resp: any) => resp.roles as PTLRoleAPModel[]),
       map((roles: PTLRoleAPModel[]) => {
         return roles.sort((a: any, b: any) => a.nombreRole.localeCompare(b.nombreRole));

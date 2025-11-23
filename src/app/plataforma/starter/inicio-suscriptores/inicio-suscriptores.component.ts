@@ -1,28 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
-import { Component, OnInit } from '@angular/core';
-
-// project import
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute } from '@angular/router';
-
-// bootstrap import
+import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-
-// third party
 import { ColorPickerModule } from 'ngx-color-picker';
-import { Subscription, tap, catchError, of } from 'rxjs';
-// import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-// import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
-// import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { Subscription } from 'rxjs';
+import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
+import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model';
+import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
 import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
-import { PTLSuscriptoresService, PtlSuitesAPService, UploadFilesService, LocalStorageService } from 'src/app/theme/shared/service';
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-// import { environment } from 'src/environments/environment';
-
-// const base_url = environment.apiUrl;
+import {
+  PTLSuscriptoresService,
+  UploadFilesService,
+  LocalStorageService,
+  PtlusuariosScService,
+  PtlusuariosEmpresasScService,
+  PtlEmpresasScService
+} from 'src/app/theme/shared/service';
 
 @Component({
   selector: 'app-inicio-suscriptores',
@@ -31,16 +29,23 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   templateUrl: './inicio-suscriptores.component.html',
   styleUrl: './inicio-suscriptores.component.scss'
 })
-export class InicioSuscriptoresComponent implements OnInit {
+export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
   public suscCode: string = '';
-  suscriptoresSub?: Subscription;
   suscriptores: PTLSuscriptorModel[] = [];
   suscriptor: string = '';
+  subscriptions = new Subscription();
+  usuariosSC: PTLUsuarioSCModel[] = [];
+  empresasSC: PTLEmpresaSCModel[] = [];
+  usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
+  usuarioSC: PTLUsuarioSCModel = {} as PTLUsuarioSCModel;
+  usuarioEmpresaSC: PTLUsuaioEmpresasSCModel = {} as PTLUsuaioEmpresasSCModel;
 
   constructor(
     private route: ActivatedRoute,
     private _suscriptoresService: PTLSuscriptoresService,
-    private _suitesService: PtlSuitesAPService,
+    private _usuariosSCService: PtlusuariosScService,
+    private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
+    private _empresasSCService: PtlEmpresasScService,
     private _uploadService: UploadFilesService,
     private _localStorageService: LocalStorageService,
     private router: Router
@@ -50,43 +55,113 @@ export class InicioSuscriptoresComponent implements OnInit {
     //   this.suscriptor = this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '';
     //   console.log('datos del suscriptor', suscriptor);
     // } else {
-    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    // this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
     console.log('no hay suscriptor suscriptor');
     // }
   }
 
   ngOnInit(): void {
     console.log('ingresa a la plataforma');
-    this.consultarAplicaciones();
+    setTimeout(() => {
+    this.consultarSuscriptores();
+
+    }, 500);
   }
 
-  consultarAplicaciones() {
-    this.suscriptoresSub = this._suscriptoresService
-      .getSuscriptores()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            resp.suscriptores.forEach((susc: any) => {
-              // susc.imagenInicio = this._uploadService.getFilePath('suscriptores', susc.imagenInicio);
-              susc.logoSusucriptor = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', susc.logoSusucriptor);
-              //   susc.logoSusucriptor = `${base_url}/upload/${this.suscriptor}/suscriptores/${susc.logoSusucriptor}`;
-            });
-            console.log('suscriptores', resp.suscriptores);
-            this.suscriptores = resp.suscriptores;
-          }
-        }),
-        catchError((err) => {
-          console.error(err);
-          return of([]);
-        })
-      )
-      .subscribe();
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  consultarSuscriptores() {
+    this.subscriptions.add(
+      this._suscriptoresService.suscriptores$.subscribe({
+        next: (suscriptores: PTLUsuarioSCModel[]) => {
+          suscriptores.forEach((susc: any) => {
+            susc.logoSusucriptor = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', susc.logoSusucriptor);
+          });
+          this.suscriptores = suscriptores;
+          console.log('suscriptores:', this.suscriptores);
+          this.consultarUusuariosEmpresasSC();
+        },
+        error: (err) => {
+          console.error('Error al cargar los roles de suscriptores:', err);
+          this.usuarioSC = {} as PTLUsuarioSCModel;
+        }
+      })
+    );
+  }
+
+  consultarUusuariosSC() {
+    const user = this._localStorageService.getUsuarioLocalStorage();
+    console.log('&&&&&&&& usuariosSC');
+    this.subscriptions.add(
+      this._usuariosSCService._usuariosSC$.subscribe({
+        next: (usuariosSC: PTLUsuarioSCModel[]) => {
+          this.usuariosSC = usuariosSC;
+          this.usuarioSC = usuariosSC.filter((x) => x.codigoUsuario == user?.codigoUsuario)[0];
+          console.log('usuarioSC:', this.usuarioSC);
+          this.consultarUusuariosEmpresasSC();
+        },
+        error: (err) => {
+          console.error('Error al cargar los roles de usuariosSC:', err);
+          this.usuarioSC = {} as PTLUsuarioSCModel;
+        }
+      })
+    );
+  }
+
+  consultarEempresasSC() {
+    console.log('&&&&&&&& empresasSC');
+    this.subscriptions.add(
+      this._empresasSCService.empresasSC$.subscribe({
+        next: (empresasSC: PTLEmpresaSCModel[]) => {
+          this.empresasSC = empresasSC;
+          console.log('empresasSC:', this.empresasSC);
+          this.consultarUusuariosEmpresasSC();
+        },
+        error: (err) => {
+          console.error('Error al cargar los roles de usuariosSC:', err);
+          this.empresasSC = {} as PTLEmpresaSCModel[];
+        }
+      })
+    );
+  }
+
+  consultarUusuariosEmpresasSC() {
+    console.log('&&&&&&&& usuariosSC');
+    this.subscriptions.add(
+      this._usuariosEmpresasSCService._usuariosEmpresas$.subscribe({
+        next: (usuariosEmpresas: PTLUsuaioEmpresasSCModel[]) => {
+          this.usuariosEmpresas = usuariosEmpresas.filter((x) => x.codigoUsuarioSC == this.usuarioSC?.codigoUsuarioSC);
+          this.usuarioEmpresaSC = this.usuariosEmpresas[0];
+          console.log('-------------------usuariosEmpresas:', this.usuariosEmpresas);
+        },
+        error: (err) => {
+          console.error('Error al cargar los roles de usuariosEmpresas:', err);
+          this.usuariosEmpresas = {} as PTLUsuaioEmpresasSCModel[];
+        }
+      })
+    );
   }
 
   ingresarPlataforma(susc: PTLSuscriptorModel) {
-    //TODO Validar las suscriptores con los suscriptores y los usuarios
+    //TODO Validar las suscriptores y las empresas
+    const current = this._localStorageService.getCurrentUserLocalStorage();
+    if (this.usuariosEmpresas.length > 0) {
+      current.empresas = [];
+      this.usuariosEmpresas.forEach((empre: any) => {
+        const empresaData = this.empresasSC.filter((x) => x.codigoEmpresaSC === empre.codigoEmpresaSC)[0];
+        if (empresaData) {
+          const existe = current.empresas?.filter((x: { codigoEmpresaSC: string; }) => x.codigoEmpresaSC === empresaData.codigoEmpresaSC);
+          if (existe?.length === 0) {
+            current.empresas?.push(empresaData);
+          }
+        }
+      });
+    }
+    console.log('&&&&&&&&&&&&&&&&&&&& Current User Final', current);
     console.log('ingresar a', susc);
-    this._localStorageService.setSuscriptorLocalStorage(susc);
-    this.router.navigate(['/starter/inicio-aplicaciones']);
+    // this._localStorageService.setSuscriptorLocalStorage(susc);
+    // this.router.navigate(['/starter/inicio-aplicaciones']);
   }
 }
