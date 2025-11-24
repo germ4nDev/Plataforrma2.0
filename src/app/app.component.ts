@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
         window.scrollTo(0, 0);
       }
     });
-    const token = localStorage.getItem('token');
+    const token = this._localStorageService.getTokenLocalStorage();
     if (token) {
       console.log('AppComponent: Token detectado en carga, iniciando carga de datos...');
       this.loadProtectedData();

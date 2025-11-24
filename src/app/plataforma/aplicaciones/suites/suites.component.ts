@@ -90,6 +90,12 @@ export class SuitesComponent implements OnInit {
   }
 
   consultarSuitees(): void {
+    const suscriptor = this._localstorageService.getSuscriptorLocalStorage();
+    if (!suscriptor || !suscriptor.codigoSuscriptor) {
+      console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
+      return;
+    }
+    const codigoSuscriptor = suscriptor.codigoSuscriptor;
     this.registrosSub = this._registrosService
       .geSuitesAP()
       .pipe(
@@ -98,7 +104,7 @@ export class SuitesComponent implements OnInit {
             resp.suites.forEach((reg: any) => {
               reg.nomEstado = reg.estadoSuite ? 'Activo' : 'Inactivo';
               reg.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion;
-              reg.imagenInicio = this._uploadService.getFilePath('plataforma', 'suites', reg.imagenInicio);
+              reg.imagenInicio = this._uploadService.getFilePath(codigoSuscriptor, 'suites', reg.imagenInicio);
             });
             this.registros = resp.suites;
             this.registrosFiltrado = resp.suites;

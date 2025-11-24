@@ -79,7 +79,9 @@
             "ADMINBD": "Conexiones",
             "TICKETS": "Tickets",
             "SEGUIMIENTOS": "Seguimientos",
-            "ROLES": "Roles"
+            "ROLES": "Roles",
+            "ACTIVIDADES": "Actividades",
+            "ACTIVIDADROLES": "Actividades Roles"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notificaciones",

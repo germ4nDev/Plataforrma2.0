@@ -10,7 +10,7 @@ export class CurrentUserModel {
         public token?: string,
         public usuario?: PTLUsuarioModel,
         public roles?: PTLRoleAPModel[],
-        public empresas?: PTLEmpresaSCModel[],
-        public suscriptores?: PTLSuscriptorModel[]
+        public empresa?: PTLEmpresaSCModel,
+        public suscriptore?: PTLSuscriptorModel
     ) {}
  }

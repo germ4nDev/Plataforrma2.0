@@ -9,28 +9,37 @@ import { Observable, Subscription, of, BehaviorSubject, combineLatest } from 'rx
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { PtlactividadesService } from 'src/app/theme/shared/service/ptlactividades.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-
-import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
-import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service';
+import {
+  LocalStorageService,
+  PtlAplicacionesService,
+  PtllogActividadesService,
+  PtlmodulosApService,
+  PtlSuitesAPService,
+  UploadFilesService
+} from 'src/app/theme/shared/service';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import Swal from 'sweetalert2';
+import { PTLActividadModel } from 'src/app/theme/shared/_helpers/models/PTLActividades.model';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
 
 @Component({
-  selector: 'app-aplicaciones',
+  selector: 'app-actividades',
   standalone: true,
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
-  templateUrl: './aplicaciones.component.html',
-  styleUrl: './aplicaciones.component.scss'
+  templateUrl: './actividades.component.html',
+  styleUrl: './actividades.component.scss'
 })
-export class AplicacionesComponent implements OnInit, OnDestroy {
+export class ActividadesComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
   DataModel: BaseSessionModel = new BaseSessionModel();
   DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
@@ -42,22 +51,30 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
   subscriptions = new Subscription();
-  filtroCodigoSubject = new BehaviorSubject<string>('todos');
-  filtroNombreSubject = new BehaviorSubject<string>('todos');
+  filtroCodigoAplicacionSubject = new BehaviorSubject<string>('todos');
+  filtroCodigoSuiteSubject = new BehaviorSubject<string>('todos');
+  filtroCodigoModuloSubject = new BehaviorSubject<string>('todos');
+  filtroActividadSubject = new BehaviorSubject<string>('');
   filtroDescripcionSubject = new BehaviorSubject<string>('');
   filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-  aplicacionesTransformadas$: Observable<PTLAplicacionModel[]> = of([]);
-  aplicacionesFiltradas$: Observable<PTLAplicacionModel[]> = of([]);
+  actividadesTransformadas$: Observable<PTLActividadModel[]> = of([]);
+  actividadesFiltradas$: Observable<PTLActividadModel[]> = of([]);
+  actividades: PTLActividadModel[] = [];
   aplicaciones: PTLAplicacionModel[] = [];
+  suites: PTLSuiteAPModel[] = [];
+  modulos: PTLModuloAP[] = [];
 
   constructor(
     private router: Router,
     private translate: TranslateService,
     private _navigationService: NavigationService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _suitesService: PtlSuitesAPService,
+    private _modulosService: PtlmodulosApService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
-    private _aplicacionesService: PtlAplicacionesService,
+    private _actividadesService: PtlactividadesService,
     private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig;
@@ -67,11 +84,14 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
-    this.setupAplicacionesStream();
+    this.consultarAplicaciones();
+    this.consultarSuites();
+    this.consultarModulos();
+    this.setupActividadesStream();
     this.subscriptions.add(
-      this._aplicacionesService.cargarAplicaciones().subscribe(
-        () => console.log('Aplicaciones cargadas y guardadas en el servicio'),
-        (err) => console.error('Error al cargar aplicaciones:', err)
+      this._actividadesService.cargarRegistros().subscribe(
+        () => console.log('Actividades cargadas y guardadas en el servicio'),
+        (err) => console.error('Error al cargar actividades:', err)
       )
     );
   }
@@ -80,76 +100,121 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  setupAplicacionesStream(): void {
-    const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
-    if (!suscriptor || !suscriptor.codigoSuscriptor) {
-      console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
-      return;
-    }
-    const codigoSuscriptor = suscriptor.codigoSuscriptor;
-    this.aplicacionesTransformadas$ = this._aplicacionesService.aplicaciones$.pipe(
-      switchMap((apps: PTLAplicacionModel[]) => {
-        if (!apps) return of([]);
-        const transformedApps = apps.map((app: any) => {
-          app.nomEstado = app.estadoAplicacion ? 'Activo' : 'Inactivo';
-          app.captura = this._uploadService.getFilePath(codigoSuscriptor, 'aplicaciones', app.imagenInicio);
-          return app as PTLAplicacionModel;
+  consultarAplicaciones() {
+    this.subscriptions.add(
+      this._aplicacionesService.getAplicaciones().subscribe((resp: any) => {
+        if (resp.ok) {
+          this.aplicaciones = resp.aplicaciones;
+          console.log('Todos las aplicaciones', this.aplicaciones);
+          return;
+        }
+      })
+    );
+  }
+
+  consultarSuites() {
+    this.subscriptions.add(
+      this._suitesService.geSuitesAP().subscribe((resp: any) => {
+        if (resp.ok) {
+          this.suites = resp.suites;
+          console.log('Todos las suites', this.suites);
+          return;
+        }
+      })
+    );
+  }
+
+  consultarModulos() {
+    this.subscriptions.add(
+      this._modulosService.getRegistros().subscribe((resp: any) => {
+        if (resp.ok) {
+          this.modulos = resp.modulos;
+          console.log('Todos las modulos', this.modulos);
+          return;
+        }
+      })
+    );
+  }
+
+  setupActividadesStream(): void {
+    this.actividadesTransformadas$ = this._actividadesService.actividades$.pipe(
+      switchMap((acts: PTLActividadModel[]) => {
+        if (!acts) return of([]);
+        const transformedActs = acts.map((act: any) => {
+          act.nomEstado = act.estadoActividad ? 'Activo' : 'Inactivo';
+          return act as PTLActividadModel;
         });
-        this.aplicaciones = transformedApps;
-        return of(transformedApps);
+        this.actividades = transformedActs;
+        return of(transformedActs);
       }),
       catchError((err) => {
-        console.error('Error en el stream de aplicaciones:', err);
+        console.error('Error en el stream de actividades:', err);
         return of([]);
       })
     );
 
-    this.aplicacionesFiltradas$ = combineLatest([
-      this.aplicacionesTransformadas$.pipe(startWith([])), // Usa la fuente de datos transformada
-      this.filtroCodigoSubject,
-      this.filtroNombreSubject,
+    this.actividadesFiltradas$ = combineLatest([
+      this.actividadesTransformadas$.pipe(startWith([])),
+      this.filtroCodigoAplicacionSubject,
+      this.filtroCodigoSuiteSubject,
+      this.filtroCodigoModuloSubject,
+      this.filtroActividadSubject,
       this.filtroDescripcionSubject,
       this.filtroEstadoSubject
     ]).pipe(
-      map(([apps, codigo, nombre, descripcion, estado]) => {
-        let filteredApps = apps;
+      map(([acts, codigoAplicacion, codigoSuite, codigoModulo, descripcion, estado]) => {
+        let filteredActs = acts;
 
-        if (codigo !== 'todos') {
-          filteredApps = filteredApps.filter((app) => app.codigoAplicacion === codigo);
+        if (codigoAplicacion !== 'todos') {
+          filteredActs = filteredActs.filter((act) => act.codigoAplicacion === codigoAplicacion);
         }
 
-        if (nombre !== 'todos') {
-          filteredApps = filteredApps.filter((app) => app.nombreAplicacion === nombre);
+        if (codigoSuite !== 'todos') {
+          filteredActs = filteredActs.filter((act) => act.codigoSuite === codigoSuite);
+        }
+
+        if (codigoModulo !== 'todos') {
+          filteredActs = filteredActs.filter((act) => act.codigoModulo === codigoModulo);
         }
 
         if (estado !== 'todos') {
           const estadoBoolean = estado === 'true';
-          filteredApps = filteredApps.filter((app) => app.estadoAplicacion === estadoBoolean);
+          filteredActs = filteredActs.filter((act) => act.estadoActividad === estadoBoolean);
         }
 
         if (descripcion) {
           const textoFiltro = descripcion.toLowerCase();
-          filteredApps = filteredApps.filter((app) => (app.descripcionAplicacion || '').toLowerCase().includes(textoFiltro));
+          filteredActs = filteredActs.filter((act) => (act.descripcion || '').toLowerCase().includes(textoFiltro));
         }
 
-        return filteredApps;
+        return filteredActs;
       })
     );
   }
 
-  onFiltroCodigoChangeClick(evento: any): void {
+  onFiltroCodigoAplicacionChangeClick(evento: any): void {
     const value = evento.target.value;
-    this.filtroCodigoSubject.next(value);
+    this.filtroCodigoAplicacionSubject.next(value);
+  }
+
+  onFiltroCodigoSuiteChangeClick(evento: any): void {
+    const value = evento.target.value;
+    this.filtroCodigoSuiteSubject.next(value);
+  }
+
+  onFiltroCodigoModuloChangeClick(evento: any): void {
+    const value = evento.target.value;
+    this.filtroCodigoModuloSubject.next(value);
   }
 
   onFiltroNombreChangeClick(evento: any): void {
     const value = evento.target.value;
-    this.filtroNombreSubject.next(value);
+    this.filtroCodigoSuiteSubject.next(value);
   }
 
   onFiltroDescripcionChangeClick(evento: any): void {
     const value = evento.target.value;
-    this.filtroDescripcionSubject.next(value);
+    this.filtroCodigoModuloSubject.next(value);
   }
 
   onFiltroEstadoChangeClick(evento: any): void {
@@ -194,15 +259,15 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     }
   ];
 
-  OnNuevaAplicaicionClick(): void {
-    this.router.navigate(['aplicaciones/gestion-aplicacion'], { queryParams: { regId: 'nuevo' } });
+  OnNuevaActividadClick(): void {
+    this.router.navigate(['actividades/gestion-aplicacion'], { queryParams: { regId: 'nuevo' } });
   }
 
-  OnEditarAplicaicionClick(id: string): void {
-    this.router.navigate(['aplicaciones/gestion-aplicacion'], { queryParams: { regId: id } });
+  OnEditarActividadClick(id: string): void {
+    this.router.navigate(['actividades/gestion-aplicacion'], { queryParams: { regId: id } });
   }
 
-  OnEliminarAplicaicionClick(id: string): void {
+  OnEliminarActividadClick(id: string): void {
     console.log('id aplicacion', id);
     Swal.fire({
       title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
@@ -213,7 +278,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this._aplicacionesService.eliminarAplicacion(id).subscribe({
+        this._actividadesService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
             const logData = {
               codigoTipoLog: '',

@@ -25,11 +25,11 @@ export class LocalStorageService {
   public suite: any = {};
   public modulo: any = {};
   public suscriptor: any = {};
+  public empresa: any = {};
   public FormRegistro: any;
   public lang: string = 'en';
   public themeSettings: any;
   public roles: PTLRoleAPModel[] = [];
-  public empresas: PTLEmpresaSCModel[] = [];
 
   constructor() {}
 
@@ -155,8 +155,7 @@ export class LocalStorageService {
     }
     try {
       const navSettJson = JSON.parse(navSetts);
-      console.log('============ navSettJson', navSettJson);
-      const obj = navSettJson.suscriptor;
+      const obj: PTLSuscriptorModel = navSettJson.suscriptor;
       return obj;
     } catch (e) {
       console.error('Error al parsear JSON desde sessionStorage:', e);
@@ -243,7 +242,7 @@ export class LocalStorageService {
       ok: currentUser.ok,
       token: currentUser.token,
       roles: currentUser.roles,
-      empresas: currentUser.empresas,
+      empresa: currentUser.empresa,
       usuario: usuario
     };
     this.setCurrentUserLocalStorage(currentUser);
@@ -258,7 +257,7 @@ export class LocalStorageService {
       ok: currentUser.ok,
       token: currentUser.token,
       roles: currentUser.roles,
-      empresas: currentUser.empresas,
+      empresa: currentUser.empresa,
       usuario: currentUser.usuario
     };
     this.setCurrentUserLocalStorage(currentUser);
@@ -272,25 +271,25 @@ export class LocalStorageService {
       ok: currentUser.ok,
       token: currentUser.token,
       roles: roles,
-      empresas: currentUser.empresas,
+      empresa: currentUser.empresa,
       usuario: currentUser.usuario
     };
     this.setCurrentUserLocalStorage(currentUser);
     this.roles = roles;
   }
 
-  setEmpresasLocalStorage(empresas: PTLEmpresaSCModel[]) {
+  setEmpresasLocalStorage(empresa: PTLEmpresaSCModel) {
     let currentUser = this.getCurrentUserLocalStorage();
     currentUser = {
       suscriptor: currentUser.suscriptor,
       ok: currentUser.ok,
       token: currentUser.token,
       roles: currentUser.roles,
-      empresas: empresas,
+      empresa: empresa,
       usuario: currentUser.usuario
     };
     this.setCurrentUserLocalStorage(currentUser);
-    this.empresas = empresas;
+    this.empresa = empresa;
   }
 
   setTokenLocalStorage(token: any) {
@@ -300,6 +299,7 @@ export class LocalStorageService {
       ok: currentUser.ok,
       token: token,
       roles: currentUser.roles,
+      empresa: currentUser.empresa,
       usuario: currentUser.usuario
     };
     this.setCurrentUserLocalStorage(currentUser);

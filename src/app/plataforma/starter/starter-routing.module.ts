@@ -14,6 +14,10 @@ const routes: Routes = [
         path: 'inicio-suites',
         loadComponent: () => import('./inicio-suites/inicio-suites.component').then((m) => m.InicioSuitesComponent)
       },
+            {
+        path: 'inicio-empresas',
+        loadComponent: () => import('./inicio-empresas/inicio-empresas.component').then((m) => m.InicioEmpresasComponent)
+      },
       {
         path: 'inicio-suscriptores',
         loadComponent: () => import('./inicio-suscriptores/inicio-suscriptores.component').then((m) => m.InicioSuscriptoresComponent)

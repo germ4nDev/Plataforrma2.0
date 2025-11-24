@@ -114,11 +114,6 @@ export class UsuariosComponent implements OnInit {
       type: 'text'
     },
     {
-      name: 'correoUsuario',
-      header: 'USUARIOS.CORREO',
-      type: 'text'
-    },
-    {
       name: 'userNameUsuario',
       header: 'USUARIOS.USERNAME',
       type: 'text'
@@ -131,6 +126,11 @@ export class UsuariosComponent implements OnInit {
   ];
 
   columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'correoUsuario',
+      header: 'USUARIOS.CORREO',
+      type: 'text'
+    },
     {
       name: 'descripcionUsuario',
       header: 'USUARIOS.DESCRIPTION',

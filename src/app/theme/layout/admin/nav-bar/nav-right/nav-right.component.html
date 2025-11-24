@@ -1,15 +1,17 @@
 <div class="navbar d-flex justify-content-between align-items-center px-3 py-2">
     <ul class="navbar-nav d-flex align-items-center gap-3 flex-row ms-auto">
         <li>
-            <i class="icon feather icon-grid icon-lg icon-style" title="Aplicaciones" (click)="homeScreen()"
+            <i class="icon feather icon-monitor icon-lg icon-style" title="{{'PLATAFORMA.NAVBAR.EMPRESAS' | translate }}" (click)="empresasScreen()"
                 style="cursor: pointer;"></i>
         </li>
-
         <li>
-            <i class="icon feather icon-home icon-lg icon-style" title="HomeSuite" (click)="suiteScreen()"
+            <i class="icon feather icon-grid icon-lg icon-style" title="{{'PLATAFORMA.NAVBAR.APLICACIONES' | translate }}" (click)="aplicacionesScreen()"
                 style="cursor: pointer;"></i>
         </li>
-
+        <li>
+            <i class="icon feather icon-home icon-lg icon-style" title="{{'PLATAFORMA.NAVBAR.SUITES' | translate }}" (click)="suitesScreen()"
+                style="cursor: pointer;"></i>
+        </li>
         <li>
             <div class="dropdown" ngbDropdown placement="auto">
                 <a ngbDropdownToggle href="javascript:">
@@ -71,7 +73,6 @@
                 </div>
             </div>
         </li>
-
         <li (click)="this.visibleUserList = !this.visibleUserList">
             <div class="dropdown">
                 <a href="javascript:" class="displayChatbox dropdown-toggle">
@@ -80,11 +81,9 @@
                 </a>
             </div>
         </li>
-
         <li>
             <app-language-selector></app-language-selector>
         </li>
-
         <li>
             <div class="dropdown drp-user" ngbDropdown placement="auto">
                 <a href="javascript:" ngbDropdownToggle>
@@ -99,8 +98,7 @@
                     </div>
                     <ul class="pro-body">
                         <li><a href="javascript:" class="dropdown-item" (click)="perfilUsuario()"><i
-                                    class="feather icon-user"></i> {{
-                                'PLATAFORMA.NAVBAR.PROFILE' | translate }}</a></li>
+                                    class="feather icon-user"></i> {{'PLATAFORMA.NAVBAR.PROFILE' | translate }}</a></li>
                         <li><a href="javascript:" class="dropdown-item"><i class="feather icon-mail"></i> {{
                                 'PLATAFORMA.NAVBAR.MESSAGES' | translate }}</a></li>
                         <li><a href="javascript:" class="dropdown-item" (click)="lockscreen()"><i

@@ -8,45 +8,42 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { Subscription } from 'rxjs';
 import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model';
-import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
+// import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model';
 import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
 import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
 import { LanguageSelectorComponent } from 'src/app/theme/shared/components/language-selector/language-selector.component';
 import {
-  PTLSuscriptoresService,
   UploadFilesService,
   LocalStorageService,
   PtlusuariosScService,
   PtlusuariosEmpresasScService,
-  PtlEmpresasScService
+  PtlEmpresasScService,
+  UtilidadesService
 } from 'src/app/theme/shared/service';
 
 @Component({
-  selector: 'app-inicio-suscriptores',
+  selector: 'app-inicio-empresas',
   standalone: true,
   imports: [NgbDropdownModule, RouterModule, ColorPickerModule, SharedModule, LanguageSelectorComponent, FullScreenSliderComponent],
-  templateUrl: './inicio-suscriptores.component.html',
-  styleUrl: './inicio-suscriptores.component.scss'
+  templateUrl: './inicio-empresas.component.html',
+  styleUrl: './inicio-empresas.component.scss'
 })
-export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
+export class InicioEmpresasComponent implements OnInit, OnDestroy {
   public suscCode: string = '';
-  suscriptores: PTLSuscriptorModel[] = [];
-  suscriptor: string = '';
   subscriptions = new Subscription();
   usuariosSC: PTLUsuarioSCModel[] = [];
-  empresasSC: PTLEmpresaSCModel[] = [];
-  usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
   usuarioSC: PTLUsuarioSCModel = {} as PTLUsuarioSCModel;
-  usuarioEmpresaSC: PTLUsuaioEmpresasSCModel = {} as PTLUsuaioEmpresasSCModel;
+  empresasSC: PTLEmpresaSCModel[] = [];
+  usuariosEmpresasSC: PTLUsuaioEmpresasSCModel[] = [];
 
   constructor(
-    private _suscriptoresService: PTLSuscriptoresService,
     private _usuariosSCService: PtlusuariosScService,
     private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
     private _empresasSCService: PtlEmpresasScService,
     private _uploadService: UploadFilesService,
     private _localStorageService: LocalStorageService,
+    private _utilidadesService: UtilidadesService,
     private router: Router
   ) {
     // const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
@@ -62,8 +59,7 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     console.log('ingresa a la plataforma');
     setTimeout(() => {
-    this.consultarSuscriptores();
-
+      this.consultarRegistros();
     }, 500);
   }
 
@@ -71,21 +67,28 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  consultarSuscriptores() {
+  consultarRegistros() {
+    const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
+    if (!suscriptor || !suscriptor.codigoSuscriptor) {
+      console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
+      this.empresasSC = [];
+      this.usuarioSC = {} as PTLUsuarioSCModel;
+      return;
+    }
+    const codigoSuscriptor = suscriptor.codigoSuscriptor;
     this.subscriptions.add(
-      this._suscriptoresService.suscriptores$.subscribe({
-        next: (suscriptores: PTLUsuarioSCModel[]) => {
-          suscriptores.forEach((susc: any) => {
-            susc.logoSusucriptor = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', susc.logoSusucriptor);
+      this._empresasSCService.empresasSC$.subscribe({
+        next: (empresas: PTLEmpresaSCModel[]) => {
+          empresas.forEach((susc: any) => {
+            susc.logoEmpresa = this._uploadService.getFilePath(codigoSuscriptor, 'empresas', susc.logoEmpresa);
           });
-          this.suscriptores = suscriptores;
-          console.log('suscriptores:', this.suscriptores);
+          this.empresasSC = empresas;
+          console.log('suscriptores:', this.empresasSC);
           this.consultarUusuariosEmpresasSC();
-          this.consultarEempresasSC();
         },
         error: (err) => {
           console.error('Error al cargar los roles de suscriptores:', err);
-          this.usuarioSC = {} as PTLUsuarioSCModel;
+          this.empresasSC = [];
         }
       })
     );
@@ -110,60 +113,34 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
     );
   }
 
-  consultarEempresasSC() {
-    console.log('&&&&&&&& empresasSC');
-    this.subscriptions.add(
-      this._empresasSCService.empresasSC$.subscribe({
-        next: (empresasSC: PTLEmpresaSCModel[]) => {
-          this.empresasSC = empresasSC;
-          console.log('****************empresasSC:', this.empresasSC);
-          this.consultarUusuariosEmpresasSC();
-        },
-        error: (err) => {
-          console.error('Error al cargar los roles de usuariosSC:', err);
-          this.empresasSC = {} as PTLEmpresaSCModel[];
-        }
-      })
-    );
-  }
-
   consultarUusuariosEmpresasSC() {
     console.log('&&&&&&&& usuariosSC');
+    this.usuariosEmpresasSC = [];
     this.subscriptions.add(
       this._usuariosEmpresasSCService._usuariosEmpresas$.subscribe({
         next: (usuariosEmpresas: PTLUsuaioEmpresasSCModel[]) => {
-          this.usuariosEmpresas = usuariosEmpresas.filter((x) => x.codigoUsuarioSC == this.usuarioSC?.codigoUsuarioSC);
-          this.usuarioEmpresaSC = this.usuariosEmpresas[0];
-          console.log('-------------------usuariosEmpresas:', this.usuariosEmpresas);
+          usuariosEmpresas.forEach((usuario) => {
+            if (this.usuarioSC && usuario.codigoUsuarioSC === this.usuarioSC.codigoUsuarioSC) {
+              this.usuariosEmpresasSC.push(usuario);
+            }
+          });
+          //   this.usuariosEmpresasSC = usuariosEmpresas;
+          console.log('-------------------usuariosEmpresas:', this.usuariosEmpresasSC);
         },
         error: (err) => {
           console.error('Error al cargar los roles de usuariosEmpresas:', err);
-          this.usuariosEmpresas = {} as PTLUsuaioEmpresasSCModel[];
+          this.usuariosEmpresasSC = [];
         }
       })
     );
   }
 
-  ingresarPlataforma(susc: PTLSuscriptorModel) {
-    console.log('empresas suscrioptor', this.empresasSC);
+  ingresarPlataforma(empre: PTLEmpresaSCModel) {
     const current = this._localStorageService.getCurrentUserLocalStorage();
-    //TODO Validar las suscriptores y la vigencia de la licencia
-    // if (this.usuariosEmpresas.length > 0) {
-    //   current.empresas = [];
-    //   this.usuariosEmpresas.forEach((empre: any) => {
-    //     const empresaData = this.empresasSC.filter((x) => x.codigoEmpresaSC === empre.codigoEmpresaSC)[0];
-    //     if (empresaData) {
-    //       const existe = current.empresas?.filter((x: { codigoEmpresaSC: string; }) => x.codigoEmpresaSC === empresaData.codigoEmpresaSC);
-    //       if (existe?.length === 0) {
-    //         current.empresas?.push(empresaData);
-    //       }
-    //     }
-    //   });
-    // }
+    current.empresa = empre;
     console.log('&&&&&&&&&&&&&&&&&&&& Current User Final', current);
-    console.log('ingresar a', susc);
-    // this._localStorageService.setEmpresasLocalStorage(current.empresas || []);
-    this._localStorageService.setSuscriptorLocalStorage(susc);
-    this.router.navigate(['/starter/inicio-empresas']);
+    console.log('ingresar a', empre);
+    this._localStorageService.setEmpresasLocalStorage(empre);
+    this.router.navigate(['/starter/inicio-aplicaciones']);
   }
 }

@@ -221,9 +221,9 @@ export class GestionModuloComponent implements OnInit {
 
   btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
-    if (!form.valid) {
-      return;
-    }
+    // if (!form.valid) {
+    //   return;
+    // }
     if (form.value.hijos == true) {
       form.value.codigoPadre = '0';
       form.value.rutaModulo = '';

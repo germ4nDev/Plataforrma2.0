@@ -252,8 +252,9 @@ export class GestionUsuarioComponent implements OnInit {
         if (this.FormRegistro.claveUsuario == '') {
           this.FormRegistro.claveUsuario = this.claveUsuario;
         }
+        console.log('************* fotoUsuario', this.FormRegistro.fotoUsuario);
         registroData.claveUsuario = this.FormRegistro.claveUsuario;
-        registroData.fotoUsuario = this.fileName;
+        registroData.fotoUsuario = this.FormRegistro.fotoUsuario;
         registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
         registroData.fechaModificacion = new Date().toISOString();
         this._registrosService.actualizarUsuarioDatos(registroData).subscribe({

@@ -178,11 +178,15 @@ export class NavRightComponent implements DoCheck, OnInit {
     this.router.navigate(['/starter/lock-screen']);
   }
 
-  homeScreen() {
+  empresasScreen() {
+    this.router.navigate(['/starter/inicio-empresas']);
+  }
+
+  aplicacionesScreen() {
     this.router.navigate(['/starter/inicio-aplicaciones']);
   }
 
-  suiteScreen() {
+  suitesScreen() {
     this.router.navigate(['/starter/inicio-suites']);
   }
 
