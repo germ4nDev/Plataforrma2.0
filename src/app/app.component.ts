@@ -6,13 +6,15 @@ import {
   LocalStorageService,
   PtlAplicacionesService,
   PtlEmpresasScService,
+  PtlmodulosApService,
   PTLRolesAPService,
+  PtlSuitesAPService,
   PTLSuscriptoresService,
   PtlusuariosEmpresasScService,
   PtlusuariosRolesApService,
   PtlusuariosScService
 } from './theme/shared/service';
-import { PtlactividadesService } from './theme/shared/service/ptlactividades.service';
+import { PtlActividadesService } from './theme/shared/service/ptlactividades.service';
 import { PtlactividadesRolesService } from './theme/shared/service/ptlactividades-roles.service';
 
 @Component({
@@ -26,9 +28,11 @@ export class AppComponent implements OnInit {
     private themeStorage: ThemeStorageService,
     private _authenticationService: AuthenticationService,
     private _localStorageService: LocalStorageService,
-    private _actividadesService: PtlactividadesService,
+    private _actividadesService: PtlActividadesService,
     private _actividadesRolesService: PtlactividadesRolesService,
     private _aplicacionesService: PtlAplicacionesService,
+    private _modulosService: PtlmodulosApService,
+    private _suitesService: PtlSuitesAPService,
     private _usuariosRolesService: PtlusuariosRolesApService,
     private _usuariosSCService: PtlusuariosScService,
     private _usuariosEmpresasService: PtlusuariosEmpresasScService,
@@ -68,6 +72,14 @@ export class AppComponent implements OnInit {
     this._aplicacionesService.cargarAplicaciones().subscribe(
       () => console.log('** Aplicaciones cargadas y guardadas en el servicio'),
       (err) => console.error('Error al cargar aplicaciones:', err)
+    );
+    this._modulosService.cargarRegistros().subscribe(
+      () => console.log('** Modulos cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar modulos:', err)
+    );
+    this._suitesService.cargarRegistros().subscribe(
+      () => console.log('** Suites cargadas y guardadas en el servicio'),
+      (err) => console.error('Error al cargar suites:', err)
     );
     this._rolesAPService.cargarRegistros().subscribe(
       () => console.log('** Roles cargadas y guardadas en el servicio'),

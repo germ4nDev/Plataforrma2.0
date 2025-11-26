@@ -13,7 +13,7 @@ const base_url = environment.apiUrl;
 @Injectable({
   providedIn: 'root'
 })
-export class PtlactividadesService {
+export class PtlActividadesService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
   private _actividades = new BehaviorSubject<PTLActividadModel[]>([]);
   private _actividadesChange = new Subject<any>();

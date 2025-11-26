@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { LocalStorageService } from './local-storage.service';
+import { SocketService } from './sockets.service';
 
 const base_url = environment.apiUrl;
 
@@ -14,11 +15,28 @@ const base_url = environment.apiUrl;
 })
 export class PtlmodulosApService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
+  private _modulos = new BehaviorSubject<PTLModuloAP[]>([]);
+  private _modulosChange = new Subject<any>();
+  modulosChange$ = this._modulosChange.asObservable();
 
   constructor(
     private http: HttpClient,
-    private _localStorageService: LocalStorageService
-  ) {}
+    private socketService: SocketService,
+    private _localstorageService: LocalStorageService
+  ) {
+    this.socketService.listen('aplicaciones-actualizadas').subscribe({
+      next: (payload) => {
+        console.log('Evento de Socket.IO recibido:', payload.msg);
+        this._modulosChange.next(payload);
+        this.cargarRegistros().subscribe();
+      },
+      error: (err) => console.error('Error en la escucha de sockets:', err)
+    });
+  }
+
+  get modulos$(): Observable<PTLModuloAP[]> {
+    return this._modulos.asObservable();
+  }
 
   getRegistros() {
     // console.log('4');
@@ -31,6 +49,21 @@ export class PtlmodulosApService {
           ok: true,
           modulos: resp.modulos
         };
+      })
+    );
+  }
+
+  cargarRegistros() {
+    console.log('Consultando y ordenando modulos del servidor...');
+    const url = `${base_url}/modulos`;
+    return this.http.get(url).pipe(
+      map((resp: any) => resp.modulos as PTLModuloAP[]),
+      map((modulos: PTLModuloAP[]) => {
+        return modulos.sort((a: any, b: any) => a.nombreModulo.localeCompare(b.nombreModulo));
+      }),
+      tap((modulosOrdenadas) => {
+        console.log('modulos servicio', modulosOrdenadas);
+        this._modulos.next(modulosOrdenadas);
       })
     );
   }

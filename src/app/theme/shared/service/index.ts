@@ -53,3 +53,5 @@ export * from './ptltextos-id.service';
 export * from './ptlcolores-settings.service';
 export * from './ptlsliders-inicio.service';
 export * from './ptlusuarios-empresas-sc.service';
+export * from './ptlactividades.service';
+export * from './ptlactividades-roles.service';

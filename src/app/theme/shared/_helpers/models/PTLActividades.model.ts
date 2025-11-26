@@ -14,5 +14,8 @@ export class PTLActividadModel {
     public codigoUsuarioModificacion?: string,
     public fechaModificacion?: string,
     public nomEstado?: string,
+    public nomAplicacion?: string,
+    public nomSuite?: string,
+    public nomModulo?: string,
   ) {}
 }

@@ -12,7 +12,7 @@ import { GradientConfig } from 'src/app/app-config';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { PtlactividadesService } from 'src/app/theme/shared/service/ptlactividades.service';
+import { PtlActividadesService } from 'src/app/theme/shared/service/ptlactividades.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
@@ -21,8 +21,7 @@ import {
   PtlAplicacionesService,
   PtllogActividadesService,
   PtlmodulosApService,
-  PtlSuitesAPService,
-  UploadFilesService
+  PtlSuitesAPService
 } from 'src/app/theme/shared/service';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
@@ -56,7 +55,7 @@ export class ActividadesComponent implements OnInit, OnDestroy {
   filtroCodigoModuloSubject = new BehaviorSubject<string>('todos');
   filtroActividadSubject = new BehaviorSubject<string>('');
   filtroDescripcionSubject = new BehaviorSubject<string>('');
-  filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  filtroEstadoSubject = new BehaviorSubject<string>('');
 
   actividadesTransformadas$: Observable<PTLActividadModel[]> = of([]);
   actividadesFiltradas$: Observable<PTLActividadModel[]> = of([]);
@@ -74,8 +73,7 @@ export class ActividadesComponent implements OnInit, OnDestroy {
     private _modulosService: PtlmodulosApService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
-    private _actividadesService: PtlactividadesService,
-    private _uploadService: UploadFilesService
+    private _actividadesService: PtlActividadesService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -87,7 +85,9 @@ export class ActividadesComponent implements OnInit, OnDestroy {
     this.consultarAplicaciones();
     this.consultarSuites();
     this.consultarModulos();
-    this.setupActividadesStream();
+    setTimeout(() => {
+      this.setupActividadesStream();
+    }, 500);
     this.subscriptions.add(
       this._actividadesService.cargarRegistros().subscribe(
         () => console.log('Actividades cargadas y guardadas en el servicio'),
@@ -102,9 +102,9 @@ export class ActividadesComponent implements OnInit, OnDestroy {
 
   consultarAplicaciones() {
     this.subscriptions.add(
-      this._aplicacionesService.getAplicaciones().subscribe((resp: any) => {
-        if (resp.ok) {
-          this.aplicaciones = resp.aplicaciones;
+      this._aplicacionesService.cargarAplicaciones().subscribe((resp: any) => {
+        if (resp.length >= 0) {
+          this.aplicaciones = resp;
           console.log('Todos las aplicaciones', this.aplicaciones);
           return;
         }
@@ -114,9 +114,9 @@ export class ActividadesComponent implements OnInit, OnDestroy {
 
   consultarSuites() {
     this.subscriptions.add(
-      this._suitesService.geSuitesAP().subscribe((resp: any) => {
-        if (resp.ok) {
-          this.suites = resp.suites;
+      this._suitesService.cargarRegistros().subscribe((resp: any) => {
+        if (resp.length >= 0) {
+          this.suites = resp;
           console.log('Todos las suites', this.suites);
           return;
         }
@@ -126,10 +126,10 @@ export class ActividadesComponent implements OnInit, OnDestroy {
 
   consultarModulos() {
     this.subscriptions.add(
-      this._modulosService.getRegistros().subscribe((resp: any) => {
-        if (resp.ok) {
-          this.modulos = resp.modulos;
-          console.log('Todos las modulos', this.modulos);
+      this._modulosService.cargarRegistros().subscribe((resp: any) => {
+        if (resp.length >= 0) {
+          const hijos = resp.filter((mod: PTLModuloAP) => mod.codigoPadre !== '0');
+          this.modulos = hijos;
           return;
         }
       })
@@ -142,6 +142,9 @@ export class ActividadesComponent implements OnInit, OnDestroy {
         if (!acts) return of([]);
         const transformedActs = acts.map((act: any) => {
           act.nomEstado = act.estadoActividad ? 'Activo' : 'Inactivo';
+          act.nomAplicacion = this.aplicaciones.find((app) => app.codigoAplicacion === act.codigoAplicacion)?.nombreAplicacion || '';
+          act.nomSuite = this.suites.find((suite) => suite.codigoSuite === act.codigoSuite)?.nombreSuite || '';
+          act.nomModulo = this.modulos.find((mod) => mod.codigoModulo === act.codigoModulo)?.nombreModulo || '';
           return act as PTLActividadModel;
         });
         this.actividades = transformedActs;
@@ -164,7 +167,6 @@ export class ActividadesComponent implements OnInit, OnDestroy {
     ]).pipe(
       map(([acts, codigoAplicacion, codigoSuite, codigoModulo, descripcion, estado]) => {
         let filteredActs = acts;
-
         if (codigoAplicacion !== 'todos') {
           filteredActs = filteredActs.filter((act) => act.codigoAplicacion === codigoAplicacion);
         }
@@ -177,7 +179,7 @@ export class ActividadesComponent implements OnInit, OnDestroy {
           filteredActs = filteredActs.filter((act) => act.codigoModulo === codigoModulo);
         }
 
-        if (estado !== 'todos') {
+        if (estado) {
           const estadoBoolean = estado === 'true';
           filteredActs = filteredActs.filter((act) => act.estadoActividad === estadoBoolean);
         }
@@ -186,7 +188,6 @@ export class ActividadesComponent implements OnInit, OnDestroy {
           const textoFiltro = descripcion.toLowerCase();
           filteredActs = filteredActs.filter((act) => (act.descripcion || '').toLowerCase().includes(textoFiltro));
         }
-
         return filteredActs;
       })
     );
@@ -224,54 +225,59 @@ export class ActividadesComponent implements OnInit, OnDestroy {
 
   columnasAplicaciopnes: ColumnMetadata[] = [
     {
-      name: 'captura',
-      header: 'APLICACIONES.FOTO',
-      type: 'image',
+      name: 'nomAplicacion',
+      header: 'ACTIVIDADES.NOMAPLICACION',
+      type: 'text',
       isSortable: false
     },
     {
-      name: 'codigoAplicacion',
-      header: 'APLICACIONES.CODE',
+      name: 'nomSuite',
+      header: 'ACTIVIDADES.NOMSUITE',
       type: 'text'
     },
     {
-      name: 'nombreAplicacion',
-      header: 'APLICACIONES.NAME',
+      name: 'nomModulo',
+      header: 'ACTIVIDADES.NOMMODULO',
       type: 'text'
     },
     {
-      name: 'nomEstado',
-      header: 'APLICACIONES.STATUS',
+      name: 'actividad',
+      header: 'ACTIVIDADES.ACTIVIDAD',
       type: 'text'
     }
   ];
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
-      name: 'descripcionAplicacion',
-      header: 'APLICACIONES.DESCRIPTION',
+      name: 'codigoActividad',
+      header: 'ACTIVIDADES.CODIGOACTIVIDAD',
       type: 'text'
     },
     {
-      name: 'captura',
-      header: 'APLICACIONES.IMAGENINICIO',
-      type: 'capture'
+      name: 'nomEstado',
+      header: 'ACTIVIDADES.NOMESTADO',
+      type: 'text'
+    },
+    {
+      name: 'descripcion',
+      header: 'ACTIVIDADES.DESCRIPCION',
+      type: 'text'
     }
   ];
 
-  OnNuevaActividadClick(): void {
-    this.router.navigate(['actividades/gestion-aplicacion'], { queryParams: { regId: 'nuevo' } });
+  OnNuevoRegistroClick(): void {
+    this.router.navigate(['actividades/gestion-actividad'], { queryParams: { regId: 'nuevo' } });
   }
 
-  OnEditarActividadClick(id: string): void {
-    this.router.navigate(['actividades/gestion-aplicacion'], { queryParams: { regId: id } });
+  OnEditarRegistroClick(id: string): void {
+    this.router.navigate(['actividades/gestion-actividad'], { queryParams: { regId: id } });
   }
 
-  OnEliminarActividadClick(id: string): void {
+  OnEliminarRegistroClick(id: string): void {
     console.log('id aplicacion', id);
     Swal.fire({
-      title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-      text: this.translate.instant('APLICACIONES.ELIMINARTEXTO'),
+      title: this.translate.instant('ACTIVIDADES.ELIMINARTITULO'),
+      text: this.translate.instant('ACTIVIDADES.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -283,10 +289,10 @@ export class ActividadesComponent implements OnInit, OnDestroy {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+              descripcionLog: this.translate.instant('ACTIVIDADES.ELIMINAREXITOSA')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            Swal.fire(this.translate.instant('ACTIVIDADES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             // Nota: Aquí el servicio PtlAplicacionesService debería emitir el nuevo listado actualizado
             // Asumiendo que el servicio hace esto, el stream se actualizará automáticamente.
           },
@@ -294,14 +300,31 @@ export class ActividadesComponent implements OnInit, OnDestroy {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR')
+              descripcionLog: this.translate.instant('ACTIVIDADES.ELIMINARERROR')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error');
+            Swal.fire('Error', this.translate.instant('ACTIVIDADES.ELIMINARERROR'), 'error');
           }
         });
       }
     });
+  }
+
+  OnViewRegistroClick(id: any) {
+    this.router.navigate(['actividades/gestion-actividad'], { queryParams: { regId: id } });
+  }
+
+  OnOption1Click(id: any) {
+    console.log('ejecutando opcion 1 Seguimientos', event);
+    this.router.navigate(['actividades/gestion-actividad'], { queryParams: { regId: id } });
+  }
+
+  OnOption2Click(event: any) {
+    console.log('ejecutando opcion 2', event);
+  }
+
+  OnOption3Click(event: any) {
+    console.log('ejecutando opcion 3', event);
   }
 
   toggleNav(): void {

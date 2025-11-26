@@ -1213,3 +1213,55 @@ Estilos del Título Principal
         color 0.3s ease,
         box-shadow 0.3s ease;
 }
+
+/*
+==============================
+Estilos para botones outline
+==============================
+*/
+/* --- Definición del Color Hex Personalizado (Ejemplo: Morado Intenso) --- */
+/* Cambia #6A1B9A por el código HEX que desees */
+// :root {
+//     --custom-color-main: #6A1B9A;
+//     /* Color principal */
+//     --custom-color-hover-text: #FFFFFF;
+//     /* Color del texto al hacer hover (blanco) */
+// }
+
+.btn-outline-custom {
+    /* Variables de Bootstrap sobrescritas */
+    /* Estado Normal: Usa --custom-color-main */
+    --bs-btn-color: var(--custom-color-main, #000);
+    /* Establece un fallback si no se define */
+    --bs-btn-border-color: var(--custom-color-main, #000);
+
+    /* Estado Hover: Usa --custom-color-main para el fondo y borde */
+    --bs-btn-hover-bg: var(--custom-color-main, #000);
+    --bs-btn-hover-border-color: var(--custom-color-main, #000);
+    --bs-btn-hover-color: var(--custom-color-hover-text, #fff);
+
+    /* Estado Activo / Focus: Usa la versión RGB para la sombra de enfoque */
+    --bs-btn-active-bg: var(--custom-color-main, #000);
+    --bs-btn-active-border-color: var(--custom-color-main, #000);
+    --bs-btn-active-color: var(--custom-color-hover-text, #fff);
+    --bs-btn-focus-shadow-rgb: var(--custom-color-rgb, 0, 0, 0);
+
+    /* Aplicación de estilos base */
+    color: var(--bs-btn-color);
+    border-color: var(--bs-btn-border-color);
+    background-color: transparent;
+    /* Se mantiene la transición original de Bootstrap */
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-outline-custom:hover {
+    color: var(--bs-btn-hover-color);
+    background-color: var(--bs-btn-hover-bg);
+    border-color: var(--bs-btn-hover-border-color);
+}
+
+.btn-outline-custom:focus,
+.btn-outline-custom.active {
+    /* Usa la variable --bs-btn-focus-shadow-rgb que es dinámica */
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
+}

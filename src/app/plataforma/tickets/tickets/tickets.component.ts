@@ -385,10 +385,6 @@ export class TicketsComponent implements OnInit {
     this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: id } });
   }
 
-  OnViewRegistroClick(id: any) {
-    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: id } });
-  }
-
   OnEliminarRegistroClick(id: any) {
     Swal.fire({
       title: this.translate.instant('TICKETS.ELIMINARTITULO'),
@@ -441,6 +437,10 @@ export class TicketsComponent implements OnInit {
         });
       }
     });
+  }
+
+  OnViewRegistroClick(id: any) {
+    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: id } });
   }
 
   OnOption1Click(event: any) {

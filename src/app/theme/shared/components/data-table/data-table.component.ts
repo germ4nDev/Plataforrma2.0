@@ -5,7 +5,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import * as XLSX from 'xlsx';
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  AfterViewInit,
+  Renderer2
+} from '@angular/core';
 import { ColumnMetadata } from '../../_helpers/models/ColumnMetadata.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -16,7 +29,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./data-table.component.scss'],
   imports: [CommonModule, TranslateModule, FormsModule]
 })
-export class DatatableComponent implements OnInit, OnChanges {
+export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
+  @ViewChildren('customButton', { read: ElementRef }) customButtons!: QueryList<ElementRef>;
+
   @Input() data: any[] = [];
   @Input() metadataColumns: any[] = [];
   @Input() metadataDetailColumns: any[] = [];
@@ -66,7 +81,20 @@ export class DatatableComponent implements OnInit, OnChanges {
   public sortDirection: 'asc' | 'desc' = 'asc';
   public registroId: number | null = null;
 
-  constructor(private sanitizer: DomSanitizer) {}
+  public option1ButtonColor: string = '#007bff';
+  public option2ButtonColor: string = '#28a745';
+  public option3ButtonColor: string = '#dc3545';
+
+  constructor(
+    private sanitizer: DomSanitizer,
+    private renderer: Renderer2
+  ) {}
+
+  ngAfterViewInit(): void {
+    // Llama a la lógica SOLO cuando los elementos están listos
+    console.log('************* aca hijuepuetaaaaaaaaa');
+    this.setButtonColors();
+  }
 
   safeHtml(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
@@ -78,6 +106,7 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.processDataAndColumns();
+    this.ngAfterViewInit();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -159,30 +188,30 @@ export class DatatableComponent implements OnInit, OnChanges {
     };
   }
 
-//   private inferColumnType(key: string, value: any): ColumnMetadata['type'] {
-//     if (value === null || value === undefined) {
-//       return 'unknown';
-//     }
+  //   private inferColumnType(key: string, value: any): ColumnMetadata['type'] {
+  //     if (value === null || value === undefined) {
+  //       return 'unknown';
+  //     }
 
-//     const lowerKey = key.toLowerCase();
-//     if (lowerKey.includes('avatar') || lowerKey.includes('foto') || lowerKey.includes('image') || lowerKey.includes('capture')) {
-//       return 'avatar';
-//     }
+  //     const lowerKey = key.toLowerCase();
+  //     if (lowerKey.includes('avatar') || lowerKey.includes('foto') || lowerKey.includes('image') || lowerKey.includes('capture')) {
+  //       return 'avatar';
+  //     }
 
-//     if (typeof value === 'number' || (typeof value === 'string' && !isNaN(Number(value)) && value.trim() !== '')) {
-//       return 'number';
-//     }
+  //     if (typeof value === 'number' || (typeof value === 'string' && !isNaN(Number(value)) && value.trim() !== '')) {
+  //       return 'number';
+  //     }
 
-//     if (typeof value === 'string' && !isNaN(Date.parse(value)) && value.length >= 8) {
-//       return 'date';
-//     }
+  //     if (typeof value === 'string' && !isNaN(Date.parse(value)) && value.length >= 8) {
+  //       return 'date';
+  //     }
 
-//     return 'text';
-//   }
+  //     return 'text';
+  //   }
 
-//   private formatHeader(key: string): string {
-//     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
-//   }
+  //   private formatHeader(key: string): string {
+  //     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+  //   }
 
   applyFiltersAndPagination(): void {
     let tempFilteredData = this.data.filter((row) => {
@@ -357,5 +386,43 @@ export class DatatableComponent implements OnInit, OnChanges {
 
   toggleDetails(row: any): void {
     this.registroId = this.registroId === row[this.idField] ? null : row[this.idField];
+  }
+
+  hexToRgb(hex: any) {
+    if (!hex) return '0, 0, 0';
+    // Quita el '#'
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (m: any, r: any, g: any, b: any) {
+      return r + r + g + g + b + b;
+    });
+
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+    // Retorna los componentes R, G, B separados por coma
+    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '0, 0, 0';
+  }
+
+  setButtonColors() {
+    this.customButtons.forEach((elRef: ElementRef) => {
+      const button: HTMLElement = elRef.nativeElement;
+      console.log('datos del hijueputa boton', button);
+
+      // 1. Obtener el color HEX del atributo data-hex
+      const hexColor = button.getAttribute('data-hex');
+
+      // El color del texto al hacer hover es opcional (por defecto es blanco, #FFFFFF)
+      const hoverTextColor = button.getAttribute('data-text-hover') || '#FFFFFF';
+
+      if (hexColor) {
+        // 2. Convertir el HEX a RGB para el focus shadow
+        const rgbColor = this.hexToRgb(hexColor);
+
+        // 3. Asignar las variables CSS en el atributo 'style' del botón
+        // Usamos Renderer2 para manipular el DOM de manera segura en Angular
+        this.renderer.setStyle(button, '--custom-color-main', hexColor);
+        this.renderer.setStyle(button, '--custom-color-rgb', rgbColor);
+        this.renderer.setStyle(button, '--custom-color-hover-text', hoverTextColor);
+      }
+    });
   }
 }

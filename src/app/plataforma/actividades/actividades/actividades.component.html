@@ -43,7 +43,7 @@
                         <small>{{ 'ACTIVIDADES.FILTROS.FILTROMODULO' | translate }}</small>
                         <!-- El cambio en el select ahora solo notifica al BehaviorSubject -->
                         <select (change)="onFiltroCodigoModuloChangeClick($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODLOS' | translate }}</option>
                             <!-- Las opciones se cargan del array local 'aplicaciones' -->
                             <option [value]="mod.codigoModulo" *ngFor="let mod of modulos">
                                 {{ mod.nombreModulo }}
@@ -82,14 +82,30 @@
             <div class="card-body">
                 <!-- CRÍTICO: Se usa el async pipe con el Observable aplicacionesFiltradas$ -->
                 <ng-container *ngIf="actividadesFiltradas$ | async as dataFiltrada">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoAplicacion'"
-                        [tableTitle]="'ACTIVIDADES.TITLE' | translate" [metadataColumns]="columnasAplicaciopnes"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showDeleteButton]="true" [newButtonLabel]="'ACTIVIDADES.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevaActividadClick()"
-                        (editRecord)="OnEditarActividadClick($event)"
-                        (deleteRecord)="OnEliminarActividadClick($event)">
+                    <app-data-table
+                        [data]="dataFiltrada"
+                        [idField]="'codigoAplicacion'"
+                        [tableTitle]="'ACTIVIDADES.TITLE' | translate"
+                        [newButtonLabel]="'ACTIVIDADES.NEW' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        [metadataColumns]="columnasAplicaciopnes"
+                        [metadataDetailColumns]="columnasDetailRegistros"
+                        [showDetail]="true"
+                        [showActions]="true"
+                        [showNewButton]="true"
+                        [showViewButton]="false"
+                        [showEditButton]="true"
+                        [showDeleteButton]="true"
+                        [showOption1Button]="true"
+                        [showOption2Button]="false"
+                        [showOption3Button]="false"
+                        (viewRecord)="OnViewRegistroClick($event)"
+                        (newRecord)="OnNuevoRegistroClick()"
+                        (editRecord)="OnEditarRegistroClick($event)"
+                        (deleteRecord)="OnEliminarRegistroClick($event)"
+                        (option1Record)="OnOption1Click($event)"
+                        (option2Record)="OnOption2Click($event)"
+                        (option3Record)="OnOption3Click($event)">
                     </app-data-table>
                 </ng-container>
 
