@@ -13,9 +13,9 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
-  ViewChildren,
-  QueryList,
-  ElementRef,
+//   ViewChildren,
+//   QueryList,
+//   ElementRef,
   AfterViewInit,
   Renderer2
 } from '@angular/core';
@@ -30,7 +30,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   imports: [CommonModule, TranslateModule, FormsModule]
 })
 export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
-  @ViewChildren('customButton', { read: ElementRef }) customButtons!: QueryList<ElementRef>;
+//   @ViewChildren('customButton', { read: ElementRef }) customButtons!: QueryList<ElementRef>;
 
   @Input() data: any[] = [];
   @Input() metadataColumns: any[] = [];
@@ -93,7 +93,6 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   ngAfterViewInit(): void {
     // Llama a la lógica SOLO cuando los elementos están listos
     console.log('************* aca hijuepuetaaaaaaaaa');
-    this.setButtonColors();
   }
 
   safeHtml(html: string): SafeHtml {
@@ -107,6 +106,7 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnInit(): void {
     this.processDataAndColumns();
     this.ngAfterViewInit();
+    // this.setButtonColors();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -403,26 +403,22 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   setButtonColors() {
-    this.customButtons.forEach((elRef: ElementRef) => {
-      const button: HTMLElement = elRef.nativeElement;
-      console.log('datos del hijueputa boton', button);
+    // this.customButtons.forEach((elRef: ElementRef) => {
+    //   const button: HTMLElement = elRef.nativeElement;
+    //   console.log('datos del hijueputa boton', button);
 
-      // 1. Obtener el color HEX del atributo data-hex
-      const hexColor = button.getAttribute('data-hex');
+    //   const hexColor = button.getAttribute('data-hex');
 
-      // El color del texto al hacer hover es opcional (por defecto es blanco, #FFFFFF)
-      const hoverTextColor = button.getAttribute('data-text-hover') || '#FFFFFF';
+    //   const hoverTextColor = button.getAttribute('data-text-hover') || '#FFFFFF';
 
-      if (hexColor) {
-        // 2. Convertir el HEX a RGB para el focus shadow
-        const rgbColor = this.hexToRgb(hexColor);
-
-        // 3. Asignar las variables CSS en el atributo 'style' del botón
-        // Usamos Renderer2 para manipular el DOM de manera segura en Angular
-        this.renderer.setStyle(button, '--custom-color-main', hexColor);
-        this.renderer.setStyle(button, '--custom-color-rgb', rgbColor);
-        this.renderer.setStyle(button, '--custom-color-hover-text', hoverTextColor);
-      }
-    });
+    //   if (hexColor) {
+    //     const rgbColor = this.hexToRgb(hexColor);
+    //   console.log('ex hex color del boton', hexColor);
+    //   console.log('ex rgb color del boton', rgbColor);
+    //     this.renderer.setStyle(button, '--custom-color-main', hexColor);
+    //     this.renderer.setStyle(button, '--custom-color-rgb', rgbColor);
+    //     this.renderer.setStyle(button, '--custom-color-hover-text', hoverTextColor);
+    //   }
+    // });
   }
 }

@@ -119,27 +119,27 @@
                                 </ng-container>
                             </td>
                             <td style="text-align: center; white-space: nowrap;" *ngIf="showActions">
-                                <button #customButton id="#btnView" *ngIf="showViewButton" class="btn-outline-custom" [attr.data-hex]="option1ButtonColor"
+                                <button id="#btnView" *ngIf="showViewButton" class="dt-option-btn dt-option-btn--archive"
                                     (click)="onView(row)" title="{{ 'PLATAFORMA.DATATABLE.VIEW' | translate }}">
                                     <i class="feather icon-eye"></i>
                                 </button>
-                                <button #customButton id="btnEdit" *ngIf="showEditButton" class="btn-outline-custom" [attr.data-hex]="option3ButtonColor"
+                                <button id="btnEdit" *ngIf="showEditButton" class="dt-option-btn dt-option-btn--success"
                                     (click)="onEdit(row)" title="{{ 'PLATAFORMA.DATATABLE.EDIT' | translate }}">
                                     <i class="feather icon-edit"></i>
                                 </button>
-                                <button #customButton id="btnDel" *ngIf="showDeleteButton" class="btn-outline-custom" [attr.data-hex]="option1ButtonColor"
+                                <button id="btnDel" *ngIf="showDeleteButton" class="dt-option-btn dt-option-btn--archive"
                                     (click)="onDelete(row)" title="{{ 'PLATAFORMA.DATATABLE.DELETE' | translate }}">
                                     <i class="feather icon-trash"></i>
                                 </button>
-                                <button #customButton id="btnOp1" *ngIf="showOption1Button" class="btn-outline-custom" [attr.data-hex]="option3ButtonColor"
+                                <button id="btnOp1" *ngIf="showOption1Button" class="dt-option-btn dt-option-btn--archive"
                                     (click)="onOption1(row)" title="{{ 'PLATAFORMA.DATATABLE.DELETE' | translate }}">
                                     <i class="feather icon-file"></i>
                                 </button>
-                                <button #customButton id="btnOp2" *ngIf="showOption2Button" class="btn-outline-custom" [attr.data-hex]="option1ButtonColor"
+                                <button id="btnOp2" *ngIf="showOption2Button" class="dt-option-btn dt-option-btn--archive"
                                     (click)="onOption2(row)" title="{{ 'PLATAFORMA.DATATABLE.DELETE' | translate }}">
                                     <i class="feather icon-trash"></i>
                                 </button>
-                                <button #customButton id="btnOp3" *ngIf="showOption3Button" class="btn-outline-custom" [attr.data-hex]="option2ButtonColor"
+                                <button id="btnOp3" *ngIf="showOption3Button" class="dt-option-btn dt-option-btn--archive"
                                     (click)="onOption3(row)" title="{{ 'PLATAFORMA.DATATABLE.DELETE' | translate }}">
                                     <i class="feather icon-trash"></i>
                                 </button>
