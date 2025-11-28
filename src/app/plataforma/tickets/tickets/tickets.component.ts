@@ -69,6 +69,9 @@ export class TicketsComponent implements OnInit {
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   suscPlataforma: string = '';
 
+colorOpcion1 = '#6f42c1';
+  letraOpcion1 = 'R';
+
   constructor(
     private router: Router,
     private translate: TranslateService,

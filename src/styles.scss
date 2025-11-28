@@ -57,6 +57,10 @@
 @import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
 @import '../node_modules/angular-calendar/css/angular-calendar.css';
 
+@import './datatables_buttons.scss';
+
+/* El resto de tu código SCSS... */
+
 // Colores por defecto para el tema claro
 :root {
     --background-color: #f8f9fa;
@@ -313,9 +317,13 @@ body.dark-theme {
     }
 
     .dataTables_paginate .paginate_button.current {
-        background-color: #66b5ff !important;
+        background-color: #1ffc02 !important;
         color: #8a8f94 !important;
         border-color: #66b5ff !important;
+    }
+
+    .dataTables_paginate .paginate_button.active {
+        border-color: #f8280c !important;
     }
 
     .dataTables_info {
@@ -1212,147 +1220,4 @@ Estilos del Título Principal
         background-color 0.3s ease,
         color 0.3s ease,
         box-shadow 0.3s ease;
-}
-
-/*
-==============================
-Estilos para botones outline
-==============================
-*/
-/* --- Definición del Color Hex Personalizado (Ejemplo: Morado Intenso) --- */
-/* Cambia #6A1B9A por el código HEX que desees */
-// :root {
-//     --custom-color-main: #6A1B9A;
-//     /* Color principal */
-//     --custom-color-hover-text: #FFFFFF;
-//     /* Color del texto al hacer hover (blanco) */
-// }
-
-.btn-outline-custom {
-    /* Variables de Bootstrap sobrescritas */
-    /* Estado Normal: Usa --custom-color-main */
-    --bs-btn-color: var(--custom-color-main, #000);
-    /* Establece un fallback si no se define */
-    --bs-btn-border-color: var(--custom-color-main, #000);
-
-    /* Estado Hover: Usa --custom-color-main para el fondo y borde */
-    --bs-btn-hover-bg: var(--custom-color-main, #000);
-    --bs-btn-hover-border-color: var(--custom-color-main, #000);
-    --bs-btn-hover-color: var(--custom-color-hover-text, #fff);
-
-    /* Estado Activo / Focus: Usa la versión RGB para la sombra de enfoque */
-    --bs-btn-active-bg: var(--custom-color-main, #000);
-    --bs-btn-active-border-color: var(--custom-color-main, #000);
-    --bs-btn-active-color: var(--custom-color-hover-text, #fff);
-    --bs-btn-focus-shadow-rgb: var(--custom-color-rgb, 0, 0, 0);
-
-    /* Aplicación de estilos base */
-    color: var(--bs-btn-color);
-    border-color: var(--bs-btn-border-color);
-    background-color: transparent;
-    /* Se mantiene la transición original de Bootstrap */
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.btn-outline-custom:hover {
-    color: var(--bs-btn-hover-color);
-    background-color: var(--bs-btn-hover-bg);
-    border-color: var(--bs-btn-hover-border-color);
-}
-
-.btn-outline-custom:focus,
-.btn-outline-custom.active {
-    /* Usa la variable --bs-btn-focus-shadow-rgb que es dinámica */
-    box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
-}
-
-@mixin btn-outline-color($color-base) {
-    // 1. Estilos Base (Idle State)
-    color: $color-base; // El texto es del color base
-    background-color: transparent; // Fondo transparente
-    border-color: $color-base; // Borde del color base
-
-    // Asegura una transición suave al pasar el ratón (hover)
-    transition:
-        color 0.15s ease-in-out,
-        background-color 0.15s ease-in-out,
-        border-color 0.15s ease-in-out,
-        box-shadow 0.15s ease-in-out;
-
-    // 2. Estilos al pasar el ratón (Hover State)
-    &:hover {
-        color: #ffffff; // Texto blanco en hover
-        background-color: $color-base; // El fondo se rellena con el color base
-        border-color: $color-base; // El borde se mantiene igual
-        // Puedes agregar una pequeña sombra si quieres
-        box-shadow: 0 4px 6px -1px rgba($color-base, 0.2), 0 2px 4px -2px rgba($color-base, 0.2);
-    }
-
-    // 3. Estilos al hacer clic o mantener presionado (Active State)
-    &:active {
-        color: #ffffff;
-        background-color: darken($color-base, 10%); // Un poco más oscuro que el color base
-        border-color: darken($color-base, 10%);
-    }
-
-    // 4. Estilos Deshabilitados (Disabled State)
-    &:disabled {
-        pointer-events: none;
-        opacity: 0.65;
-    }
-
-    .dt-option-btn {
-    // Estilos comunes que todo botón debe tener (padding, fuente, bordes)
-    display: inline-block;
-    font-weight: 600; // Semi-bold
-    line-height: 1.5;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    user-select: none;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    border-radius: 0.45rem; // Bordes redondeados
-    border: 1px solid transparent; // Inicialmente transparente
-
-    // Estilo al enfocarse con teclado
-    &:focus {
-        outline: 0;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); // Un box-shadow simple
-    }
-}
-
-// ----------------------------------------------------
-// 2. Modificadores con Colores Personalizados
-// ----------------------------------------------------
-
-// Botón de Éxito (Ver/Check) -> Color Verde (Ejemplo: #28A745)
-.dt-option-btn--success {
-    @include btn-outline-color(#28A745);
-}
-
-// Botón de Advertencia (Editar/Modificar) -> Color Naranja (Ejemplo: #FFC107)
-.dt-option-btn--warning {
-    @include btn-outline-color(#FFC107);
-}
-
-// Botón de Peligro (Eliminar) -> Color Rojo (Ejemplo: #DC3545)
-.dt-option-btn--danger {
-    @include btn-outline-color(#DC3545);
-}
-
-// Botón de Información (Detalles) -> Color Azul (Ejemplo: #007BFF)
-.dt-option-btn--info {
-    @include btn-outline-color(#007BFF);
-}
-
-// ----------------------------------------------------
-// 3. Puedes crear un modificador directamente con un nuevo color
-// ----------------------------------------------------
-
-// Un color personalizado para una acción específica de la Datatable (por ejemplo, "Archivar")
-.dt-option-btn--archive {
-    // Usamos el color #6F42C1 (un púrpura)
-    @include btn-outline-color(#6F42C1);
-}
 }

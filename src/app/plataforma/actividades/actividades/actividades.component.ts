@@ -64,6 +64,9 @@ export class ActividadesComponent implements OnInit, OnDestroy {
   suites: PTLSuiteAPModel[] = [];
   modulos: PTLModuloAP[] = [];
 
+  colorOpcion1 = '#28a745';
+  letraOpcion1 = 'R';
+
   constructor(
     private router: Router,
     private translate: TranslateService,
@@ -317,14 +320,6 @@ export class ActividadesComponent implements OnInit, OnDestroy {
   OnOption1Click(id: any) {
     console.log('ejecutando opcion 1 Seguimientos', event);
     this.router.navigate(['actividades/gestion-actividad'], { queryParams: { regId: id } });
-  }
-
-  OnOption2Click(event: any) {
-    console.log('ejecutando opcion 2', event);
-  }
-
-  OnOption3Click(event: any) {
-    console.log('ejecutando opcion 3', event);
   }
 
   toggleNav(): void {

@@ -13,9 +13,9 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
-//   ViewChildren,
-//   QueryList,
-//   ElementRef,
+  //   ViewChildren,
+  //   QueryList,
+  //   ElementRef,
   AfterViewInit,
   Renderer2
 } from '@angular/core';
@@ -30,7 +30,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   imports: [CommonModule, TranslateModule, FormsModule]
 })
 export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
-//   @ViewChildren('customButton', { read: ElementRef }) customButtons!: QueryList<ElementRef>;
+  //   @ViewChildren('customButton', { read: ElementRef }) customButtons!: QueryList<ElementRef>;
 
   @Input() data: any[] = [];
   @Input() metadataColumns: any[] = [];
@@ -46,6 +46,22 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() backButtonLabel: string = 'Regresar';
   @Input() buttonsClass: string = 'btn btn-primary';
 
+  @Input() colorOpcion1: string = '#007bff';
+  @Input() colorOpcion2: string = '#007bff';
+  @Input() colorOpcion3: string = '#007bff';
+  @Input() colorOpcion4: string = '#007bff';
+  @Input() colorOpcion5: string = '#007bff';
+  @Input() tooltipOption1: string = '';
+  @Input() tooltipOpcion2: string = '';
+  @Input() tooltipOpcion3: string = '';
+  @Input() tooltipOpcion4: string = '';
+  @Input() tooltipOpcion5: string = '';
+  @Input() letraOpcion1: string = 'O';
+  @Input() letraOpcion2: string = 'O';
+  @Input() letraOpcion3: string = 'O';
+  @Input() letraOpcion4: string = 'O';
+  @Input() letraOpcion5: string = 'O';
+
   @Input() showDetail: boolean = false;
   @Input() showSearchBox: boolean = true;
   @Input() showAvatar: boolean = false;
@@ -59,6 +75,9 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() showOption1Button: boolean = false;
   @Input() showOption2Button: boolean = false;
   @Input() showOption3Button: boolean = false;
+  @Input() showOption4Button: boolean = false;
+  @Input() showOption5Button: boolean = false;
+  @Input() showOption6Button: boolean = false;
 
   @Output() backRecord = new EventEmitter<void>();
   @Output() viewRecord = new EventEmitter<void>();
@@ -69,6 +88,9 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   @Output() option1Record = new EventEmitter<void>();
   @Output() option2Record = new EventEmitter<void>();
   @Output() option3Record = new EventEmitter<void>();
+  @Output() option4Record = new EventEmitter<void>();
+  @Output() option5Record = new EventEmitter<void>();
+  @Output() option6Record = new EventEmitter<void>();
 
   public finalColumns: ColumnMetadata[] = [];
   public filteredData: any[] = [];
@@ -366,6 +388,18 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
     this.option3Record.emit(row[this.idField]);
   }
 
+  onOption4(row: any): void {
+    this.option4Record.emit(row[this.idField]);
+  }
+
+  onOption5(row: any): void {
+    this.option5Record.emit(row[this.idField]);
+  }
+
+  onOption6(row: any): void {
+    this.option6Record.emit(row[this.idField]);
+  }
+
   onExcelExport(): void {
     this.excelExport.emit();
     const exportData = this.filteredData.map((row) => {
@@ -406,11 +440,8 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
     // this.customButtons.forEach((elRef: ElementRef) => {
     //   const button: HTMLElement = elRef.nativeElement;
     //   console.log('datos del hijueputa boton', button);
-
     //   const hexColor = button.getAttribute('data-hex');
-
     //   const hoverTextColor = button.getAttribute('data-text-hover') || '#FFFFFF';
-
     //   if (hexColor) {
     //     const rgbColor = this.hexToRgb(hexColor);
     //   console.log('ex hex color del boton', hexColor);

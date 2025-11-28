@@ -83,6 +83,10 @@ const routes: Routes = [
         loadChildren: () => import('./plataforma/logs/logs.module').then((module) => module.LogsModule)
       },
       {
+        path: 'websites',
+        loadChildren: () => import('./plataforma/websites/websites.module').then((module) => module.WebsitesModule)
+      },
+      {
         path: 'maintenance',
         loadChildren: () => import('./plataforma/maintenance/maintenance.module').then((module) => module.MaintenanceModule)
       }

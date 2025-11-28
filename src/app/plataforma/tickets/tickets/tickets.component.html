@@ -105,15 +105,14 @@
                     [showEditButton]="true"
                     [showDeleteButton]="true"
                     [showOption1Button]="true"
-                    [showOption2Button]="false"
-                    [showOption3Button]="false"
+                    [colorOpcion1]="colorOpcion1"
+                    [tooltipOption1]="'TICKETS.REQUES' | translate"
+                    [letraOpcion1]="letraOpcion1"
                     (viewRecord)="OnViewRegistroClick($event)"
                     (newRecord)="OnNuevoRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)"
                     (deleteRecord)="OnEliminarRegistroClick($event)"
-                    (option1Record)="OnOption1Click($event)"
-                    (option2Record)="OnOption2Click($event)"
-                    (option3Record)="OnOption3Click($event)">
+                    (option1Record)="OnOption1Click($event)">
                 </app-data-table>
             </div>
         </div>

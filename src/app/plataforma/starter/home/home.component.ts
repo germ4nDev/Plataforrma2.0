@@ -58,6 +58,10 @@ export class HomeComponent implements OnInit {
     this.hasFiltersSlot = true;
   }
 
+    ingresarQplusWeb(): void {
+    this.router.navigate(['/websites/qplus']);
+  }
+
   toggleNav(): void {
     this.toggleSidebar.emit();
   }
