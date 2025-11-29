@@ -58,6 +58,8 @@ export class ThemeService {
 
   loadThemeSettings(): void {
     const savedSettings = this._loclaStorageService.getThemeSettings();
+          console.log('***********savedSettings', savedSettings);
+
     if (savedSettings) {
       try {
         this.isDarkTheme.next(savedSettings.isDarkTheme);
@@ -114,6 +116,11 @@ export class ThemeService {
   toggleDarkTheme(): void {
     const newTheme = !this.isDarkTheme.value;
     this.isDarkTheme.next(newTheme);
+    this.saveThemeSettings();
+  }
+
+  setDarkTheme(isDark: boolean): void {
+    this.isDarkTheme.next(isDark);
     this.saveThemeSettings();
   }
 }

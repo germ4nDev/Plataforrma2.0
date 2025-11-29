@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { ThemeStorageService } from './theme/shared/service/theme-storage.service';
 import {
   AuthenticationService,
   LocalStorageService,
@@ -12,7 +11,8 @@ import {
   PTLSuscriptoresService,
   PtlusuariosEmpresasScService,
   PtlusuariosRolesApService,
-  PtlusuariosScService
+  PtlusuariosScService,
+  ThemeService
 } from './theme/shared/service';
 import { PtlActividadesService } from './theme/shared/service/ptlactividades.service';
 import { PtlactividadesRolesService } from './theme/shared/service/ptlactividades-roles.service';
@@ -25,7 +25,7 @@ import { PtlactividadesRolesService } from './theme/shared/service/ptlactividade
 export class AppComponent implements OnInit {
   constructor(
     private router: Router,
-    private themeStorage: ThemeStorageService,
+    private themeService: ThemeService,
     private _authenticationService: AuthenticationService,
     private _localStorageService: LocalStorageService,
     private _actividadesService: PtlActividadesService,
@@ -47,11 +47,17 @@ export class AppComponent implements OnInit {
         window.scrollTo(0, 0);
       }
     });
+    const themeSettings = this._localStorageService.getThemeSettings();
+    if (themeSettings) {
+      this.themeService.setDarkTheme(themeSettings.isDarkTheme);
+    }
     const token = this._localStorageService.getTokenLocalStorage();
     if (token) {
       console.log('AppComponent: Token detectado en carga, iniciando carga de datos...');
       this.loadProtectedData();
-    } else {this.router.navigate(['autenticacion/login']);}
+    } else {
+      this.router.navigate(['autenticacion/login']);
+    }
     this._authenticationService.isLoggedIn$.subscribe((isLoggedIn) => {
       if (isLoggedIn) {
         console.log('AppComponent: Notificación de Login exitoso recibida, iniciando carga de datos...');

@@ -29,9 +29,7 @@ export class AdminComponent implements OnInit {
     if (baseHref) {
       current_url = baseHref + this.location.path();
     }
-
     this.windowWidth = window.innerWidth;
-
     if (
       current_url === baseHref + '/layout/collapse-menu' ||
       current_url === baseHref + '/layout/box' ||
@@ -39,12 +37,10 @@ export class AdminComponent implements OnInit {
     ) {
       GradientConfig.isCollapse_menu = true;
     }
-
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
   }
 
-  // life cycle event
   ngOnInit() {
     if (this.windowWidth < 992) {
       GradientConfig.layout = 'vertical';
@@ -55,7 +51,6 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  // public method
   navMobClick() {
     if (this.windowWidth < 992) {
       if (this.navCollapsedMob && !document.querySelector('app-navigation.pcoded-navbar')?.classList.contains('mob-open')) {

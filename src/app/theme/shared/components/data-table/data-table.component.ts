@@ -52,10 +52,10 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() colorOpcion4: string = '#007bff';
   @Input() colorOpcion5: string = '#007bff';
   @Input() tooltipOption1: string = '';
-  @Input() tooltipOpcion2: string = '';
-  @Input() tooltipOpcion3: string = '';
-  @Input() tooltipOpcion4: string = '';
-  @Input() tooltipOpcion5: string = '';
+  @Input() tooltipOption2: string = '';
+  @Input() tooltipOption3: string = '';
+  @Input() tooltipOption4: string = '';
+  @Input() tooltipOption5: string = '';
   @Input() letraOpcion1: string = 'O';
   @Input() letraOpcion2: string = 'O';
   @Input() letraOpcion3: string = 'O';
@@ -209,31 +209,6 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
       isSortable: type !== 'avatar' && type !== 'image' && type !== 'capture' && type !== 'array_text' && type !== 'array_tags'
     };
   }
-
-  //   private inferColumnType(key: string, value: any): ColumnMetadata['type'] {
-  //     if (value === null || value === undefined) {
-  //       return 'unknown';
-  //     }
-
-  //     const lowerKey = key.toLowerCase();
-  //     if (lowerKey.includes('avatar') || lowerKey.includes('foto') || lowerKey.includes('image') || lowerKey.includes('capture')) {
-  //       return 'avatar';
-  //     }
-
-  //     if (typeof value === 'number' || (typeof value === 'string' && !isNaN(Number(value)) && value.trim() !== '')) {
-  //       return 'number';
-  //     }
-
-  //     if (typeof value === 'string' && !isNaN(Date.parse(value)) && value.length >= 8) {
-  //       return 'date';
-  //     }
-
-  //     return 'text';
-  //   }
-
-  //   private formatHeader(key: string): string {
-  //     return key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
-  //   }
 
   applyFiltersAndPagination(): void {
     let tempFilteredData = this.data.filter((row) => {

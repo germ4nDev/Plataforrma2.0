@@ -167,7 +167,8 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this._modulosService.cargarRegistros().subscribe((resp: any) => {
         if (resp.length >= 0) {
-          this.modulos = resp;
+          this.modulos = resp.filter((mod: PTLModuloAP) => mod.codigoPadre !== '0');
+          console.log('************todos los modulos hijos', this.modulos);
           return;
         }
       })
@@ -204,10 +205,10 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('ACTIVIDADES.CREATESUCCSESSFULLY')
+              descripcionLog: this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertSuccess(this.translate.instant('ACTIVIDADES.CREATESUCCSESSFULLY'));
+            this._swalService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
             form.resetForm();
             // this.isSubmit = false;
             this.router.navigate(['/actividades/actividades']);
@@ -218,10 +219,10 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
           const logData = {
             codigoTipoLog: '',
             codigoRespuesta: '501',
-            descripcionLog: this.translate.instant('ACTIVIDADES.CREATESUCCSESSFULLY')
+            descripcionLog: this.translate.instant('ACTIVIDADES.UPDATEERROR')
           };
           this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-          this._swalService.getAlertError('No se pudo actualizar la Aplicación');
+          this._swalService.getAlertError('No se pudo actualizar la Actividad');
         }
       });
     } else {
@@ -242,7 +243,7 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
               descripcionLog: this.translate.instant('ACTIVIDADES.ELIMINAREXITOSA')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertSuccess(this.translate.instant('ACTIVIDADES.UPDATESUCCSESSFULLY'));
+            this._swalService.getAlertSuccess(this.translate.instant('ACTIVIDADES.CREATESUCCESSFULLY'));
             form.resetForm();
             // this.isSubmit = false;
             this.router.navigate(['/actividades/actividades']);
@@ -253,10 +254,10 @@ export class GestiionActividadComponent implements OnInit, OnDestroy {
           const logData = {
             codigoTipoLog: '',
             codigoRespuesta: '500',
-            descripcionLog: this.translate.instant('ACTIVIDADES.ELIMINAREXITOSA')
+            descripcionLog: this.translate.instant('ACTIVIDADES.CREATEERROR')
           };
           this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-          this._swalService.getAlertError('No se pudo crear la Aplicación');
+          this._swalService.getAlertError('No se pudo crear la Actividad');
         }
       });
     }

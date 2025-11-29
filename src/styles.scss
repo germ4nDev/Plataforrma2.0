@@ -52,6 +52,7 @@
 @import 'scss/layout';
 @import 'scss/navbar';
 @import 'scss/tabs-aside';
+@import 'scss/swal_dark.scss';
 
 // third party Module
 @import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
@@ -876,14 +877,14 @@ body.gradient-dark {
 .image-table {
     width: 60px;
     object-fit: cover;
-    border: 1px solid #ddd;
+    border: 1px solid #363636;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .capture-table {
     width: 500px;
     object-fit: cover;
-    border: 1px solid #ddd;
+    border: 1px solid #363636;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 

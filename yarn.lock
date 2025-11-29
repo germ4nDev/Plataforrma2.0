@@ -2689,6 +2689,11 @@
   dependencies:
     tslib "^2.0.0"
 
+"@sweetalert2/theme-dark@^5.0.27":
+  version "5.0.27"
+  resolved "https://registry.npmjs.org/@sweetalert2/theme-dark/-/theme-dark-5.0.27.tgz"
+  integrity sha512-FQ3o+eD9I68m42+cHAxnjc0r9JAKzxSpCfwZ74uV182ajG7+FjOFJkEqIyJTibwo8W+oCKIFWkZtkJ2xj31tGw==
+
 "@tinymce/tinymce-angular@^7.0.0":
   version "7.0.0"
   resolved "https://registry.npmjs.org/@tinymce/tinymce-angular/-/tinymce-angular-7.0.0.tgz"

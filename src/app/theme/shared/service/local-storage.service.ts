@@ -196,7 +196,7 @@ export class LocalStorageService {
   }
 
   getThemeSettings() {
-    if (sessionStorage.getItem('app-theme-settings')) {
+    if (localStorage.getItem('themeSettings')) {
       this.themeSettings = JSON.parse(localStorage.getItem('themeSettings') || '');
     } else {
       const settings: ThemeSettingsModel = {

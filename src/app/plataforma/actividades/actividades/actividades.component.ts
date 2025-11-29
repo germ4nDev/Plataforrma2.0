@@ -131,8 +131,8 @@ export class ActividadesComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this._modulosService.cargarRegistros().subscribe((resp: any) => {
         if (resp.length >= 0) {
-          const hijos = resp.filter((mod: PTLModuloAP) => mod.codigoPadre !== '0');
-          this.modulos = hijos;
+          this.modulos = resp.filter((mod: PTLModuloAP) => mod.codigoPadre !== '0');
+          console.log('************todos los modulos hijos', this.modulos);
           return;
         }
       })

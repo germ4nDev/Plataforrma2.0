@@ -8,7 +8,6 @@ import { Subscription, catchError, of, Observable, BehaviorSubject, switchMap, s
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { GradientConfig } from 'src/app/app-config';
@@ -16,7 +15,8 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-import { UploadFilesService } from 'src/app/theme/shared/service';
+import { LocalStorageService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-suscriptores',
@@ -29,7 +29,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
   //#region VARIABLES
   subscriptions = new Subscription();
-//   filtroCodigoSubject = new BehaviorSubject<string>('todos');
+  //   filtroCodigoSubject = new BehaviorSubject<string>('todos');
   filtroNombreSubject = new BehaviorSubject<string>('');
   filtroIdentificacionSubject = new BehaviorSubject<string>('');
   filtroEstadoSubject = new BehaviorSubject<string>('todos');
@@ -44,6 +44,12 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   hasFiltersSlot: boolean = false;
   menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
+
+  colorOpcion1 = '#39b87d';
+  letraOpcion1 = 'E';
+
+  colorOpcion2 = '#e08815';
+  letraOpcion2 = 'U';
   //#endregion VARIABLES
 
   constructor(
@@ -51,7 +57,9 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private _suscriptoresService: PTLSuscriptoresService,
     private _navigationService: NavigationService,
-    private _uploadService: UploadFilesService
+    private _localStorageService: LocalStorageService,
+    private _uploadService: UploadFilesService,
+    private _swalService: SwalAlertService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -74,12 +82,18 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   }
 
   setupRegistrosStream(): void {
+    const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
+    if (!suscriptor || !suscriptor.codigoSuscriptor) {
+      console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
+      return;
+    }
+    const codigoSuscriptor = suscriptor.codigoSuscriptor;
     this.registrosTransformadas$ = this._suscriptoresService.suscriptores$.pipe(
       switchMap((regs: PTLSuscriptorModel[]) => {
         if (!regs) return of([]);
         const transformedRegs = regs.map((reg: any) => {
           reg.nomEstado = reg.estadoAplicacion ? 'Activo' : 'Inactivo';
-          reg.logoSuscriptor = this._uploadService.getFilePath('plataforma', 'suscriptores', reg.logoSuscriptor);
+          reg.logoSuscriptor = this._uploadService.getFilePath(codigoSuscriptor, 'suscriptores', reg.logoSuscriptor);
           return reg as PTLSuscriptorModel;
         });
         this.registros = transformedRegs;
@@ -93,7 +107,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     );
     this.registrosFiltrados$ = combineLatest([
       this.registrosTransformadas$.pipe(startWith([])),
-    //   this.filtroCodigoSubject,
+      //   this.filtroCodigoSubject,
       this.filtroNombreSubject,
       this.filtroIdentificacionSubject,
       this.filtroEstadoSubject
@@ -113,7 +127,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
         }
         if (estado !== 'todos') {
           const estadoBoolean = estado === 'true';
-          filteredRegs = filteredRegs.filter(app => app.estadoSuscriptor === estadoBoolean);
+          filteredRegs = filteredRegs.filter((app) => app.estadoSuscriptor === estadoBoolean);
         }
         console.log('filtrado2s', filteredRegs);
         return filteredRegs;
@@ -210,11 +224,21 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     this.router.navigate(['/suscriptor/gestion-suscriptor'], { queryParams: { regId: id } });
   }
 
+  OnOption1Click(event: any) {
+    this.router.navigate(['/suscriptor/empresas-suscriptor'], { queryParams: { suscriptorId: event.id } });
+  }
+
+  OnOption2Click(event: any) {
+    this.router.navigate(['/suscriptor/usuarios-suscriptor'], { queryParams: { suscriptorId: event.id } });
+  }
+
   OnEliminarRegistroClick(id: any) {
     Swal.fire({
       title: this.translate.instant('SUSCRIPTORES.ELIMINARTITULO'),
       text: this.translate.instant('SUSCRIPTORES.ELIMINARTEXTO'),
       icon: 'warning',
+      //theme: 'datk',
+      customClass: this._swalService.getSwalCustomClass(),
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')

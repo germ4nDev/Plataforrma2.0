@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import Swal, { SweetAlertOptions } from 'sweetalert2';
 import { ThemeService } from './theme.service'; // Importa tu ThemeService
+import Swal, { SweetAlertOptions } from 'sweetalert2';
+// import '@sweetalert2/theme-dark/dark.css'
 
 @Injectable({
   providedIn: 'root'
@@ -16,20 +17,29 @@ export class SwalAlertService {
     });
   }
 
-  private getSwalCustomClass() {
-    return {
-      container: this.isDarkTheme ? 'swal2-dark-theme-container' : 'swal2-light-theme-container',
-      popup: 'custom-popup-class', // Usa esta clase si necesitas más control
-      confirmButton: this.isDarkTheme ? 'btn btn-primary-dark' : 'btn btn-primary-light',
-      denyButton: 'btn btn-secondary'
-    };
+  getSwalCustomClass() {
+    if (!this.isDarkTheme) {
+      return {
+        container: 'swal2-light-theme-container',
+        popup: 'custom-popup-class swal2-light-mode-custom',
+        confirmButton: 'btn btn-primary-light',
+        denyButton: 'btn btn-secondary'
+      };
+    } else {
+      return {
+        container: this.isDarkTheme ? 'swal2-dark-theme-container' : 'swal2-light-theme-container',
+        popup: 'custom-popup-class swal2-dark-mode-custom',
+        confirmButton: this.isDarkTheme ? 'btn btn-primary-dark' : 'btn btn-primary-light',
+        denyButton: 'btn btn-secondary'
+      };
+    }
   }
 
-  private fireSwal(options: SweetAlertOptions) {
+  fireSwal(options: SweetAlertOptions) {
     Swal.fire({
-      ...options, // Aplica las opciones pasadas
+      ...options,
       customClass: this.getSwalCustomClass(),
-      buttonsStyling: false, // Desactiva el estilo por defecto para usar los tuyos
+      buttonsStyling: false,
       target: 'body'
     });
   }
@@ -40,7 +50,8 @@ export class SwalAlertService {
       icon: 'error',
       title: 'Error',
       text: descripcion,
-      showConfirmButton: true
+      showConfirmButton: true,
+      customClass: this.getSwalCustomClass()
     });
   }
 
@@ -51,7 +62,8 @@ export class SwalAlertService {
       icon: 'success',
       title: 'Success',
       text: descripcion,
-      showConfirmButton: true
+      showConfirmButton: true,
+      customClass: this.getSwalCustomClass()
     });
   }
 
@@ -67,7 +79,8 @@ export class SwalAlertService {
       icon: 'warning',
       title: 'Advertencia',
       html: `<ul style="list-style-type: disc; margin: 0; padding-left: 20px; text-align: left;">${listadoIncidencias}</ul>`,
-      showConfirmButton: true
+      showConfirmButton: true,
+      customClass: this.getSwalCustomClass()
     });
   }
 
@@ -78,7 +91,8 @@ export class SwalAlertService {
       title: 'Error',
       text: descripcion,
       showConfirmButton: true,
-      timer: 9000
+      timer: 9000,
+      customClass: this.getSwalCustomClass()
     });
   }
 
@@ -89,7 +103,8 @@ export class SwalAlertService {
       title: 'Error',
       text: descripcion,
       showConfirmButton: true,
-      timer: 9000
+      timer: 9000,
+      customClass: this.getSwalCustomClass()
     });
   }
 
@@ -100,7 +115,8 @@ export class SwalAlertService {
       title: 'Info',
       text: descripcion,
       showConfirmButton: true,
-      timer: 9000
+      timer: 9000,
+      customClass: this.getSwalCustomClass()
     });
   }
 
@@ -111,7 +127,8 @@ export class SwalAlertService {
       title: 'Warning',
       text: descripcion,
       showConfirmButton: true,
-      timer: 9000
+      timer: 9000,
+      customClass: this.getSwalCustomClass()
     });
   }
 
@@ -122,7 +139,8 @@ export class SwalAlertService {
       title: 'Question',
       text: descripcion,
       showConfirmButton: true,
-      timer: 9000
+      timer: 9000,
+      customClass: this.getSwalCustomClass()
     });
   }
 
@@ -138,7 +156,8 @@ export class SwalAlertService {
       customClass: {
         container: customClasses.container,
         confirmButton: customClasses.confirmButton,
-        denyButton: customClasses.denyButton
+        denyButton: customClasses.denyButton,
+        popup: 'swal2-dark-mode-custom'
       },
       buttonsStyling: false
     }).then((result) => {

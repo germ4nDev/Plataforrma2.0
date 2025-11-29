@@ -69,7 +69,7 @@ export class TicketsComponent implements OnInit {
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
   suscPlataforma: string = '';
 
-colorOpcion1 = '#6f42c1';
+  colorOpcion1 = '#6f42c1';
   letraOpcion1 = 'R';
 
   constructor(
@@ -102,7 +102,7 @@ colorOpcion1 = '#6f42c1';
     this.consultarUsuairos();
     setTimeout(() => {
       this.consultarRegistros();
-    }, 1000);
+    }, 500);
   }
 
   consultarEstadosTicket() {
@@ -164,7 +164,7 @@ colorOpcion1 = '#6f42c1';
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.modulos = resp.modulos;
+            this.modulos = resp.modulos.filter((mod: PTLModuloAP) => mod.codigoPadre !== '0');
             return;
           }
         }),

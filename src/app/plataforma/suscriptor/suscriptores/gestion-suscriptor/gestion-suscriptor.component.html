@@ -40,7 +40,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="form-label">{{ 'TICKETS.GESTION.CODE' | translate }}</label>
+                                <label class="form-label">{{ 'SUSCRIPTOR.GESTION.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigoSuscriptor"
                                     placeholder="{{ 'SUSCRIPTORES.GESTION.PLACEHOLDERCODE' | translate }}"
                                     [ngClass]="{'is-invalid': !codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit) }"
@@ -55,8 +55,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreSuscriptor">
-                                    {{ 'SUSCRIPTORES.GESTION.NAME' | translate }}</label>
+                                <label class="form-control-label" for="nombreSuscriptor">{{ 'SUSCRIPTORES.GESTION.NAME' | translate }}</label>
                                 <input class="form-control form-input" id="nombreSuscriptor" name="nombreSuscriptor"
                                     type="text" placeholder="{{ 'SUSCRIPTORES.GESTION.PLACEHOLDERNAME' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreSuscriptor.valid && (nombreSuscriptor.dirty || nombreSuscriptor.touched || isSubmit) }"
@@ -70,8 +69,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="identificacion">{{
-                                    'SUSCRIPTORES.GESTION.IDENTIFICATION' | translate }}</label>
+                                <label class="form-control-label" for="identificacion">{{'SUSCRIPTORES.GESTION.IDENTIFICATION' | translate }}</label>
                                 <input class="form-control form-input" id="identificacion" name="identificacion"
                                     type="text"
                                     placeholder="{{ 'SUSCRIPTORES.GESTION.PLACEHOLDERIDENTIFICACION' | translate }}"
@@ -87,9 +85,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="direccionSuscriptor">{{
-                                    'SUSCRIPTORES.GESTION.ADDRESS' |
-                                    translate }}</label>
+                                <label class="form-control-label" for="direccionSuscriptor">{{'SUSCRIPTORES.GESTION.ADDRESS' | translate }}</label>
                                 <input class="form-control form-input" id="direccionSuscriptor"
                                     name="direccionSuscriptor" type="text"
                                     placeholder="{{ 'SUSCRIPTORES.GESTION.ADDRESS' | translate }}"
@@ -105,14 +101,11 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="telefonoContacto">{{ 'SUSCRIPTORES.GESTION.PHONE'
-                                    |
-                                    translate }}</label>
+                                <label class="form-control-label" for="telefonoContacto">{{ 'SUSCRIPTORES.GESTION.PHONE' | translate }}</label>
                                 <input class="form-control form-input" id="telefonoContacto" name="telefonoContacto"
                                     type="text" placeholder="{{ 'SUSCRIPTORES.GESTION.PHONE' | translate }}"
                                     [ngClass]="{ 'is-invalid': !telefonoContacto.valid && (telefonoContacto.dirty || telefonoContacto.touched || isSubmit) }"
-                                    #telefonoContacto="ngModel" required [(ngModel)]="FormRegistro.telefonoContacto"
-                                    />
+                                    #telefonoContacto="ngModel" required [(ngModel)]="FormRegistro.telefonoContacto" />
                                 <label
                                     *ngIf="!telefonoContacto.valid && (telefonoContacto.dirty || telefonoContacto.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
@@ -122,14 +115,11 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="numeroEmpresas">{{
-                                    'SUSCRIPTORES.GESTION.NUMEMPRESAS' |
-                                    translate }}</label>
+                                <label class="form-control-label" for="numeroEmpresas">{{'SUSCRIPTORES.GESTION.NUMEMPRESAS' | translate }}</label>
                                 <input class="form-control form-input" id="numeroEmpresas" name="numeroEmpresas"
                                     type="number" placeholder="{{ 'SUSCRIPTORES.GESTION.NUMEMPRESAS' | translate }}"
                                     [ngClass]="{ 'is-invalid': !numeroEmpresas.valid && (numeroEmpresas.dirty || numeroEmpresas.touched || isSubmit) }"
-                                    #numeroEmpresas="ngModel" required [(ngModel)]="FormRegistro.numeroEmpresas"
-                                    />
+                                    #numeroEmpresas="ngModel" required [(ngModel)]="FormRegistro.numeroEmpresas" />
                                 <label
                                     *ngIf="!numeroEmpresas.valid && (numeroEmpresas.dirty || numeroEmpresas.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
@@ -139,14 +129,11 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="numeroUsuarios">{{
-                                    'SUSCRIPTORES.GESTION.NUMUSERS' |
-                                    translate }}</label>
+                                <label class="form-control-label" for="numeroUsuarios">{{'SUSCRIPTORES.GESTION.NUMUSERS' | translate }}</label>
                                 <input class="form-control form-input" id="numeroUsuarios" name="numeroUsuarios"
                                     type="number" placeholder="{{ 'SUSCRIPTORES.GESTION.NUMUSERS' | translate }}"
                                     [ngClass]="{ 'is-invalid': !numeroUsuarios.valid && (numeroUsuarios.dirty || numeroUsuarios.touched || isSubmit) }"
-                                    #numeroUsuarios="ngModel" required [(ngModel)]="FormRegistro.numeroUsuarios"
-                                    />
+                                    #numeroUsuarios="ngModel" required [(ngModel)]="FormRegistro.numeroUsuarios" />
                                 <label
                                     *ngIf="!numeroUsuarios.valid && (numeroUsuarios.dirty || numeroUsuarios.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
@@ -156,9 +143,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="usuarioAdministrador">{{
-                                    'SUSCRIPTORES.GESTION.ADMINUSER' |
-                                    translate }}</label>
+                                <label class="form-control-label" for="usuarioAdministrador">{{'SUSCRIPTORES.GESTION.ADMINUSER' | translate }}</label>
                                 <input class="form-control form-input" id="usuarioAdministrador"
                                     name="usuarioAdministrador" type="text"
                                     placeholder="{{ 'SUSCRIPTORES.GESTION.ADMINUSER' | translate }}"
@@ -174,9 +159,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="claveAdministrador">{{
-                                    'SUSCRIPTORES.GESTION.ADMINPASSWORD' |
-                                    translate }}</label>
+                                <label class="form-control-label" for="claveAdministrador">{{'SUSCRIPTORES.GESTION.ADMINPASSWORD' | translate }}</label>
                                 <div class="input-group mb-4">
                                     <input class="form-control form-input" id="claveAdministrador"
                                         name="claveAdministrador" type="password"
