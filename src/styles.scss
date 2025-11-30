@@ -62,12 +62,22 @@
 
 /* El resto de tu código SCSS... */
 
-// Colores por defecto para el tema claro
+// =================================
+// REGLAS FINALES DEL TEMA CLARO
+// =================================
 :root {
     --background-color: #f8f9fa;
     --text-color: #212529;
     --border-color: #dee2e6;
+    --header-color: #f5f5f5;
+    --color-fin-gradiente: #ffffff;
     --card-background: #ffffff;
+    --app-btn-secondary: #acb2b8;
+    --app-btn-secondary-texto: #333;
+    --app-btn-inactive: #c4c4c4;
+    --app-btn-border: #9b9b9b;
+    --app-titulo-color: #333;
+    --app-form-object-bg: #fff;
     --radio-border-color: #afaeae;
     --radio-fill-color: #007bff;
     --radio-fill-shadow: rgba(0, 123, 255, 0.5);
@@ -76,15 +86,45 @@
     --panel-user-bg: #dadada;
     --panel-hover-bg: #dadada;
     --panel-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    --color-fin-gradiente: #ffffff;
     --scrollbar-track-color: #f1f1f1;
     --scrollbar-thumb-color: #c1c1c1;
     --scrollbar-thumb-hover: #5f5f5f;
-    --panel-bg: #fff;
-    --app-btn-secondary: #acb2b8;
-    --app-btn-secondary-texto: #333;
-    --app-titulo-color: #333;
-    --card-background: #ffffff;
+}
+
+.card {
+    // background-color: var(--card-background);
+    // border-color: var(--border-color);
+    background-color: #007bff;
+    border-color: var(--border-color);
+}
+
+// =================================
+// REGLAS FINALES DEL TEMA OSCURO
+// =================================
+body.dark-theme {
+    --background-color: #212529;
+    --text-color: #b4b4b4;
+    --border-color: #4b4b4b;
+    --header-color: #292828;
+    --card-background: #222121;
+    --color-fin-gradiente: #000000;
+    --app-btn-secondary: #495057;
+    --app-btn-secondary-texto: #ccc;
+    --app-btn-inactive: #4b4b4b;
+    --app-btn-border: #797979;
+    --app-titulo-color: #ccc;
+    --app-form-object-bg: #1f1c1c;
+    --radio-border-color: #ccc;
+    --radio-fill-color: #007bff;
+    --radio-fill-shadow: rgba(0, 123, 255, 0.5);
+    --panel-bg: #1e1e2d;
+    --panel-text: #fff;
+    --panel-user-bg: #363636;
+    --panel-hover-bg: #363636;
+    --panel-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    --scrollbar-track-color: #2c2c3d;
+    --scrollbar-thumb-color: #555;
+    --scrollbar-thumb-hover: #777;
 }
 
 hr.detail-separator {
@@ -177,280 +217,283 @@ body {
     scrollbar-width: thin;
 }
 
-// ====================================================================
-// REGLAS FINALES DEL TEMA OSCURO - ESTO DEBE SER LO ÚLTIMO EN EL ARCHIVO
-// ====================================================================
-body.dark-theme {
-    --background-color: #212529;
-    --text-color: #a0a5aa;
-    --border-color: #495057;
-    --app-btn-secondary: #495057;
-    --app-btn-secondary-texto: #ccc;
-    --card-background: #343a40;
-    --radio-border-color: #ccc;
-    --radio-fill-color: #007bff;
-    --radio-fill-shadow: rgba(0, 123, 255, 0.5);
-    --panel-bg: #1e1e2d;
-    --panel-text: #fff;
-    --panel-user-bg: #363636;
-    --panel-hover-bg: #363636;
-    --panel-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    --color-fin-gradiente: #000000;
-    --scrollbar-track-color: #2c2c3d;
-    --scrollbar-thumb-color: #555;
-    --scrollbar-thumb-hover: #777;
-    --panel-bg: #1e1e2d;
-    --app-titulo-color: #ccc;
-    --card-background: #343a40;
+/* *************************************************************** */
+/* * ESTILOS GLOBALES DE QUILL EDITOR (TEMA OSCURO) */
+/* *************************************************************** */
 
-    /* *************************************************************** */
-    /* * ESTILOS GLOBALES DE QUILL EDITOR (TEMA OSCURO) */
-    /* *************************************************************** */
+/* Forzar fondo oscuro para el toolbar y el container */
+.ql-container,
+.ql-toolbar {
+    background-color: var(--card-background) !important;
+    border-color: var(--border-color) !important;
+}
 
-    /* Forzar fondo oscuro para el toolbar y el container */
-    .ql-container,
-    .ql-toolbar {
-        background-color: #2c3034 !important;
-        /* Ligeramente más claro que el fondo de la página */
-        border-color: #495057 !important;
-    }
+/* Color del texto (blanco) */
+.ql-editor {
+    color: var(--text-color) !important;
+}
 
-    /* Color del texto (blanco) */
-    .ql-editor {
-        color: #f8f9fa !important;
-    }
+/* Forzar fondo transparente para los botones para eliminar el color heredado en tema oscuro */
+.ql-toolbar.ql-snow button {
+    background-color: transparent !important;
+}
 
-    /* Forzar fondo transparente para los botones para eliminar el color heredado en tema oscuro */
-    .ql-toolbar.ql-snow button {
-        background-color: transparent !important;
-    }
+/* Iconos y botones: Usamos el gris suave de --text-color para integrar con los labels */
+/* Aumentamos la especificidad apuntando a los elementos dentro del botón */
+.ql-toolbar.ql-snow button svg {
+    /* Fuerza el color del trazo y relleno para todos los elementos SVG inactivos */
+    fill: var(--text-color) !important;
+    stroke: var(--text-color) !important;
+    color: var(--text-color) !important;
+}
 
-    /* Iconos y botones: Usamos el gris suave de --text-color para integrar con los labels */
-    /* Aumentamos la especificidad apuntando a los elementos dentro del botón */
-    .ql-toolbar.ql-snow button svg {
-        /* Fuerza el color del trazo y relleno para todos los elementos SVG inactivos */
-        fill: var(--text-color) !important;
-        stroke: var(--text-color) !important;
+/* Reglas específicas de Quill para asegurar la consistencia del color gris suave */
+.ql-toolbar.ql-snow .ql-stroke {
+    stroke: var(--text-color) !important;
+}
+
+.ql-toolbar.ql-snow .ql-fill {
+    fill: var(--text-color) !important;
+}
+
+/* El selector .ql-picker-label también es un botón/contenedor, lo ajustamos */
+.ql-toolbar.ql-snow .ql-picker-label {
+    background-color: transparent !important;
+    color: var(--text-color) !important;
+}
+
+/* Menús desplegables */
+.ql-picker-label {
+    color: var(--text-color) !important;
+}
+
+/* Opciones del menú desplegable */
+.ql-picker-options {
+    background-color: var(--card-background) !important;
+    border-color: var(--border-color) !important;
+}
+
+.ql-picker-options span {
+    color: var(--text-color) !important;
+}
+
+/* Placeholder: Gris muy claro para mejor visibilidad */
+.ql-editor::before {
+    color: var(--text-color) !important;
+    /* Gris claro */
+}
+
+/* ******************************** */
+/* * ESTILOS GLOBALES DEL DATATABLE */
+/* ******************************** */
+.dataTables_wrapper,
+.card,
+.dropdown-menu {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+.card-header h5 {
+    color: var(--text-color) !important;
+}
+
+.table {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(var(--border-color)) !important;
+    border-radius: 16px !important;
+
+    thead th {
+        background-color: var(--header-color) !important;
         color: var(--text-color) !important;
+        border-color: var(--border-color) !important;
     }
 
-    /* Reglas específicas de Quill para asegurar la consistencia del color gris suave */
-    .ql-toolbar.ql-snow .ql-stroke {
-        stroke: var(--text-color) !important;
+    tbody td {
+        background-color: var(--card-background) !important;
+        color: var(--text-color) !important;
+        border-color: var(var(--border-color)) !important;
     }
+}
 
-    .ql-toolbar.ql-snow .ql-fill {
-        fill: var(--text-color) !important;
-    }
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_filter input,
+.table input {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(var(--border-color)) !important;
+}
 
-    /* El selector .ql-picker-label también es un botón/contenedor, lo ajustamos */
-    .ql-toolbar.ql-snow .ql-picker-label {
-        background-color: transparent !important;
-        color: #f8f9fa !important;
-    }
+.card-header .btn,
+.dt-buttons .dt-button,
+.dataTables_paginate .paginate_button {
+    background-color: var(--card-background) !important;
+    color: var(--text-color) !important;
+    border-color: var(var(--border-color)) !important;
+}
 
-    /* Menús desplegables */
-    .ql-picker-label {
-        color: #f8f9fa !important;
-    }
+.dataTables_paginate .paginate_button.current {
+    background-color: #1ffc02 !important;
+    color: var(--text-color) !important;
+    border-color: var(var(--border-color)) !important;
+}
 
-    /* Opciones del menú desplegable */
-    .ql-picker-options {
-        background-color: #2c3034 !important;
-        border-color: #495057 !important;
-    }
+.dataTables_paginate .paginate_button.active {
+    border-color: var(--) !important;
+}
 
-    .ql-picker-options span {
-        color: #f8f9fa !important;
-    }
+.dataTables_info {
+    color: var(--text-color) !important;
+}
 
-    /* Placeholder: Gris muy claro para mejor visibilidad */
-    .ql-editor::before {
-        color: #aaaaaa !important;
-        /* Gris claro */
-    }
+.filtros-title {
+    color: var(--text-color) !important;
+}
 
-    // Contenedores generales del datatable
-    .dataTables_wrapper,
-    .card,
-    .dropdown-menu {
-        background-color: #17181a !important;
-        color: #8a8f94 !important;
-        border-color: #313438 !important;
-    }
+.dataTables_length label {
+    color: var(--text-color) !important;
+}
 
-    .card-header h5 {
-        color: #8a8f94 !important;
-    }
+.dataTables_filter label {
+    color: var(--text-color) !important;
+}
 
-    .table {
-        background-color: #212529 !important;
-        color: #8a8f94 !important;
-        border-color: #495057 !important;
+.datatable-title {
+    color: var(--text-color) !important;
+}
 
-        thead th {
-            background-color: #222121 !important; // FONDO NEGRO PARA LOS TÍTULOS DE LAS COLUMNAS
-            color: #8a8f94 !important;
-            border-color: #495057 !important;
-        }
+hr.detail-separator {
+    margin-top: -10px;
+    margin-bottom: -10px;
+    border: none;
+    height: 1px;
+    background-color: var(--text-color) !important;
+    padding: 20;
+}
 
-        tbody td {
-            background-color: #212529 !important;
-            color: #8a8f94 !important;
-            border-color: #495057 !important;
-        }
-    }
+.form-select {
+    background-color: var(--app-form-object-bg) !important;
+    color: var(--texto-color) !important;
+    border-color: var(--border-color) !important;
+    border-radius: 5px !important;
+}
 
-    .dataTables_wrapper .dataTables_length select,
-    .dataTables_wrapper .dataTables_filter input,
-    .table input {
-        background-color: #2c3138 !important;
-        color: #8a8f94 !important;
-        border-color: #495057 !important;
-    }
+.form-input {
+    background-color: var(--app-form-object-bg) !important;
+    color: var(--texto-color) !important;
+    border-color: var(--border-color) !important;
+    border-radius: 5px !important;
+}
 
-    .card-header .btn,
-    .dt-buttons .dt-button,
-    .dataTables_paginate .paginate_button {
-        background-color: #343a40 !important;
-        color: #8a8f94 !important;
-        border-color: #495057 !important;
-    }
+.btn.btn-NuevoRegistro {
+    background-color: var(--app-btn-inactive) !important;
+    color: var(--app-btn-secondary-texto) !important;
+    border-color: var(--app-btn-border) !important;
+    border-radius: 10px !important;
+    transition: all 0.6s ease !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    white-space: nowrap !important;
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+}
 
-    .dataTables_paginate .paginate_button.current {
-        background-color: #1ffc02 !important;
-        color: #8a8f94 !important;
-        border-color: #66b5ff !important;
-    }
+.btn.btn-NuevoRegistro:hover {
+    background-color: var(--app-navbar-color) !important;
+    border-color: var(--app-navbar-color) !important;
+    color: var(--app-texto-color) !important;
+    cursor: pointer;
+}
 
-    .dataTables_paginate .paginate_button.active {
-        border-color: #f8280c !important;
-    }
+.btn.btn-NuevoRegistro:active {
+    transform: scale(0.95) !important;
+}
 
-    .dataTables_info {
-        color: #999999 !important; // Color gris oscuro
-    }
+.pcoded-mtext {
+    color: #8a8f94 !important;
+}
 
-    .filtros-title {
-        color: #8a8f94 !important;
-    }
+.pcoded-micon {
+    color: #8a8f94 !important;
+}
 
-    .dataTables_length label {
-        color: #8a8f94 !important;
-    }
+.drop-menu {
+    background-color: #161718 !important;
+}
 
-    .dataTables_filter label {
-        color: #8a8f94 !important;
-    }
+.icon-style {
+    color: var(--app-iconos-color) !important;
+}
 
-    .datatable-title {
-        color: #8a8f94 !important;
-    }
+.page-link-a {
+    background-color: var(--app-navbar-color) !important;
+    color: var(--text-color) !important;
+}
 
-    hr.detail-separator {
-        margin-top: -10px;
-        margin-bottom: -10px;
-        border: none;
-        height: 1px;
-        background-color: var(--scrollbar-thumb-hover);
-        padding: 20;
-    }
+.page-link-b {
+    background-color: #2c3138 !important;
+    color: #8a8f94 !important;
+    border-color: #495057 !important;
+    border-radius: 5px !important;
+}
 
-    .form-select {
-        background-color: #2c3138 !important;
-        color: #8a8f94 !important;
-        border-color: #495057 !important;
-        border-radius: 5px !important;
-    }
+.sr-only {
+    color: var(--text-color) !important;
+}
 
-    .form-input {
-        background-color: #2c3138 !important;
-        color: #8a8f94 !important;
-        border-color: #495057 !important;
-        border-radius: 5px !important;
-    }
+.nav-tabs-custom button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-color) !important;
+    transition: all 0.6s ease;
+}
 
-    .btn.btn-NuevoRegistro {
-        background-color: #2c3138 !important;
-        color: #8a8f94 !important;
-        border-color: #495057 !important;
-        border-radius: 10px !important;
-        transition: all 0.6s ease !important;
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-        white-space: nowrap !important;
-        margin-left: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
+.nav-tabs-custom button:hover {
+    background-color: var(--app-navbar-color);
+    color: var(--app-texto-color) !important;
+}
 
-    .btn.btn-NuevoRegistro:hover {
-        background-color: var(--app-navbar-color) !important;
-        border-color: var(--app-navbar-color) !important;
-        color: var(--app-texto-color) !important;
-        cursor: pointer;
-    }
+.nav-tabs-custom button:active {
+    transform: scale(0.95) !important;
+    color: var(--app-texto-color) !important;
+}
 
-    .btn.btn-NuevoRegistro:active {
-        transform: scale(0.95) !important;
-    }
+.nav-tabs-custom button.active {
+    background-color: var(--app-navbar-color);
+    border-bottom: 2px solid var(--aside-tab-active);
+    color: var(--app-texto-color) !important;
+}
 
-    .pcoded-mtext {
-        color: #8a8f94 !important;
-    }
+.cardlogin.card-body {
+    width: 400px;
+    min-height: 350px;
+    margin-bottom: 10px;
+    padding: 20px !important;
+    position: relative;
+    background-color: transparent !important;
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
-    .pcoded-micon {
-        color: #8a8f94 !important;
-    }
-
-    .drop-menu {
-        background-color: #161718 !important;
-    }
-
-    .icon-style {
-        color: var(--app-iconos-color) !important;
-    }
-
-    .page-link-a {
-        background-color: var(--app-navbar-color) !important;
-        color: var(--app-texto-color) !important;
-    }
-
-    .page-link-b {
-        background-color: #2c3138 !important;
-        color: #8a8f94 !important;
-        border-color: #495057 !important;
-        border-radius: 5px !important;
-    }
-
-    .sr-only {
-        color: var(--app-texto-color) !important;
-    }
-
-    .nav-tabs-custom button {
-        flex: 1;
-        padding: 10px;
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        font-weight: 600;
-        color: var(--app-texto-color) !important;
-        transition: all 0.6s ease;
-    }
-
-    .nav-tabs-custom button:hover {
-        background-color: var(--app-navbar-color);
-        color: var(--app-texto-color) !important;
-    }
-
-    .nav-tabs-custom button:active {
-        transform: scale(0.95) !important;
-        color: var(--app-texto-color) !important;
-    }
-
-    .nav-tabs-custom button.active {
-        background-color: var(--app-navbar-color);
-        border-bottom: 2px solid var(--aside-tab-active);
-        color: var(--app-texto-color) !important;
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: var(--card-background);
+        opacity: 0.95;
+        z-index: -1;
+        backdrop-filter: blur(4px);
+        border-radius: inherit;
     }
 }
 
@@ -459,9 +502,6 @@ body {
     overflow: hidden;
     overflow-y: hidden;
     overflow-x: hidden;
-}
-
-body {
     background-color: var(--background-color);
     color: var(--text-color);
     transition:
@@ -514,33 +554,9 @@ body {
     overflow-x: hidden;
 }
 
-.btn.btn-NuevoRegistro {
-    background-color: #e2e2e2 !important;
-    color: #3b4650 !important;
-    height: 2.9em !important;
-    border: #d1d1d1 0.15em solid !important;
-    border-radius: 11px !important;
-    transition: all 0.6s ease !important;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-    white-space: nowrap !important;
-    margin-left: 0.5rem;
-}
-
-.btn.btn-NuevoRegistro:hover {
-    background-color: var(--app-navbar-color) !important;
-    border-color: var(--app-navbar-color) !important;
-    color: var(--app-texto-color) !important;
-    cursor: pointer;
-}
-
-.btn.btn-NuevoRegistro:active {
-    transform: scale(0.95) !important;
-}
-
 .btn.btn-unlock {
     background-color: var(--app-navbar-color) !important;
-    color: var(--app-texto-color) !important;
+    color: var(--text-color) !important;
     cursor: pointer;
     height: 2.9em !important;
     border: var(--app-navbar-color) !important;
@@ -581,7 +597,7 @@ body {
     margin-bottom: 10px;
     padding: 5px 10px;
     border-radius: 4px;
-    color: var(--app-texto-color) !important;
+    color: var(--text-color) !important;
     font-size: 14px;
     white-space: nowrap;
 }
@@ -600,17 +616,12 @@ body {
     height: 60px;
     border-radius: 50%;
     background-color: var(--app-navbar-color) !important;
-    color: var(--app-texto-color) !important;
+    color: var(--text-color) !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
     border: none;
     font-size: 24px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-}
-
-.card {
-    background-color: var(--card-background);
-    border-color: var(--border-color);
 }
 
 .card-table {
@@ -635,7 +646,7 @@ body {
 
 .nav-tabs-custom button:hover {
     background-color: var(--app-navbar-color);
-    color: var(--app-texto-color);
+    color: var(--text-color);
     cursor: pointer;
 }
 
@@ -643,7 +654,7 @@ body {
     background-color: var(--app-navbar-color);
     // background-color: var(--aside-tab-bg);
     border-bottom: 2px solid var(--aside-tab-active);
-    color: var(--app-texto-color) !important;
+    color: var(--text-color) !important;
 }
 
 .table {
@@ -800,11 +811,11 @@ body.gradient-dark {
 
 .page-link-a {
     background-color: var(--app-navbar-color) !important;
-    color: var(--app-texto-color) !important;
+    color: var(--text-color) !important;
 }
 
 .sr-only {
-    color: var(--app-texto-color) !important;
+    color: var(--text-color) !important;
 }
 
 .radio-buttons {
@@ -975,8 +986,8 @@ body.gradient-dark {
 // 1. Panel Principal del Perfil
 // ==============================================
 .profile-notification {
-    background-color: var(--panel-bg);
-    color: var(--panel-text);
+    background-color: var(--card-background);
+    color: var(--text-color);
     box-shadow: var(--panel-shadow);
     border-radius: 12px;
     min-width: 250px;
@@ -987,16 +998,17 @@ body.gradient-dark {
         margin: 0px !important;
         padding: 16px !important;
         background-image: linear-gradient(to bottom, var(--app-navbar-color), var(--color-fin-gradiente));
+            color: var(--text-color);
 
         span {
             display: block;
             font-weight: 600;
             font-size: 16px;
-            color: var(--app-texto-color);
+            color: var(--text-color);
         }
 
         .dud-logout {
-            color: var(--panel-text);
+            color: var(--text-color);
 
             &:hover {
                 color: #dc3545;
@@ -1004,16 +1016,22 @@ body.gradient-dark {
         }
     }
 
+    .header-texto {
+        background-color: var(--card-background);
+        color: var(--text-color);
+    }
+
     .pro-body {
         list-style: none;
         padding: 12px !important;
+        background-color: var(--card-background);
+        color: var(--text-color);
 
         li {
             a {
-                color: var(--panel-text);
-
+                color: var(--text-color);
                 &:hover {
-                    background-color: var(--panel-hover-bg);
+                    background-color: var(--header-color);
                 }
             }
         }
@@ -1024,18 +1042,18 @@ body.gradient-dark {
 // 2. Dropdown General (Si se usa)
 // ==============================================
 .dropdown-menu {
-    background-color: var(--panel-bg);
-    color: var(--panel-text);
-    border: 1px solid var(--panel-hover-bg);
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
     padding: 0px 0px 0px 0px !important;
     box-shadow: 0 4px 8px var(--panel-shadow);
     z-index: 1050;
 
     .dropdown-item {
-        color: var(--panel-text);
+        color: var(--text-color);
 
         &:hover {
-            background-color: var(--panel-hover-bg);
+            background-color: var(--header-color);
         }
     }
 }
@@ -1063,20 +1081,6 @@ body.gradient-dark {
 .swal2-dark-theme-container .swal2-title,
 .swal2-dark-theme-container .swal2-html-container {
     color: var(--panel-text, #fff);
-}
-
-/* -- Estilos para los botones (opcional, si usas buttonsStyling: false) -- */
-.btn.btn-primary-light {
-    background-color: var(--app-navbar-color, #007bff);
-    color: white;
-    border: none;
-}
-
-.btn.btn-primary-dark {
-    background-color: var(--app-navbar-color, #0dcaf0);
-    /* Color de acento para el modo oscuro */
-    color: black;
-    border: none;
 }
 
 /*
@@ -1164,7 +1168,7 @@ body.gradient-dark {
     display: inline-block;
     padding: 8px 15px;
     background-color: var(--app-navbar-color);
-    color: var(--app-texto-color);
+    color: var(--text-color);
     text-decoration: none;
     border-radius: 5px;
     border: none;
@@ -1175,7 +1179,7 @@ body.gradient-dark {
 
 .card-grd-button:hover {
     background-color: var(--app-navbar-color);
-    color: var(--app-texto-color);
+    color: var(--text-color);
 }
 
 /*

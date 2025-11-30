@@ -92,6 +92,20 @@ export class PTLSuscriptoresService {
     );
   }
 
+  crearCarpetaSuscriptor(data: string) {
+    console.log('data servicio', data);
+    const url = `${base_url}/suscriptores/folder/${data}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        return {
+          ok: true,
+          mensaje: resp.msg,
+          folder: resp.folder
+        };
+      })
+    );
+  }
+
   actualizarSuscriptor(suscriptor: PTLSuscriptorModel) {
     const url = `${base_url}/suscriptores/${suscriptor.suscriptorId}`;
     return this.http.put(url, suscriptor).pipe(

@@ -1,18 +1,6 @@
 <div class="navbar d-flex justify-content-between align-items-center px-3 py-2">
     <ul class="navbar-nav d-flex align-items-center gap-3 flex-row ms-auto">
         <li>
-            <i class="icon feather icon-monitor icon-lg icon-style" title="{{'PLATAFORMA.NAVBAR.EMPRESAS' | translate }}" (click)="empresasScreen()"
-                style="cursor: pointer;"></i>
-        </li>
-        <li>
-            <i class="icon feather icon-grid icon-lg icon-style" title="{{'PLATAFORMA.NAVBAR.APLICACIONES' | translate }}" (click)="aplicacionesScreen()"
-                style="cursor: pointer;"></i>
-        </li>
-        <li>
-            <i class="icon feather icon-home icon-lg icon-style" title="{{'PLATAFORMA.NAVBAR.SUITES' | translate }}" (click)="suitesScreen()"
-                style="cursor: pointer;"></i>
-        </li>
-        <li>
             <div class="dropdown" ngbDropdown placement="auto">
                 <a ngbDropdownToggle href="javascript:">
                     <i class="icon feather icon-bell icon-lg icon-style" title="Notification"></i>
@@ -82,6 +70,20 @@
             </div>
         </li>
         <li>
+            <i class="icon feather icon-monitor icon-lg icon-style"
+                title="{{'PLATAFORMA.NAVBAR.EMPRESAS' | translate }}" (click)="empresasScreen()"
+                style="cursor: pointer;"></i>
+        </li>
+        <li>
+            <i class="icon feather icon-grid icon-lg icon-style"
+                title="{{'PLATAFORMA.NAVBAR.APLICACIONES' | translate }}" (click)="aplicacionesScreen()"
+                style="cursor: pointer;"></i>
+        </li>
+        <li>
+            <i class="icon feather icon-home icon-lg icon-style" title="{{'PLATAFORMA.NAVBAR.SUITES' | translate }}"
+                (click)="suitesScreen()" style="cursor: pointer;"></i>
+        </li>
+        <li>
             <app-language-selector></app-language-selector>
         </li>
         <li>
@@ -93,10 +95,10 @@
                     <div class="pro-head">
                         <img src="{{ avatarUsuario }}" class="img-radius avatar-panel" alt="User-Profile-Image" />
                     </div>
-                    <div class="text-center">
-                        <h6 class="nombre-user-panel">{{ nombreUsuario }}</h6>
-                    </div>
                     <ul class="pro-body">
+                        <div class="text-center">
+                            <p style="font-size: large;">{{ nombreUsuario }}</p>
+                        </div>
                         <li><a href="javascript:" class="dropdown-item" (click)="perfilUsuario()"><i
                                     class="feather icon-user"></i> {{'PLATAFORMA.NAVBAR.PROFILE' | translate }}</a></li>
                         <li><a href="javascript:" class="dropdown-item"><i class="feather icon-mail"></i> {{

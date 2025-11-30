@@ -35,8 +35,7 @@
                     <tr>
                         <th *ngIf="showDetail" class="detail-col"></th>
                         <th *ngFor="let column of finalColumns" (click)="onSort(column.name)"
-                            [style.cursor]="column.isSortable === false ? 'default' : 'pointer'" class="text-nowrap"
-                            [class.text-right]="column.type === 'number'">
+                            [style.cursor]="column.isSortable === false ? 'default' : 'pointer'" class="text-nowrap">
                             {{ column.header | translate }}
                             <ng-container *ngIf="sortByColumn === column.name && column.isSortable !== false">
                                 <i class="fas fa-arrow-up ms-1" *ngIf="sortDirection === 'asc'"></i>
@@ -251,7 +250,7 @@
                         <td *ngFor="let column of finalColumns; let i = index">
                             <ng-container
                                 *ngIf="column.type === 'text' || column.type === 'number' || column.type === 'price'">
-                                <input type="text" class="form-control form-control-sm"
+                                <input type="text" class="form-control form-control-sm form-input"
                                     [placeholder]="column.header | translate" (keyup)="onFilter(column.name, $event)" />
                             </ng-container>
                         </td>

@@ -50,7 +50,6 @@ export class GestionSuscriptorComponent {
   fileName: string | null = null;
   selectedFileUrl: string | null = null;
 
-  // constructor
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -102,7 +101,6 @@ export class GestionSuscriptorComponent {
     }
     const togglePassword = document.querySelector('#togglePassword');
     const password = document.querySelector('#claveAdministrador');
-
     togglePassword?.addEventListener('click', () => {
       // toggle the type attribute
       const type = password?.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -112,19 +110,20 @@ export class GestionSuscriptorComponent {
     if (!this.modoEdicion) {
       console.log('modo edicion', this.modoEdicion);
       this.FormRegistro.codigoSuscriptor = uuidv4();
-
-      //   this.FormRegistro.codigoAplicacion = '';
-      //   this.FormRegistro.codigoSuite = '';
-      //   this.FormRegistro.codigoModulo = '';
-      //   this.FormRegistro.codigoUsuarioAsignado = '';
-      //   this.FormRegistro.codigoClase = '';
-      //   this.FormRegistro.estadoTicket = '';
-      //   this.FormRegistro.prioridad = '';
-      //   this.FormRegistro.capturaTicket = 'no-imagen.png';
-      //   this.FormRegistro.codigoTicket = uuidv4();
-      //   this.selectedFileUrl = this._uploadService.getFilePath('tickets', 'no-foto.png');
-      //   this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
-      // console.log('FormRegistro', this.FormRegistro);
+      this.FormRegistro.nombreSuscriptor = '';
+      this.FormRegistro.identificacionSuscriptor = '';
+      this.FormRegistro.direccionSuscriptor = '';
+      this.FormRegistro.telefonoContacto = '';
+      this.FormRegistro.numeroEmpresas = 0;
+      this.FormRegistro.numeroUsuarios = 0;
+      this.FormRegistro.usuarioAdministrador = '';
+      this.FormRegistro.claveAdministrador = '';
+      this.FormRegistro.descripcionSuscriptor = '';
+      this.FormRegistro.envioCorreosSuscriptor = false;
+      this.FormRegistro.envioMensajesSuscriptor = false;
+      this.FormRegistro.envioPublicidadSuscriptor = false;
+      this.FormRegistro.estadoSuscriptor = false;
+      console.log('FormRegistro', this.FormRegistro);
     }
   }
 
@@ -168,28 +167,61 @@ export class GestionSuscriptorComponent {
     if (!form.valid) {
       return;
     }
+    const registroData = form.value as PTLSuscriptorModel;
     if (this.modoEdicion) {
-      this._suscriptoresService.actualizarSuscriptor(this.FormRegistro).subscribe({
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaModificacion = new Date().toISOString();
+      this._suscriptoresService.actualizarSuscriptor(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            Swal.fire('', 'El suscriptor se modificó correctamente', 'success');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
             this.router.navigate(['/suscriptor/suscriptores']);
           } else {
-            Swal.fire('Error', resp.message || 'No se pudo actualizar el suscriptor', 'error');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + resp.message);
           }
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo actualizar el suscriptor', 'error');
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err.message);
         }
       });
     } else {
       console.log('FormRegistro', this.FormRegistro);
-      this._suscriptoresService.crearSuscriptor(this.FormRegistro).subscribe({
+      registroData.fechaCreacion = new Date().toISOString();
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.codigoUsuarioModificacion = '';
+      registroData.fechaModificacion = '';
+      this._suscriptoresService.crearSuscriptor(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            // todo, hacer el serFoldersuscriptor desde upload-files.service
-            Swal.fire('', 'El suscriptor se insertó correctamente', 'success');
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._suscriptoresService.crearCarpetaSuscriptor(this.FormRegistro.codigoSuscriptor || '').subscribe((datos) => {
+              console.log('Carpeta de suscriptor creada:', datos);
+            });
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
             this.router.navigate(['/suscriptor/suscriptores']);
@@ -197,7 +229,13 @@ export class GestionSuscriptorComponent {
         },
         error: (err: any) => {
           console.error(err);
-          Swal.fire('Error', 'No se pudo insertar el suscriptor', 'error');
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+          };
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err.message);
         }
       });
     }

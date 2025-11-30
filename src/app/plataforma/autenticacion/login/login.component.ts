@@ -3,7 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { catchError, tap } from 'rxjs/operators';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -31,7 +31,7 @@ import {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterModule, LanguageSelectorComponent, SharedModule, TranslateModule, FullScreenSliderComponent],
+  imports: [CommonModule, FormsModule, RouterModule, LanguageSelectorComponent, SharedModule, TranslateModule, FullScreenSliderComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -66,13 +66,8 @@ export class LoginComponent implements OnInit {
     private _localstorageService: LocalStorageService,
     private _swalService: SwalAlertService,
     private _themeService: ThemeService,
-    // private _suscriptoresService: PTLSuscriptoresService,
-    // private _usuariosSCService: PtlusuariosScService,
-    // private _empresasSCService: PtlEmpresasScService,
-    // private _usuariosService: PTLUsuariosService,
     private _authenticationService: AuthenticationService
   ) {
-    // redirect to home if already logged in
     if (this._authenticationService.currentUserValue) {
       //    this.router.navigate(['/dashboard/analytics']);
     }
@@ -80,14 +75,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      //   suscriptor: ['', Validators.required],
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
-    // this.consultarUsuarios();
-    // this.consultarUsuariosSC();
-    // this.consultarEmpresasSC();
-    // this.consultarRegistros();
     const togglePassword = document.querySelector('#togglePassword');
     const password = document.querySelector('#password');
     togglePassword?.addEventListener('click', () => {
@@ -106,10 +96,6 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
-  //   get suscriptorControl() {
-  //     return this.loginForm.get('suscriptor');
-  //   }
-
   get usernameControl() {
     return this.loginForm.get('username');
   }
@@ -117,82 +103,6 @@ export class LoginComponent implements OnInit {
   get passwordControl() {
     return this.loginForm.get('password');
   }
-
-  //   consultarUsuarios() {
-  //     this.usuariosSub = this._usuariosService
-  //       .getUsuarios()
-  //       .pipe(
-  //         tap((resp: any) => {
-  //           if (resp.ok) {
-  //             this.usuarios = resp.usuarios;
-  //             console.log('Todos los usuarios', this.usuarios);
-  //             return;
-  //           }
-  //         }),
-  //         catchError((err) => {
-  //           console.log('error', err);
-  //           return of(null);
-  //         })
-  //       )
-  //       .subscribe();
-  //   }
-
-  //   consultarUsuariosSC() {
-  //     this.usuariosSCSub = this._usuariosSCService
-  //       .getUsuariosSC()
-  //       .pipe(
-  //         tap((resp: any) => {
-  //           if (resp.ok) {
-  //             this.registros = resp.usuarios;
-  //             console.log('Todos los usuariosSC', this.registros);
-  //             return;
-  //           }
-  //         }),
-  //         catchError((err) => {
-  //           console.log('error', err);
-  //           return of(null);
-  //         })
-  //       )
-  //       .subscribe();
-  //   }
-
-  //   consultarEmpresasSC() {
-  //     this.empresasSCSub = this._empresasSCService
-  //       .getEmpresasSC()
-  //       .pipe(
-  //         tap((resp: any) => {
-  //           if (resp.ok) {
-  //             this.empresasSC = resp.empresas;
-  //             console.log('Todos los empresasSC', this.empresasSC);
-  //             return;
-  //           }
-  //         }),
-  //         catchError((err) => {
-  //           console.log('error', err);
-  //           return of(null);
-  //         })
-  //       )
-  //       .subscribe();
-  //   }
-
-  //   consultarRegistros() {
-  //     this.registrosSub = this._suscriptoresService
-  //       .getSuscriptores()
-  //       .pipe(
-  //         tap((resp: any) => {
-  //           if (resp.ok) {
-  //             this.registros = resp.suscriptores;
-  //             console.log('Todos los Suscriptores', this.registros);
-  //             return;
-  //           }
-  //         }),
-  //         catchError((err) => {
-  //           console.log('error', err);
-  //           return of(null);
-  //         })
-  //       )
-  //       .subscribe();
-  //   }
 
   onLoginUserClick(): void {
     this.submitted = true;

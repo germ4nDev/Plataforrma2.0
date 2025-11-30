@@ -3,11 +3,8 @@
     <aside class="aside-left">
         <div class="card">
             <div class="nav-tabs-custom">
-                <button>
-                    {{ 'PLATAFORMA.MENU' | translate }}
-                </button>
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
             </div>
-
             <ng-container>
                 <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
@@ -118,7 +115,7 @@
                                     <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
                                         id="fileUploadInput" class="form-control form-input d-none" name="fotoUsuario">
                                     <span class="file-name" [ngClass]="{'has-file': fileName}">
-                                        {{ fileName || ('APLICACIONES.GESTION.FOTOHOLDER' | translate) }}
+                                        <!-- {{ fileName || ('APLICACIONES.GESTION.FOTOHOLDER' | translate) }} -->
                                     </span>
                                 </div>
                             </div>
