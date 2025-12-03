@@ -54,7 +54,7 @@
         <ng-container *ngIf="registrosFiltrados$ | async as dataFiltrada">
             <app-data-table
                 [data]="dataFiltrada"
-                [idField]="'suscriptorId'"
+                [idField]="'codigoSuscriptor'"
                 [tableTitle]="'SUSCRIPTORES.TITLE' | translate"
                 [newButtonLabel]="'SUSCRIPTORES.NEW' | translate"
                 [exportLabel]="'PLATAFORMA.EXCEL' | translate"

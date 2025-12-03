@@ -19,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (request.context.get(SKIP_TOKEN_INTERCEPTOR)) {
       return next.handle(request);
     }
-    const token = this._localStorageService.getTokenLocalStorage(); // Reemplaza con tu lógica real de obtención de token
+    const token = this._localStorageService.getTokenLocalStorage();
     if (token) {
       const clonedRequest = request.clone({
         headers: request.headers.set('x-token', token),

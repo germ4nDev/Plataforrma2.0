@@ -103,6 +103,8 @@
         "MODIFICAR": "El registro se modificó correctamente",
         "NOINSERTO": "No se pudo insertar el registro",
         "NOMODIFICO": "No se pudo actualizar el registro",
+        "VALIDARPASSWORD": "Validar",
+        "PASSWORDNOTMATCH": "Clave actual no coincide.",
         "DATATABLE": {
             "SHOW": "Mostrar",
             "ENTRIES": "Entradas",

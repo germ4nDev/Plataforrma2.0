@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, tap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, map, tap } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { SocketService } from './sockets.service';
 import { LocalStorageService } from './local-storage.service';
 import { PtlusuariosRolesApService } from './ptlusuarios-roles-ap.service';
@@ -89,6 +89,25 @@ export class PTLUsuariosService {
       })
     );
   }
+
+  verificarClaveActual(codigo: string, clave: string) {
+      const validacion = { codigoAdministrador: codigo, claveActual: clave };
+      return this.http.post(`${environment.apiUrl}/usuarios/validar`, { validacion }).pipe(
+        tap((susc) => {
+          if (!susc) {
+            throw new Error('Usuairo no válido');
+          }
+          return {
+            ok: true,
+            suscriptor: susc
+          };
+        }),
+        catchError((error: HttpErrorResponse) => {
+          const errorMessage = error.error?.msg || 'Error en la validación';
+          return throwError(() => errorMessage);
+        })
+      );
+    }
 
   crearUsuario(data: PTLUsuarioModel) {
     const url = `${base_url}/usuarios`;

@@ -3,6 +3,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
+import { Observable, Subscription } from 'rxjs';
+import {
+  LocalStorageService,
+  PtllogActividadesService,
+  PTLUsuariosService,
+  SwalAlertService,
+  UploadFilesService
+} from 'src/app/theme/shared/service';
+import { TranslateService } from '@ngx-translate/core';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { NarikCustomValidatorsModule } from '@narik/custom-validators';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
@@ -12,11 +23,6 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
-import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
-import { Observable, Subscription } from 'rxjs';
-import { LocalStorageService, PtllogActividadesService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
-import { TranslateService } from '@ngx-translate/core';
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-gestion-suscriptor',
@@ -38,6 +44,9 @@ export class GestionSuscriptorComponent {
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;
+  isClaveActual: boolean = true;
+  verificarHabilitado: boolean = true;
+  isClaveValida: boolean = false;
   cosigoSusucriptor = uuidv4();
   tipoEditorTexto = 'basica';
   lockScreenSubscription: Subscription | undefined;
@@ -58,6 +67,7 @@ export class GestionSuscriptorComponent {
     private _navigationService: NavigationService,
     private _localStorageService: LocalStorageService,
     private _uploadService: UploadFilesService,
+    private _usuariosService: PTLUsuariosService,
     private _logActividadesService: PtllogActividadesService,
     private _swalAlertService: SwalAlertService
   ) {
@@ -67,6 +77,7 @@ export class GestionSuscriptorComponent {
       console.log('me llena el Id', id);
       if (id != 'nuevo') {
         this.modoEdicion = true;
+        this.verificarHabilitado = false;
         this._suscriptoresService.getSuscriptorById(id).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.suscriptor;
@@ -77,6 +88,7 @@ export class GestionSuscriptorComponent {
           }
         });
       } else {
+        this.verificarHabilitado = true;
         this.modoEdicion = false;
         this.FormRegistro.codigoSuscriptor = uuidv4();
       }
@@ -117,7 +129,6 @@ export class GestionSuscriptorComponent {
       this.FormRegistro.numeroEmpresas = 0;
       this.FormRegistro.numeroUsuarios = 0;
       this.FormRegistro.usuarioAdministrador = '';
-      this.FormRegistro.claveAdministrador = '';
       this.FormRegistro.descripcionSuscriptor = '';
       this.FormRegistro.envioCorreosSuscriptor = false;
       this.FormRegistro.envioMensajesSuscriptor = false;
@@ -134,11 +145,29 @@ export class GestionSuscriptorComponent {
     // }
   }
 
+  validarClaveActual(claveActual: any) {
+    const codigo = this.FormRegistro.codigoAdministrador || '';
+    this._usuariosService.verificarClaveActual(codigo, claveActual).subscribe((data: any) => {
+      if (data.ok == true) {
+        if (this.FormRegistro.codigoAdministrador === data.suscriptor.codigoAdministrador) {
+          this.isClaveActual = false;
+          this.isClaveValida = true;
+        }
+      } else {
+        this.FormRegistro.claveNew = '';
+        this.FormRegistro.claveConfirm = '';
+        this.isClaveValida = false;
+        this.isClaveActual = true;
+        this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.PASSWORDNOTMATCH'));
+      }
+    });
+  }
+
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];
     const objUpload = {
       susc: this.FormRegistro.codigoSuscriptor,
-      tipo: 'tickets'
+      tipo: 'suscriptores'
     };
     if (file) {
       const reader = new FileReader();
@@ -171,6 +200,16 @@ export class GestionSuscriptorComponent {
     if (this.modoEdicion) {
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaModificacion = new Date().toISOString();
+      if (this.isClaveValida == true) {
+        if (this.FormRegistro.codigoAdministrador) {
+          this._usuariosService.getUsuarioById(this.FormRegistro.codigoAdministrador).subscribe((user: any) => {
+            if (user) {
+              user.claveUsuario = this.FormRegistro.claveNew;
+              this._usuariosService.actualizarUsuario(user).subscribe();
+            }
+          });
+        }
+      }
       this._suscriptoresService.actualizarSuscriptor(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {

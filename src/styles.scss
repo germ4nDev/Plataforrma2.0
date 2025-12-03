@@ -53,6 +53,7 @@
 @import 'scss/navbar';
 @import 'scss/tabs-aside';
 @import 'scss/swal_dark.scss';
+// @import 'scss/aplus10';
 
 // third party Module
 @import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
@@ -408,6 +409,21 @@ hr.detail-separator {
 
 .btn.btn-NuevoRegistro:active {
     transform: scale(0.95) !important;
+}
+
+.btn.btn-NuevoRegistroGroup {
+    background-color: var(--app-btn-inactive) !important;
+    color: var(--app-btn-secondary-texto) !important;
+    transition: all 0.6s ease !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    white-space: nowrap !important;
+}
+
+.btn.btn-NuevoRegistroGroup:hover {
+    background-color: var(--app-navbar-color) !important;
+    color: var(--app-texto-color) !important;
+    cursor: pointer;
 }
 
 .pcoded-mtext {

@@ -126,7 +126,6 @@ export class GestionUsuarioComponent implements OnInit {
   }
 
   consultarRolesAplicacion() {
-
     const navSettings = this._localStorageService.getNavSettingsLocalStorage();
     const codigo = navSettings.aplicacion?.codigoAplicacion || '';
     console.log('aca hijuepuuuuuuuuuuuuuuuu', codigo);

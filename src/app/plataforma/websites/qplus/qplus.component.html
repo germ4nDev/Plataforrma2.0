@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" type="image/png" href="media/logoqplus.icon.ico">
+    <link rel="icon" type="image/png" href="./media/logoqplus.icon.ico">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <script defer src="scripts.js"></script>
@@ -19,16 +19,16 @@
     <div class="header-container">
         <header>
             <div class="logo-container">
-                <img src="media/logo_Qplus2.jpg" alt="Logo de QPLUS" class="logo">
+                <img src="{{ LogoQplus }}" alt="Logo de QPLUS" class="logo">
             </div>
             <nav>
-                <a href="#" onclick="showSection('inicio')">Inicio</a>
-                <a href="#modulos" onclick="showSection('modulos')">Suites</a>
-                <a href="#caracteristicas" onclick="showSection('caracteristicas')">Características</a>
-                <a href="#instalacion" onclick="showSection('instalacion')">Instalación</a>
-                <a href="#nosotros" onclick="showSection('nosotros')">Nosotros</a>
-                <a href="#carousel-clientes" onclick="showSection('clientes')">Clientes</a>
-                <a href="#contacto" onclick="showSection('contacto')">Contáctenos</a>
+                <a href="javascript();" onclick="showSection('inicio')">Inicio</a>
+                <a href="javascript();" onclick="showSection('modulos')">Suites</a>
+                <a href="javascript();" onclick="showSection('caracteristicas')">Características</a>
+                <a href="javascript();" onclick="showSection('instalacion')">Instalación</a>
+                <a href="javascript();" onclick="showSection('nosotros')">Nosotros</a>
+                <a href="javascript();" onclick="showSection('clientes')">Clientes</a>
+                <a href="javascript();" onclick="showSection('contacto')">Contáctenos</a>
             </nav>
         </header>
         <div class="color-bar">
@@ -36,11 +36,11 @@
     </div>
 
     <div class="carousel" id="carousel-main">
-        <img src="media/carrusel-inicio/2.png" alt="Slide 1" style="opacity: 1;">
-        <img src="media/carrusel-inicio/1.png" alt="Slide 2" style="opacity: 0;">
-        <img src="media/carrusel-inicio/3.png" alt="Slide 3" style="opacity: 0;">
-        <img src="media/carrusel-inicio/4.png" alt="Slide 4" style="opacity: 0;">
-        <img src="media/carrusel-inicio/5.png" alt="Slide 5" style="opacity: 0;">
+        <img src="{{ carrusel1 }}" alt="Slide 1" style="opacity: 1;">
+        <img src="{{ carrusel2 }}" alt="Slide 2" style="opacity: 0;">
+        <img src="{{ carrusel3 }}" alt="Slide 3" style="opacity: 0;">
+        <img src="{{ carrusel4 }}" alt="Slide 4" style="opacity: 0;">
+        <img src="{{ carrusel5 }}" alt="Slide 5" style="opacity: 0;">
         <div class="carousel-buttons">
             <button id="prev-main">&#10094;</button>
             <button id="next-main">&#10095;</button>
@@ -52,7 +52,7 @@
         <div class="container-inicio" id="inicio">
             <div style="flex: 1; max-width: 50%; padding: 10px;">
                 <video width="100%" controls>
-                    <source src="media/Qplus 2024- Corto.mp4" type="video/mp4">
+                    <source src="{{ videoInicio }}" type="video/mp4">
                     Tu navegador no soporta el formato de video.
                 </video>
             </div>
@@ -69,7 +69,7 @@
             <h2>Suites Disponibles</h2>
             <div class="card-container">
                 <div class="card">
-                    <img src="media/SG_Qplus.png" alt="Sistemas de Gestión">
+                    <img src="{{ qplusSG }}" alt="Sistemas de Gestión">
                     <h3>SISTEMAS DE GESTIÓN</h3>
                     <p>Administración, gestión y mantenimiento de los Sistemas de Gestión de las empresas, evidenciando
                         rápida y fácilmente seguimientos, trazabilidades, análisis y mejoras.</p>
@@ -77,7 +77,7 @@
                     <button class="load-content-btn" data-file="M_SistemasGestion.html">Más información</button>
                 </div>
                 <div class="card">
-                    <img src="media/VD_Qplus.png" alt="Valoración del Desempeño">
+                    <img src="{{ qplusVD }}" alt="Valoración del Desempeño">
                     <h3>VALORACIÓN DEL DESEMPEÑO</h3>
                     <p>Administración y análisis del desarrollo de los colaboradores de la empresa, de una manera
                         eficiente, basado en el análisis de competencias y análisis de rendimiento.
@@ -86,7 +86,7 @@
                     <button class="load-content-btn" data-file="M_ValoracionDesempeño.html">Más información</button>
                 </div>
                 <div class="card">
-                    <img src="media/TH_Qplus.png" alt="Gestión de Talento Humano">
+                    <img src="{{ qplusTH }}" alt="Gestión de Talento Humano">
                     <h3>GESTIÓN TALENTO HUMANO</h3>
                     <p>Administración de la información personal, laboral, académica, seguridad social de los
                         colaboradores de la empresa, así como la ficha de ingreso, las hojas de vida y diferentes
@@ -95,10 +95,8 @@
                 </div>
             </div>
         </div>
-
         <div id="content-container">
         </div>
-
         <div class="container-Caracteristicas" id="caracteristicas">
             <h2>Administramos su sistema ahorrándole tiempo y recursos</h2>
             <div class="caracteristica-general">
@@ -126,18 +124,17 @@
                 </div>
                 <div class="img-content">
                     <div class="image-right">
-                        <img src="media/Caract-1.png" alt="Características">
+                        <img src="./media/Caract-1.png" alt="Características">
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="container-insta" id="instalacion">
             <h2>Tipos de Instalación</h2>
             <div class="card-container-nav">
                 <div class="card-nav">
                     <div class="card-logo">
-                        <img src="media/La_nube2.png" alt="Logo">
+                        <img src="./media/La_nube2.png" alt="Logo">
                         <h3>LA NUBE</h3>
                     </div>
                     <div class="card-content-nav">
@@ -161,7 +158,7 @@
                 </div>
                 <div class="card-nav">
                     <div class="card-logo">
-                        <img src="media/Multiempresa.png" alt="Logo">
+                        <img src="./media/Multiempresa.png" alt="Logo">
                         <h3>MULTIEMPRESA</h3>
                     </div>
                     <div class="card-content-nav">
@@ -178,12 +175,12 @@
             <h2>Nosotros</h2>
             <div class="grid-layout">
                 <div class="grid-item image-section-equipo">
-                    <img src="media/Equipo_1.png" alt="Características">
+                    <img src="./media/Equipo_1.png" alt="Características">
                 </div>
 
                 <div class="grid-item right-section">
                     <div class="logo-section-equipo">
-                        <img src="media/Logo_D&M.png" alt="Logo" class="logo-img-equipo">
+                        <img src="./media/Logo_D&M.png" alt="Logo" class="logo-img-equipo">
                     </div>
                     <div class="text-section-equipo">
                         <p>D&M Software Solutions es una empresa creada en el año 2004 con sede en la ciudad de Cali y
@@ -212,60 +209,60 @@
             <div class="carouselClientes">
                 <div class="group">
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_Protecnica.png" alt="Protecnica">
+                        <img src="./media/clientes/logo_Protecnica.png" alt="Protecnica">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logoquimicalider.png" alt="Quimica Lider">
+                        <img src="./media/clientes/logoquimicalider.png" alt="Quimica Lider">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logonutresol.png" alt="Nutresol">
+                        <img src="./media/clientes/logonutresol.png" alt="Nutresol">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_Comfandi3.jpg" alt="Comfandi">
+                        <img src="./media/clientes/logo_Comfandi3.jpg" alt="Comfandi">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_SOS.png" alt="SOS">
+                        <img src="./media/clientes/logo_SOS.png" alt="SOS">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_gangana.png" alt="Seapto">
+                        <img src="./media/clientes/logo_gangana.png" alt="Seapto">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_Suchance.png" alt="Suchance">
+                        <img src="./media/clientes/logo_Suchance.png" alt="Suchance">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logoreditos.png" alt="Grupo Reditos">
+                        <img src="./media/clientes/logoreditos.png" alt="Grupo Reditos">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logoproductecnica.png" alt="Productecnica">
+                        <img src="./media/clientes/logoproductecnica.png" alt="Productecnica">
                     </div>
                 </div>
                 <div aria-hidden class="group">
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_Protecnica.png" alt="Protecnica">
+                        <img src="./media/clientes/logo_Protecnica.png" alt="Protecnica">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logoquimicalider.png" alt="Quimica Lider">
+                        <img src="./media/clientes/logoquimicalider.png" alt="Quimica Lider">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logonutresol.png" alt="Nutresol">
+                        <img src="./media/clientes/logonutresol.png" alt="Nutresol">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_Comfandi3.jpg" alt="Comfandi">
+                        <img src="./media/clientes/logo_Comfandi3.jpg" alt="Comfandi">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_SOS.png" alt="SOS">
+                        <img src="./media/clientes/logo_SOS.png" alt="SOS">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_gangana.png" alt="Seapto">
+                        <img src="./media/clientes/logo_gangana.png" alt="Seapto">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logo_Suchance.png" alt="Suchance">
+                        <img src="./media/clientes/logo_Suchance.png" alt="Suchance">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logoreditos.png" alt="Grupo Reditos">
+                        <img src="./media/clientes/logoreditos.png" alt="Grupo Reditos">
                     </div>
                     <div class="cardCarousel">
-                        <img src="media/clientes/logoproductecnica.png" alt="Productecnica">
+                        <img src="./media/clientes/logoproductecnica.png" alt="Productecnica">
                     </div>
                 </div>
             </div>
@@ -314,7 +311,7 @@
                             </p>
                             <p>Cali - Colombia</p>
                             <div class="image-container">
-                                <img src="media/contact us.png" alt="Imagen sobre QPLUS"
+                                <img src="./media/contact us.png" alt="Imagen sobre QPLUS"
                                     style="width: 50%; border-radius: 10px;">
                             </div>
                         </td>
@@ -322,7 +319,6 @@
                 </table>
             </div>
         </div>
-
     </div>
     <!-- Footer John -->
     <br>
@@ -332,14 +328,14 @@
             <div class="box">
                 <figure>
                     <a href="#">
-                        <img src="media/QplusLogo.png" alt="Logo Qplus">
+                        <img src="{{ LogoQplus }}" alt="Logo Qplus">
                     </a>
                 </figure>
             </div>
             <div class="box">
                 <h3>LINKS</h3>
                 <P><a href="https://www.dymsites.co" target="_blank" class="footer-link">www.dymsites.co</a></P>
-                <p><a href="media/Condiciones del uso del software QPLUS NUBE como servicio.pdf" target="_blank" class="footer-link">Condiciones del uso del software <b>QPLUS NUBE</b> como servicio</a></p>
+                <p><a href="./media/Condiciones del uso del software QPLUS NUBE como servicio.pdf" target="_blank" class="footer-link">Condiciones del uso del software <b>QPLUS NUBE</b> como servicio</a></p>
             </div>
             <div class="box">
                 <h3>SÍGUENOS</h3>

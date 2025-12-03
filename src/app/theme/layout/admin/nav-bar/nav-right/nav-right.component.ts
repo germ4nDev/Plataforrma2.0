@@ -90,7 +90,6 @@ export class NavRightComponent implements DoCheck, OnInit {
     this.consultarColorsettings();
     this.suscriptorPlataforma = this._localstorageService.getSuscriptorPlataformaLocalStorage();
     const userLogg = this._localstorageService.getUsuarioLocalStorage();
-    console.log('no hay suscriptor suscriptor');
     this.avatarUsuario = this._uploadService.getFilePath(this.suscriptorPlataforma, 'usuarios', userLogg.fotoUsuario);
     this.nombreUsuario = userLogg.nombreUsuario || '';
     this.themeService.isDarkTheme$.subscribe((isDark) => {

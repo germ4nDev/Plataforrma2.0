@@ -55,7 +55,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreSuscriptor">{{ 'SUSCRIPTORES.GESTION.NAME' | translate }}</label>
+                                <label class="form-control-label" for="nombreSuscriptor">{{ 'SUSCRIPTORES.GESTION.NAME'
+                                    | translate }}</label>
                                 <input class="form-control form-input" id="nombreSuscriptor" name="nombreSuscriptor"
                                     type="text" placeholder="{{ 'SUSCRIPTORES.GESTION.PLACEHOLDERNAME' | translate }}"
                                     [ngClass]="{ 'is-invalid': !nombreSuscriptor.valid && (nombreSuscriptor.dirty || nombreSuscriptor.touched || isSubmit) }"
@@ -69,7 +70,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="identificacion">{{'SUSCRIPTORES.GESTION.IDENTIFICATION' | translate }}</label>
+                                <label class="form-control-label"
+                                    for="identificacion">{{'SUSCRIPTORES.GESTION.IDENTIFICATION' | translate }}</label>
                                 <input class="form-control form-input" id="identificacion" name="identificacion"
                                     type="text"
                                     placeholder="{{ 'SUSCRIPTORES.GESTION.PLACEHOLDERIDENTIFICACION' | translate }}"
@@ -85,7 +87,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="direccionSuscriptor">{{'SUSCRIPTORES.GESTION.ADDRESS' | translate }}</label>
+                                <label class="form-control-label"
+                                    for="direccionSuscriptor">{{'SUSCRIPTORES.GESTION.ADDRESS' | translate }}</label>
                                 <input class="form-control form-input" id="direccionSuscriptor"
                                     name="direccionSuscriptor" type="text"
                                     placeholder="{{ 'SUSCRIPTORES.GESTION.ADDRESS' | translate }}"
@@ -101,7 +104,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="telefonoContacto">{{ 'SUSCRIPTORES.GESTION.PHONE' | translate }}</label>
+                                <label class="form-control-label" for="telefonoContacto">{{ 'SUSCRIPTORES.GESTION.PHONE'
+                                    | translate }}</label>
                                 <input class="form-control form-input" id="telefonoContacto" name="telefonoContacto"
                                     type="text" placeholder="{{ 'SUSCRIPTORES.GESTION.PHONE' | translate }}"
                                     [ngClass]="{ 'is-invalid': !telefonoContacto.valid && (telefonoContacto.dirty || telefonoContacto.touched || isSubmit) }"
@@ -115,7 +119,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="numeroEmpresas">{{'SUSCRIPTORES.GESTION.NUMEMPRESAS' | translate }}</label>
+                                <label class="form-control-label"
+                                    for="numeroEmpresas">{{'SUSCRIPTORES.GESTION.NUMEMPRESAS' | translate }}</label>
                                 <input class="form-control form-input" id="numeroEmpresas" name="numeroEmpresas"
                                     type="number" placeholder="{{ 'SUSCRIPTORES.GESTION.NUMEMPRESAS' | translate }}"
                                     [ngClass]="{ 'is-invalid': !numeroEmpresas.valid && (numeroEmpresas.dirty || numeroEmpresas.touched || isSubmit) }"
@@ -129,7 +134,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="numeroUsuarios">{{'SUSCRIPTORES.GESTION.NUMUSERS' | translate }}</label>
+                                <label class="form-control-label" for="numeroUsuarios">{{'SUSCRIPTORES.GESTION.NUMUSERS'
+                                    | translate }}</label>
                                 <input class="form-control form-input" id="numeroUsuarios" name="numeroUsuarios"
                                     type="number" placeholder="{{ 'SUSCRIPTORES.GESTION.NUMUSERS' | translate }}"
                                     [ngClass]="{ 'is-invalid': !numeroUsuarios.valid && (numeroUsuarios.dirty || numeroUsuarios.touched || isSubmit) }"
@@ -143,7 +149,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="usuarioAdministrador">{{'SUSCRIPTORES.GESTION.ADMINUSER' | translate }}</label>
+                                <label class="form-control-label"
+                                    for="usuarioAdministrador">{{'SUSCRIPTORES.GESTION.ADMINUSER' | translate }}</label>
                                 <input class="form-control form-input" id="usuarioAdministrador"
                                     name="usuarioAdministrador" type="text"
                                     placeholder="{{ 'SUSCRIPTORES.GESTION.ADMINUSER' | translate }}"
@@ -159,22 +166,32 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="claveAdministrador">{{'SUSCRIPTORES.GESTION.ADMINPASSWORD' | translate }}</label>
+                                <label class="form-label">{{ 'SUSCRIPTORES.GESTION.CLAVEACTUAL' | translate }}</label>
                                 <div class="input-group mb-4">
-                                    <input class="form-control form-input" id="claveAdministrador"
-                                        name="claveAdministrador" type="password"
-                                        placeholder="{{ 'SUSCRIPTORES.GESTION.ADMINPASSWORD' | translate }}"
-                                        [ngClass]="{ 'is-invalid': !claveAdministrador.valid && (claveAdministrador.dirty || claveAdministrador.touched || isSubmit) }"
-                                        #claveAdministrador="ngModel" required
-                                        [(ngModel)]="FormRegistro.claveAdministrador" />
-                                    <span class="input-group-text form-input"><i class="feather icon-eye"
-                                            style="cursor: pointer;" id="togglePassword"></i></span>
+                                    <input type="text" class="form-control form-input" name="claveActual"
+                                        placeholder="{{ 'SUSCRIPTORES.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                        #claveActual="ngModel" [(ngModel)]="FormRegistro.claveActual" />
+                                    <button id="validarClave" class="btn btn-primary btn-NuevoRegistroGroup" [disabled]="verificarHabilitado"
+                                        (click)="validarClaveActual(FormRegistro.claveActual)">{{ 'PLATAFORMA.VALIDARPASSWORD' | translate }}</button>
                                 </div>
-                                <label
-                                    *ngIf="!claveAdministrador.valid && (claveAdministrador.dirty || claveAdministrador.touched || isSubmit)"
-                                    class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REGRESAR' | translate }}
-                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'SUSCRIPTORES.GESTION.CLAVENEW' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="claveNew"
+                                    [disabled]="isClaveActual"
+                                    placeholder="{{ 'SUSCRIPTORES.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    #claveNew="ngModel" required [(ngModel)]="FormRegistro.claveNew" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'SUSCRIPTORES.GESTION.CLAVECONFIRM' | translate }}</label>
+                                <input type="text" class="form-control form-input" name="claveConfirm"
+                                    [disabled]="isClaveActual"
+                                    placeholder="{{ 'SUSCRIPTORES.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    #claveConfirm="ngModel" required [(ngModel)]="FormRegistro.claveConfirm" />
                             </div>
                         </div>
                         <div class="col-md-12">

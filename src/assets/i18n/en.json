@@ -99,6 +99,8 @@
         "MODIFICAR": "The record was successfully updated",
         "NOINSERTO": "The record could not be inserted",
         "NOMODIFICO": "The record could not be updated",
+        "VALIDARPASSWORD": "Validate",
+        "PASSWORDNOTMATCH": "Curent password is invalid.",
         "DATATABLE": {
             "SHOW": "Show",
             "ENTRIES": "Entries",

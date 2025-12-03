@@ -1130,6 +1130,7 @@ h1 {
 .caracteristica-Container {
     display: flex;
 }
+
 .video-right {
     width: 100%;
     max-width: 800px;
@@ -1137,4 +1138,31 @@ h1 {
     display: block;
     padding-left: 50px;
 }
+
+/*
+      Nota: En un entorno de Canvas, se asume que Tailwind CSS está cargado globalmente.
+      Estos estilos adicionales son para la animación del carrusel de clientes.
+    */
+    .carouselClientes {
+      display: flex;
+      width: fit-content;
+    }
+
+    /* Definición de la animación de scroll infinito para el carrusel de clientes */
+    @keyframes scroll {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(calc(-50% - 16px)); /* Mueve el 50% del contenido + el gap (8px * 2) */
+      }
+    }
+
+    .animate-scroll {
+      animation: scroll 30s linear infinite;
+    }
+
+    .animate-scroll:hover {
+        animation-play-state: paused;
+    }
 
