@@ -92,13 +92,6 @@
     --scrollbar-thumb-hover: #5f5f5f;
 }
 
-.card {
-    // background-color: var(--card-background);
-    // border-color: var(--border-color);
-    background-color: #007bff;
-    border-color: var(--border-color);
-}
-
 // =================================
 // REGLAS FINALES DEL TEMA OSCURO
 // =================================
@@ -135,6 +128,13 @@ hr.detail-separator {
     height: 1px;
     background-color: var(--scrollbar-thumb-hover);
     padding: 20;
+}
+
+.card {
+    // background-color: var(--card-background);
+    // border-color: var(--border-color);
+    background-color: #007bff;
+    border-color: var(--border-color);
 }
 
 /* *************************************************************** */
@@ -523,6 +523,30 @@ body {
     transition:
         background-color 0.3s ease,
         color 0.3s ease;
+}
+
+.main-wrapper {
+    /* 1. Limitar ancho para legibilidad en monitores grandes (e.g., 1280px) */
+    max-width: 1280px;
+
+    /* 2. Centrar el contenedor en el centro de la pantalla */
+    margin-left: auto;
+    margin-right: auto;
+
+    /* 3. Padding para evitar que el contenido toque los bordes de la ventana/pantalla */
+    padding: 32px; /* o 2rem */
+
+    /* 4. Usar Flexbox para gestionar el espacio entre secciones */
+    display: flex;
+    flex-direction: column;
+    /* Ajusta el espacio vertical entre las secciones */
+    gap: 48px; /* o 3rem, para separar bien el Carrusel del Formulario, etc. */
+
+    /* 5. Asegurar que ocupe todo el ancho disponible si no alcanza el max-width */
+    width: 100%;
+
+    /* 6. Mejorar la fuente base del sitio */
+    font-family: 'Inter', sans-serif;
 }
 
 .layout-wrapper {

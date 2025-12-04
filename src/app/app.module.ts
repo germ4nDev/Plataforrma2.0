@@ -32,7 +32,6 @@ import { LanguageSelectorComponent } from './theme/shared/components/language-se
 import { NavContentComponent } from './theme/layout/admin/navigation/nav-content/nav-content.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import {  } from './theme/shared/_helpers/jwt-interceptor.interceptor';
-import { AuthInterceptor } from './theme/shared/_helpers/auth.interceptor';
 
 const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
 
@@ -83,7 +82,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     FriendComponent
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],

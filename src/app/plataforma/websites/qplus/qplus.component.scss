@@ -4,47 +4,12 @@
     margin-left: auto;
     margin-right: auto;
     padding: 0 10px;
-}
-/* Estilos básicos */
-html {
     scroll-padding-top: 200px;
     scroll-behavior: smooth;
 }
 
-body {
-    font-family: 'Century Gothic';
-    margin: 0;
-    padding: 0;
-    background-color: whitesmoke;
-    color: black;
-    font-size: 22px;
-}
 
-h2{
-    text-align: center;
-    font-weight: bold;
-    font-size: 35px;
-}
-
-.container {
-    justify-content: center;
-    text-align: center;
-}
-
-/* .container-inicio {
-    padding: 20px;
-    background-color: #dddd;
-}
-
-.container-suites{
-    padding: 20px;
-    background-color: #dddd;
-}
-
-.container-insta{
-    background-color: #dddd;
-} */
-
+/* CARD */
 .card-container {
     display: flex;
     flex-wrap: wrap;
@@ -116,6 +81,13 @@ h2{
     background-color: #346ba6;
 }
 
+.card-container-nav {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 #content-container {
     margin-top: 20px;
     padding: 20px;
@@ -140,80 +112,6 @@ h2{
     background-color: #003366;
 }
 
-
-/* .card-container-nav {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-
-.card-nav {
-    width: 350px;
-    height: 350px;
-    background-color: #346ba6;
-    color: white;
-    border: 1px solid white;
-    border-bottom: 4px solid #e67626;
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-}
-
-.card-nav:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    height: auto;
-}
-
-.card-logo {
-    text-align: center;
-    padding: 20px;
-}
-
-.card-logo img {
-    max-height: 250px;
-    max-width: 250px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-    filter: brightness(0) invert(1);
-}
-
-.card-logo h3 {
-    margin: 0;
-    font-size: 30px;
-    color: white;
-}
-
-
-.card-content-nav {
-    flex-grow: 1;
-    padding: 15px;
-    background-color: #346ba6;
-    box-sizing: border-box;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    text-align: left;
-}
-
-.card-nav:hover .card-content-nav {
-    opacity: 1;
-    transform: translateY(0);
-} */
-
-.card-container-nav {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 20px;
-}
 
 /* Estilo base de las tarjetas */
 .card-nav {
@@ -260,7 +158,6 @@ h2{
     color: white;
 }
 
-
 .card-content-nav {
     flex-grow: 1;
     padding: 15px;
@@ -275,6 +172,23 @@ h2{
 .card-nav:hover .card-content-nav {
     opacity: 1;
     transform: translateY(0);
+}
+
+.card-requisitos {
+    background-color: #346ba6;
+    border-bottom: 4px solid #e67626; /* Borde inferior fijo visible */
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    width: 150px;
+}
+
+.card-requisitos-img {
+    width: 100%;
+    border-radius: 8px;
+    filter: brightness(0) invert(1); /* Aplica un filtro de brillo para hacer la imagen blanca */
 }
 
 /* Botón central */
@@ -336,22 +250,7 @@ h2{
 }
 
 /* Ventanilla de los requisitos de instalación */
-.card-requisitos {
-    background-color: #346ba6;
-    border-bottom: 4px solid #e67626; /* Borde inferior fijo visible */
-    border-radius: 10px;
-    color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    text-align: center;
-    width: 150px;
-}
 
-.card-requisitos-img {
-    width: 100%;
-    border-radius: 8px;
-    filter: brightness(0) invert(1); /* Aplica un filtro de brillo para hacer la imagen blanca */
-}
 
 .list-right{
     padding: 10px;
@@ -576,6 +475,7 @@ nav a:hover {
     animation: spin 25s infinite linear;
     padding-right: 1em;
 }
+
 .cardCarousel {
     flex: 0 0 5em;
     height: 3em;
@@ -596,6 +496,7 @@ nav a:hover {
 .tituloClientes {
     text-align: center;
 }
+
 @keyframes spin {
     from {
         translate: 0;
@@ -1130,7 +1031,6 @@ h1 {
 .caracteristica-Container {
     display: flex;
 }
-
 .video-right {
     width: 100%;
     max-width: 800px;
@@ -1138,31 +1038,4 @@ h1 {
     display: block;
     padding-left: 50px;
 }
-
-/*
-      Nota: En un entorno de Canvas, se asume que Tailwind CSS está cargado globalmente.
-      Estos estilos adicionales son para la animación del carrusel de clientes.
-    */
-    .carouselClientes {
-      display: flex;
-      width: fit-content;
-    }
-
-    /* Definición de la animación de scroll infinito para el carrusel de clientes */
-    @keyframes scroll {
-      from {
-        transform: translateX(0);
-      }
-      to {
-        transform: translateX(calc(-50% - 16px)); /* Mueve el 50% del contenido + el gap (8px * 2) */
-      }
-    }
-
-    .animate-scroll {
-      animation: scroll 30s linear infinite;
-    }
-
-    .animate-scroll:hover {
-        animation-play-state: paused;
-    }
 

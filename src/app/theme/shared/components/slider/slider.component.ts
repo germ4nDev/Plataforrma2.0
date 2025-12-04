@@ -11,13 +11,13 @@ import { LocalStorageService, UploadFilesService } from '../../service';
 const base_url = environment.apiUrl;
 
 @Component({
-  selector: 'app-full-screen-slider',
+  selector: 'app-slider',
   standalone: true,
   imports: [CommonModule, NgOptimizedImage],
-  templateUrl: './fullscreen-slider.component.html',
-  styleUrl: './fullscreen-slider.component.scss'
+  templateUrl: './slider.component.html',
+  styleUrl: './slider.component.scss'
 })
-export class FullScreenSliderComponent implements OnInit, OnDestroy {
+export class SliderComponent implements OnInit, OnDestroy {
   @Input() tipoSlider: number = 0;
   @Input() slides: any[] = [];
   autoSlideInterval: number = 7000;
