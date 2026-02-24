@@ -132,7 +132,7 @@ export class LoginComponent implements OnInit {
               this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOROLESASIGN'));
               this._localstorageService.setLogOut();
             } else {
-              this.router.navigate(['/starter/inicio-suscriptores']);
+              this.router.navigate(['/aplicaciones/aplicaciones']);
             }
 
           console.log('Login exitoso:', resp.usuario.codigoUsuario);
