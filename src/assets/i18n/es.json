@@ -81,7 +81,8 @@
             "SEGUIMIENTOS": "Seguimientos",
             "ROLES": "Roles",
             "ACTIVIDADES": "Actividades",
-            "ACTIVIDADROLES": "Actividades Roles"
+            "ACTIVIDADROLES": "Actividades Roles",
+            "CLASESTICKET": "Clases Tickets"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notificaciones",
@@ -458,6 +459,47 @@
                 "NOMBRECHOLDER": "Nombre Seguimientos",
                 "DESCRIPCIONCHOLDER": "Descripción Seguimientos",
                 "ESTADOSEGUIMIENTO": "Estado Seguimiento"
+            }
+        },
+        "CLASESTICKET": {
+            "TITLE": "Administración de Clases Ticket",
+            "NEW": "Nueva Clase Ticket",
+            "UPDATE": "Modificar Clase Ticket",
+            "DELETE": "Eliminar Clase Ticket",
+            "CREATE": "Crear Clase Ticket",
+            "CODE": "Código",
+            "NOMBRECLASE": "Nombre",
+            "DESCRIPCIONCLASE": "Descripción",
+            "ESTADOCLASE": "Estado",
+            "ELIMINARTITULO": "¿Está seguro de eliminar?",
+            "ELIMINARTEXTO": "¡Será Eliminada la Clase!",
+            "ELIMINAREXITOSA": "¡La Clase fué eliminada correctamente!",
+            "ELIMINARERROR": "No se pudo eliminar la Clase.",
+            "GESTION": {
+                "TITLE": "Crear/Actualizar una Clase Ticket",
+                "CREATE": "Crear Clase Ticket",
+                "UPDATE": "Modificar Clase Ticket",
+                "CODIGOCLASE": "Código",
+                "NOMBRECLASE": "Nombre",
+                "DESCRIPCIONCLASE": "Descripción",
+                "ESTADOCLASE": "Estado",
+                "PLACEHOLDERCODE": "Código Clase",
+                "REQUERIDCODE": "Por favor, Ingrese el Código. Este campo es obligatorio.",
+                "PLACEHOLDERNAME": "Nombre de la Clase",
+                "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+                "DESCRIPTION": "Descripción",
+                "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
+                "STATUS":"Estado"
+            },
+            "FILTROS": {
+                "TITULO": "Filtros Clases Tickets",
+                "FILTRONOMBRE": "Nombre",
+                "FILTRODECRIPCION": "Descripción",
+                "FILTROESTADO": "Estado",
+                "TODOS": "Mostrar Todos",
+                "NOMBRECHOLDER": "Nombre Clase",
+                "DESCRIPCIONCHOLDER": "Descripción Clase",
+                "ESTADOSEGUIMIENTO": "Estado Clase"
             }
         }
     },

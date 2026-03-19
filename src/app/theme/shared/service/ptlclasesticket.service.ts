@@ -3,10 +3,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { PTLClaseTicketModel } from '../_helpers/models/PTLClaseTicket.model';
 import { LocalStorageService } from './local-storage.service';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { SocketService } from './sockets.service';
+import { ClasesTicketComponent } from '../../../plataforma/tickets/clases-ticket/clases-ticket.component';
 
 const base_url = environment.apiUrl;
 
@@ -15,11 +18,43 @@ const base_url = environment.apiUrl;
 })
 export class PtlclasesticketService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
+  private _registros = new BehaviorSubject<PTLClaseTicketModel[]>([]);
+  private _registrosChange = new Subject<any>();
+  _registrosChange$ = this._registrosChange.asObservable();
 
   constructor(
     private http: HttpClient,
+    private socketService: SocketService,
     private _localStorageService: LocalStorageService
-) {}
+) {
+    this.socketService.listen('clasesTickets-actualizadas').subscribe({
+      next: (payload) => {
+        console.log('Evento de Socket.IO recibido:', payload.msg);
+        this._registrosChange.next(payload);
+        this.cargarRegistros().subscribe();
+      },
+      error: (err) => console.error('Error en la escucha de sockets:', err)
+    });
+}
+    get clasesTicket$(): Observable<PTLClaseTicketModel[]> {
+        return this._registros.asObservable();
+    }
+
+    cargarRegistros() {
+        console.log('Consultando y las clases del servidor...');
+        const url = `${base_url}/clases-ticket`;
+        return this.http.get(url)
+        .pipe(
+            map((resp: any) => resp.clasesTicket as PTLClaseTicketModel[]),
+            map((regs: PTLClaseTicketModel[]) => {
+                console.log('respuesta clasesTicket', regs);
+                return regs.sort((a: any, b: any) => a.claseTicket.localeCompare(b.claseTicket));
+            }),
+            tap((RegistrosOrdenadas) => {
+                this._registros.next(RegistrosOrdenadas);
+            })
+        );
+    }
 
   getRegistros() {
     const url = `${base_url}/clases-ticket`;
