@@ -25,6 +25,14 @@ const routes: Routes = [
         {
             path: 'estadisticas',
             loadComponent: () => import('./estadisticas/estadisticas.component').then(m => m.EstadisticasComponent)
+        },
+        {
+            path: 'clases-ticket',
+            loadComponent: () => import('./clases-ticket/clases-ticket.component').then(m => m.ClasesTicketComponent)
+        },
+        {
+            path: 'gestion-clases-ticket',
+            loadComponent: () => import('./clases-ticket/gestion-clases-ticket/gestion-clases-ticket.component').then(m => m.GestionClasesTicketComponent)
         }
     ]
   }
