@@ -4,7 +4,7 @@ export class PTLClaseTicketModel {
     public codigoClase?: string,
     public claseTicket?: string,
     public descripcionClase?: string,
-    public estadoClase?: string,
+    public estadoClase?: boolean,
     public nomEstado?: string,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,

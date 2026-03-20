@@ -473,6 +473,47 @@
                 "DESCRIPCIONCHOLDER": "Follow-up Descripction",
                 "ESTADOSEGUIMIENTO": "Follow-up Status"
             }
+        },
+        "CLASESTICKET": {
+            "TITLE": "Ticket Class Administration",
+            "NEW": "New Ticket Class",
+            "UPDATE": "Modify Ticket Class",
+            "DELETE": "Delete Ticket Class",
+            "CREATE": "Create Ticket Class",
+            "CODE": "Code",
+            "NOMBRECLASE": "Name",
+            "DESCRIPCIONCLASE": "Description",
+            "ESTADOCLASE": "Status",
+            "ELIMINARTITULO": "Are you sure you want to delete?",
+            "ELIMINARTEXTO": "The Class will be deleted!",
+            "ELIMINAREXITOSA": "The Class was deleted successfully!",
+            "ELIMINARERROR": "The Class could not be deleted.",
+            "GESTION": {
+                "TITLE": "Create/Update a Ticket Class",
+                "CREATE": "Create Ticket Class",
+                "UPDATE": "Modify Ticket Class",
+                "CODIGOCLASE": "Code",
+                "NOMBRECLASE": "Name",
+                "DESCRIPCIONCLASE": "Description",
+                "ESTADOCLASE": "Status",
+                "PLACEHOLDERCODE": "Class Code",
+                "REQUERIDCODE": "Please enter the Code. This field is required.",
+                "PLACEHOLDERNAME": "Class Name",
+                "REQUERIDONAME": "Please enter a name. This field is required.",
+                "DESCRIPTION": "Description",
+                "REQUERIDODESCRIPCION": "Please enter a description. This field is required.",
+                "STATUS": "Status"
+            },
+            "FILTROS": {
+                "TITULO": "Ticket Class Filters",
+                "FILTRONOMBRE": "Name",
+                "FILTRODECRIPCION": "Description",
+                "FILTROESTADO": "Status",
+                "TODOS": "Show All",
+                "NOMBRECHOLDER": "Class Name",
+                "DESCRIPCIONCHOLDER": "Class Description",
+                "ESTADOSEGUIMIENTO": "Class Status"
+            }
         }
     },
     "CONEXIONES": {
