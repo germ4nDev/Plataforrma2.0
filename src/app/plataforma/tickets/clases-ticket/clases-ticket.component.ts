@@ -24,6 +24,7 @@ import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetad
 import { PTLClaseTicketModel } from 'src/app/theme/shared/_helpers/models/PTLClaseTicket.model';
 import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclasesticket.service';
 
+
 @Component({
   selector: 'app-clases-ticket',
   standalone: true,

@@ -1,4 +1,4 @@
-<div class="datatable-wrapper">
+<div>
     <h5 *ngIf="tableTitle" class="datatable-title text-center">{{ tableTitle }}</h5>
     <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
         <div class="d-flex align-items-center">
@@ -12,7 +12,7 @@
             <span>{{ 'PLATAFORMA.DATATABLE.ENTRIES' | translate }}</span>
         </div>
         <div class="d-flex">
-            <button class="btn btn-primary btn-NuevoRegistro btn-animacion me-2" (click)="onExcelExport()">
+            <button *ngIf="showExportButton" class="btn btn-primary btn-NuevoRegistro btn-animacion me-2" (click)="onExcelExport()">
                 {{ exportLabel | translate }}
                 <i class="feather ms-2 icon-download"></i>
             </button>
@@ -28,7 +28,7 @@
             </button>
         </div>
     </div>
-    <div class="content-g67">
+    <div class="content-g">
         <div class="tableFixHead">
             <table id="datatable-component" class="row-border hover table nowrap w-100">
                 <thead *ngIf="paginatedData.length > 0">

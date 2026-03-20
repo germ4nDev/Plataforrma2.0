@@ -68,7 +68,7 @@ export class PtlmodulosApService {
     );
   }
 
-  getRegistroById(id: number) {
+  getRegistroById(id: string) {
     const url = `${base_url}/modulos/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
@@ -95,7 +95,7 @@ export class PtlmodulosApService {
     );
   }
 
-  putModificarRegistro(modulo: PTLModuloAP, moduloId: number) {
+  putModificarRegistro(modulo: PTLModuloAP, moduloId: string) {
     const url = `${base_url}/modulos/${moduloId}`;
     return this.http.put(url, modulo).pipe(
       map((resp: any) => {

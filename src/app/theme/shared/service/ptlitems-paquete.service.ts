@@ -46,6 +46,19 @@ export class PtlItemsPaqueteService {
     );
   }
 
+  getRegistroByCodigoPaquete(codigo: string) {
+    const url = `${base_url}/items-itemPaquete/code${codigo}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('data de los itemPaquete', resp);
+        return {
+          ok: true,
+          itemsPaquete: resp.itemsPaquete
+        };
+      })
+    );
+  }
+
   postCrearRegistro(itemPaquete: PTLItemPaquete) {
     const url = `${base_url}/items-paquete`;
     return this.http.post(url, itemPaquete);
@@ -64,7 +77,7 @@ export class PtlItemsPaqueteService {
     );
   }
 
-  deleteEliminarRegistro(_id: number) {
+  deleteEliminarRegistro(_id: string) {
     const url = `${base_url}/items-itemPaquete/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {

@@ -152,17 +152,18 @@ export class UsuariosComponent implements OnInit {
 
   setupRegistrosStream(): void {
     this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    let codigo = this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || this._localStorageService.getSuscriptorPlataformaLocalStorage();
     this.registrosTransformados$ = this._usuariosService.usuarios$.pipe(
       switchMap((users: PTLUsuarioModel[]) => {
         if (!users) return of([]);
         this.usuairos = users;
-        const transformedApps = users.map((user: any) => {
+        const transformedUsuarios = users.map((user: any) => {
           user.nomEstado = user.estadoAplicacion ? 'Activo' : 'Inactivo';
-          user.fotoUsuario = this._uploadService.getFilePath(this.suscPlataforma, 'usuarios', user.fotoUsuario);
+          user.fotoUsuario = this._uploadService.getFilePath(codigo, 'usuarios', user.fotoUsuario);
           return user as PTLUsuarioModel;
         });
-        this.registros = transformedApps;
-        return of(transformedApps);
+        this.registros = transformedUsuarios;
+        return of(transformedUsuarios);
       }),
       catchError((err) => {
         console.error('Error en el stream de aplicaciones:', err);
@@ -170,7 +171,7 @@ export class UsuariosComponent implements OnInit {
       })
     );
     this.registrosFiltrado$ = combineLatest([
-      this.registrosTransformados$.pipe(startWith([])), // Usa la fuente de datos transformada
+      this.registrosTransformados$.pipe(startWith([])),
       this.filtroIdentificacionSubject,
       this.filtroNombreSubject,
       this.filtroCorreoSubject,

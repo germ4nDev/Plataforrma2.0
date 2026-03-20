@@ -23,6 +23,7 @@ import { PtlSlidersInicioService } from 'src/app/theme/shared/service/ptlsliders
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { environment } from 'src/environments/environment';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { LocalStorageService, UploadFilesService } from 'src/app/theme/shared/service';
 
 const base_url = environment.apiUrl;
 //#endregion IMPORTS
@@ -45,15 +46,17 @@ export class SliderInicioComponent implements OnInit {
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   //#endregion VARIABLES
-
+suscPlataforma: string = '';
   constructor(
     private router: Router,
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _swalService: SwalAlertService,
     private _registrosService: PtlSlidersInicioService,
-    private _languageService: LanguageService
-  ) {}
+    private _languageService: LanguageService,
+    private _localStorageService: LocalStorageService,
+        private _uploadService: UploadFilesService
+  ) {this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();}
 
   ngOnInit() {
     this._navigationService.getNavigationItems();
@@ -75,7 +78,9 @@ export class SliderInicioComponent implements OnInit {
           if (resp.ok) {
             resp.slidersInicio.forEach((slider: any) => {
               slider.nomEstado = slider.estadoSlider == true ? 'Activo' : 'Inactivo';
-              slider.urlSlider = `${base_url}/upload/sliders/${slider.urlSlider}`;
+                      slider.urlSlider = this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider)
+
+            //   slider.urlSlider = `${base_url}/upload/sliders/${slider.urlSlider}`;
             });
             this.registros = resp.slidersInicio;
             this.registrosFiltrado = resp.slidersInicio;
@@ -105,7 +110,7 @@ export class SliderInicioComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'SLIDER.STATUS',
-      type: 'text'
+      type: 'estado'
     }
   ];
 

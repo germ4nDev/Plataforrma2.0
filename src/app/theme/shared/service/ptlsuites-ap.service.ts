@@ -64,7 +64,7 @@ export class PtlSuitesAPService {
       );
     }
 
-  getSuiteAPById(id: number) {
+  getSuiteAPById(id: string) {
     const url = `${base_url}/suites/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {

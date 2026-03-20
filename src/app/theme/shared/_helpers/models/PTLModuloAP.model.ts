@@ -13,6 +13,7 @@ export class PTLModuloAP {
     public translateKey?: string,
     public estadoModulo?: boolean,
     public hijos?: boolean,
+    public checked?: boolean,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,
     public codigoUsuarioModificacion?: string,

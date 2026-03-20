@@ -151,7 +151,7 @@ export class RolesUsuariosComponent implements OnInit {
     }
   }
 
-  private async consultarSuiteById(suiteId: number) {
+  private async consultarSuiteById(suiteId: string) {
     try {
       const resp = await firstValueFrom(
         this._suitesService.getSuiteAPById(suiteId).pipe(

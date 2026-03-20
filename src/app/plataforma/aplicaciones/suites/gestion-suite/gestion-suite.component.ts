@@ -38,7 +38,7 @@ export class GestionSuiteComponent implements OnInit {
   navCollapsed: boolean = false;
   navCollapsedMob: boolean = false;
   windowWidth: number = 0;
-  registroId: number = 0;
+  registroId: string = '';
   form: undefined;
   isSubmit: boolean;
   modoEdicion: boolean = false;

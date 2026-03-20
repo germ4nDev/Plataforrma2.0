@@ -88,6 +88,21 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="rutaServidor">{{ 'CONEXIONES.SERVIDORES.GESTION.IP' |
+                                    translate }}</label>
+                                <input class="form-control form-input" id="direccionIP" name="direccionIP" type="text"
+                                    placeholder="{{ 'CONEXIONES.SERVIDORES.GESTION.RUTAHOLDER' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !direccionIP.valid && (direccionIP.dirty || direccionIP.touched || isSubmit) }"
+                                    #direccionIP="ngModel" required [(ngModel)]="FormRegistro.direccionIP" />
+                                <label
+                                    *ngIf="!direccionIP.valid && (direccionIP.dirty || direccionIP.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'CONEXIONES.SERVIDORES.GESTION.REQUERIDOIP' | translate }}
+                                </label>
+                            </div>
+                        </div>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'CONEXIONES.SERVIDORES.GESTION.DESCRIPTION' | translate }}</label>
@@ -118,7 +133,7 @@
                                             [(ngModel)]="FormRegistro.estadoServidor" />
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
-                                    </label><br />
+                                    </label>
                                     <label class="radio-button">
                                         <input name="option" type="radio" [value]="false"
                                             [(ngModel)]="FormRegistro.estadoServidor" />

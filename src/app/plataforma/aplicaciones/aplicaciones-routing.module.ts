@@ -58,6 +58,22 @@ const routes: Routes = [
         loadComponent: () => import('./paquetes/gestion-paquete/gestion-paquete.component').then((m) => m.GestionPaqueteComponent)
       },
       {
+        path: 'items-paquete',
+        loadComponent: () => import('./paquetes/items-paquete/items-paquete.component').then((m) => m.ItemsPaqueteComponent)
+      },
+      {
+        path: 'modulos-paquete',
+        loadComponent: () => import('./paquetes/modulos-paquete/modulos-paquete.component').then((m) => m.ModulosPaqueteComponent)
+      },
+      {
+        path: 'gestion-itempq',
+        loadComponent: () => import('./paquetes/items-paquete/gestion-itempq/gestion-itempq.component').then((m) => m.GestionItempqComponent)
+      },
+      {
+        path: 'gestion-modulopq',
+        loadComponent: () => import('./paquetes/modulos-paquete/gestion-modulopq/gestion-modulopq.component').then((m) => m.GestionModulopqComponent)
+      },
+      {
         path: 'estadisticas',
         loadComponent: () => import('./estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent)
       }

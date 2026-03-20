@@ -1,41 +1,40 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataTablesModule } from 'angular-datatables';
-import { Router } from '@angular/router';
-import { PTLAplicacionModel } from './../../../theme/shared/_helpers/models/PTLAplicacion.model';
-import { PtlAplicacionesService } from './../../../theme/shared/service/ptlaplicaciones.service';
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { DataTablesModule } from 'angular-datatables';
+import { Subscription, Observable, tap, catchError, of } from 'rxjs';
 import { GradientConfig } from 'src/app/app-config';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { PTLPaqueteModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model';
-import { PTLPaquetesService } from 'src/app/theme/shared/service/ptlpaquetes.service';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
-import Swal from 'sweetalert2';
-import { PtllogActividadesService } from 'src/app/theme/shared/service/ptllog-actividades.service';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { PTLItemPaquete } from 'src/app/theme/shared/_helpers/models/PTLItemPaquete.model';
+import { PTLPaqueteModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { NavigationService, SwalAlertService, LocalStorageService, PtllogActividadesService, PTLPaquetesService, PtlAplicacionesService } from 'src/app/theme/shared/service';
+import { PtlItemsPaqueteService } from 'src/app/theme/shared/service/ptlitems-paquete.service';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import Swal from 'sweetalert2';
 
 @Component({
-    selector: 'app-paquetes',
+    selector: 'app-items-paquete',
     standalone: true,
     imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
-    templateUrl: './paquetes.component.html',
-    styleUrl: './paquetes.component.scss'
+    templateUrl: './items-paquete.component.html',
+    styleUrl: './items-paquete.component.scss'
 })
-export class PaquetesComponent implements OnInit {
+export class ItemsPaqueteComponent {
     @Output() toggleSidebar = new EventEmitter<void>();
-    aplicacionesSub?: Subscription;
+    itemsPaqueteSub?: Subscription;
     registrosSub?: Subscription;
-    registros: PTLPaqueteModel[] = [];
-    registrosFiltrado: PTLPaqueteModel[] = [];
+    registros: PTLItemPaquete[] = [];
+    registrosFiltrado: PTLItemPaquete[] = [];
     aplicaciones: PTLAplicacionModel[] = [];
+        registroId: string = '';
+    modoEdicion: boolean = false;
+
     moduloTituloExcel: string = '';
     filtroPersonalizado: string = '';
     hasFiltersSlot: boolean = false;
@@ -46,15 +45,31 @@ export class PaquetesComponent implements OnInit {
 
     constructor(
         private router: Router,
+        private route: ActivatedRoute,
         private translate: TranslateService,
         private _navigationService: NavigationService,
         private _swalService: SwalAlertService,
         private _localstorageService: LocalStorageService,
         private _logActividadesService: PtllogActividadesService,
-        private _registrosService: PTLPaquetesService,
-        private _aplicacionesService: PtlAplicacionesService
+        private _registrosService: PtlItemsPaqueteService
     ) {
         this.gradientConfig = GradientConfig;
+        this.route.queryParams.subscribe((params) => {
+            this.registroId = params['regId'] || '';
+            console.log('regId', this.registroId);
+                this.modoEdicion = true;
+                this._registrosService.getRegistros().subscribe({
+                    next: (resp: any) => {
+                        console.log('resp', resp);
+                        this.registrosFiltrado = resp;
+                    },
+                    error: (err) => {
+                        Swal.fire('Error', 'No se pudo obtener los items del paquete por, ', err);
+                    }
+                });
+                this.modoEdicion = false;
+                this.registrosFiltrado = [];
+        });
     }
 
     ngOnInit(): void {
@@ -71,13 +86,11 @@ export class PaquetesComponent implements OnInit {
             .pipe(
                 tap((resp: any) => {
                     if (resp.ok) {
-                        resp.paquetes.forEach((reg: any) => {
-                            reg.nomEstado = reg.estadoPaquete ? 'Activo' : 'Inactivo';
-                            reg.nomPromocion = reg.promocion ? 'Si' : 'No';
+                        resp.itemsPaquete.forEach((reg: any) => {
+                            reg.nomEstado = reg.estadoItem ? 'Activo' : 'Inactivo';
                         });
-                        console.log('todos los paquetes', resp);
-                        this.registros = resp.paquetes;
-                        this.registrosFiltrado = resp.paquetes;
+                        this.registros = resp.itemsPaquete;
+                        this.registrosFiltrado = resp.itemsPaquete;
                     }
                 }),
                 catchError((err) => {
@@ -90,62 +103,57 @@ export class PaquetesComponent implements OnInit {
 
     columnasPaquetes: ColumnMetadata[] = [
         {
-            name: 'nombrePaquete',
-            header: 'PAQUETES.NAME',
+            name: 'nombreItem',
+            header: 'ITEMS.NAME',
             type: 'text'
         },
         {
-            name: 'costoPaquete',
-            header: 'PAQUETES.COSTE',
+            name: 'cantidad',
+            header: 'ITEMS.CANTIDAD',
+            type: 'number'
+        },
+        {
+            name: 'valorUnitario',
+            header: 'ITEMS.VALOR',
             type: 'price'
         },
         {
-            name: 'precioPaquete',
-            header: 'PAQUETES.PRECIO',
+            name: 'valoresAdicionales',
+            header: 'ITEMS.ADICIONALES',
             type: 'price'
         },
         {
-            name: 'nomPromocion',
-            header: 'PAQUETES.PROMOCION',
-            type: 'estado'
+            name: 'valorTotal',
+            header: 'ITEMS.TOTAL',
+            type: 'price'
         },
         {
             name: 'nomEstado',
-            header: 'PAQUETES.STATUS',
-            type: 'estado'
+            header: 'ITEMS.STATUS',
+            type: 'text'
         }
     ];
 
     columnasDetailRegistros: ColumnMetadata[] = [
         {
+            name: 'codigoItem',
+            header: 'ITEMS.CODE',
+            type: 'text'
+        },
+        {
             name: 'codigoPaquete',
-            header: 'PAQUETES.CODE',
+            header: 'ITEMS.CODEPAQUETE',
             type: 'text'
         },
         {
-            name: 'precioPromocion',
-            header: 'PAQUETES.PRECIOPROMOCION',
-            type: 'price'
-        },
-        {
-            name: 'descripcionPaquete',
-            header: 'PAQUETES.DESCRIPTION',
+            name: 'codigoValor',
+            header: 'ITEMS.CODEVALOR',
             type: 'text'
         },
         {
-            name: 'acuerdoLicencia',
-            header: 'PAQUETES.ACUERDOLICENCIA',
+            name: 'descripcionItem',
+            header: 'ITEMS.DESCRIPCION',
             type: 'text'
-        },
-        {
-            name: 'iconoPaquete',
-            header: 'PAQUETES.ICONO',
-            type: 'avatar'
-        },
-        {
-            name: 'imagenPaquete',
-            header: 'PAQUETES.IMAGEN',
-            type: 'image'
         }
     ];
 
@@ -168,7 +176,7 @@ export class PaquetesComponent implements OnInit {
         if (evento.target.value == 'todos') {
             this.registrosFiltrado = this.registros;
         } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.nombrePaquete = evento.target.value));
+            this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.nombreItem = evento.target.value));
         }
     }
 
@@ -178,7 +186,7 @@ export class PaquetesComponent implements OnInit {
         if (!textoFiltro) {
             this.registrosFiltrado = [...this.registros];
         } else {
-            this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionPaquete || '').toLowerCase().includes(textoFiltro));
+            this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionItem || '').toLowerCase().includes(textoFiltro));
             console.log('filtrados', this.registrosFiltrado);
         }
     }
@@ -191,23 +199,23 @@ export class PaquetesComponent implements OnInit {
         } else {
             const estado = evento.target.value == 'true' ? true : false;
             console.log('Suitees', this.registrosFiltrado);
-            this.registrosFiltrado = this.registros.filter((x) => x.estadoPaquete == estado);
+            this.registrosFiltrado = this.registros.filter((x) => x.estadoItem == estado);
         }
     }
 
     OnNuevoRegistroClick(): void {
-        this.router.navigate(['aplicaciones/gestion-paquete']);
+        this.router.navigate(['aplicaciones/gestion-item'], { queryParams: { regId: '', regPQ: this.registroId } });
     }
 
     OnEditarRegistroClick(id: number): void {
-        this.router.navigate(['aplicaciones/gestion-paquete'], { queryParams: { regId: id } });
+        this.router.navigate(['aplicaciones/gestion-item'], { queryParams: { regId: id, regPQ: this.registroId } });
     }
 
-    OnEliminarRegistroClick(id: number): void {
-        const nombreApp = this.registrosFiltrado.filter((x) => x.paqueteId == id)[0];
+    OnEliminarRegistroClick(id: string): void {
+        const nombreApp = this.registrosFiltrado.filter((x) => x.codigoItem == id)[0];
         Swal.fire({
             title: this.translate.instant('APLICACIONES.ELIMINARTITULO'),
-            text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombrePaquete}".`,
+            text: this.translate.instant('APLICACIONES.ELIMINARTEXTO') + `"${nombreApp.nombreItem}".`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -223,7 +231,7 @@ export class PaquetesComponent implements OnInit {
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                         Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-                        this.registros = this.registros.filter((a) => a.paqueteId !== id);
+                        this.registros = this.registros.filter((a) => a.codigoItem !== id);
                         this.registrosFiltrado = [...this.registros];
                     },
                     error: (err) => {
@@ -243,4 +251,5 @@ export class PaquetesComponent implements OnInit {
     toggleNav(): void {
         this.toggleSidebar.emit();
     }
+
 }

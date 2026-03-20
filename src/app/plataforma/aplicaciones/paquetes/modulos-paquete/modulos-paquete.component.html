@@ -1,4 +1,3 @@
-
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
 <div class="layout-wrapper">
     <aside class="aside-left">
@@ -7,34 +6,34 @@
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
                     {{ 'PLATAFORMA.MENU' | translate }}
                 </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
                     {{ 'PLATAFORMA.FILTERS' | translate }}
                 </button>
             </div>
-
             <ng-container *ngIf="activeTab === 'menu'">
                 <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <DIV class="text-center">
-                        <h6 class="filtros-title">{{ 'TICKETS.CLASESTICKET.FILTROS.TITULO' | translate }}</h6>
-                    </DIV>
+                    <h6 class="filtros-title">{{ 'PAQUETES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.CLASESTICKET.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'TICKETS.CLASESTICKET.FILTROS.NOMBRECHOLDER' | translate }}" />
+                        <small>{{ 'PAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <select (change)="onFiltroNombreCodigoClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="reg.codigoPaquete" *ngFor="let reg of registros">
+                                {{ reg.nombreItem }}
+                            </option>
+                        </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.CLASESTICKET.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'PAQUETES.FILTROS.FILTRODECRIPCION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'TICKETS.CLASESTICKET.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'PAQUETES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'TICKETS.CLASESTICKET.FILTROS.FILTROESTADO' | translate }}</small>
-                        <select class="form-control form-select" style="cursor: pointer;"
-                            (change)="onFiltroEstadoChangeClick($event)">
+                        <small>{{ 'PAQUETES.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
@@ -44,33 +43,31 @@
             </ng-container>
         </div>
     </aside>
-
-    <div class="content-area">
+    <div class="content-area-pq">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
-                    <app-data-table
-                    [data]="dataFiltrada"
-                    [idField]="'codigoClase'"
-                    [tableTitle]="'TICKETS.CLASESTICKET.TITLE' | translate"
-                    [newButtonLabel]="'TICKETS.CLASESTICKET.NEW' | translate"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                    [metadataColumns]="columnasRegistros"
+                <app-data-table-pq
+                    [data]="registrosFiltrado"
+                    [idField]="'codigoPaquete'"
+                    [tableTitle]="'PAQUETES.TITLE' | translate"
+                    [metadataColumns]="columnasPaquetes"
                     [metadataDetailColumns]="columnasDetailRegistros"
-                    [showDetail]="true"
+                    [showDetail]="false"
                     [showActions]="true"
+                    [showExportButton]="false"
+                    [showBackButton]="true"
                     [showNewButton]="true"
                     [showViewButton]="false"
-                    [showEditButton]="true"
+                    [showEditButton]="false"
                     [showDeleteButton]="true"
-                    (viewRecord)="OnViewRegistroClick($event)"
+                    [newButtonLabel]="'ITEMS.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (backRecord)="OnRegresarClick()"
                     (newRecord)="OnNuevoRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)"
                     (deleteRecord)="OnEliminarRegistroClick($event)">
-                </app-data-table>
-                </ng-container>
+                </app-data-table-pq>
             </div>
         </div>
     </div>
 </div>
-
