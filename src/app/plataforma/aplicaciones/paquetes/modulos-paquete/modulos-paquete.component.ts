@@ -246,7 +246,7 @@ export class ModulosPaqueteComponent {
   }
 
   OnRegresarClick() {
-    this.router.navigate(['aplicaciones/gestion-paquete'], { queryParams: { regId: '', regPQ: this.registroId } });
+    this.router.navigate(['aplicaciones/gestion-paquete'], { queryParams: { regId: this.registroId, regPQ: this.registroId } });
   }
 
   toggleNav(): void {

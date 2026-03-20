@@ -24,7 +24,7 @@ export class PtlmodulosApService {
     private socketService: SocketService,
     private _localstorageService: LocalStorageService
   ) {
-    this.socketService.listen('aplicaciones-actualizadas').subscribe({
+    this.socketService.listen('modulos-actualizados').subscribe({
       next: (payload) => {
         console.log('Evento de Socket.IO recibido:', payload.msg);
         this._modulosChange.next(payload);
