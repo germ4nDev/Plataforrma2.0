@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'angular-datatables';
 import { Router } from '@angular/router';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription, combineLatest, of } from 'rxjs';
+import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -22,8 +22,10 @@ import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.mo
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { PtllogActividadesService } from 'src/app/theme/shared/service';
+import { PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 
 @Component({
   selector: 'app-modulos',
@@ -32,24 +34,35 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
   templateUrl: './modulos.component.html',
   styleUrl: './modulos.component.scss'
 })
-export class ModulosComponent implements OnInit {
+export class ModulosComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
-  aplicacionesSub?: Subscription;
-  aplicaciones: PTLAplicacionModel[] = [];
-  suites: PTLSuiteAPModel[] = [];
-  modulosPadre: PTLModuloAP[] = [];
-  registros: PTLModuloAP[] = [];
-  registrosSub?: Subscription;
-  suitesSub?: Subscription;
-  modulosSub?: Subscription;
-  registrosFiltrado: PTLModuloAP[] = [];
+  DataModel: BaseSessionModel = new BaseSessionModel();
+  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
   moduloTituloExcel: string = '';
-  filtroPersonalizado: string = '';
   hasFiltersSlot: boolean = false;
   gradientConfig;
   lang = localStorage.getItem('lang');
   menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
+
+  subscriptions = new Subscription();
+  filtroAplicacionSubject = new BehaviorSubject<string>('todos');
+  filtroSuiteSubject = new BehaviorSubject<string>('todos');
+  filtroModuloSubject = new BehaviorSubject<string>('todos');
+  filtroDescripcionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
+
+  modulosTransformados$: Observable<PTLModuloAP[]> = of([]);
+  modulosFiltrados$: Observable<PTLModuloAP[]> = of([]);
+  modulos: PTLModuloAP[] = [];
+
+  aplicaciones: PTLAplicacionModel[] = [];
+  aplicacionesSub?: Subscription;
+  suites: PTLSuiteAPModel[] = [];
+  suitesSub?: Subscription;
+  modulosSub?: Subscription;
+  modulosPadre: PTLModuloAP[] = [];
+  filtroPersonalizado: string = '';
 
   constructor(
     private router: Router,
@@ -58,20 +71,38 @@ export class ModulosComponent implements OnInit {
     private _aplicacionesService: PtlAplicacionesService,
     private _logActividadesService: PtllogActividadesService,
     private _suitesService: PtlSuitesAPService,
-    private _registrosService: PtlmodulosApService
+    private _registrosService: PtlmodulosApService,
+    private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig;
-    this.consultarAplicacines();
-    this.consultarSuites();
-    this.consultarModulosPadre();
+    // this.consultarAplicacines();
+    // this.consultarSuites();
+    // this.consultarModulosPadre();
   }
 
   ngOnInit(): void {
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
-    this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
+    this.consultarAplicacines();
+    this.consultarSuites();
+    this.consultarModulosPadre();
     this.consultarRegistros();
+    setTimeout(() => {
+      this.setupModulosStream();
+    }, 100);
+    this.subscriptions.add(
+      this._registrosService.cargarRegistros().subscribe(
+        () => console.log('Modulos cargadas y guardadas en el servicio'),
+        (err) => console.error('Error al cargar aplicaciones:', err)
+      )
+    );
+    // this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
+    // this.consultarRegistros();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   consultarAplicacines() {
@@ -132,37 +163,82 @@ export class ModulosComponent implements OnInit {
       .subscribe();
   }
 
-  consultarRegistros(codSuite?: string): void {
-    this.registrosSub = this._registrosService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-        //   if (resp.ok) {
-        //     resp.modulos.forEach((mod: any) => {
-        //       mod.nomEstado = mod.estadoModulo ? 'Activo' : 'Inactivo';
-        //       mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos';
-        //       mod.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == mod.codigoAplicacion)[0].nombreAplicacion || '';
-        //       mod.nomSuite = this.suites.filter((x) => x.codigoSuite == mod.codigoSuite)[0].nombreSuite || '';
-        //       mod.nomPadre =
-        //         mod.codigoPadre != '0' ? this.modulosPadre.filter((x) => x.codigoModulo == mod.codigoPadre)[0].nombreModulo : '';
-        //       //   // console.log('detalle modulo', mod);
-        //     });
-        //     // // console.log('los modulos', resp.modulos);
-        //     if (codSuite) {
-        //       this.registros = resp.modulos.filter((x: { codigosuite: string }) => x.codigosuite == codSuite);
-        //       this.registrosFiltrado = resp.modulos.filter((x: { codigosuite: string }) => x.codigosuite == codSuite);
-        //     } else {
-        //       this.registros = resp.modulos;
-        //       this.registrosFiltrado = resp.modulos;
-        //     }
-        //   }
-        }),
-        catchError((err) => {
-          console.error(err);
-          return of([]);
-        })
-      )
-      .subscribe();
+  consultarRegistros() {
+    this.subscriptions.add(
+      this._registrosService.getRegistros().subscribe((resp: any) => {
+        if (resp.ok) {
+          this.modulos = resp.modulos;
+          console.log('Todos las modulos', this.modulos);
+          return;
+        }
+      })
+    );
+  }
+
+  setupModulosStream(): void {
+    // const suscriptor = this._localStorageService.getSuscriptorLocalStorage() ? this._localStorageService.getSuscriptorLocalStorage()  : {};
+    // if (!suscriptor || !suscriptor.codigoSuscriptor) {
+    //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
+    //   return;
+    // }
+    const codigoSuscriptor = 'e1a8fa99-15db-479b-a0a4-9c2be72273c9';
+    this.modulosTransformados$ = this._registrosService.modulos$.pipe(
+      switchMap((mods: PTLModuloAP[]) => {
+        if (!mods) return of([]);
+        console.log('todas las modulos', mods);
+        const transformedModulos = mods.map((mod: any) => {
+          mod.nomEstado = mod.estadoModulo ? 'Activo' : 'Inactivo';
+          mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos';
+          mod.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == mod.codigoAplicacion)[0].nombreAplicacion || '';
+          mod.nomSuite = this.suites.filter((x) => x.codigoSuite == mod.codigoSuite)[0].nombreSuite || '';
+          mod.nomPadre = mod.codigoPadre != '0' ? this.modulosPadre.filter((x) => x.codigoModulo == mod.codigoPadre)[0].nombreModulo : '';
+          return mod as PTLModuloAP;
+        });
+        this.modulos = transformedModulos;
+        return of(transformedModulos);
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de aplicaciones:', err);
+        return of([]);
+      })
+    );
+
+    this.modulosFiltrados$ = combineLatest([
+      this.modulosTransformados$.pipe(startWith([])),
+      this.filtroAplicacionSubject,
+      this.filtroSuiteSubject,
+      this.filtroModuloSubject,
+      this.filtroDescripcionSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([mods, aplicacion, suite, modulo, descripcion, estado]) => {
+        let filteredmodulos = mods;
+
+        if (aplicacion !== 'todos') {
+          filteredmodulos = filteredmodulos.filter((mod: any) => mod.codigoAplicacion === aplicacion);
+        }
+
+        if (suite !== 'todos') {
+          filteredmodulos = filteredmodulos.filter((mod: any) => mod.codigoSuite === suite);
+        }
+
+        if (modulo !== 'todos') {
+          filteredmodulos = filteredmodulos.filter((mod: any) => mod.codigoModulo === modulo);
+        }
+
+        if (estado !== 'todos') {
+          const estadoBoolean = estado === 'true';
+          filteredmodulos = filteredmodulos.filter((mod: any) => mod.estadoModulo === estado);
+        }
+
+        if (descripcion) {
+          const textoFiltro = descripcion.toLowerCase();
+          filteredmodulos = filteredmodulos.filter((mod: any) => (mod.descripcionModulo || '').toLowerCase().includes(textoFiltro));
+        }
+
+        return filteredmodulos;
+      })
+    );
   }
 
   columnasRegistros: ColumnMetadata[] = [
@@ -184,7 +260,7 @@ export class ModulosComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'MODULOS.STATUS',
-      type: 'text'
+      type: 'estado'
     }
   ];
 
@@ -223,54 +299,30 @@ export class ModulosComponent implements OnInit {
 
   onFiltroCodigoAplicacionChangeClick(evento: any) {
     // console.log('filtrar el codigo ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoAplicacion = evento.target.value));
-      this.consultarSuites(evento.target.value);
-    }
+    const value = evento.target.value;
+    this.filtroAplicacionSubject.next(value);
   }
 
   onFiltroCodigoSuiteChangeClick(evento: any) {
     // console.log('filtrar el codigo ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoSuite = evento.target.value));
-      this.consultarRegistros(evento.target.value);
-    }
+    const value = evento.target.value;
+    this.filtroSuiteSubject.next(value);
   }
 
-  onFiltroNombreChangeClick(evento: any) {
-    // console.log('filtrar el nombre ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.nombreModulo = evento.target.value));
-    }
+  onFiltroCodigoModuloChangeClick(evento: any) {
+    // console.log('filtrar el codigo ', evento.target.value);
+    const value = evento.target.value;
+    this.filtroModuloSubject.next(value);
   }
 
-  onFiltroDescripcionChangeClick(evento: any) {
-    // console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionModulo || '').toLowerCase().includes(textoFiltro));
-      // console.log('filtrados', this.registrosFiltrado);
-    }
+  onFiltroDescripcionChangeClick(evento: any): void {
+    const value = evento.target.value;
+    this.filtroDescripcionSubject.next(value);
   }
 
-  onFiltroEstadoChangeClick(evento: any) {
-    // console.log('filtrar el estado ', evento.target.value);
-    // const estado: boolean = evento.target.value || true;
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      const estado = evento.target.value == 'true' ? true : false;
-      // console.log('Suitees', this.registrosFiltrado);
-      this.registrosFiltrado = this.registros.filter((x) => x.estadoModulo == estado);
-    }
+  onFiltroEstadoChangeClick(evento: any): void {
+    const value = evento.target.value;
+    this.filtroEstadoSubject.next(value);
   }
 
   OnNuevoRegistroClick(): void {
@@ -300,7 +352,7 @@ export class ModulosComponent implements OnInit {
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this.translate.instant('MODULOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.consultarRegistros();
+            this.setupModulosStream();
           },
           error: (err) => {
             const logData = {

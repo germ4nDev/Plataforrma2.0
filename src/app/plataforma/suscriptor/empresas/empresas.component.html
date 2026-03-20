@@ -1,1 +1,82 @@
+<app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+<div class="layout-wrapper">
+    <aside class="aside-left">
+        <div class="card">
+            <div class="nav-tabs-custom">
+                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
+                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'" *ngIf="hasFiltersSlot">
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
+            </div>
 
+            <ng-container *ngIf="activeTab === 'menu'">
+                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            </ng-container>
+            <ng-container *ngIf="activeTab === 'filters'">
+                <div class="p-3 filtros-scroll-wrapper">
+                    <h6 class="filtros-title text-center">{{ 'EMPRESASSC.FILTROS.TITULO' | translate }}</h6>
+                    <div class="filtro">
+                        <small>{{ 'EMPRESASSC.FILTROS.FILTROSUSCRIPTOR' | translate }}</small>
+                        <select class="form-control form-select" style="cursor: pointer;"
+                            (change)="onFiltroSuscriptorChangeClick($event)">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="apli.codigoSuscriptor" *ngFor="let apli of suscriptores">
+                                {{ apli.nombreSuscriptor }}</option>
+                        </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'EMPRESASSC.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
+                            placeholder="{{ 'EMPRESASSC.FILTROS.NOMBRECHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'EMPRESASSC.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
+                            class="form-control form-input"
+                            placeholder="{{ 'EMPRESASSC.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'EMPRESASSC.FILTROS.FILTROESTADO' | translate }}</small>
+                        <select class="form-control form-select" style="cursor: pointer;"
+                            (change)="onFiltroEstadoChangeClick($event)">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">Activo</option>
+                            <option value="false">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </aside>
+
+    <div class="content-area">
+        <div class="card card-table content-scroll-wrapper">
+            <div class="card-body">
+                <app-data-table
+                    [data]="registrosFiltrado"
+                    [idField]="'codigoTicket'"
+                    [tableTitle]="'EMPRESASSC.TITLE' | translate"
+                    [newButtonLabel]="'EMPRESASSC.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    [metadataColumns]="columnasRegistros"
+                    [metadataDetailColumns]="columnasDetailRegistros"
+                    [showDetail]="true"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [showOption1Button]="false"
+                    [colorOpcion1]="colorOpcion1"
+                    [tooltipOption1]="'EMPRESASSC.REQUES' | translate"
+                    [letraOpcion1]="letraOpcion1"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
+            </div>
+        </div>
+    </div>
+</div>

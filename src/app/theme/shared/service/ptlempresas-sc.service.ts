@@ -54,6 +54,19 @@ export class PtlEmpresasScService {
     );
   }
 
+   getTodasEmpresaById() {
+    const url = `${base_url}/empresas-sc`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('todas las empresas', resp);
+        return {
+          ok: true,
+          empresasSC: resp.empresasSC
+        };
+      })
+    );
+  }
+
   getEmpresaById(id: number) {
     const url = `${base_url}/empresas-sc/${id}`;
     return this.http.get(url).pipe(

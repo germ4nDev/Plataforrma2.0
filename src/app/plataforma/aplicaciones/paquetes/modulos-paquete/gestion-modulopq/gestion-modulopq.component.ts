@@ -375,7 +375,7 @@ export class GestionModulopqComponent {
     }
 
     btnRegresarClick() {
-        this.router.navigate(['/aplicaciones/modulos']);
+        this.router.navigate(['aplicaciones/modulos-paquete'], { queryParams: { regId: this.moduloId } });
     }
 
     toggleNav(): void {
