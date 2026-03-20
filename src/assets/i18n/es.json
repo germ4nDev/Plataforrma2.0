@@ -349,11 +349,11 @@
             "APLICACION": "Aplicación",
             "PLACEHOLDERAPLICACION": "Seleccione una Aplicación",
             "REQUERIDOAPLICACION": "Por favor, seleccione la Aplicación. Este campo es obligatorio.",
-            "CODE" : "Código",
-            "SUITE" : "Suite",
-            "MODULO" : "Modulo",
-            "ASIGNACION" : "Datos Asignación",
-            "ELEMENTOSTICKET" : "Elementos Ticket"
+            "CODE": "Código",
+            "SUITE": "Suite",
+            "MODULO": "Modulo",
+            "ASIGNACION": "Datos Asignación",
+            "ELEMENTOSTICKET": "Elementos Ticket"
         },
         "FILTROS": {
             "TITULO": "Filtros Tickets",
@@ -520,7 +520,9 @@
             "REQUERIDOPASSWORDBD": "Por favor, ingrese una contraseña. Este campo es obligatorio.",
             "BDPORT": "Port Base de Datos",
             "PLACEHOLDERBDPORT": "Ingrese Port Base de Datos",
-            "REQUERIDOBDPORT": "Por favor, ingrese un Port. Este campo es obligatorio."
+            "REQUERIDOBDPORT": "Por favor, ingrese un Port. Este campo es obligatorio.",
+            "RUTA": "Ruta Servidor.",
+            "IP": "Dirección IP."
         },
         "FILTROS": {
             "TITULO": "Filtros Conexiones",
@@ -567,7 +569,9 @@
                 "REQUERIDORUTA": "Por favor, Ingrese la ruta del servidor. Este campo es obligatorio.",
                 "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
                 "REQUERIDODESCRIPCION": "Por favor, ingrese una descripción. Este campo es obligatorio.",
-                "STATUS": "Estado Servidor"
+                "STATUS": "Estado Servidor",
+                "IP": "Dirección IP",
+                "CODE": "Codigo Servidor"
             },
             "FILTROS": {
                 "TITULO": "Filtros Servidores",

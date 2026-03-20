@@ -82,7 +82,7 @@ export class ColoresNavComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'PLATAFORMA.COLORSETTING.STATUS',
-      type: 'text'
+      type: 'estado'
     }
   ];
 

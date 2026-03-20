@@ -166,11 +166,13 @@ export class GestionUsuarioComponent implements OnInit {
 
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];
+    const codigo = this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || this._localStorageService.getSuscriptorPlataformaLocalStorage();
     const objUpload = {
-      susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+      susc: codigo,
       tipo: 'usuarios',
       id: '0'
     };
+    console.log('objUpload', objUpload);
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {

@@ -824,7 +824,8 @@ export class NavigationService implements OnInit, OnDestroy {
         this._modulosService.getRegistros().subscribe((data) => {
           const nuevosModulos = data.modulos;
           if (nuevosModulos.length > 0) {
-            const menu = this.getAplicacionSuiteItems(nuevosModulos);
+            const ordenado = nuevosModulos.sort((a:any, b:any) => a.nombreModulo - b.nombreModulo);
+            const menu = this.getAplicacionSuiteItems(ordenado);
             this.menuSubject.next(menu);
           } else {
             this.menuSubject.next([]);

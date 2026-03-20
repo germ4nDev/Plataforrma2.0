@@ -5,6 +5,7 @@ export class PTLServidorModel {
     public nombreServidor?: string,
     public descripcionServidor?: string,
     public rutaServidor?: string,
+    public direccionIP?: string,
     public estadoServidor?: boolean,
     public nomEstado?: string,
     public codigoUsuarioCreacion?: string,

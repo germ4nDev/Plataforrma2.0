@@ -23,13 +23,13 @@ import { ColumnMetadata } from '../../_helpers/models/ColumnMetadata.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-data-table',
+  selector: 'app-data-table-pq',
   standalone: true,
-  templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss'],
+  templateUrl: './data-table-pq.component.html',
+  styleUrls: ['./data-table-pq.component.scss'],
   imports: [CommonModule, TranslateModule, FormsModule]
 })
-export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
+export class DatatablePqComponent implements OnInit, OnChanges, AfterViewInit {
   //   @ViewChildren('customButton', { read: ElementRef }) customButtons!: QueryList<ElementRef>;
 
   @Input() data: any[] = [];
@@ -68,6 +68,7 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() showImage: boolean = false;
   @Input() showActions: boolean = true;
   @Input() showBackButton: boolean = false;
+  @Input() showExportButton: boolean = false;
   @Input() showNewButton: boolean = false;
   @Input() showViewButton: boolean = false;
   @Input() showEditButton: boolean = false;

@@ -81,12 +81,12 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
   }
 
   setupAplicacionesStream(): void {
-    const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
-    if (!suscriptor || !suscriptor.codigoSuscriptor) {
-      console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
-      return;
-    }
-    const codigoSuscriptor = suscriptor.codigoSuscriptor;
+    // const suscriptor = this._localStorageService.getSuscriptorLocalStorage() ? this._localStorageService.getSuscriptorLocalStorage()  : {};
+    // if (!suscriptor || !suscriptor.codigoSuscriptor) {
+    //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
+    //   return;
+    // }
+    const codigoSuscriptor = 'e1a8fa99-15db-479b-a0a4-9c2be72273c9';
     this.aplicacionesTransformadas$ = this._aplicacionesService.aplicaciones$.pipe(
       switchMap((apps: PTLAplicacionModel[]) => {
         if (!apps) return of([]);
@@ -96,6 +96,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
           return app as PTLAplicacionModel;
         });
         this.aplicaciones = transformedApps;
+        console.log('todas las aplicaciones', this.aplicaciones);
         return of(transformedApps);
       }),
       catchError((err) => {
@@ -177,7 +178,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     {
       name: 'nomEstado',
       header: 'APLICACIONES.STATUS',
-      type: 'text'
+      type: 'estado'
     }
   ];
 

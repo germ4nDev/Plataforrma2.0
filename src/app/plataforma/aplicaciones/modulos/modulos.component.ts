@@ -137,25 +137,25 @@ export class ModulosComponent implements OnInit {
       .getRegistros()
       .pipe(
         tap((resp: any) => {
-          if (resp.ok) {
-            resp.modulos.forEach((mod: any) => {
-              mod.nomEstado = mod.estadoModulo ? 'Activo' : 'Inactivo';
-              mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos';
-              mod.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == mod.codigoAplicacion)[0].nombreAplicacion || '';
-              mod.nomSuite = this.suites.filter((x) => x.codigoSuite == mod.codigoSuite)[0].nombreSuite || '';
-              mod.nomPadre =
-                mod.codigoPadre != '0' ? this.modulosPadre.filter((x) => x.codigoModulo == mod.codigoPadre)[0].nombreModulo : '';
-              //   // console.log('detalle modulo', mod);
-            });
-            // // console.log('los modulos', resp.modulos);
-            if (codSuite) {
-              this.registros = resp.modulos.filter((x: { codigosuite: string }) => x.codigosuite == codSuite);
-              this.registrosFiltrado = resp.modulos.filter((x: { codigosuite: string }) => x.codigosuite == codSuite);
-            } else {
-              this.registros = resp.modulos;
-              this.registrosFiltrado = resp.modulos;
-            }
-          }
+        //   if (resp.ok) {
+        //     resp.modulos.forEach((mod: any) => {
+        //       mod.nomEstado = mod.estadoModulo ? 'Activo' : 'Inactivo';
+        //       mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos';
+        //       mod.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == mod.codigoAplicacion)[0].nombreAplicacion || '';
+        //       mod.nomSuite = this.suites.filter((x) => x.codigoSuite == mod.codigoSuite)[0].nombreSuite || '';
+        //       mod.nomPadre =
+        //         mod.codigoPadre != '0' ? this.modulosPadre.filter((x) => x.codigoModulo == mod.codigoPadre)[0].nombreModulo : '';
+        //       //   // console.log('detalle modulo', mod);
+        //     });
+        //     // // console.log('los modulos', resp.modulos);
+        //     if (codSuite) {
+        //       this.registros = resp.modulos.filter((x: { codigosuite: string }) => x.codigosuite == codSuite);
+        //       this.registrosFiltrado = resp.modulos.filter((x: { codigosuite: string }) => x.codigosuite == codSuite);
+        //     } else {
+        //       this.registros = resp.modulos;
+        //       this.registrosFiltrado = resp.modulos;
+        //     }
+        //   }
         }),
         catchError((err) => {
           console.error(err);

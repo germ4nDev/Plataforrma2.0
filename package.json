@@ -4,7 +4,7 @@
   "author": "CodedThemes",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve -o",
     "build": "ng build",
     "build-stage": "ng build --configuration production --base-href /demos/admin-templates/gradient-able/angular/stage/",
     "build-prod": "ng build --configuration production --base-href /demos/admin-templates/gradient-able/angular/default/",

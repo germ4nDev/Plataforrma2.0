@@ -100,7 +100,7 @@ export class SwalAlertService {
     this.fireSwal({
       position: 'center',
       icon: 'success',
-      title: 'Error',
+      title: 'Success',
       text: descripcion,
       showConfirmButton: true,
       timer: 9000,

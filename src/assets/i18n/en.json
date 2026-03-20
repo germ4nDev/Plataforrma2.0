@@ -363,11 +363,11 @@
             "APLICACION": "Application",
             "PLACEHOLDERAPLICACION": "Select an Application",
             "REQUERIDOAPLICACION": "This field is required.",
-            "CODE" : "Code",
-            "SUITE" : "Suite",
-            "MODULO" : "Module",
-            "ASIGNACION" : "Assignment Data",
-            "ELEMENTOSTICKET" : "Ticket Elements"
+            "CODE": "Code",
+            "SUITE": "Suite",
+            "MODULO": "Module",
+            "ASIGNACION": "Assignment Data",
+            "ELEMENTOSTICKET": "Ticket Elements"
         },
         "FILTROS": {
             "TITULO": "Ticket Filters",
@@ -534,7 +534,9 @@
             "REQUERIDOPASSWORDBD": "This field is required.",
             "BDPORT": "Database Port",
             "PLACEHOLDERBDPORT": "Enter the Database Port",
-            "REQUERIDOBDPORT": "This field is required."
+            "REQUERIDOBDPORT": "This field is required.",
+            "RUTA": "Server link.",
+            "IP": "Server IP."
         },
         "FILTROS": {
             "TITULO": "Connection Filters",
@@ -581,7 +583,9 @@
                 "REQUERIDORUTA": "This field is required.",
                 "REQUERIDONAME": "This field is required.",
                 "REQUERIDODESCRIPCION": "This field is required.",
-                "STATUS": "Server Status"
+                "STATUS": "Server Status",
+                "IP": "Server IP",
+                "CODE": "Server Code"
             },
             "FILTROS": {
                 "TITULO": "Server Filters",

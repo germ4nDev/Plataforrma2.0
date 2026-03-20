@@ -562,6 +562,12 @@ body {
     height: calc(100vh - 77px);
 }
 
+.content-area-pq {
+    min-height: 0;
+    overflow-y: hidden;
+    padding: 1rem 0.5rem 0.5rem 0.5rem;
+}
+
 .form-area {
     min-height: 0;
     overflow-y: hidden;
@@ -768,6 +774,11 @@ td {
     padding: 8px 8px 8px 8px;
 }
 
+.content-g {
+    position: relative;
+    overflow: auto;
+}
+
 .content-g67 {
     position: relative;
     height: 66vh !important;
@@ -882,6 +893,18 @@ body.gradient-dark {
     width: 20px;
     height: 20px;
     border-radius: 50%;
+    border: 2px solid var(--text-color);
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.radio-box {
+    width: 20px;
+    height: 20px;
     border: 2px solid var(--text-color);
     transition: all 0.2s ease-in-out;
     position: relative;

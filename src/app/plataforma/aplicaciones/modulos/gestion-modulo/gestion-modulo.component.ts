@@ -40,7 +40,7 @@ export class GestionModuloComponent implements OnInit {
   windowWidth: number = 0;
   form: undefined;
   isSubmit: boolean;
-  moduloId: number = 9;
+  moduloId: string = '';
   modoEdicion: boolean = false;
   aplicacionesSub?: Subscription;
   aplicaciones: PTLAplicacionModel[] = [];
@@ -61,8 +61,8 @@ export class GestionModuloComponent implements OnInit {
     private route: ActivatedRoute,
     private translate: TranslateService,
     private _aplicacionesService: PtlAplicacionesService,
-    private _registrosService: PtlmodulosApService,
     private _suitesService: PtlSuitesAPService,
+    private _registrosService: PtlmodulosApService,
     private _layoutInitializer: LayoutInitializerService,
     private _logActividadesService: PtllogActividadesService,
     private _swalAlertService: SwalAlertService,
