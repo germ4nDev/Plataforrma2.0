@@ -8,6 +8,7 @@ export class PTLValoresUnitarios {
     public costoValor?: number,
     public descripcionValor?: string,
     public estadoValor?: boolean,
+    public checked?: boolean,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,
     public codigoUsuarioModificacion?: string,
