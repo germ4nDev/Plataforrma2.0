@@ -1,30 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { DataTablesModule } from 'angular-datatables'
-import { Router } from '@angular/router'
-import { SharedModule } from 'src/app/theme/shared/shared.module'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
-import { GradientConfig } from 'src/app/app-config'
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DataTablesModule } from 'angular-datatables';
+import { Router } from '@angular/router';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Observable, Subscription, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { GradientConfig } from 'src/app/app-config';
 
-import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
-import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component'
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
-import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service'
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
+import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
-import Swal from 'sweetalert2'
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
-import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service'
-import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service'
-import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
-import { PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service'
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
-import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
-import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
-import { Observable, Subscription, of, BehaviorSubject, combineLatest } from 'rxjs' // Importación de BehaviorSubject y combineLatest
-import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators'
+import Swal from 'sweetalert2';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-registros',
@@ -33,36 +31,22 @@ import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators'
   templateUrl: './suites.component.html',
   styleUrl: './suites.component.scss'
 })
-export class SuitesComponent implements OnInit, OnDestroy {
-  @Output() toggleSidebar = new EventEmitter<void>()
-  DataModel: BaseSessionModel = new BaseSessionModel()
-  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
-  moduloTituloExcel: string = ''
-  hasFiltersSlot: boolean = false
-  gradientConfig
-  lang = localStorage.getItem('lang')
-  menuItems$!: Observable<NavigationItem[]>
-  activeTab: 'menu' | 'filters' | 'main' = 'menu'
+export class SuitesComponent implements OnInit {
+  @Output() toggleSidebar = new EventEmitter<void>();
+  registros: PTLSuiteAPModel[] = [];
+  aplicaciones: PTLAplicacionModel[] = [];
+  registrosFiltrado: PTLSuiteAPModel[] = [];
+  moduloTituloExcel: string = '';
+  filtroPersonalizado: string = '';
+  hasFiltersSlot: boolean = false;
+  aplicacionesSub?: Subscription;
+  registrosSub?: Subscription;
+  gradientConfig;
+  lang = localStorage.getItem('lang');
+  menuItems$!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
-  subscriptions = new Subscription()
-  filtroAplicacionSubject = new BehaviorSubject<string>('todos')
-  filtroSuiteSubject = new BehaviorSubject<string>('todos')
-  filtroNombreSubject = new BehaviorSubject<string>('todos')
-  filtroDescripcionSubject = new BehaviorSubject<string>('')
-  filtroEstadoSubject = new BehaviorSubject<string>('todos')
-
-  suitesTransformados$: Observable<PTLSuiteAPModel[]> = of([])
-  suitesFiltrados$: Observable<PTLSuiteAPModel[]> = of([])
-
-  aplicaciones: PTLAplicacionModel[] = []
-  aplicacionesSub?: Subscription
-  suitesSub?: Subscription
-  suites: PTLSuiteAPModel[] = []
-  filtroPersonalizado: string = ''
-  registros: any
-  registrosFiltrado: any
-
-  constructor (
+  constructor(
     private _router: Router,
     private _translate: TranslateService,
     private _navigationService: NavigationService,
@@ -72,145 +56,66 @@ export class SuitesComponent implements OnInit, OnDestroy {
     private _logActividadesService: PtllogActividadesService,
     private _uploadService: UploadFilesService
   ) {
-    this.gradientConfig = GradientConfig
+    this.gradientConfig = GradientConfig;
   }
 
-  ngOnInit (): void {
-    this._navigationService.getNavigationItems()
-    this.menuItems$ = this._navigationService.menuItems$
-    this.hasFiltersSlot = true
-    this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications'
-    this.consultarAplicacines()
-    // this.consultarSuitees();
-    setTimeout(() => {
-      this.setupRegistrosStream()
-    }, 200)
-    this.subscriptions.add(
-      this._registrosService.cargarRegistros().subscribe(
-        () => console.log('Aplicaciones cargadas y guardadas en el servicio'),
-        err => console.error('Error al cargar aplicaciones:', err)
-      )
-    )
+  ngOnInit(): void {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.hasFiltersSlot = true;
+    this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
+    this.consultarAplicacines();
+    this.consultarSuitees();
   }
 
-  ngOnDestroy (): void {
-    this.subscriptions.unsubscribe()
+  getLanguageUrl() {
+    return this._localstorageService.getLanguageUrl();
   }
 
-  getLanguageUrl () {
-    return this._localstorageService.getLanguageUrl()
-  }
-
-  consultarAplicacines () {
+  consultarAplicacines() {
     this.aplicacionesSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.aplicaciones = resp.aplicaciones
-            console.log('aplicaciones', this.aplicaciones)
+            this.aplicaciones = resp.aplicaciones;
           }
         }),
-        catchError(err => {
-          console.error(err)
-          return of([])
+        catchError((err) => {
+          console.error(err);
+          return of([]);
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
-  consultarSuitees (): void {
-    const suscriptor = this._localstorageService.getSuscriptorLocalStorage()
+  consultarSuitees(): void {
+    const suscriptor = this._localstorageService.getSuscriptorLocalStorage();
     if (!suscriptor || !suscriptor.codigoSuscriptor) {
-      console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.')
-      return
+      console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
+      return;
     }
-    const codigoSuscriptor = suscriptor.codigoSuscriptor
-    this.suitesSub = this._registrosService
+    const codigoSuscriptor = suscriptor.codigoSuscriptor;
+    this.registrosSub = this._registrosService
       .geSuitesAP()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
             resp.suites.forEach((reg: any) => {
-              reg.nomEstado = reg.estadoSuite ? 'Activo' : 'Inactivo'
-              reg.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion
-              reg.imagenInicio = this._uploadService.getFilePath(codigoSuscriptor, 'suites', reg.imagenInicio)
-            })
-            this.registros = resp.suites
-            this.registrosFiltrado = resp.suites
+              reg.nomEstado = reg.estadoSuite ? 'Activo' : 'Inactivo';
+              reg.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion;
+              reg.imagenInicio = this._uploadService.getFilePath(codigoSuscriptor, 'suites', reg.imagenInicio);
+            });
+            this.registros = resp.suites;
+            this.registrosFiltrado = resp.suites;
           }
         }),
-        catchError(err => {
-          console.error(err)
-          return of([])
+        catchError((err) => {
+          console.error(err);
+          return of([]);
         })
       )
-      .subscribe()
-  }
-
-  setupRegistrosStream (): void {
-    // const suscriptor = this._localStorageService.getSuscriptorLocalStorage() ? this._localStorageService.getSuscriptorLocalStorage()  : {};
-    // if (!suscriptor || !suscriptor.codigoSuscriptor) {
-    //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
-    //   return;
-    // }
-    const codigoSuscriptor = 'e1a8fa99-15db-479b-a0a4-9c2be72273c9'
-    this.suitesTransformados$ = this._registrosService.suites$.pipe(
-      switchMap((sts: PTLSuiteAPModel[]) => {
-        if (!sts) return of([])
-        console.log('todas las modulos', sts)
-        const transformedSuites = sts.map((reg: any) => {
-          reg.nomEstado = reg.estadoModulo ? 'Activo' : 'Inactivo'
-          reg.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion
-          reg.imagenInicio = this._uploadService.getFilePath(codigoSuscriptor, 'suites', reg.imagenInicio)
-          return reg as PTLSuiteAPModel
-        })
-        this.suites = transformedSuites
-        return of(transformedSuites)
-      }),
-      catchError(err => {
-        console.error('Error en el stream de aplicaciones:', err)
-        return of([])
-      })
-    )
-
-    this.suitesFiltrados$ = combineLatest([
-      this.suitesTransformados$.pipe(startWith([])),
-      this.filtroAplicacionSubject,
-      this.filtroSuiteSubject,
-      this.filtroNombreSubject,
-      this.filtroDescripcionSubject,
-      this.filtroEstadoSubject
-    ]).pipe(
-      map(([sts, aplicacion, suite, nombre, descripcion, estado]) => {
-        let filteredSuites = sts
-
-        if (aplicacion !== 'todos') {
-          filteredSuites = filteredSuites.filter((sui: any) => sui.codigoAplicacion === aplicacion)
-        }
-
-        if (suite !== 'todos') {
-          filteredSuites = filteredSuites.filter((sui: any) => sui.codigoSuite === suite)
-        }
-
-        if (nombre) {
-          const textoFiltro = descripcion.toLowerCase()
-          filteredSuites = filteredSuites.filter((sui: any) => (sui.nombreSuite || '').toLowerCase().includes(textoFiltro))
-        }
-
-        if (estado !== 'todos') {
-          const estadoBoolean = estado === 'true'
-          filteredSuites = filteredSuites.filter((sui: any) => sui.estadoSuite === estadoBoolean)
-        }
-
-        if (descripcion) {
-          const textoFiltro = descripcion.toLowerCase()
-          filteredSuites = filteredSuites.filter((sui: any) => (sui.descripcionSuite || '').toLowerCase().includes(textoFiltro))
-        }
-        console.log('registros filtrados', filteredSuites)
-        return filteredSuites
-      })
-    )
+      .subscribe();
   }
 
   columnasRegistros: ColumnMetadata[] = [
@@ -235,7 +140,7 @@ export class SuitesComponent implements OnInit, OnDestroy {
       header: 'SUITES.APLICACION',
       type: 'text'
     }
-  ]
+  ];
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
@@ -248,42 +153,67 @@ export class SuitesComponent implements OnInit, OnDestroy {
       header: 'SUITE.STATUS',
       type: 'capture'
     }
-  ]
+  ];
 
-  onFiltroCodigoAplicacionChangeClick (evento: any) {
-    const value = evento.target.value
-    this.filtroAplicacionSubject.next(value)
+  onFiltroCodigoAplicacionChangeClick(evento: any) {
+    console.log('filtrar el codigo ', evento.target.value);
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = this.registros;
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoAplicacion = evento.target.value));
+    }
   }
 
-  onFiltroCodigoChangeClick (evento: any) {
-    const value = evento.target.value
-    this.filtroSuiteSubject.next(value)
+  onFiltroCodigoChangeClick(evento: any) {
+    console.log('filtrar el codigo ', evento.target.value);
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = this.registros;
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.codigoSuite = evento.target.value));
+    }
   }
 
-  onFiltroNombreChangeClick (evento: any) {
-    const value = evento.target.value
-    this.filtroNombreSubject.next(value)
+  onFiltroNombreChangeClick(evento: any) {
+    console.log('filtrar el nombre ', evento.target.value);
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = this.registros;
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.nombreSuite = evento.target.value));
+    }
   }
 
-  onFiltroDescripcionChangeClick (evento: any) {
-    const value = evento.target.value
-    this.filtroDescripcionSubject.next(value)
+  onFiltroDescripcionChangeClick(evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value);
+    const textoFiltro = evento.target.value.toLowerCase();
+    if (!textoFiltro) {
+      this.registrosFiltrado = [...this.registros];
+    } else {
+      this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionSuite || '').toLowerCase().includes(textoFiltro));
+      console.log('filtrados', this.registrosFiltrado);
+    }
   }
 
-  onFiltroEstadoChangeClick (evento: any) {
-    const value = evento.target.value
-    this.filtroEstadoSubject.next(value)
+  onFiltroEstadoChangeClick(evento: any) {
+    console.log('filtrar el estado ', evento.target.value);
+    // const estado: boolean = evento.target.value || true;
+    if (evento.target.value == 'todos') {
+      this.registrosFiltrado = this.registros;
+    } else {
+      const estado = evento.target.value == 'true' ? true : false;
+      console.log('Suitees', this.registrosFiltrado);
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoSuite == estado);
+    }
   }
 
-  OnNuevoRegistroClick (): void {
-    this._router.navigate(['aplicaciones/gestion-suite'])
+  OnNuevoRegistroClick(): void {
+    this._router.navigate(['aplicaciones/gestion-suite']);
   }
 
-  OnEditarRegistroClick (id: number): void {
-    this._router.navigate(['aplicaciones/gestion-suite'], { queryParams: { regId: id } })
+  OnEditarRegistroClick(id: number): void {
+    this._router.navigate(['aplicaciones/gestion-suite'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick (id: any): void {
+  OnEliminarRegistroClick(id: any): void {
     Swal.fire({
       title: this._translate.instant('SUITES.ELIMINARTITULO'),
       text: this._translate.instant('SUITES.ELIMINARTEXTO'),
@@ -291,34 +221,35 @@ export class SuitesComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonText: this._translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this._translate.instant('PLATAFORMA.CANCEL')
-    }).then(result => {
+    }).then((result) => {
       if (result.isConfirmed) {
         this._registrosService.eliminarSuiteAP(id.id).subscribe({
           next: (resp: any) => {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this._translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
-            }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            Swal.fire(this._translate.instant('MODULOS.ELIMINAREXITOSA'), resp.mensaje, 'success')
-            this.setupRegistrosStream()
+              descripcionLog: this._translate.instant('SUITES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            Swal.fire(this._translate.instant('SUITES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.registros = this.registros.filter((a) => a.suiteId !== id.id);
+            this.registrosFiltrado = [...this.registros];
           },
-          error: err => {
+          error: (err) => {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
-              descripcionLog: this._translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
-            }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            Swal.fire('Error', this._translate.instant('MODULOS.ELIMINARERROR'), 'error')
+              descripcionLog: this._translate.instant('SUITES.ELIMINARERROR') + ' ' + err.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            Swal.fire('Error', this._translate.instant('SUITES.ELIMINARERROR'), 'error');
           }
-        })
+        });
       }
-    })
+    });
   }
 
-  toggleNav (): void {
-    this.toggleSidebar.emit()
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }

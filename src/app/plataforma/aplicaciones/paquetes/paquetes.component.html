@@ -18,8 +18,12 @@
                     <h6 class="filtros-title">{{ 'PAQUETES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
                         <small>{{ 'PAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'PAQUETES.FILTROS.NOMBRECHOLDER' | translate }}" />
+                        <select (change)="onFiltroNombreCodigoClick($event)" class="form-control form-select">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="reg.codigoPaquete" *ngFor="let reg of registros">
+                                {{ reg.nombrePaquete }}
+                            </option>
+                        </select>
                     </div>
                     <div class="filtro">
                         <small>{{ 'PAQUETES.FILTROS.FILTRODECRIPCION' | translate }}</small>
@@ -42,21 +46,24 @@
     <div class="content-area">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <ng-container *ngIf="paquetesFiltrados$ | async as dataFiltrada">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoPaquete'"
-                        [tableTitle]="'PAQUETES.TITLE' | translate" [metadataColumns]="columnasPaquetes"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showDeleteButton]="true" [showOption1Button]="true" [colorOpcion1]="colorOpcion1"
-                        [tooltipOption1]="'PAQUETES.MODULOS' | translate" [letraOpcion1]="letraOpcion1"
-                        [showOption2Button]="true" [colorOpcion2]="colorOpcion2"
-                        [tooltipOption2]="'PAQUETES.ITEMS' | translate" [letraOpcion2]="letraOpcion2"
-                        [newButtonLabel]="'PAQUETES.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                        (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)"
-                        (deleteRecord)="OnEliminarRegistroClick($event)" (option1Record)="OnOption1Click($event)"
-                        (option2Record)="OnOption2Click($event)">
-                    </app-data-table>
-                </ng-container>
+                <app-data-table
+                    [data]="registrosFiltrado"
+                    [idField]="'codigoPaquete'"
+                    [tableTitle]="'PAQUETES.TITLE' | translate"
+                    [metadataColumns]="columnasPaquetes"
+                    [metadataDetailColumns]="columnasDetailRegistros"
+                    [showDetail]="true"
+                    [showActions]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="true"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'PAQUETES.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table>
             </div>
         </div>
     </div>

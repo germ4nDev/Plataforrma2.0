@@ -11,7 +11,6 @@ export class PTLItemPaquete {
     public valorTotal?: number,
     public valoresAdicionales?: number,
     public estadoItem?: boolean,
-    public tipoValorId?: number,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,
     public codigoUsuarioModificacion?: string,

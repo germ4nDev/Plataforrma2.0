@@ -23,15 +23,20 @@
                         <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'SUITES.UPDATE' | translate }}</h4>
                     </div>
                     <div class="d-flex">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnGestionarRegistroClick(validationForm)">
+                        <button *ngIf="!modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SUITES.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnGestionarRegistroClick(validationForm)">
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SUITES.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
@@ -45,14 +50,19 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoAplicacion">
                                     {{ 'SUITES.GESTION.APLICACION' | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer;" name="codigoAplicacion" id="codigoAplicacion" [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }" #codigoAplicacion="ngModel"
-                                    required [(ngModel)]="FormRegistro.codigoAplicacion" (change)="onAplicacionchangeClick($event)">
+                                <select class="form-control form-input" style="cursor: pointer;" name="codigoAplicacion"
+                                    id="codigoAplicacion"
+                                    [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
+                                    #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"
+                                    (change)="onAplicacionchangeClick($event)">
                                     <option value="" disabled>{{ 'SUITES.GESTION.PLACEHOLDERAPLICACION' | translate }}
                                     </option>
                                     <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
                                         {{ app.nombreAplicacion }}</option>
                                 </select>
-                                <label *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SUITES.GESTION.REQUERIDOAPLICACION' | translate }}
                                 </label>
                             </div>
@@ -60,9 +70,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SUITE.CODE' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="codigoSuite" placeholder="{{ 'SUITES.GESTION.PLACEHOLDERCODE' | translate }}" [ngClass]="{'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }" #codigoSuite="ngModel"
-                                    required [(ngModel)]="FormRegistro.codigoSuite" readonly />
-                                <label *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <input type="text" class="form-control form-input" name="codigoSuite"
+                                    placeholder="{{ 'SUITES.GESTION.PLACEHOLDERCODE' | translate }}"
+                                    [ngClass]="{'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
+                                    #codigoSuite="ngModel" required [(ngModel)]="FormRegistro.codigoSuite" readonly />
+                                <label
+                                    *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SUITE.CODEHOLDER' | translate }}
                                 </label>
                             </div>
@@ -71,9 +85,13 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreSuite">{{ 'SUITES.NAME' | translate
                                     }}</label>
-                                <input class="form-control form-input" id="nombreSuite" name="nombreSuite" type="text" placeholder="{{ 'SUITES.GESTION.PLACEHOLDERNAME' | translate }}" [ngClass]="{'is-invalid': !nombreSuite.valid && (nombreSuite.dirty || nombreSuite.touched || isSubmit)}"
+                                <input class="form-control form-input" id="nombreSuite" name="nombreSuite" type="text"
+                                    placeholder="{{ 'SUITES.GESTION.PLACEHOLDERNAME' | translate }}"
+                                    [ngClass]="{'is-invalid': !nombreSuite.valid && (nombreSuite.dirty || nombreSuite.touched || isSubmit)}"
                                     #nombreSuite="ngModel" required [(ngModel)]="FormRegistro.nombreSuite" />
-                                <label *ngIf="!nombreSuite.valid && (nombreSuite.dirty || nombreSuite.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!nombreSuite.valid && (nombreSuite.dirty || nombreSuite.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SUITES.GESTION.REQUERIDONAME' | translate }}
                                 </label>
                             </div>
@@ -81,9 +99,12 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SUITES.PATH' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="rutaInicio" placeholder="{{ 'SUITES.GESTION.PLACEHOLDERPATH' | translate }}" [ngClass]="{'is-invalid': !rutaInicio.valid && (rutaInicio.dirty || rutaInicio.touched || isSubmit) }" #rutaInicio="ngModel"
-                                    required [(ngModel)]="FormRegistro.rutaInicio" />
-                                <label *ngIf="!rutaInicio.valid && (rutaInicio.dirty || rutaInicio.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <input type="text" class="form-control form-input" name="rutaInicio"
+                                    placeholder="{{ 'SUITES.GESTION.PLACEHOLDERPATH' | translate }}"
+                                    [ngClass]="{'is-invalid': !rutaInicio.valid && (rutaInicio.dirty || rutaInicio.touched || isSubmit) }"
+                                    #rutaInicio="ngModel" required [(ngModel)]="FormRegistro.rutaInicio" />
+                                <label *ngIf="!rutaInicio.valid && (rutaInicio.dirty || rutaInicio.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SUITES.GESTION.REQUERIDPATH' | translate }}
                                 </label>
                             </div>
@@ -91,10 +112,16 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SUITES.DESCRIPTION' | translate }}</label>
-                                <app-text-editor [toolbarType]="tipoEditorTexto" [contentHtml]="FormRegistro.descripcionSuite ?? ''" (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionSuite" [(ngModel)]="FormRegistro.descripcionSuite" [ngClass]="{'is-invalid': !descripcionSuite.valid && (descripcionSuite.dirty || descripcionSuite.touched || isSubmit)}"
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
+                                    [contentHtml]="FormRegistro.descripcionSuite ?? ''"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionSuite"
+                                    [(ngModel)]="FormRegistro.descripcionSuite"
+                                    [ngClass]="{'is-invalid': !descripcionSuite.valid && (descripcionSuite.dirty || descripcionSuite.touched || isSubmit)}"
                                     #descripcionSuite="ngModel" required rows="5">
                                 </app-text-editor>
-                                <label *ngIf="!descripcionSuite.valid && (descripcionSuite.dirty || descripcionSuite.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!descripcionSuite.valid && (descripcionSuite.dirty || descripcionSuite.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'SUITES.GESTION.REQUERIDODESCRIPCION' | translate }}
                                 </label>
                             </div>
@@ -107,7 +134,11 @@
                                     <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
                                         {{ 'Seleccionar archivo' | translate }}
                                     </label>
-                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*" id="fileUploadInput" class="form-control form-input d-none" name="fotoUsuario">
+                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
+                                        id="fileUploadInput" class="form-control form-input d-none" name="fotoUsuario">
+                                    <span class="file-name" [ngClass]="{'has-file': fileName}">
+                                        {{ fileName || ('SUITES.GESTION.FOTOHOLDER' | translate) }}
+                                    </span>
                                 </div>
                             </div>
                         </div>

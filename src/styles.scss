@@ -2,11 +2,13 @@
 
 // Theme Font
 @import 'scss/themes/font/theme-font';
+
 // main framework
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 @import 'scss/settings/custom-variables';
 @import 'scss/settings/theme-variables';
+
 // bootstrap
 @import 'node_modules/bootstrap/scss/mixins';
 @import 'node_modules/bootstrap/scss/utilities';
@@ -15,26 +17,35 @@
 @import 'scss/themes/general';
 @import 'scss/themes/generic';
 @import 'scss/themes/minixs/function';
+
 // ng module
 @import 'scss/ng-module/ng-module';
+
 // icon
 @import 'scss/themes/font/datta-icon';
 @import 'scss/themes/font/feather';
 @import 'scss/themes/font/fontawesome';
 @import 'scss/themes/font/flaticon';
+
 // component
 @import 'scss/themes/component/component';
+
 @import 'scss/themes/plugin/animate';
+
 // theme layouts
 @import 'scss/themes/layouts/menu-lite';
 @import 'scss/themes/layouts/menu-ng';
+
 // Dashboard Widgets
 @import 'scss/themes/dashboard/widget';
+
 // custom plugin
 @import 'scss/themes/plugin/plugin';
+
 // pages
 @import 'scss/themes/pages/page';
 @import 'scss/themes/chat/chat';
+
 // custom
 @import 'scss/themes/custom';
 @import 'scss/layout-rtl';
@@ -43,9 +54,11 @@
 @import 'scss/tabs-aside';
 @import 'scss/swal_dark.scss';
 // @import 'scss/aplus10';
+
 // third party Module
 @import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
 @import '../node_modules/angular-calendar/css/angular-calendar.css';
+
 @import './datatables_buttons.scss';
 
 /* El resto de tu código SCSS... */
@@ -56,15 +69,14 @@
 :root {
     --background-color: #f8f9fa;
     --text-color: #212529;
-    --text-subtitle-color: #464e57;
     --border-color: #dee2e6;
     --header-color: #f5f5f5;
     --color-fin-gradiente: #ffffff;
     --card-background: #ffffff;
-    --app-btn-secondary: #dadada;
+    --app-btn-secondary: #acb2b8;
     --app-btn-secondary-texto: #333;
-    --app-btn-inactive: #f8f9fa;
-    --app-btn-border: #dee2e6;
+    --app-btn-inactive: #c4c4c4;
+    --app-btn-border: #9b9b9b;
     --app-titulo-color: #333;
     --app-form-object-bg: #fff;
     --radio-border-color: #afaeae;
@@ -78,7 +90,6 @@
     --scrollbar-track-color: #f1f1f1;
     --scrollbar-thumb-color: #c1c1c1;
     --scrollbar-thumb-hover: #5f5f5f;
-    --data-table-detail-row: #dfdfdf;
 }
 
 // =================================
@@ -87,17 +98,16 @@
 body.dark-theme {
     --background-color: #212529;
     --text-color: #b4b4b4;
-    --text-subtitle-color: #9c9c9c;
-    --border-color: #474747;
+    --border-color: #4b4b4b;
     --header-color: #292828;
     --card-background: #222121;
     --color-fin-gradiente: #000000;
-    --app-btn-secondary: #313131;
+    --app-btn-secondary: #495057;
     --app-btn-secondary-texto: #ccc;
-    --app-btn-inactive: #212529;
-    --app-btn-border: #474747;
+    --app-btn-inactive: #4b4b4b;
+    --app-btn-border: #797979;
     --app-titulo-color: #ccc;
-    --app-form-object-bg: #222121;
+    --app-form-object-bg: #1f1c1c;
     --radio-border-color: #ccc;
     --radio-fill-color: #007bff;
     --radio-fill-shadow: rgba(0, 123, 255, 0.5);
@@ -109,7 +119,6 @@ body.dark-theme {
     --scrollbar-track-color: #2c2c3d;
     --scrollbar-thumb-color: #555;
     --scrollbar-thumb-hover: #777;
-    --data-table-detail-row: #3d3d3d;
 }
 
 hr.detail-separator {
@@ -122,60 +131,15 @@ hr.detail-separator {
 }
 
 .card {
-    background-color: var(--card-background);
+    // background-color: var(--card-background);
+    // border-color: var(--border-color);
+    background-color: #007bff;
     border-color: var(--border-color);
 }
 
-.titles {
-    color: var(--text-color) !important;
-}
-
-.sub-titles {
-    color: var(--text-subtitle-color) !important;
-}
-
-.custom-check-form {
-    padding: 10px 15px;
-    background-color: var(--card-background);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    transition: background 0.2s;
-}
-
-.custom-check-form .form-check-input {
-    width: 1.5em;
-    height: 1.5em;
-    margin-top: 0;
-    margin-right: 12px;
-    /* Centrado vertical con el texto */
-    cursor: pointer;
-    background-color: var(--card-background) !important;
-    border: 1px solid var(--border-color) !important;
-}
-
-.custom-check-form .form-check-label {
-    color: var(--text-color) !important;
-    cursor: pointer;
-    font-size: 0.95rem;
-    user-select: none;
-}
-
-.custom-check-form .form-check-input:checked {
-    background-color: var(--app-navbar-color) !important;
-    border-color: var(--app-navbar-color) !important;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
-}
-
-
 /* *************************************************************** */
-
-
 /* * ESTILOS GLOBALES DE QUILL EDITOR (TEMA CLARO DEFAULT) */
-
-
 /* *************************************************************** */
-
 .ql-container,
 .ql-toolbar {
     background-color: var(--card-background) !important;
@@ -186,16 +150,12 @@ hr.detail-separator {
     color: var(--text-color) !important;
 }
 
-
 /* NUEVO: Forzar fondo transparente para los botones para eliminar el color heredado en tema claro */
-
 .ql-toolbar button {
     background-color: transparent !important;
 }
 
-
 /* Color de los iconos y botones (oscuro) */
-
 .ql-toolbar svg {
     /* Forzar color para el SVG en tema claro */
     fill: var(--text-color) !important;
@@ -203,16 +163,12 @@ hr.detail-separator {
     color: var(--text-color) !important;
 }
 
-
 /* Menús desplegables (Headers, fuentes) */
-
 .ql-picker-label {
     color: var(--text-color) !important;
 }
 
-
 /* Opciones del menú desplegable */
-
 .ql-picker-options {
     background-color: var(--card-background) !important;
     border-color: var(--border-color) !important;
@@ -222,9 +178,7 @@ hr.detail-separator {
     color: var(--text-color) !important;
 }
 
-
 /* Placeholder (color más claro en tema claro) */
-
 .ql-editor::before {
     color: #999999 !important;
 }
@@ -251,6 +205,7 @@ hr.detail-separator {
 ::-webkit-scrollbar-thumb {
     background-color: var(--scrollbar-thumb-color);
     border-radius: 10px;
+
     border: 2px solid var(--panel-bg);
 }
 
@@ -263,44 +218,29 @@ body {
     scrollbar-width: thin;
 }
 
-
 /* *************************************************************** */
-
-
 /* * ESTILOS GLOBALES DE QUILL EDITOR (TEMA OSCURO) */
-
-
 /* *************************************************************** */
-
 
 /* Forzar fondo oscuro para el toolbar y el container */
-
 .ql-container,
 .ql-toolbar {
     background-color: var(--card-background) !important;
     border-color: var(--border-color) !important;
 }
 
-
 /* Color del texto (blanco) */
-
 .ql-editor {
     color: var(--text-color) !important;
 }
 
-
 /* Forzar fondo transparente para los botones para eliminar el color heredado en tema oscuro */
-
 .ql-toolbar.ql-snow button {
     background-color: transparent !important;
 }
 
-
 /* Iconos y botones: Usamos el gris suave de --text-color para integrar con los labels */
-
-
 /* Aumentamos la especificidad apuntando a los elementos dentro del botón */
-
 .ql-toolbar.ql-snow button svg {
     /* Fuerza el color del trazo y relleno para todos los elementos SVG inactivos */
     fill: var(--text-color) !important;
@@ -308,9 +248,7 @@ body {
     color: var(--text-color) !important;
 }
 
-
 /* Reglas específicas de Quill para asegurar la consistencia del color gris suave */
-
 .ql-toolbar.ql-snow .ql-stroke {
     stroke: var(--text-color) !important;
 }
@@ -319,24 +257,18 @@ body {
     fill: var(--text-color) !important;
 }
 
-
 /* El selector .ql-picker-label también es un botón/contenedor, lo ajustamos */
-
 .ql-toolbar.ql-snow .ql-picker-label {
     background-color: transparent !important;
     color: var(--text-color) !important;
 }
 
-
 /* Menús desplegables */
-
 .ql-picker-label {
     color: var(--text-color) !important;
 }
 
-
 /* Opciones del menú desplegable */
-
 .ql-picker-options {
     background-color: var(--card-background) !important;
     border-color: var(--border-color) !important;
@@ -346,23 +278,15 @@ body {
     color: var(--text-color) !important;
 }
 
-
 /* Placeholder: Gris muy claro para mejor visibilidad */
-
 .ql-editor::before {
     color: var(--text-color) !important;
     /* Gris claro */
 }
 
-
 /* ******************************** */
-
-
 /* * ESTILOS GLOBALES DEL DATATABLE */
-
-
 /* ******************************** */
-
 .dataTables_wrapper,
 .card,
 .dropdown-menu {
@@ -380,11 +304,13 @@ body {
     color: var(--text-color) !important;
     border-color: var(var(--border-color)) !important;
     border-radius: 16px !important;
+
     thead th {
         background-color: var(--header-color) !important;
         color: var(--text-color) !important;
         border-color: var(--border-color) !important;
     }
+
     tbody td {
         background-color: var(--card-background) !important;
         color: var(--text-color) !important;
@@ -412,11 +338,6 @@ body {
     background-color: #1ffc02 !important;
     color: var(--text-color) !important;
     border-color: var(var(--border-color)) !important;
-}
-
-.data-table-detail-row {
-    padding: 4px !important;
-    border-bottom: 1px solid var(--data-table-detail-row);
 }
 
 .dataTables_paginate .paginate_button.active {
@@ -506,11 +427,11 @@ hr.detail-separator {
 }
 
 .pcoded-mtext {
-    color: var(--text-color) !important;
+    color: #8a8f94 !important;
 }
 
 .pcoded-micon {
-    color: var(--text-color) !important;
+    color: #8a8f94 !important;
 }
 
 .drop-menu {
@@ -527,14 +448,10 @@ hr.detail-separator {
 }
 
 .page-link-b {
-    background-color: var(--app-btn-inactive) !important;
-    color: var(--text-color) !important;
-    border-color: var(--app-btn-border) !important;
+    background-color: #2c3138 !important;
+    color: #8a8f94 !important;
+    border-color: #495057 !important;
     border-radius: 5px !important;
-}
-
-.page-link-b:hover {
-    background-color: var(--app-btn-secondary) !important;
 }
 
 .sr-only {
@@ -580,6 +497,7 @@ hr.detail-separator {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
     &::before {
         content: "";
         position: absolute;
@@ -602,26 +520,31 @@ body {
     overflow-x: hidden;
     background-color: var(--background-color);
     color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 .main-wrapper {
     /* 1. Limitar ancho para legibilidad en monitores grandes (e.g., 1280px) */
     max-width: 1280px;
+
     /* 2. Centrar el contenedor en el centro de la pantalla */
     margin-left: auto;
     margin-right: auto;
+
     /* 3. Padding para evitar que el contenido toque los bordes de la ventana/pantalla */
-    padding: 32px;
-    /* o 2rem */
+    padding: 32px; /* o 2rem */
+
     /* 4. Usar Flexbox para gestionar el espacio entre secciones */
     display: flex;
     flex-direction: column;
     /* Ajusta el espacio vertical entre las secciones */
-    gap: 48px;
-    /* o 3rem, para separar bien el Carrusel del Formulario, etc. */
+    gap: 48px; /* o 3rem, para separar bien el Carrusel del Formulario, etc. */
+
     /* 5. Asegurar que ocupe todo el ancho disponible si no alcanza el max-width */
     width: 100%;
+
     /* 6. Mejorar la fuente base del sitio */
     font-family: 'Inter', sans-serif;
 }
@@ -782,13 +705,16 @@ body {
 
 .table {
     border-collapse: collapse;
+
     thead tr th {
         border-bottom: 1px solid #5f5f5f;
         border-top: none;
     }
+
     tbody td {
         border-bottom: none !important;
     }
+
     tbody tr td {
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
@@ -879,7 +805,9 @@ td {
 .navbar-custom {
     background-color: var(--custom-navbar-background);
     color: var(--custom-navbar-text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 .gradient-rtl {
@@ -1128,33 +1056,40 @@ body.gradient-dark {
     min-width: 250px;
     padding: 1rem;
     margin-top: 10px;
+
     .pro-head {
         margin: 0px !important;
         padding: 16px !important;
         background-image: linear-gradient(to bottom, var(--app-navbar-color), var(--color-fin-gradiente));
-        color: var(--text-color);
+            color: var(--text-color);
+
         span {
             display: block;
             font-weight: 600;
             font-size: 16px;
             color: var(--text-color);
         }
+
         .dud-logout {
             color: var(--text-color);
+
             &:hover {
                 color: #dc3545;
             }
         }
     }
+
     .header-texto {
         background-color: var(--card-background);
         color: var(--text-color);
     }
+
     .pro-body {
         list-style: none;
         padding: 12px !important;
         background-color: var(--card-background);
         color: var(--text-color);
+
         li {
             a {
                 color: var(--text-color);
@@ -1176,8 +1111,10 @@ body.gradient-dark {
     padding: 0px 0px 0px 0px !important;
     box-shadow: 0 4px 8px var(--panel-shadow);
     z-index: 1050;
+
     .dropdown-item {
         color: var(--text-color);
+
         &:hover {
             background-color: var(--header-color);
         }
@@ -1198,9 +1135,7 @@ body.gradient-dark {
     color: #fff;
 }
 
-
 /* -- Contenedor para el tema OSCURO -- */
-
 .swal2-dark-theme-container .swal2-popup {
     background: var(--panel-bg, #1e1e2d);
     color: var(--panel-text, #fff);
@@ -1211,13 +1146,11 @@ body.gradient-dark {
     color: var(--panel-text, #fff);
 }
 
-
 /*
 ===================================================
 1. Estilos Generales y Contenedor Grid (Responsivo)
 ===================================================
 */
-
 .card-grid-apps {
     display: grid;
     grid-template-columns: 1fr;
@@ -1227,13 +1160,11 @@ body.gradient-dark {
     margin: 0 auto;
 }
 
-
 /*
 ==============================
 2. Estilos de la Card (Contenedor principal)
 ==============================
 */
-
 .card-grd {
     background-size: cover;
     background-position: center;
@@ -1244,7 +1175,9 @@ body.gradient-dark {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1010;
 }
@@ -1255,13 +1188,11 @@ body.gradient-dark {
     /* Sombra más fuerte al pasar el ratón */
 }
 
-
 /*
 ==============================
 3. Estilos del Contenido (Panel Inferior)
 ==============================
 */
-
 .card-grd-content {
     width: 100%;
     box-sizing: border-box;
@@ -1273,8 +1204,8 @@ body.gradient-dark {
     margin: 0;
 }
 
-
 /* 4. Estilos de Tipografía y Botón */
+
 
 .card-grd-content h1 {
     margin-top: 0;
@@ -1314,38 +1245,31 @@ body.gradient-dark {
     color: var(--text-color);
 }
 
-
 /*
 ==============================
 5. Media Queries para Responsividad
 ==============================
 */
 
-
 /* Tabletas (768px y más): 2 columnas */
-
 @media (min-width: 768px) {
     .card-grid-apps {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-
 /* Escritorio (1024px y más): 3 columnas */
-
 @media (min-width: 1024px) {
     .card-grid-apps {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-
 /*
 ==============================
 Estilos del Título Principal
 ==============================
 */
-
 .page-title {
     text-align: center;
     width: 100%;
@@ -1360,5 +1284,8 @@ Estilos del Título Principal
     background-color: var(--card-background);
     color: var(--text-color);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease;
 }

@@ -27,7 +27,7 @@ export class PtlclasesticketService {
     private socketService: SocketService,
     private _localStorageService: LocalStorageService
 ) {
-    this.socketService.listen('clasesickets-actualizadas').subscribe({
+    this.socketService.listen('clasesTickets-actualizadas').subscribe({
       next: (payload) => {
         console.log('Evento de Socket.IO recibido:', payload.msg);
         this._registrosChange.next(payload);

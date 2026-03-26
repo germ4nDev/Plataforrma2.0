@@ -15,15 +15,21 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'ITEMSPAQUETES.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title">{{ 'PAQUETES.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
                         <small>{{ 'PAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
-                        <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
+                        <select (change)="onFiltroNombreCodigoClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="reg.codigoModuloPQ" *ngFor="let reg of registros">
-                                {{ reg.nomModulo }}
+                            <option [value]="reg.codigoPaquete" *ngFor="let reg of registros">
+                                {{ reg.nombreItem }}
                             </option>
                         </select>
+                    </div>
+                    <div class="filtro">
+                        <small>{{ 'PAQUETES.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
+                            class="form-control form-input"
+                            placeholder="{{ 'PAQUETES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'PAQUETES.FILTROS.FILTROESTADO' | translate }}</small>
@@ -40,17 +46,27 @@
     <div class="content-area-pq">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <ng-container *ngIf="modulosPaqueteFiltrados$ | async as dataFiltrada">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoModuloPQ'"
-                        [tableTitle]="'ITEMSPAQUETES.TITLE' | translate" [metadataColumns]="columnasPaquetes"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="false" [showActions]="true"
-                        [showNewButton]="true" [showBackButton]="true" [showViewButton]="false" [showEditButton]="false"
-                        [showDeleteButton]="true" [newButtonLabel]="'ITEMS.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)" (backRecord)="OnRegresarClick()"
-                        (deleteRecord)="OnEliminarRegistroClick($event)">
-                    </app-data-table>
-                </ng-container>
+                <app-data-table-pq
+                    [data]="registrosFiltrado"
+                    [idField]="'codigoPaquete'"
+                    [tableTitle]="'PAQUETES.TITLE' | translate"
+                    [metadataColumns]="columnasPaquetes"
+                    [metadataDetailColumns]="columnasDetailRegistros"
+                    [showDetail]="false"
+                    [showActions]="true"
+                    [showExportButton]="false"
+                    [showBackButton]="true"
+                    [showNewButton]="true"
+                    [showViewButton]="false"
+                    [showEditButton]="false"
+                    [showDeleteButton]="true"
+                    [newButtonLabel]="'ITEMS.NEW' | translate"
+                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                    (backRecord)="OnRegresarClick()"
+                    (newRecord)="OnNuevoRegistroClick()"
+                    (editRecord)="OnEditarRegistroClick($event)"
+                    (deleteRecord)="OnEliminarRegistroClick($event)">
+                </app-data-table-pq>
             </div>
         </div>
     </div>
