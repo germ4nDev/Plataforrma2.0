@@ -68,6 +68,7 @@ export class GestionPaqueteComponent {
     selectedFileIconoUrl: string | null = null;
     lockScreenSubscription: Subscription | undefined;
     isLocked: boolean = false;
+    isPromocion: boolean = true;
     lockMessage: string = '';
 
     // constructor
@@ -359,6 +360,11 @@ export class GestionPaqueteComponent {
     OnNuevoRegistroClick() {
         this.isGestionItems = true;
         this.itemPaquete.codigoItem = uuidv4();
+    }
+
+    onPromocionClick(evento: any) {
+        const option = evento.target.value;
+        this.isPromocion = option == 'true' ? false : true;
     }
 
     OnEditarRegistroClick(evento: any) { }
