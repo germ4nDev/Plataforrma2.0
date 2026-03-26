@@ -21,7 +21,7 @@ export class PTLModulosPaqueteService {
   modulosPQChange$ = this._modulosPQChange.asObservable()
 
   constructor (private http: HttpClient, private socketService: SocketService, private _localStorageService: LocalStorageService) {
-    this.socketService.listen('modulospq-actualizados').subscribe({
+    this.socketService.listen('modulos-paquete-actualizados').subscribe({
       next: payload => {
         console.log('Evento de Socket.IO recibido:', payload.msg)
         this._modulosPQChange.next(payload)
