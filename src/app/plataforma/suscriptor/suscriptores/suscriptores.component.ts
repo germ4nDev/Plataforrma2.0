@@ -88,18 +88,24 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
       return;
     }
     const codigoSuscriptor = suscriptor.codigoSuscriptor;
-    this.registrosTransformadas$ = this._suscriptoresService.suscriptores$.pipe(
-      switchMap((regs: PTLSuscriptorModel[]) => {
-        if (!regs) return of([]);
-        const transformedRegs = regs.map((reg: any) => {
-          reg.nomEstado = reg.estadoAplicacion ? 'Activo' : 'Inactivo';
-          reg.logoSuscriptor = this._uploadService.getFilePath(codigoSuscriptor, 'suscriptores', reg.logoSuscriptor);
-          return reg as PTLSuscriptorModel;
-        });
-        this.registros = transformedRegs;
-        console.log('registros', this.registros);
-        return of(transformedRegs);
-      }),
+this.registrosTransformadas$ = this._suscriptoresService.suscriptores$.pipe(
+  switchMap((regs: PTLSuscriptorModel[]) => {
+    if (!regs) return of([]);
+    const transformedRegs = regs.map((reg: any) => {
+      // CORRECCIÓN: Usar la propiedad correcta del suscriptor
+      reg.nomEstado = reg.estadoSuscriptor ? 'Activo' : 'Inactivo';
+
+      // Asegúrate de que logoSuscriptor no venga nulo para evitar errores en getFilePath
+      reg.logoSuscriptor = this._uploadService.getFilePath(
+        codigoSuscriptor,
+        'suscriptores',
+        reg.logoSuscriptor || 'default.png'
+      );
+      return reg as PTLSuscriptorModel;
+    });
+    this.registros = transformedRegs;
+    return of(transformedRegs);
+  }),
       catchError((err) => {
         console.error('Error en el stream de aplicaciones:', err);
         return of([]);
@@ -150,34 +156,28 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     this.filtroEstadoSubject.next(evento.target.value);
   }
 
-  columnasRegistros: ColumnMetadata[] = [
-    {
-      name: 'logoSuscriptor',
-      header: 'SUSCRIPTORES.CODE',
-      type: 'image'
-    },
-    {
-      name: 'nombreSuscriptor',
-      header: 'SUSCRIPTORES.NAME',
-      type: 'text'
-    },
-    {
-      name: 'identificacionSuscriptor',
-      header: 'SUSCRIPTORES.IDENTIFICATION',
-      type: 'text'
-    },
-    {
-      name: 'correoSuscriptor',
-      header: 'SUSCRIPTORES.STATUS',
-      type: 'text'
-    },
-    {
-      name: 'nomEstado',
-      header: 'SUSCRIPTORES.STATUS',
-      type: 'estado'
-    }
-  ];
-
+columnasRegistros: ColumnMetadata[] = [
+  {
+    name: 'logoSuscriptor', // Debe coincidir con la propiedad del objeto
+    header: 'SUSCRIPTORES.LOGO', // Cambié el header para que sea coherente
+    type: 'image'
+  },
+  {
+    name: 'nombreSuscriptor',
+    header: 'SUSCRIPTORES.NAME',
+    type: 'text'
+  },
+  {
+    name: 'identificacionSuscriptor',
+    header: 'SUSCRIPTORES.IDENTIFICATION',
+    type: 'text'
+  },
+  {
+    name: 'nomEstado', // Esta es la propiedad que creamos en el paso anterior
+    header: 'SUSCRIPTORES.STATUS',
+    type: 'estado'
+  }
+];
   columnasDetailRegistros: ColumnMetadata[] = [
     {
       name: 'codigoSuscriptor',
