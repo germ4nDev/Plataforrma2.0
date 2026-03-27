@@ -95,6 +95,18 @@ export class GestionSuscriptorComponent {
     });
   }
 
+  get clavesCoinciden(): boolean {
+    const clave = this.FormRegistro.claveNew;
+    const confirmacion = this.FormRegistro.claveConfirm;
+
+    // Si ambos están vacíos, no mostramos error de "no coinciden"
+    if (!clave && !confirmacion) {
+      return true;
+    }
+
+    return clave === confirmacion;
+  }
+
   ngOnInit() {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
@@ -134,6 +146,7 @@ export class GestionSuscriptorComponent {
       this.FormRegistro.envioMensajesSuscriptor = false;
       this.FormRegistro.envioPublicidadSuscriptor = false;
       this.FormRegistro.estadoSuscriptor = false;
+      this.isClaveActual = false; // Permitir escribir claves nuevas de una vez
       console.log('FormRegistro', this.FormRegistro);
     }
   }
@@ -193,88 +206,69 @@ export class GestionSuscriptorComponent {
 
   btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
-    if (!form.valid) {
-      return;
-    }
-    const registroData = form.value as PTLSuscriptorModel;
+    if (!form.valid) return;
+
+    // 1. Clonamos el objeto actual
+    const rawData = { ...this.FormRegistro };
+
+    // 2. Definimos el objeto que REALMENTE espera el servidor
+    // Ajusta los nombres de la derecha según lo que pida tu API
+    const registroParaEnvio = {
+      codigoSuscriptor: rawData.codigoSuscriptor,
+      identificacionSuscriptor: rawData.identificacionSuscriptor,
+      nombreSuscriptor: rawData.nombreSuscriptor,
+      direccionSuscriptor: rawData.direccionSuscriptor,
+      telefonoContacto: rawData.telefonoContacto,
+      numeroEmpresas: rawData.numeroEmpresas,
+      numeroUsuarios: rawData.numeroUsuarios,
+      usuarioAdministrador: rawData.usuarioAdministrador,
+      descripcionSuscriptor: rawData.descripcionSuscriptor,
+      logoSuscriptor: rawData.logoSuscriptor,
+      envioCorreosSuscriptor: rawData.envioCorreosSuscriptor,
+      envioMensajesSuscriptor: rawData.envioMensajesSuscriptor,
+      envioPublicidadSuscriptor: rawData.envioPublicidadSuscriptor,
+      estadoSuscriptor: rawData.estadoSuscriptor,
+      // MAREAR LA CLAVE: El backend suele esperar un campo como 'claveUsuario'
+      claveUsuario: rawData.claveNew
+    };
+
+    const usuarioLogueado = this._localStorageService.getUsuarioLocalStorage();
+
     if (this.modoEdicion) {
-      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-      registroData.fechaModificacion = new Date().toISOString();
-      if (this.isClaveValida == true) {
-        if (this.FormRegistro.codigoAdministrador) {
-          this._usuariosService.getUsuarioById(this.FormRegistro.codigoAdministrador).subscribe((user: any) => {
-            if (user) {
-              user.claveUsuario = this.FormRegistro.claveNew;
-              this._usuariosService.actualizarUsuario(user).subscribe();
-            }
-          });
-        }
-      }
-      this._suscriptoresService.actualizarSuscriptor(registroData).subscribe({
+      const dataUpdate = {
+        ...registroParaEnvio,
+        suscriptorId: rawData.suscriptorId,
+        codigoUsuarioModificacion: usuarioLogueado.codigoUsuario,
+        fechaModificacion: new Date().toISOString()
+      };
+
+      this._suscriptoresService.actualizarSuscriptor(dataUpdate as any).subscribe({
         next: (resp: any) => {
-          if (resp.ok) {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-            this.router.navigate(['/suscriptor/suscriptores']);
-          } else {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + resp.message);
-          }
+          this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
+          this.router.navigate(['/suscriptor/suscriptores']);
         },
-        error: (err: any) => {
-          console.error(err);
-          const logData = {
-            codigoTipoLog: '',
-            codigoRespuesta: '501',
-            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
-          };
-          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err.message);
-        }
+        error: (err) => console.error(err)
       });
     } else {
-      console.log('FormRegistro', this.FormRegistro);
-      registroData.fechaCreacion = new Date().toISOString();
-      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-      registroData.codigoUsuarioModificacion = '';
-      registroData.fechaModificacion = '';
-      this._suscriptoresService.crearSuscriptor(registroData).subscribe({
+      // MODO CREACIÓN
+      const dataCreate = {
+        ...registroParaEnvio,
+        codigoUsuarioCreacion: usuarioLogueado.codigoUsuario,
+        fechaCreacion: new Date().toISOString()
+      };
+
+      this._suscriptoresService.crearSuscriptor(dataCreate as any).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._suscriptoresService.crearCarpetaSuscriptor(this.FormRegistro.codigoSuscriptor || '').subscribe((datos) => {
-              console.log('Carpeta de suscriptor creada:', datos);
-            });
+            this._suscriptoresService.crearCarpetaSuscriptor(dataCreate.codigoSuscriptor!).subscribe();
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
-            form.resetForm();
-            this.isSubmit = false;
             this.router.navigate(['/suscriptor/suscriptores']);
           }
         },
-        error: (err: any) => {
-          console.error(err);
-          const logData = {
-            codigoTipoLog: '',
-            codigoRespuesta: '501',
-            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
-          };
-          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO') + err.message);
+        error: (err) => {
+          // Imprime esto en consola para ver el error real del backend
+          console.error('Error detallado:', err.error);
+          this._swalAlertService.getAlertError('Error: ' + (err.error?.error || 'Error interno'));
         }
       });
     }
