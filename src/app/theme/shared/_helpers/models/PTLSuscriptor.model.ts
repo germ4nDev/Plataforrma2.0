@@ -9,6 +9,7 @@ export class PTLSuscriptorModel {
     public numeroEmpresas?: number,
     public numeroUsuarios?: number,
     public codigoAdministrador?: string,
+    public correoSuscriptor?: string,
     public usuarioAdministrador?: string,
     public claveActual?: string,
     public claveNew?: string,

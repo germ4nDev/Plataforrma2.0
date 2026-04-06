@@ -86,8 +86,6 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
     const codigoSuscriptor = suscriptor?.codigoSuscriptor;
 
-    // 2. Definimos la transformación de datos
-    // Usamos 'map' en lugar de 'switchMap' para transformar el array
     this.registrosTransformadas$ = this._suscriptoresService.suscriptores$.pipe(
       map((regs: PTLSuscriptorModel[]) => {
         if (!regs || regs.length === 0) return [];
@@ -96,7 +94,6 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
           const newReg = { ...reg };
           newReg.nomEstado = newReg.estadoSuscriptor ? 'Activo' : 'Inactivo';
 
-          // Solo intentamos armar la ruta del logo si tenemos el código del suscriptor
           if (codigoSuscriptor) {
             newReg.logoSuscriptor = this._uploadService.getFilePath(
               codigoSuscriptor,
@@ -114,8 +111,6 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
       })
     );
 
-    // 3. Inicializamos el stream de filtrado
-    // Esto ahora sí se ejecutará siempre
     this.registrosFiltrados$ = combineLatest([
       this.registrosTransformadas$.pipe(startWith([])),
       this.filtroNombreSubject,
@@ -132,7 +127,6 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
       })
     );
 
-    // LOG DE ADVERTENCIA: Si no hay suscriptor, avisamos pero no matamos el flujo
     if (!codigoSuscriptor) {
       console.warn('Advertencia: No hay código de suscriptor en LocalStorage. Los logos podrían no cargar correctamente.');
     }
@@ -215,7 +209,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
       header: 'SUSCRIPTORES.LOGO',
       type: 'image',
       isSortable: false,
-      searchable: false // Propiedad personalizada para el HTML
+      searchable: false
     },
     {
       name: 'nombreSuscriptor',

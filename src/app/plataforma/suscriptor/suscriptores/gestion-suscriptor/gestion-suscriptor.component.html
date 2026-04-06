@@ -139,6 +139,29 @@
                 </label>
               </div>
             </div>
+                        <!-- SECTION COREO CORPORATIVO -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-control-label" for="correoSuscriptor">{{ 'SUSCRIPTORES.GESTION.EMAILSUSCRIPTOR' | translate }}</label>
+                <input
+                  class="form-control form-input"
+                  id="correoSuscriptor"
+                  name="correoSuscriptor"
+                  type="text"
+                  placeholder="{{ 'SUSCRIPTORES.GESTION.HOLDEREMAILSUSCRIPTOR' | translate }}"
+                  [ngClass]="{ 'is-invalid': !correoSuscriptor.valid && (correoSuscriptor.dirty || correoSuscriptor.touched || isSubmit) }"
+                  #correoSuscriptor="ngModel"
+                  required
+                  [(ngModel)]="FormRegistro.correoSuscriptor"
+                />
+                <label
+                  *ngIf="!correoSuscriptor.valid && (correoSuscriptor.dirty || correoSuscriptor.touched || isSubmit)"
+                  class="error jquery-validation-error small form-text invalid-feedback"
+                >
+                  {{ 'PLATAFORMA.ERROREMAILSUSCRIPTOR' | translate }}
+                </label>
+              </div>
+            </div>
             <!-- SECTION TELEFONO -->
             <div class="col-md-6">
               <div class="form-group">

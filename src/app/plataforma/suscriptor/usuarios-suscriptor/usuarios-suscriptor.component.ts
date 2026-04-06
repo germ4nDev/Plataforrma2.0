@@ -33,13 +33,6 @@ export class UsuariosSuscriptorComponent implements OnInit {
   private filtroNombreSubject = new BehaviorSubject<string>('');
   private filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-  // Configuración de columnas (Basado en tu imagen de la BD)
-  columnasUsuarios = [
-    { name: 'colCodigoUsuario', header: 'USUARIOS.CODIGO_USUARIO', type: 'text' },
-    { name: 'colCodigoUsuarioSC', header: 'USUARIOS.CODIGO_SC', type: 'text' },
-    { name: 'nomEstado', header: 'PLATAFORMA.STATUS', type: 'estado' }
-  ];
-
   constructor(
     private _usuariosService: PTLUsuariosService,
     private _navigationService: NavigationService,
@@ -76,25 +69,30 @@ export class UsuariosSuscriptorComponent implements OnInit {
   cargarDatos() {
     this._usuariosService.obtenerUsuariosPorSuscriptor(this.suscriptorId).subscribe({
       next: (res: any) => {
-        let lista = [];
+        // 1. Extraer la lista según la estructura que envía tu API de Node (usualmente res.usuariosSC)
+        let lista: any[] = [];
 
-        // Normalización para que siempre sea un array (incluso si viene un objeto único)
-        if (Array.isArray(res)) {
+        if (res && res.ok && Array.isArray(res.usuariosSC)) {
+          lista = res.usuariosSC;
+        } else if (Array.isArray(res)) {
           lista = res;
-        } else if (res && res.usuarios) {
-          lista = res.usuarios;
-        } else if (res && typeof res === 'object' && res.usuarioSCId) {
-          lista = [res];
         }
 
-        // Mapeo de campos de la BD a la Grilla
-        const datosMapeados = lista.map((u: any) => ({
-          ...u,
-          idParaTabla: u.usuarioSCId, // El '1' de tu imagen
-          colCodigoUsuario: u.codigoUsuario,
-          colCodigoUsuarioSC: u.codigoUsuarioSC,
-          nomEstado: u.estadoUsuario === true || u.estadoUsuario === 'True' ? 'Activo' : 'Inactivo'
-        }));
+        // 2. Mapeo riguroso hacia la interfaz de la tabla
+        const datosMapeados = lista.map((u: any) => {
+          return {
+            ...u,
+            // 'idParaTabla' debe ser la llave primaria para que funcionen editar/eliminar
+            idParaTabla: u.codigoUsuarioSC,
+
+            // Mapeo de columnas basado en tu array 'columnasUsuarios'
+            colCodigoUsuario: u.codigoUsuario,
+            colCodigoUsuarioSC: u.codigoUsuarioSC,
+
+            // Manejo del estado para el pipe/tipo 'estado' de tu datatable
+            nomEstado: u.estadoUsuario === true || u.estadoUsuario === 1 ? 'Activo' : 'Inactivo'
+          };
+        });
 
         this.usuariosSubject.next(datosMapeados);
       },
@@ -104,6 +102,13 @@ export class UsuariosSuscriptorComponent implements OnInit {
       }
     });
   }
+
+  // Configuración de columnas (Basado en tu imagen de la BD)
+  columnasUsuarios = [
+    { name: 'colCodigoUsuarioSC', header: 'USUARIOS.CODIGO_SC', type: 'text' },
+    { name: 'colCodigoUsuario', header: 'USUARIOS.CODIGO_USUARIO', type: 'text' },
+    { name: 'nomEstado', header: 'PLATAFORMA.STATUS', type: 'estado' }
+  ];
 
   // --- Eventos de Interfaz ---
 

@@ -207,28 +207,23 @@ export class GestionSuscriptorComponent {
   btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
     if (!form.valid) return;
-
-    // 1. Clonamos el objeto actual
     const rawData = { ...this.FormRegistro };
-
-    // 2. Definimos el objeto que REALMENTE espera el servidor
-    // Ajusta los nombres de la derecha según lo que pida tu API
     const registroParaEnvio = {
       codigoSuscriptor: rawData.codigoSuscriptor,
       identificacionSuscriptor: rawData.identificacionSuscriptor,
       nombreSuscriptor: rawData.nombreSuscriptor,
       direccionSuscriptor: rawData.direccionSuscriptor,
+      correoSuscriptor: rawData.correoSuscriptor,
       telefonoContacto: rawData.telefonoContacto,
       numeroEmpresas: rawData.numeroEmpresas,
       numeroUsuarios: rawData.numeroUsuarios,
       usuarioAdministrador: rawData.usuarioAdministrador,
       descripcionSuscriptor: rawData.descripcionSuscriptor,
-      logoSuscriptor: rawData.logoSuscriptor,
+      logoSuscriptor: this.userPhotoUrl != '' ? this.userPhotoUrl : 'no-image.png',
       envioCorreosSuscriptor: rawData.envioCorreosSuscriptor,
       envioMensajesSuscriptor: rawData.envioMensajesSuscriptor,
       envioPublicidadSuscriptor: rawData.envioPublicidadSuscriptor,
       estadoSuscriptor: rawData.estadoSuscriptor,
-      // MAREAR LA CLAVE: El backend suele esperar un campo como 'claveUsuario'
       claveUsuario: rawData.claveNew
     };
 
@@ -253,6 +248,7 @@ export class GestionSuscriptorComponent {
       // MODO CREACIÓN
       const dataCreate = {
         ...registroParaEnvio,
+        codigoAdministrador: '',
         codigoUsuarioCreacion: usuarioLogueado.codigoUsuario,
         fechaCreacion: new Date().toISOString()
       };
