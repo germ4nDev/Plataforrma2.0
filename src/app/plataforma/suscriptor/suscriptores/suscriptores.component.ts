@@ -84,7 +84,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   setupRegistrosStream(): void {
     // 1. Intentamos obtener el suscriptor
     const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
-    const codigoSuscriptor = suscriptor?.codigoSuscriptor;
+    const codigoSuscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
 
     this.registrosTransformadas$ = this._suscriptoresService.suscriptores$.pipe(
       map((regs: PTLSuscriptorModel[]) => {
@@ -98,7 +98,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
             newReg.logoSuscriptor = this._uploadService.getFilePath(
               codigoSuscriptor,
               'suscriptores',
-              newReg.logoSuscriptor || 'default.png'
+              newReg.logoSuscriptor || 'no-imagen.png'
             );
           }
           return newReg as PTLSuscriptorModel;
@@ -326,7 +326,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
         this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.suscriptorId !== id.id);
+            this.setupRegistrosStream();
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('SUSCRIPTORES.ELIMINARERROR'), 'error');

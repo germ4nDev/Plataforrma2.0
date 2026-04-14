@@ -23,6 +23,8 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
+import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
+import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 
 @Component({
   selector: 'app-gestion-suscriptor',
@@ -47,7 +49,7 @@ export class GestionSuscriptorComponent {
   isClaveActual: boolean = true;
   verificarHabilitado: boolean = true;
   isClaveValida: boolean = false;
-  cosigoSusucriptor = uuidv4();
+  codigoSusucriptor = uuidv4();
   tipoEditorTexto = 'basica';
   lockScreenSubscription: Subscription | undefined;
   isLocked: boolean = false;
@@ -208,6 +210,7 @@ export class GestionSuscriptorComponent {
     this.isSubmit = true;
     if (!form.valid) return;
     const rawData = { ...this.FormRegistro };
+    const codigoAdmin = uuidv4();
     const registroParaEnvio = {
       codigoSuscriptor: rawData.codigoSuscriptor,
       identificacionSuscriptor: rawData.identificacionSuscriptor,
@@ -219,7 +222,7 @@ export class GestionSuscriptorComponent {
       numeroUsuarios: rawData.numeroUsuarios,
       usuarioAdministrador: rawData.usuarioAdministrador,
       descripcionSuscriptor: rawData.descripcionSuscriptor,
-      logoSuscriptor: this.userPhotoUrl != '' ? this.userPhotoUrl : 'no-image.png',
+      logoSuscriptor: this.userPhotoUrl != '' ? this.userPhotoUrl : 'no-imagen.png',
       envioCorreosSuscriptor: rawData.envioCorreosSuscriptor,
       envioMensajesSuscriptor: rawData.envioMensajesSuscriptor,
       envioPublicidadSuscriptor: rawData.envioPublicidadSuscriptor,
@@ -248,7 +251,22 @@ export class GestionSuscriptorComponent {
       // MODO CREACIÓN
       const dataCreate = {
         ...registroParaEnvio,
-        codigoAdministrador: '',
+        codigoAdministrador: codigoAdmin,
+        codigoUsuarioCreacion: usuarioLogueado.codigoUsuario,
+        fechaCreacion: new Date().toISOString()
+      };
+
+      const usuarioAdministrador: PTLUsuarioModel = {
+        codigoUsuario: codigoAdmin,
+        identificacionUsuario: '',
+        nombreUsuario: 'Administrador ' + rawData.nombreSuscriptor,
+        correoUsuario: '',
+        userNameUsuario: rawData.usuarioAdministrador,
+        claveUsuario: rawData.claveNew,
+        descripcionUsuario: '',
+        fotoUsuario: 'no-imagne.png',
+        estadoUsuario: true,
+        usuarioAdministrador: true,
         codigoUsuarioCreacion: usuarioLogueado.codigoUsuario,
         fechaCreacion: new Date().toISOString()
       };
@@ -256,6 +274,7 @@ export class GestionSuscriptorComponent {
       this._suscriptoresService.crearSuscriptor(dataCreate as any).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            this._usuariosService.crearUsuario(usuarioAdministrador).subscribe(() => console.log('usuario creado correctamente'));
             this._suscriptoresService.crearCarpetaSuscriptor(dataCreate.codigoSuscriptor!).subscribe();
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             this.router.navigate(['/suscriptor/suscriptores']);

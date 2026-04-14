@@ -9,35 +9,33 @@ import { Observable, Subscription, of, BehaviorSubject, combineLatest } from 'rx
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 
-import { PTLBiblioteca } from 'src/app/theme/shared/_helpers/models/PTLBiblioteca.model';
+import { PTLFormatosGaleria } from 'src/app/theme/shared/_helpers/models/PTLFormatosGaleria.model';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { PtlBibliotecaService } from 'src/app/theme/shared/service/ptlbiblioteca.service';
+import { PtlFormatosGaleriaService } from 'src/app/theme/shared/service/ptlformatosgaleria.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
-import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtllogActividadesService } from 'src/app/theme/shared/service';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
-  selector: 'app-biblioteca',
+  selector: 'app-formatos-galeria',
   standalone: true,
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
-  templateUrl: './biblioteca.component.html',
-  styleUrl: './biblioteca.component.scss'
+  templateUrl: './formatos-galeria.component.html',
+  styleUrl: './formatos-galeria.component.scss'
 })
-export class BibliotecaComponent implements OnInit, OnDestroy {
+export class FormatosGaleriaComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
   DataModel: BaseSessionModel = new BaseSessionModel();
   DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
-  moduloTituloExcel: string = '';
   hasFiltersSlot: boolean = false;
   gradientConfig;
-  lang = localStorage.getItem('lang');
   menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
@@ -47,9 +45,9 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
   filtroDescripcionSubject = new BehaviorSubject<string>('');
   filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-  bibliotecaTransformada$: Observable<PTLBiblioteca[]> = of([]);
-  bibliotecaFiltrada$: Observable<PTLBiblioteca[]> = of([]);
-  bibliotecas: PTLBiblioteca[] = [];
+  formatosTransformada$: Observable<PTLFormatosGaleria[]> = of([]);
+  formatosFiltrada$: Observable<PTLFormatosGaleria[]> = of([]);
+  formatos: PTLFormatosGaleria[] = [];
 
   constructor(
     private router: Router,
@@ -57,8 +55,7 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
     private _navigationService: NavigationService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
-    private _bibliotecaService: PtlBibliotecaService,
-    private _uploadService: UploadFilesService
+    private _formatosGaleriaService: PtlFormatosGaleriaService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -67,11 +64,11 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
-    this.setupBibliotecaStream();
+    this.setupFormatosStream();
     this.subscriptions.add(
-      this._bibliotecaService.cargarBiblioteca().subscribe(
-        () => console.log('Datos de biblioteca cargados'),
-        (err) => console.error('Error al cargar biblioteca:', err)
+      this._formatosGaleriaService.cargarFormatosGaleria().subscribe(
+        () => console.log('Datos de Formatos de Galería cargados'),
+        (err) => console.error('Error al cargar Formatos:', err)
       )
     );
   }
@@ -80,46 +77,42 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  setupBibliotecaStream(): void {
-    this.bibliotecaTransformada$ = this._bibliotecaService.biblioteca$.pipe(
-      switchMap((libs: PTLBiblioteca[]) => {
-        if (!libs) return of([]);
-        const transformed = libs.map((lib: any) => {
-          lib.nomEstado = lib.estadoBiblioteca ? 'Activo' : 'Inactivo';
-          return lib as PTLBiblioteca;
+  setupFormatosStream(): void {
+    this.formatosTransformada$ = this._formatosGaleriaService.formatosGaleria$.pipe(
+      switchMap((formatos: PTLFormatosGaleria[]) => {
+        if (!formatos) return of([]);
+        const transformed = formatos.map((f: any) => {
+          f.nomEstado = f.estadoFormatosGaleria ? 'Activo' : 'Inactivo';
+          return f as PTLFormatosGaleria;
         });
-        this.bibliotecas = transformed;
+        this.formatos = transformed;
         return of(transformed);
       }),
       catchError((err) => {
-        console.error('Error en el stream de biblioteca:', err);
+        console.error('Error en el stream de Formatos:', err);
         return of([]);
       })
     );
 
-    this.bibliotecaFiltrada$ = combineLatest([
-      this.bibliotecaTransformada$.pipe(startWith([])),
+    this.formatosFiltrada$ = combineLatest([
+      this.formatosTransformada$.pipe(startWith([])),
       this.filtroCodigoSubject,
       this.filtroNombreSubject,
       this.filtroDescripcionSubject,
       this.filtroEstadoSubject
     ]).pipe(
-      map(([libs, codigo, nombre, descripcion, estado]) => {
-        let filtered = libs;
+      map(([formatos, codigo, nombre, descripcion, estado]) => {
+        let filtered = formatos;
 
-        if (codigo !== 'todos') {
-          filtered = filtered.filter((lib) => lib.codigoBiblioteca === codigo);
-        }
-        if (nombre !== 'todos') {
-          filtered = filtered.filter((lib) => lib.nombreBiblioteca === nombre);
-        }
+        if (codigo !== 'todos') filtered = filtered.filter((f) => f.codigoFormatosGaleria === codigo);
+        if (nombre !== 'todos') filtered = filtered.filter((f) => f.nombreFormatosGaleria === nombre);
         if (estado !== 'todos') {
           const estadoBoolean = estado === 'true';
-          filtered = filtered.filter((lib) => lib.estadoBiblioteca === estadoBoolean);
+          filtered = filtered.filter((f) => f.estadoFormatosGaleria === estadoBoolean);
         }
         if (descripcion) {
           const textoFiltro = descripcion.toLowerCase();
-          filtered = filtered.filter((lib) => (lib.descripcionBiblioteca || '').toLowerCase().includes(textoFiltro));
+          filtered = filtered.filter((f) => (f.descripcionFormatosGaleria || '').toLowerCase().includes(textoFiltro));
         }
         return filtered;
       })
@@ -139,52 +132,38 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
     this.filtroEstadoSubject.next(evento.target.value);
   }
 
-  columnasBiblioteca: ColumnMetadata[] = [
-    { name: 'codigoBiblioteca', header: 'BIBLIOTECA.CODE', type: 'text' },
-    { name: 'nombreBiblioteca', header: 'BIBLIOTECA.NAME', type: 'text' },
-    { name: 'nomEstado', header: 'BIBLIOTECA.STATUS', type: 'estado' }
+  columnasFormatos: ColumnMetadata[] = [
+    { name: 'codigoFormatosGaleria', header: 'FORMATOSGALERIA.CODE', type: 'text' },
+    { name: 'nombreFormatosGaleria', header: 'FORMATOSGALERIA.NAME', type: 'text' },
+    { name: 'nomEstado', header: 'FORMATOSGALERIA.STATUS', type: 'estado' }
   ];
 
-  columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionBiblioteca', header: 'BIBLIOTECA.DESCRIPTION', type: 'text' }];
+  columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionFormatosGaleria', header: 'FORMATOSGALERIA.DESCRIPTION', type: 'text' }];
 
-  OnNuevaBibliotecaClick(): void {
-    this.router.navigate(['biblioteca/gestion-biblioteca'], { queryParams: { regId: 'nuevo' } });
+  OnNuevoFormatoClick(): void {
+    this.router.navigate(['/biblioteca/gestion-formatos-galeria'], { queryParams: { regId: 'nuevo' } });
   }
 
-  OnEditarBibliotecaClick(id: string): void {
-    this.router.navigate(['biblioteca/gestion-biblioteca'], { queryParams: { regId: id } });
+  OnEditarFormatoClick(id: string): void {
+    this.router.navigate(['/biblioteca/gestion-formatos-galeria'], { queryParams: { regId: id } });
   }
 
-  OnEliminarBibliotecaClick(id: string): void {
+  OnEliminarFormatoClick(id: string): void {
     Swal.fire({
-      title: this.translate.instant('BIBLIOTECA.ELIMINARTITULO'),
-      text: this.translate.instant('BIBLIOTECA.ELIMINARTEXTO'),
+      title: this.translate.instant('FORMATOSGALERIA.ELIMINARTITULO'),
+      text: this.translate.instant('FORMATOSGALERIA.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this._bibliotecaService.eliminarBiblioteca(id).subscribe({
+        this._formatosGaleriaService.eliminarFormatoGaleria(id).subscribe({
           next: (resp: any) => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('BIBLIOTECA.ELIMINAREXITOSA')
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire(this.translate.instant('BIBLIOTECA.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.setupBibliotecaStream();
+            Swal.fire(this.translate.instant('FORMATOSGALERIA.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.setupFormatosStream();
           },
-          error: () => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('BIBLIOTECA.ELIMINARERROR')
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire('Error', this.translate.instant('BIBLIOTECA.ELIMINARERROR'), 'error');
-          }
+          error: () => Swal.fire('Error', this.translate.instant('FORMATOSGALERIA.ELIMINARERROR'), 'error')
         });
       }
     });
