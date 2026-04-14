@@ -25,7 +25,7 @@ const routes: Routes = [
         loadComponent: () => import('./biblioteca/galeria/gestion-galeria/gestion-galeria.component').then((m) => m.GestionGaleriaComponent)
       },
       {
-        path: 'tipos-galeria',
+        path: 'tiposGaleria',
         loadComponent: () => import('./biblioteca/tiposGaleria/tipos-galeria.component').then((m) => m.TiposGaleriaComponent)
       },
       {

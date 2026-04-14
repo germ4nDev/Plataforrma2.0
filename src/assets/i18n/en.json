@@ -78,7 +78,10 @@
       "ROLES": "Roles",
       "ACTIVIDADES": "Activities",
       "ACTIVIDADROLES": "Roles Activities",
-      "BIBLIOTECA": "Gallery"
+      "BIBLIOTECA": "Gallery",
+      "GALERIA": "Gallery",
+      "TIPOS GALERIA": "Gallery Types",
+      "FORMATOS GALERIA": "Gallery Formats"
     },
     "NAVBAR": {
       "NOTIFICACIONES": "Notifications",

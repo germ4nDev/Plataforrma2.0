@@ -83,7 +83,10 @@
       "ACTIVIDADES": "Actividades",
       "ACTIVIDADROLES": "Actividades Roles",
       "CLASESTICKET": "Clases Tickets",
-      "BIBLIOTECA": "Biblioteca"
+      "BIBLIOTECA": "Biblioteca",
+      "GALERIA": "Galería",
+      "TIPOS GALERIA": "Tipos Galería",
+      "FORMATOS GALERIA": "Formatos Galería"
     },
     "NAVBAR": {
       "NOTIFICACIONES": "Notificaciones",

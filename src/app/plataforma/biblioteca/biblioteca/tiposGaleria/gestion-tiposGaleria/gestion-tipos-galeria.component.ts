@@ -96,7 +96,7 @@ export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
           if (resp.ok) {
             this._swalService.getAlertSuccess(this.translate.instant('TIPOSGALERIA.UPDATESUCCSESSFULLY'));
             form.resetForm();
-            this.router.navigate(['/biblioteca/tipos-galeria']);
+            this.router.navigate(['/biblioteca/tiposGaleria']);
           }
         },
         error: () => this._swalService.getAlertError('No se pudo actualizar')
@@ -116,7 +116,7 @@ export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
           if (resp.ok) {
             this._swalService.getAlertSuccess(this.translate.instant('TIPOSGALERIA.CREATESUCCSESSFULLY'));
             form.resetForm();
-            this.router.navigate(['/biblioteca/tipos-galeria']);
+            this.router.navigate(['/biblioteca/tiposGaleria']);
           }
         },
         error: () => this._swalService.getAlertError('No se pudo crear')
@@ -125,7 +125,7 @@ export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/biblioteca/tipos-galeria']);
+    this.router.navigate(['/biblioteca/tiposGaleria']);
   }
 
   toggleNav(): void {
