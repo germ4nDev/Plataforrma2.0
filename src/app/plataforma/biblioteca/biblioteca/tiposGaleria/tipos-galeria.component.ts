@@ -148,7 +148,14 @@ export class TiposGaleriaComponent implements OnInit, OnDestroy {
     this.router.navigate(['/biblioteca/gestion-tipos-galeria'], { queryParams: { regId: id } });
   }
 
-  OnEliminarTipoClick(id: string): void {
+  OnEliminarTipoClick(evento: any): void {
+    const id = typeof evento === 'string' ? evento : evento?.codigoTipo || evento?.id;
+
+    if (!id) {
+      console.error('No se pudo extraer el ID del registro a eliminar. El evento recibido fue:', evento);
+      return;
+    }
+
     Swal.fire({
       title: this.translate.instant('TIPOSGALERIA.ELIMINARTITULO'),
       text: this.translate.instant('TIPOSGALERIA.ELIMINARTEXTO'),

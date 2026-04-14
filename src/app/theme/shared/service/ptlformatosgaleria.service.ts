@@ -57,7 +57,7 @@ export class PtlFormatosGaleriaService {
     return this.http.get(url).pipe(
       map((resp: any) => (resp.formatosGaleria || resp.formatoGaleria) as PTLFormatosGaleria[]),
       map((formatos: PTLFormatosGaleria[]) => {
-        return formatos.sort((a: any, b: any) => (a.nombreFormatosGaleria || '').localeCompare(b.nombreFormatosGaleria || ''));
+        return formatos.sort((a: any, b: any) => (a.nombreFormato || '').localeCompare(b.nombreFormato || ''));
       }),
       tap((formatosOrdenados) => {
         this._formatosGaleria.next(formatosOrdenados);
@@ -104,7 +104,7 @@ export class PtlFormatosGaleriaService {
   }
 
   actualizarFormatoGaleria(formato: PTLFormatosGaleria) {
-    const url = `${base_url}/formatosGaleria/${formato.codigoFormatosGaleria}`;
+    const url = `${base_url}/formatosGaleria/${formato.codigoFormato}`;
     return this.http.put(url, formato).pipe(
       map((resp: any) => {
         console.log('data de formato galería modificado', resp);

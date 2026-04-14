@@ -21,7 +21,7 @@
             <small>{{ 'FORMATOSGALERIA.FILTROS.FILTROCODIGO' | translate }}</small>
             <select (change)="onFiltroCodigoChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option [value]="f.codigoFormatosGaleria" *ngFor="let f of formatos">{{ f.codigoFormatosGaleria }}</option>
+              <option [value]="f.codigoFormato" *ngFor="let f of formatos">{{ f.codigoFormato }}</option>
             </select>
           </div>
 
@@ -29,7 +29,7 @@
             <small>{{ 'FORMATOSGALERIA.FILTROS.FILTRONOMBRE' | translate }}</small>
             <select (change)="onFiltroNombreChangeClick($event)" class="form-control form-select">
               <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option [value]="f.nombreFormatosGaleria" *ngFor="let f of formatos">{{ f.nombreFormatosGaleria }}</option>
+              <option [value]="f.nombreFormato" *ngFor="let f of formatos">{{ f.nombreFormato }}</option>
             </select>
           </div>
 
@@ -62,7 +62,7 @@
         <ng-container *ngIf="formatosFiltrada$ | async as dataFiltrada">
           <app-data-table
             [data]="dataFiltrada"
-            [idField]="'codigoFormatosGaleria'"
+            [idField]="'codigoFormato'"
             [tableTitle]="'FORMATOSGALERIA.TITLE' | translate"
             [metadataColumns]="columnasFormatos"
             [metadataDetailColumns]="columnasDetailRegistros"

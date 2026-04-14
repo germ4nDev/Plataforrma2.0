@@ -62,7 +62,7 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
           this._formatosGaleriaService.getFormatoGaleriaById(regId).subscribe({
             next: (resp: any) => {
               this.FormRegistro = resp.formatoGaleria;
-              this.codeFormato = resp.formatoGaleria.codigoFormatosGaleria;
+              this.codeFormato = resp.formatoGaleria.codigoFormato;
             },
             error: () => Swal.fire('Error', 'No se pudo obtener el Formato', 'error')
           });
@@ -74,8 +74,8 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.menuItems$ = this._navigationService.menuItems$;
     if (this.modoEdicion == false) {
-      this.FormRegistro.codigoFormatosGaleria = uuidv4();
-      this.FormRegistro.estadoFormatosGaleria = true;
+      this.FormRegistro.codigoFormato = uuidv4();
+      this.FormRegistro.estadoFormato = true;
     }
   }
 
@@ -84,7 +84,7 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
-    this.FormRegistro.descripcionFormatosGaleria = nuevoContenido;
+    this.FormRegistro.descripcionFormato = nuevoContenido;
   }
 
   btnGestionarFormatoClick(form: any) {
@@ -104,8 +104,8 @@ export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
     } else {
       form.formatosGaleriaId = 0;
       const registroData = form.value as PTLFormatosGaleria;
-      registroData.codigoFormatosGaleria = this.FormRegistro.codigoFormatosGaleria;
-      registroData.descripcionFormatosGaleria = this.FormRegistro.descripcionFormatosGaleria;
+      registroData.codigoFormato = this.FormRegistro.codigoFormato;
+      registroData.descripcionFormato = this.FormRegistro.descripcionFormato;
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaCreacion = new Date().toISOString();
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;

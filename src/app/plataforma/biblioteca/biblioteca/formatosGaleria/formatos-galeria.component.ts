@@ -82,7 +82,7 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
       switchMap((formatos: PTLFormatosGaleria[]) => {
         if (!formatos) return of([]);
         const transformed = formatos.map((f: any) => {
-          f.nomEstado = f.estadoFormatosGaleria ? 'Activo' : 'Inactivo';
+          f.nomEstado = f.estadoFormato ? 'Activo' : 'Inactivo';
           return f as PTLFormatosGaleria;
         });
         this.formatos = transformed;
@@ -104,15 +104,15 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
       map(([formatos, codigo, nombre, descripcion, estado]) => {
         let filtered = formatos;
 
-        if (codigo !== 'todos') filtered = filtered.filter((f) => f.codigoFormatosGaleria === codigo);
-        if (nombre !== 'todos') filtered = filtered.filter((f) => f.nombreFormatosGaleria === nombre);
+        if (codigo !== 'todos') filtered = filtered.filter((f) => f.codigoFormato === codigo);
+        if (nombre !== 'todos') filtered = filtered.filter((f) => f.nombreFormato === nombre);
         if (estado !== 'todos') {
           const estadoBoolean = estado === 'true';
-          filtered = filtered.filter((f) => f.estadoFormatosGaleria === estadoBoolean);
+          filtered = filtered.filter((f) => f.estadoFormato === estadoBoolean);
         }
         if (descripcion) {
           const textoFiltro = descripcion.toLowerCase();
-          filtered = filtered.filter((f) => (f.descripcionFormatosGaleria || '').toLowerCase().includes(textoFiltro));
+          filtered = filtered.filter((f) => (f.descripcionFormato || '').toLowerCase().includes(textoFiltro));
         }
         return filtered;
       })
@@ -133,12 +133,12 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
   }
 
   columnasFormatos: ColumnMetadata[] = [
-    { name: 'codigoFormatosGaleria', header: 'FORMATOSGALERIA.CODE', type: 'text' },
-    { name: 'nombreFormatosGaleria', header: 'FORMATOSGALERIA.NAME', type: 'text' },
+    { name: 'codigoFormato', header: 'FORMATOSGALERIA.CODE', type: 'text' },
+    { name: 'nombreFormato', header: 'FORMATOSGALERIA.NAME', type: 'text' },
     { name: 'nomEstado', header: 'FORMATOSGALERIA.STATUS', type: 'estado' }
   ];
 
-  columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionFormatosGaleria', header: 'FORMATOSGALERIA.DESCRIPTION', type: 'text' }];
+  columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionFormato', header: 'FORMATOSGALERIA.DESCRIPTION', type: 'text' }];
 
   OnNuevoFormatoClick(): void {
     this.router.navigate(['/biblioteca/gestion-formatos-galeria'], { queryParams: { regId: 'nuevo' } });
@@ -148,7 +148,14 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
     this.router.navigate(['/biblioteca/gestion-formatos-galeria'], { queryParams: { regId: id } });
   }
 
-  OnEliminarFormatoClick(id: string): void {
+  OnEliminarFormatoClick(evento: any): void {
+    const id = typeof evento === 'string' ? evento : evento?.codigoFormato || evento?.id;
+
+    if (!id) {
+      console.error('No se pudo extraer el ID del formato a eliminar. El evento recibido fue:', evento);
+      return;
+    }
+
     Swal.fire({
       title: this.translate.instant('FORMATOSGALERIA.ELIMINARTITULO'),
       text: this.translate.instant('FORMATOSGALERIA.ELIMINARTEXTO'),

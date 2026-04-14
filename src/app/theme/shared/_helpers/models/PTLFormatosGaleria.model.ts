@@ -1,10 +1,10 @@
 export class PTLFormatosGaleria {
   constructor(
     public formatosGaleriaId?: number,
-    public codigoFormatosGaleria?: string,
-    public nombreFormatosGaleria?: string,
-    public descripcionFormatosGaleria?: string,
-    public estadoFormatosGaleria?: boolean,
+    public codigoFormato?: string,
+    public nombreFormato?: string,
+    public descripcionFormato?: string,
+    public estadoFormato?: boolean,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,
     public codigoUsuarioModificacion?: string,

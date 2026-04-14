@@ -37,13 +37,13 @@
                 <input
                   type="text"
                   class="form-control form-input"
-                  name="codigoFormatosGaleria"
+                  name="codigoFormato"
                   [ngClass]="{
-                    'is-invalid': !codigoFormatosGaleria.valid && (codigoFormatosGaleria.dirty || codigoFormatosGaleria.touched || isSubmit)
+                    'is-invalid': !codigoFormato.valid && (codigoFormato.dirty || codigoFormato.touched || isSubmit)
                   }"
-                  #codigoFormatosGaleria="ngModel"
+                  #codigoFormato="ngModel"
                   required
-                  [(ngModel)]="FormRegistro.codigoFormatosGaleria"
+                  [(ngModel)]="FormRegistro.codigoFormato"
                   readonly
                 />
               </div>
@@ -51,19 +51,19 @@
 
             <div class="col-md-6">
               <div class="form-group">
-                <label class="form-control-label" for="nombreFormatosGaleria">{{ 'FORMATOSGALERIA.NAME' | translate }}</label>
+                <label class="form-control-label" for="nombreFormato">{{ 'FORMATOSGALERIA.NAME' | translate }}</label>
                 <input
                   class="form-control form-input"
-                  id="nombreFormatosGaleria"
-                  name="nombreFormatosGaleria"
+                  id="nombreFormato"
+                  name="nombreFormato"
                   type="text"
                   placeholder="{{ 'FORMATOSGALERIA.NAMEHOLDER' | translate }}"
                   [ngClass]="{
-                    'is-invalid': !nombreFormatosGaleria.valid && (nombreFormatosGaleria.dirty || nombreFormatosGaleria.touched || isSubmit)
+                    'is-invalid': !nombreFormato.valid && (nombreFormato.dirty || nombreFormato.touched || isSubmit)
                   }"
-                  #nombreFormatosGaleria="ngModel"
+                  #nombreFormato="ngModel"
                   required
-                  [(ngModel)]="FormRegistro.nombreFormatosGaleria"
+                  [(ngModel)]="FormRegistro.nombreFormato"
                 />
               </div>
             </div>
@@ -73,16 +73,16 @@
                 <label class="form-label">{{ 'FORMATOSGALERIA.DESCRIPTION' | translate }}</label>
                 <app-text-editor
                   [toolbarType]="tipoEditorTexto"
-                  [contentHtml]="FormRegistro.descripcionFormatosGaleria ?? ''"
+                  [contentHtml]="FormRegistro.descripcionFormato ?? ''"
                   (contentHtmlChange)="actualizarDescripcionVersion($event)"
-                  name="descripcionFormatosGaleria"
-                  [(ngModel)]="FormRegistro.descripcionFormatosGaleria"
+                  name="descripcionFormato"
+                  [(ngModel)]="FormRegistro.descripcionFormato"
                   [ngClass]="{
                     'is-invalid':
-                      !descripcionFormatosGaleria.valid &&
-                      (descripcionFormatosGaleria.dirty || descripcionFormatosGaleria.touched || isSubmit)
+                      !descripcionFormato.valid &&
+                      (descripcionFormato.dirty || descripcionFormato.touched || isSubmit)
                   }"
-                  #descripcionFormatosGaleria="ngModel"
+                  #descripcionFormato="ngModel"
                   required
                   rows="5"
                 ></app-text-editor>
@@ -94,12 +94,12 @@
                 <label class="form-label">{{ 'FORMATOSGALERIA.STATUS' | translate }}</label>
                 <div class="radio-buttons">
                   <label class="radio-button">
-                    <input name="estadoFormatosGaleria" type="radio" [value]="true" [(ngModel)]="FormRegistro.estadoFormatosGaleria" />
+                    <input name="estadoFormato" type="radio" [value]="true" [(ngModel)]="FormRegistro.estadoFormato" />
                     <div class="radio-circle"></div>
                     <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
                   </label>
                   <label class="radio-button">
-                    <input name="estadoFormatosGaleria" type="radio" [value]="false" [(ngModel)]="FormRegistro.estadoFormatosGaleria" />
+                    <input name="estadoFormato" type="radio" [value]="false" [(ngModel)]="FormRegistro.estadoFormato" />
                     <div class="radio-circle"></div>
                     <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
                   </label>
