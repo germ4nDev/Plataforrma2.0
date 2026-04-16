@@ -6,6 +6,7 @@ export class PTLGaleria {
     public codigoFormato?: string,
     public nombreGaleria?: string,
     public descripcionGaleria?: string,
+    public imagenGaleria?: string,
     public estadoGaleria?: boolean,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,

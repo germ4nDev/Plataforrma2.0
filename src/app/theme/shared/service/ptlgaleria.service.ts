@@ -116,9 +116,9 @@ export class PtlGaleriaService {
     );
   }
 
-  eliminarGaleria(_id: any) {
-    console.log('eliminar galería', _id);
-    const url = `${base_url}/galeria/${_id.id}`;
+  eliminarGaleria(id: string) {
+    console.log('eliminar galería', id);
+    const url = `${base_url}/galeria/${id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de galería eliminada', resp);

@@ -19,7 +19,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
-import { LocalStorageService, PtllogActividadesService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
@@ -57,9 +57,19 @@ export class GaleriaComponent implements OnInit, OnDestroy {
     private _navigationService: NavigationService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
-    private _galeriaService: PtlGaleriaService
+    private _galeriaService: PtlGaleriaService,
+    private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig;
+  }
+
+  cargarDatos(): void {
+    this.subscriptions.add(
+      this._galeriaService.cargarGaleria().subscribe(
+        () => console.log('Datos de galería cargados'),
+        (err) => console.error('Error al cargar galería:', err)
+      )
+    );
   }
 
   ngOnInit(): void {
@@ -67,12 +77,7 @@ export class GaleriaComponent implements OnInit, OnDestroy {
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.setupGaleriaStream();
-    this.subscriptions.add(
-      this._galeriaService.cargarGaleria().subscribe(
-        () => console.log('Datos de galería cargados'),
-        (err) => console.error('Error al cargar galería:', err)
-      )
-    );
+    this.cargarDatos();
   }
 
   ngOnDestroy(): void {
@@ -85,6 +90,7 @@ export class GaleriaComponent implements OnInit, OnDestroy {
         if (!gals) return of([]);
         const transformed = gals.map((gal: any) => {
           gal.nomEstado = gal.estadoGaleria ? 'Activo' : 'Inactivo';
+          gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', gal.imagenGaleria || 'no-imagen.png');
           return gal as PTLGaleria;
         });
         this.galerias = transformed;
@@ -139,12 +145,16 @@ export class GaleriaComponent implements OnInit, OnDestroy {
   }
 
   columnasGaleria: ColumnMetadata[] = [
+    { name: 'imagenGaleria', header: 'GALERIA.FOTO', type: 'image', isSortable: false },
     { name: 'codigoGaleria', header: 'GALERIA.CODE', type: 'text' },
     { name: 'nombreGaleria', header: 'GALERIA.NAME', type: 'text' },
     { name: 'nomEstado', header: 'GALERIA.STATUS', type: 'estado' }
   ];
 
-  columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionGaleria', header: 'GALERIA.DESCRIPTION', type: 'text' }];
+  columnasDetailRegistros: ColumnMetadata[] = [
+    { name: 'descripcionGaleria', header: 'GALERIA.DESCRIPTION', type: 'text' },
+    { name: 'imagenGaleria', header: 'GALERIA.FOTO', type: 'capture' }
+  ];
 
   OnNuevaGaleriaClick(): void {
     this.router.navigate(['/biblioteca/galeria/gestion-galeria'], { queryParams: { regId: 'nuevo' } });
@@ -154,7 +164,13 @@ export class GaleriaComponent implements OnInit, OnDestroy {
     this.router.navigate(['/biblioteca/galeria/gestion-galeria'], { queryParams: { regId: id } });
   }
 
-  OnEliminarGaleriaClick(id: string): void {
+  OnEliminarGaleriaClick(evento: any): void {
+    const id = typeof evento === 'string' ? evento : evento?.codigoGaleria || evento?.id;
+    if (!id) {
+      console.error('No se pudo extraer el ID del registro a eliminar. El evento recibido fue:', evento);
+      return;
+    }
+
     Swal.fire({
       title: this.translate.instant('GALERIA.ELIMINARTITULO'),
       text: this.translate.instant('GALERIA.ELIMINARTEXTO'),
@@ -173,7 +189,7 @@ export class GaleriaComponent implements OnInit, OnDestroy {
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe();
             Swal.fire(this.translate.instant('GALERIA.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.setupGaleriaStream();
+            this.cargarDatos();
           },
           error: () => {
             const logData = { codigoTipoLog: '', codigoRespuesta: '501', descripcionLog: this.translate.instant('GALERIA.ELIMINARERROR') };

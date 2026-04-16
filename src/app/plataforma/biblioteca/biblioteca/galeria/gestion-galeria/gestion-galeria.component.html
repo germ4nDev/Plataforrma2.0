@@ -94,37 +94,56 @@
               </div>
             </div>
 
-            <div class="col-md-6">
+           <div class="col-md-6">
               <div class="form-group">
                 <label class="form-control-label" for="codigoTipo">{{ 'GALERIA.CODIGOTIPO' | translate }}</label>
-                <input
-                  class="form-control form-input"
+                <select
+                  class="form-control form-select form-input"
                   id="codigoTipo"
                   name="codigoTipo"
-                  type="text"
-                  placeholder="{{ 'GALERIA.CODIGOTIPO_HOLDER' | translate }}"
                   [ngClass]="{ 'is-invalid': !codigoTipo.valid && (codigoTipo.dirty || codigoTipo.touched || isSubmit) }"
                   #codigoTipo="ngModel"
                   required
                   [(ngModel)]="FormRegistro.codigoTipo"
-                />
+                >
+                  <option value="" disabled selected>{{ 'GALERIA.CODIGOTIPO_HOLDER' | translate }}</option>
+
+                  <option *ngFor="let tipo of listaTipos" [value]="tipo.codigoTipo">
+                    {{ tipo.nombreTipo }}
+                  </option>
+                </select>
+                <label
+                  *ngIf="!codigoTipo.valid && (codigoTipo.dirty || codigoTipo.touched || isSubmit)"
+                  class="error jquery-validation-error small form-text invalid-feedback"
+                >
+                  El Tipo de Galería es obligatorio
+                </label>
               </div>
             </div>
-
             <div class="col-md-6">
               <div class="form-group">
                 <label class="form-control-label" for="codigoFormato">{{ 'GALERIA.CODIGOFORMATO' | translate }}</label>
-                <input
-                  class="form-control form-input"
+                <select
+                  class="form-control form-select form-input"
                   id="codigoFormato"
                   name="codigoFormato"
-                  type="text"
-                  placeholder="{{ 'GALERIA.CODIGOFORMATO_HOLDER' | translate }}"
                   [ngClass]="{ 'is-invalid': !codigoFormato.valid && (codigoFormato.dirty || codigoFormato.touched || isSubmit) }"
                   #codigoFormato="ngModel"
                   required
                   [(ngModel)]="FormRegistro.codigoFormato"
-                />
+                >
+                  <option value="" disabled selected>{{ 'GALERIA.CODIGOFORMATO_HOLDER' | translate }}</option>
+
+                  <option *ngFor="let formato of listaFormatos" [value]="formato.codigoFormato">
+                    {{ formato.nombreFormato }}
+                  </option>
+                </select>
+                <label
+                  *ngIf="!codigoFormato.valid && (codigoFormato.dirty || codigoFormato.touched || isSubmit)"
+                  class="error jquery-validation-error small form-text invalid-feedback"
+                >
+                  El Formato de Galería es obligatorio
+                </label>
               </div>
             </div>
 
@@ -145,6 +164,30 @@
                   rows="5"
                 >
                 </app-text-editor>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label">{{ 'GALERIA.FOTO' | translate }}</label>
+
+                <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="image-preview" />
+
+                <div class="file-input-wrapper">
+                  <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
+                    {{ 'Seleccionar archivo' | translate }}
+                  </label>
+                  <input
+                    type="file"
+                    (change)="onFileSelectedClick($event)"
+                    accept="image/*"
+                    id="fileUploadInput"
+                    class="form-control form-input d-none"
+                    name="fotoGaleria"
+                  />
+                  <span class="file-name" [ngClass]="{ 'has-file': fileName }">
+                  </span>
+                </div>
               </div>
             </div>
 

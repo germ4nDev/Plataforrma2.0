@@ -63,17 +63,21 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
     this.gradientConfig = GradientConfig;
   }
 
+  cargarDatos(): void {
+    this.subscriptions.add(
+      this._bibliotecaService.cargarBiblioteca().subscribe(
+        () => console.log('Datos de Tipos de Galería actualizados'),
+        (err) => console.error('Error al cargar Tipos de Galería:', err)
+      )
+    );
+  }
+
   ngOnInit(): void {
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.setupBibliotecaStream();
-    this.subscriptions.add(
-      this._bibliotecaService.cargarBiblioteca().subscribe(
-        () => console.log('Datos de biblioteca cargados'),
-        (err) => console.error('Error al cargar biblioteca:', err)
-      )
-    );
+    this.cargarDatos();
   }
 
   ngOnDestroy(): void {
@@ -189,7 +193,7 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             Swal.fire(this.translate.instant('BIBLIOTECA.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.setupBibliotecaStream();
+            this.cargarDatos();
           },
           error: () => {
             const logData = {
