@@ -14,7 +14,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { PTLPaqueteModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model'
 import { PTLPaquetesService } from 'src/app/theme/shared/service/ptlpaquetes.service'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
-import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service'
+import { LocalStorageService, SessionStorageService, SwalAlertService } from 'src/app/theme/shared/service'
 import { BehaviorSubject, Observable, Subscription, combineLatest, of } from 'rxjs'
 import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators'
 import { GradientConfig } from 'src/app/app-config'
@@ -63,6 +63,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     private _navigationService: NavigationService,
     private _swalService: SwalAlertService,
     private _localstorageService: LocalStorageService,
+    private _sessionStorageService: SessionStorageService,
     private _logActividadesService: PtllogActividadesService,
     private _registrosService: PTLPaquetesService,
     private _aplicacionesService: PtlAplicacionesService
@@ -252,7 +253,8 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   OnEditarRegistroClick (id: number): void {
-    this.router.navigate(['aplicaciones/gestion-paquete'], { queryParams: { regId: id } })
+    this._sessionStorageService.setObject('regId', id);
+    this.router.navigate(['aplicaciones/gestion-paquete'])
   }
 
   OnEliminarRegistroClick (id: string): void {
@@ -292,11 +294,13 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   OnOption1Click (id: any) {
-    this.router.navigate(['aplicaciones/modulos-paquete'], { queryParams: { regId: id } })
+    this._sessionStorageService.setObject('regId', id);
+    this.router.navigate(['aplicaciones/modulos-paquete'])
   }
 
   OnOption2Click (id: any) {
-    this.router.navigate(['aplicaciones/items-paquete'], { queryParams: { regId: id } })
+    this._sessionStorageService.setObject('regId', id);
+    this.router.navigate(['aplicaciones/items-paquete'])
   }
 
   toggleNav (): void {

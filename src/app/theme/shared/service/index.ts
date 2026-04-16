@@ -9,6 +9,7 @@ export * from './navigation.service';
 export * from './utilidades.service';
 export * from './upload-files.service';
 export * from './local-storage.service';
+export * from './session-storage.service';
 export * from './swal-alert.service';
 export * from './theme-storage.service';
 export * from './sockets.service';

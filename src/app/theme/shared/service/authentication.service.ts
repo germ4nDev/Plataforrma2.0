@@ -21,21 +21,19 @@ import { PTLUsuaioEmpresasSCModel } from '../_helpers/models/PTLUsuarioEmpresaSC
 import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model';
 import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from './ptlsuscriptores.service';
+import { PtlActividadesService } from './ptlactividades.service';
+import { PtlactividadesRolesService } from './ptlactividades-roles.service';
+import { PTLActividadModel } from '../_helpers/models/PTLActividades.model';
+import { PTLActividadRoleModel } from '../_helpers/models/PTLActividadesRoles.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-  // eslint-disable-next-line
   private currentUserSubject: BehaviorSubject<PTLUsuarioModel | any>;
   public currentUser: Observable<PTLUsuarioModel>;
 
-  // === PROPIEDAD REQUERIDA POR EL AUTH GUARD (MODIFICACIÓN CLAVE 1) ===
-  // Subject para indicar que la verificación inicial del token ha terminado.
   private initializedSubject = new BehaviorSubject<boolean>(false);
-  // Observable público que el AuthGuard usa para esperar.
   public isAuthInitialized$ = this.initializedSubject.asObservable();
 
-  // === MODIFICACIÓN CLAVE 2: Comprobación del token movida al constructor/inicio ===
-  // El hasToken se llama dentro de initializeAuth para asegurar el flujo asíncrono.
   private loggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.loggedInSubject.asObservable();
 
@@ -46,12 +44,12 @@ export class AuthenticationService {
   usuariosSC: PTLUsuarioSCModel[] = [];
   usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
   suscriptores: PTLSuscriptorModel[] = [];
-  usuariosRolesSubscription: Subscription | undefined;
-  rolesSubscription: Subscription | undefined;
-  empresasSCSubscription: Subscription | undefined;
-  usuariosSCSubscription: Subscription | undefined;
-  usuariosEmpresasSCSubscription: Subscription | undefined;
-  suscriptorSubscription: Subscription | undefined;
+  usuariosRolesSub: Subscription | undefined;
+  rolesSub: Subscription | undefined;
+  empresasSCSub: Subscription | undefined;
+  usuariosSCSub: Subscription | undefined;
+  usuariosEmpresasSCSub: Subscription | undefined;
+  suscriptorSub: Subscription | undefined;
 
   constructor(
     private router: Router,
@@ -69,29 +67,17 @@ export class AuthenticationService {
     this.currentUserSubject = new BehaviorSubject(this._localstorageService.getCurrentUserLocalStorage());
     this.currentUser = this.currentUserSubject.asObservable();
 
-    // === MODIFICACIÓN CLAVE 3: Iniciar la lógica de comprobación de autenticación ===
     this.initializeAuth();
   }
 
-  /**
-   * Lógica de inicialización: Comprueba si existe un token válido al cargar la app.
-   * Esto se ejecuta inmediatamente después del constructor.
-   */
   private initializeAuth(): void {
-    // Ejecuta la comprobación del token.
     const isLoggedIn = this.hasToken();
-
-    // Emite el estado de login basado en el token encontrado/validado.
     this.loggedInSubject.next(isLoggedIn);
-
-    // IMPORTANTE: Marca el servicio como inicializado. Esto desbloquea el AuthGuard.
     this.initializedSubject.next(true);
-
     console.log('AuthService: Inicialización completada. Usuario logueado:', isLoggedIn);
   }
 
   private hasToken(): boolean {
-    // Utiliza el mismo método de hasToken que ya tenías
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
     return !!(currentUser && currentUser.token && !this.isTokenExpired(currentUser.token));
   }
@@ -104,11 +90,9 @@ export class AuthenticationService {
     return this.currentUserValue?.token || null;
   }
 
-  // --- El resto de tus métodos (consultarRoles, login, logout, etc.) siguen igual ---
-
   consultarRoles() {
     console.log('acaaaaaaaaa');
-    this.rolesSubscription = this._rolesService.roles$.subscribe({
+    this.rolesSub = this._rolesService.roles$.subscribe({
       next: (roles: PTLRoleAPModel[]) => {
         console.log('Roles de usuario cargados con éxito:', roles.length);
         this.roles = roles;
@@ -122,9 +106,40 @@ export class AuthenticationService {
     });
   }
 
+  consultarActividades() {
+    console.log('actividades');
+    // this.actividadesSub = this._actividadesService.actividades$.subscribe({
+    //   next: (actividades: PTLActividadModel[]) => {
+    //     console.log('Roles de usuario cargados con éxito:', actividades.length);
+    //     this.actividades = actividades;
+    //     console.log('Roles de usuario:', actividades);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al cargar los actividades de usuario:', err);
+    //     this.roles = [];
+    //   }
+    // });
+  }
+
+  consultarActividadesRoles(codRole: string) {
+    console.log('actividades Role');
+    // this.actividadesRolesSub = this._actividadesRolesService.actividadesRoles$.subscribe({
+    //   next: (actividades: PTLActividadRoleModel[]) => {
+    //     console.log('ActividadRole de usuario cargados con éxito:', actividades.length);
+    //     const actsRole = actividades.filter(x => x.codigoRole === codRole);
+    //     this.actividadesRoles = actsRole.filter(x => x.permiso === true);;
+    //     console.log('Roles de usuario:', actividades);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al cargar los actividades de usuario:', err);
+    //     this.roles = [];
+    //   }
+    // });
+  }
+
   consultarUsuariosRoles() {
     console.log('acaaaaaaaaa');
-    this.usuariosRolesSubscription = this._usuarioRolesService._usuariosRoles$.subscribe({
+    this.usuariosRolesSub = this._usuarioRolesService._usuariosRoles$.subscribe({
       next: (userRoles: PTLUsuarioRoleAP[]) => {
         console.log('usuarios roles cargados con éxito:', userRoles.length);
         this.usuariosRoles = userRoles;
@@ -140,7 +155,7 @@ export class AuthenticationService {
 
   consultarUusuariosSC() {
     console.log('&&&&&&&& usuariosSC');
-    this.usuariosSCSubscription = this._usuariosSCService._usuariosSC$.subscribe({
+    this.usuariosSCSub = this._usuariosSCService._usuariosSC$.subscribe({
       next: (usuariosSC: PTLUsuarioSCModel[]) => {
         console.log('usuariosSC cargadas con éxito:', usuariosSC.length);
         this.usuariosSC = usuariosSC;
@@ -157,7 +172,7 @@ export class AuthenticationService {
 
   consultarSuscriptores() {
     console.log('acaaaaaaaaa');
-    this.suscriptorSubscription = this._suscriptoresService._suscriptores.subscribe({
+    this.suscriptorSub = this._suscriptoresService._suscriptores.subscribe({
       next: (suscriptores: PTLSuscriptorModel[]) => {
         console.log('suscriptores cargadas con éxito:', suscriptores.length);
         this.suscriptores = suscriptores;
@@ -173,7 +188,7 @@ export class AuthenticationService {
 
   consultarEmpresasSC() {
     console.log('acaaaaaaaaa');
-    this.empresasSCSubscription = this._empresasSCService.empresasSC$.subscribe({
+    this.empresasSCSub = this._empresasSCService.empresasSC$.subscribe({
       next: (empresasSC: PTLEmpresaSCModel[]) => {
         console.log('empresasSC cargadas con éxito:', empresasSC.length);
         this.emrpesasSC = empresasSC;
@@ -189,7 +204,7 @@ export class AuthenticationService {
 
   consultarUusuariosEmpresasSC() {
     console.log('acaaaaaaaaa');
-    this.usuariosEmpresasSCSubscription = this._usuariosEmpresasSCService._usuariosEmpresas$.subscribe({
+    this.usuariosEmpresasSCSub = this._usuariosEmpresasSCService._usuariosEmpresas$.subscribe({
       next: (usuariosEmpresas: PTLUsuarioSCModel[]) => {
         console.log('usuariosEmpresas cargadas con éxito:', usuariosEmpresas.length);
         this.usuariosEmpresas = usuariosEmpresas;

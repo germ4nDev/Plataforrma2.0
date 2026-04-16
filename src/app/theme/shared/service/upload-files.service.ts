@@ -24,7 +24,7 @@ export class UploadFilesService {
     const headers = new HttpHeaders({
       'x-token': this._localStorageService.getTokenLocalStorage()
     });
-    console.log('Token JWT a enviar:', this._localStorageService.getTokenLocalStorage());
+    // console.log('Token JWT a enviar:', this._localStorageService.getTokenLocalStorage());
     const url = `${base_url}/upload/${objUpload.susc}/${objUpload.tipo}/${objUpload.id}`;
     return this.http
       .put(url, formData, {
