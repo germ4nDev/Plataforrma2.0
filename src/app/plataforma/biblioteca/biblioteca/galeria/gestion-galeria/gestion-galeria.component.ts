@@ -42,6 +42,8 @@ export class GestionGaleriaComponent implements OnInit {
   userPhotoUrl: string = '';
   fileName: string | null = null;
   selectedFileUrl: string | null = null;
+  selectedFileType: 'image' | 'video' | 'document' | null = null;
+  selectedFileName: string = '';
 
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
@@ -119,7 +121,6 @@ export class GestionGaleriaComponent implements OnInit {
   cargarListasDesplegables() {
     this._tiposGaleriaService.cargarTiposGaleria().subscribe({
       next: (resp: any) => {
-        // Asumiendo que tu servicio devuelve un array o un objeto con la lista
         this.listaTipos = resp.tiposGaleria || resp;
       },
       error: (err: any) => console.error('Error cargando tipos', err)
@@ -201,11 +202,20 @@ export class GestionGaleriaComponent implements OnInit {
     const file: File = event.target.files[0];
     const objUpload = {
       susc: 'plataforma',
-      tipo: 'galeria', // <-- Guardamos en la carpeta de galeria
+      tipo: 'galeria',
       id: '0'
     };
 
     if (file) {
+      this.selectedFileName = file.name;
+      if (file.type.startsWith('image/')) {
+        this.selectedFileType = 'image';
+      } else if (file.type.startsWith('video/')) {
+        this.selectedFileType = 'video';
+      } else {
+        this.selectedFileType = 'document';
+      }
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.selectedFileUrl = e.target.result;
@@ -224,8 +234,40 @@ export class GestionGaleriaComponent implements OnInit {
     } else {
       this.selectedFileUrl = null;
       this.userPhotoUrl = '';
+      this.selectedFileType = null;
+      this.selectedFileName = '';
     }
   }
+
+  //   onFileSelectedClick(event: any) {
+  //     const file: File = event.target.files[0];
+  //     const objUpload = {
+  //       susc: 'plataforma',
+  //       tipo: 'galeria', // <-- Guardamos en la carpeta de galeria
+  //       id: '0'
+  //     };
+
+  //     if (file) {
+  //       const reader = new FileReader();
+  //       reader.onload = (e: any) => {
+  //         this.selectedFileUrl = e.target.result;
+  //       };
+  //       reader.readAsDataURL(file);
+
+  //       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+  //         next: (path: any) => {
+  //           this.FormRegistro.imagenGaleria = path.nombreArchivo;
+  //           this.userPhotoUrl = path.nombreArchivo;
+  //         },
+  //         error: () => {
+  //           this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+  //         }
+  //       });
+  //     } else {
+  //       this.selectedFileUrl = null;
+  //       this.userPhotoUrl = '';
+  //     }
+  //   }
 
   btnRegresarClick() {
     this.router.navigate(['/biblioteca/galeria']);

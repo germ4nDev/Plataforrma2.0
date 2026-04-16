@@ -90,7 +90,19 @@ export class GaleriaComponent implements OnInit, OnDestroy {
         if (!gals) return of([]);
         const transformed = gals.map((gal: any) => {
           gal.nomEstado = gal.estadoGaleria ? 'Activo' : 'Inactivo';
-          gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', gal.imagenGaleria || 'no-imagen.png');
+          const nombreArchivo = gal.imagenGaleria || '';
+          const nombreMinuscula = nombreArchivo.toLowerCase();
+
+          if (nombreMinuscula.endsWith('.mp4') || nombreMinuscula.endsWith('.avi') || nombreMinuscula.endsWith('.mov')) {
+            gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', 'no-imagen.png');
+          } else if (nombreMinuscula.endsWith('.pdf') || nombreMinuscula.endsWith('.doc')) {
+            gal.imagenGaleria = 'assets/images/doc-placeholder.png';
+          } else if (nombreArchivo !== '') {
+            gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', gal.imagenGaleria);
+          } else {
+            gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', 'no-imagen.png');
+          }
+
           return gal as PTLGaleria;
         });
         this.galerias = transformed;
