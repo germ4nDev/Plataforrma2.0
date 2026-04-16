@@ -60,17 +60,21 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
     this.gradientConfig = GradientConfig;
   }
 
-  ngOnInit(): void {
-    this._navigationService.getNavigationItems();
-    this.menuItems$ = this._navigationService.menuItems$;
-    this.hasFiltersSlot = true;
-    this.setupFormatosStream();
+  cargarDatos(): void {
     this.subscriptions.add(
       this._formatosGaleriaService.cargarFormatosGaleria().subscribe(
         () => console.log('Datos de Formatos de Galería cargados'),
         (err) => console.error('Error al cargar Formatos:', err)
       )
     );
+  }
+  ngOnInit(): void {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.hasFiltersSlot = true;
+
+    this.setupFormatosStream();
+    this.cargarDatos();
   }
 
   ngOnDestroy(): void {
@@ -168,7 +172,7 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
         this._formatosGaleriaService.eliminarFormatoGaleria(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('FORMATOSGALERIA.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.setupFormatosStream();
+            this.cargarDatos();
           },
           error: () => Swal.fire('Error', this.translate.instant('FORMATOSGALERIA.ELIMINARERROR'), 'error')
         });

@@ -55,10 +55,10 @@ export class PtlBibliotecaService {
     console.log('Consultando y ordenando biblioteca del servidor...');
     const url = `${base_url}/biblioteca`;
     return this.http.get(url).pipe(
-      map((resp: any) => resp.biblioteca as PTLBiblioteca[]),
-      map((biblioteca: PTLBiblioteca[]) => {
-        // Ordena basándose en la propiedad nombreBiblioteca del modelo
-        return biblioteca.sort((a: any, b: any) => (a.nombreBiblioteca || '').localeCompare(b.nombreBiblioteca || ''));
+      map((resp: any) => resp.bibliotecas as PTLBiblioteca[]),
+      map((bibliotecas: PTLBiblioteca[]) => {
+        console.log('Todas las bibliotecas', bibliotecas);
+        return bibliotecas.sort((a: any, b: any) => (a.nombreBiblioteca || '').localeCompare(b.nombreBiblioteca || ''));
       }),
       tap((bibliotecaOrdenada) => {
         this._biblioteca.next(bibliotecaOrdenada);
@@ -93,6 +93,8 @@ export class PtlBibliotecaService {
   }
 
   crearBiblioteca(data: PTLBiblioteca) {
+    console.log(data);
+
     const url = `${base_url}/biblioteca`;
     return this.http.post(url, data).pipe(
       map((resp: any) => {

@@ -5,6 +5,7 @@ export class PTLBiblioteca {
     public codigoBiblioteca?: string,
     public nombreBiblioteca?: string,
     public descripcionBiblioteca?: string,
+    public imagenBiblioteca?: string,
     public estadoBiblioteca?: boolean,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,

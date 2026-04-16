@@ -92,7 +92,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
         if (!apps) return of([])
         const transformedApps = apps.map((app: any) => {
           app.nomEstado = app.estadoAplicacion ? 'Activo' : 'Inactivo'
-          app.captura = this._uploadService.getFilePath(codigoSuscriptor, 'aplicaciones', app.imagenInicio)
+          app.captura = this._uploadService.getFilePath('plataforma', 'aplicaciones', app.imagenInicio);
           return app as PTLAplicacionModel
         })
         this.aplicaciones = transformedApps

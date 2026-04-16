@@ -91,6 +91,8 @@ export class GestionBibliotecaComponent implements OnInit {
               Swal.fire('Error', 'No se pudo obtener la Biblioteca', 'error');
             }
           });
+        } else {
+            this.FormRegistro.imagenBiblioteca = 'no-imagen.png';
         }
       }
     });
@@ -154,9 +156,11 @@ export class GestionBibliotecaComponent implements OnInit {
     const file: File = event.target.files[0];
     const objUpload = {
       susc: 'plataforma',
-      tipo: 'aplicaciones',
+      tipo: 'biblioteca',
       id: '0'
     };
+    console.log('archivo seleccionado', file);
+
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -166,7 +170,8 @@ export class GestionBibliotecaComponent implements OnInit {
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path: any) => {
           console.log('resultado', path);
-          //   this.FormRegistro.imagenInicio = path.nombreArchivo;
+            this.FormRegistro.imagenBiblioteca = path.nombreArchivo;
+            this.userPhotoUrl = path.nombreArchivo;
         },
         error: () => {
           this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
@@ -212,11 +217,16 @@ export class GestionBibliotecaComponent implements OnInit {
         }
       });
     } else {
+        console.log('imagen biblioteca', this.FormRegistro.imagenBiblioteca);
+
       registroData.codigoBiblioteca = this.FormRegistro.codigoBiblioteca; // Mantener el UUID generado
       registroData.codigoAplicacion = this.FormRegistro.codigoAplicacion;
       registroData.descripcionBiblioteca = this.FormRegistro.descripcionBiblioteca; // Asegurar el texto del editor
+      registroData.imagenBiblioteca = this.userPhotoUrl; // Asegurar el texto del editor
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaCreacion = new Date().toISOString();
+      console.log('Crear biblioteca', registroData);
+
       this._bibliotecaService.crearBiblioteca(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {

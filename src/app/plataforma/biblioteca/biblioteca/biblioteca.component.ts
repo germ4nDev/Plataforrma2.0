@@ -86,6 +86,8 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
         if (!libs) return of([]);
         const transformed = libs.map((lib: any) => {
           lib.nomEstado = lib.estadoBiblioteca ? 'Activo' : 'Inactivo';
+          lib.imagenBiblioteca = this._uploadService.getFilePath('plataforma', 'biblioteca', lib.imagenBiblioteca);
+
           return lib as PTLBiblioteca;
         });
         this.bibliotecas = transformed;
@@ -140,12 +142,25 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
   }
 
   columnasBiblioteca: ColumnMetadata[] = [
+    {
+      name: 'imagenBiblioteca',
+      header: 'APLICACIONES.FOTO',
+      type: 'image',
+      isSortable: false
+    },
     { name: 'codigoBiblioteca', header: 'BIBLIOTECA.CODE', type: 'text' },
     { name: 'nombreBiblioteca', header: 'BIBLIOTECA.NAME', type: 'text' },
     { name: 'nomEstado', header: 'BIBLIOTECA.STATUS', type: 'estado' }
   ];
 
-  columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionBiblioteca', header: 'BIBLIOTECA.DESCRIPTION', type: 'text' }];
+  columnasDetailRegistros: ColumnMetadata[] = [
+    { name: 'descripcionBiblioteca', header: 'BIBLIOTECA.DESCRIPTION', type: 'text' },
+    {
+      name: 'imagenBiblioteca',
+      header: 'APLICACIONES.IMAGENINICIO',
+      type: 'capture'
+    }
+  ];
 
   OnNuevaBibliotecaClick(): void {
     this.router.navigate(['biblioteca/gestion-biblioteca'], { queryParams: { regId: 'nuevo' } });

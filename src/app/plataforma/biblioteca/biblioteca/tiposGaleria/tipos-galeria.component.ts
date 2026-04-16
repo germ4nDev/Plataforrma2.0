@@ -60,17 +60,28 @@ export class TiposGaleriaComponent implements OnInit, OnDestroy {
     this.gradientConfig = GradientConfig;
   }
 
+  cargarDatos(): void {
+    this.subscriptions.add(
+      this._tiposGaleriaService.cargarTiposGaleria().subscribe(
+        () => console.log('Datos de Tipos de Galería actualizados'),
+        (err) => console.error('Error al cargar Tipos de Galería:', err)
+      )
+    );
+  }
+
   ngOnInit(): void {
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
     this.setupTiposStream();
-    this.subscriptions.add(
-      this._tiposGaleriaService.cargarTiposGaleria().subscribe(
-        () => console.log('Datos de Tipos de Galería cargados'),
-        (err) => console.error('Error al cargar Tipos de Galería:', err)
-      )
-    );
+
+    this.subscriptions.add();
+    this.cargarDatos();
+    //   this._tiposGaleriaService.cargarTiposGaleria().subscribe(
+    //     () => console.log('Datos de Tipos de Galería cargados'),
+    //     (err) => console.error('Error al cargar Tipos de Galería:', err)
+    //   )
+    // );
   }
 
   ngOnDestroy(): void {
@@ -168,7 +179,7 @@ export class TiposGaleriaComponent implements OnInit, OnDestroy {
         this._tiposGaleriaService.eliminarTipoGaleria(id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('TIPOSGALERIA.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.setupTiposStream();
+            this.cargarDatos();
           },
           error: () => Swal.fire('Error', this.translate.instant('TIPOSGALERIA.ELIMINARERROR'), 'error')
         });

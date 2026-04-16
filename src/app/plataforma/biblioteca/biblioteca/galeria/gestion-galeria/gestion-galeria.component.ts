@@ -43,6 +43,8 @@ export class GestionGaleriaComponent implements OnInit {
   lockScreenSubscription: Subscription | undefined;
   isLocked: boolean = false;
   lockMessage: string = '';
+  listaTipos: any[] = [];
+  listaFormatos: any[] = [];
 
   constructor(
     private router: Router,
