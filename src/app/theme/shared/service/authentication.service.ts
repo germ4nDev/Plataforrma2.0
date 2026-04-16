@@ -108,33 +108,33 @@ export class AuthenticationService {
 
   consultarActividades() {
     console.log('actividades');
-    this.actividadesSub = this._actividadesService.actividades$.subscribe({
-      next: (actividades: PTLActividadModel[]) => {
-        console.log('Roles de usuario cargados con éxito:', actividades.length);
-        this.actividades = actividades;
-        console.log('Roles de usuario:', actividades);
-      },
-      error: (err) => {
-        console.error('Error al cargar los actividades de usuario:', err);
-        this.roles = [];
-      }
-    });
+    // this.actividadesSub = this._actividadesService.actividades$.subscribe({
+    //   next: (actividades: PTLActividadModel[]) => {
+    //     console.log('Roles de usuario cargados con éxito:', actividades.length);
+    //     this.actividades = actividades;
+    //     console.log('Roles de usuario:', actividades);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al cargar los actividades de usuario:', err);
+    //     this.roles = [];
+    //   }
+    // });
   }
 
   consultarActividadesRoles(codRole: string) {
     console.log('actividades Role');
-    this.actividadesRolesSub = this._actividadesRolesService.actividadesRoles$.subscribe({
-      next: (actividades: PTLActividadRoleModel[]) => {
-        console.log('ActividadRole de usuario cargados con éxito:', actividades.length);
-        const actsRole = actividades.filter(x => x.codigoRole === codRole);
-        this.actividadesRoles = actsRole.filter(x => x.permiso === true);;
-        console.log('Roles de usuario:', actividades);
-      },
-      error: (err) => {
-        console.error('Error al cargar los actividades de usuario:', err);
-        this.roles = [];
-      }
-    });
+    // this.actividadesRolesSub = this._actividadesRolesService.actividadesRoles$.subscribe({
+    //   next: (actividades: PTLActividadRoleModel[]) => {
+    //     console.log('ActividadRole de usuario cargados con éxito:', actividades.length);
+    //     const actsRole = actividades.filter(x => x.codigoRole === codRole);
+    //     this.actividadesRoles = actsRole.filter(x => x.permiso === true);;
+    //     console.log('Roles de usuario:', actividades);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al cargar los actividades de usuario:', err);
+    //     this.roles = [];
+    //   }
+    // });
   }
 
   consultarUsuariosRoles() {

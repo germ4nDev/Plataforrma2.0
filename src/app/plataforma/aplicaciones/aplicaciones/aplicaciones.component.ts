@@ -19,7 +19,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import Swal from 'sweetalert2'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
-import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service'
+import { LocalStorageService, PtllogActividadesService, SessionStorageService, UploadFilesService } from 'src/app/theme/shared/service'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 
@@ -56,7 +56,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _logActividadesService: PtllogActividadesService,
-    private _localStorageService: LocalStorageService,
+    private _sessionStorageService: SessionStorageService,
     private _aplicacionesService: PtlAplicacionesService,
     private _uploadService: UploadFilesService
   ) {
@@ -196,11 +196,13 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
   ]
 
   OnNuevaAplicaicionClick (): void {
-    this.router.navigate(['aplicaciones/gestion-aplicacion'], { queryParams: { regId: 'nuevo' } })
+    this._sessionStorageService.setObject('regId', 'nuevo');
+    this.router.navigate(['aplicaciones/gestion-aplicacion'])
   }
 
   OnEditarAplicaicionClick (id: string): void {
-    this.router.navigate(['aplicaciones/gestion-aplicacion'], { queryParams: { regId: id } })
+    this._sessionStorageService.setObject('regId', id);
+    this.router.navigate(['aplicaciones/gestion-aplicacion'])
   }
 
   OnEliminarAplicaicionClick (id: string): void {
@@ -224,8 +226,6 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success')
             this.setupAplicacionesStream();
-            // Nota: Aquí el servicio PtlAplicacionesService debería emitir el nuevo listado actualizado
-            // Asumiendo que el servicio hace esto, el stream se actualizará automáticamente.
           },
           error: () => {
             const logData = {

@@ -22,7 +22,7 @@ import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.mo
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
-import { PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service'
+import { PtllogActividadesService, SessionStorageService, UploadFilesService } from 'src/app/theme/shared/service'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
@@ -70,14 +70,12 @@ export class ModulosComponent implements OnInit, OnDestroy {
     private _navigationService: NavigationService,
     private _aplicacionesService: PtlAplicacionesService,
     private _logActividadesService: PtllogActividadesService,
+    private _sessionStorageService: SessionStorageService,
     private _suitesService: PtlSuitesAPService,
     private _registrosService: PtlmodulosApService,
     private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig
-    // this.consultarAplicacines();
-    // this.consultarSuites();
-    // this.consultarModulosPadre();
   }
 
   ngOnInit (): void {
@@ -330,7 +328,8 @@ export class ModulosComponent implements OnInit, OnDestroy {
   }
 
   OnEditarRegistroClick (id: number): void {
-    this.router.navigate(['aplicaciones/gestion-modulo'], { queryParams: { regId: id } })
+    this._sessionStorageService.setObject('regId', id);
+    this.router.navigate(['aplicaciones/gestion-modulo'])
   }
 
   OnEliminarRegistroClick (id: any): void {

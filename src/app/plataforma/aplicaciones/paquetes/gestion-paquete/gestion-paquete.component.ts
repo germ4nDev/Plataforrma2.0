@@ -17,7 +17,8 @@ import {
     LocalStorageService,
     UploadFilesService,
     NavigationService,
-    PTLPaquetesService
+    PTLPaquetesService,
+    SessionStorageService
 } from 'src/app/theme/shared/service';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -84,6 +85,7 @@ export class GestionPaqueteComponent {
         private _swalService: SwalAlertService,
         private _translate: TranslateService,
         private _localStorageService: LocalStorageService,
+        private _sessionStorageService: SessionStorageService,
         private _uploadService: UploadFilesService,
         private _navigationService: NavigationService
     ) {
@@ -92,28 +94,26 @@ export class GestionPaqueteComponent {
         this.gradientConfig = GradientConfig;
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
         this.navCollapsedMob = false;
-        this.route.queryParams.subscribe((params) => {
-            this.registroId = params['regId'] || '';
-            console.log('regId', this.registroId);
-            if (this.registroId !== '') {
-                this.modoEdicion = true;
-                this._registrosService.getRegistroById(this.registroId).subscribe({
-                    next: (resp: any) => {
-                        this.FormRegistro = resp.paquete;
-                        this.selectedFileUrl = this._uploadService.getFilePath('paquetes', 'paquetes', resp.paquete.imagenPaquete);
-                        this.registrosFiltrado = this.getItemsPaquete(this.FormRegistro.codigoPaquete || '');
-                    },
-                    error: () => {
-                        Swal.fire('Error', 'No se pudo obtener el paquete por, ', 'error');
-                    }
-                });
-            } else {
-                this.registroId = uuidv4();
-                this.modoEdicion = false;
-                this.FormRegistro.codigoPaquete = this.registroId;
-                this.registrosFiltrado = [];
-            }
-        });
+        this.registroId = this._sessionStorageService.getObject<string>('regId') || '';
+        console.log('regId', this.registroId);
+        if (this.registroId !== '') {
+            this.modoEdicion = true;
+            this._registrosService.getRegistroById(this.registroId).subscribe({
+                next: (resp: any) => {
+                    this.FormRegistro = resp.paquete;
+                    this.selectedFileUrl = this._uploadService.getFilePath('paquetes', 'paquetes', resp.paquete.imagenPaquete);
+                    this.registrosFiltrado = this.getItemsPaquete(this.FormRegistro.codigoPaquete || '');
+                },
+                error: () => {
+                    Swal.fire('Error', 'No se pudo obtener el paquete por, ', 'error');
+                }
+            });
+        } else {
+            this.registroId = uuidv4();
+            this.modoEdicion = false;
+            this.FormRegistro.codigoPaquete = this.registroId;
+            this.registrosFiltrado = [];
+        }
     }
 
     ngOnInit() {
@@ -372,9 +372,11 @@ export class GestionPaqueteComponent {
     OnEliminarRegistroClick(evento: any) { }
 
     btnGestionarModulosClick() {
-        this.router.navigate(['aplicaciones/modulos-paquete'], { queryParams: { regId: this.registroId } });
+        this._sessionStorageService.setObject('regId', this.registroId );
+        this.router.navigate(['aplicaciones/modulos-paquete']);
     }
     btnGestionarItemsClick() {
-        this.router.navigate(['aplicaciones/items-paquete'], { queryParams: { regId: this.registroId } });
+        this._sessionStorageService.setObject('regId', this.registroId );
+        this.router.navigate(['aplicaciones/items-paquete']);
     }
 }

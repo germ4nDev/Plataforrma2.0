@@ -130,7 +130,7 @@ export class RolesUsuariosComponent implements OnInit {
     }
   }
 
-  private async consultarAplicacionById(aplicacionId: number) {
+  private async consultarAplicacionById(aplicacionId: string) {
     try {
       const resp = await firstValueFrom(
         this._aplicacionesService.getAplicacionById(aplicacionId).pipe(

@@ -64,7 +64,7 @@ export class PtlAplicacionesService {
     );
   }
 
-  getAplicacionById(id: number) {
+  getAplicacionById(id: string) {
     const url = `${base_url}/aplicaciones/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
