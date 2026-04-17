@@ -34,7 +34,7 @@ export class SliderComponent implements OnInit, OnDestroy {
     private _localStorageService: LocalStorageService,
     private _uploadService: UploadFilesService
   ) {
-    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    this.suscPlataforma = 'plataforma';
   }
 
   ngOnInit(): void {
@@ -74,6 +74,8 @@ export class SliderComponent implements OnInit, OnDestroy {
             resp.slidersInicio.forEach((slider: any) => {
               slider.imageSlider = this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider);
             });
+            console.log('sliders inicio', resp.slidersInicio);
+
             this.images = resp.slidersInicio;
             this.startAutoSlide();
             return;

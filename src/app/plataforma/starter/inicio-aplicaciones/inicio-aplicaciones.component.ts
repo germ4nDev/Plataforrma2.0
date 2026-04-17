@@ -83,12 +83,13 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
   }
 
   consultarAplicaciones () {
+    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
     this.subscriptions.add(
       this._aplicacionesService.getAplicaciones().subscribe((resp: any) => {
         if (resp.ok) {
           resp.aplicaciones.forEach((app: any) => {
             // app.imagenInicio = this._uploadService.getFilePath('aplicaciones', app.imagenInicio);
-            app.imagenInicio = `${base_url}/upload/${this.suscriptor}/aplicaciones/${app.imagenInicio}`
+            app.imagenInicio = `${base_url}/upload/${codigoSuscriptor}/aplicaciones/${app.imagenInicio}`
           })
           this.aplicaciones = resp.aplicaciones
           this.consultarUusuariosSC()
@@ -103,13 +104,13 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     const user = this._localStorageService.getUsuarioLocalStorage()
     console.log('&&&&&&&& usuariosSC')
     this.subscriptions.add(
-      this._usuariosSCService._usuariosSC$.subscribe({
+      this._usuariosSCService.usuariosSC$.subscribe({
         next: (usuariosSC: PTLUsuarioSCModel[]) => {
           this.usuarioSC = usuariosSC.filter(x => x.codigoUsuario == user?.codigoUsuario)[0]
           console.log('usuarioSC:', this.usuarioSC)
           this.consultarRoles()
         },
-        error: err => {
+        error: (err: any) => {
           console.error('Error al cargar los roles de usuariosSC:', err)
           this.usuarioSC = {} as PTLUsuarioSCModel
         }

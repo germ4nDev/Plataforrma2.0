@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
 
 const routes: Routes = [
   {
@@ -22,13 +22,16 @@ const routes: Routes = [
         loadComponent: () => import('./servidores/gestion-servidor/gestion-servidor.component').then(m => m.GestionServidorComponent)
       },
       {
+        path: 'conexiones',
+        loadComponent: () => import('./conexiones/conexiones.component').then(m => m.ConexionesComponent)
+      },
+      {
         path: 'estadisticas',
         loadComponent: () => import('./estadisticas/estadisticas.component').then(m => m.EstadisticasComponent)
       }
-
     ]
   }
-];
+]
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

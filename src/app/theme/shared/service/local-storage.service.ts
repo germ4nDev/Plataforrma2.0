@@ -36,6 +36,18 @@ export class LocalStorageService {
   constructor () {}
 
   // #region GETTERS
+  getObject<T>(key: string): T | null {
+    const value = sessionStorage.getItem(key);
+    if (!value) return null;
+
+    try {
+      return JSON.parse(value) as T;
+    } catch (error) {
+      console.error(`Error al recuperar la clave ${key}:`, error);
+      return null;
+    }
+  }
+
   getCurrentUserLocalStorage (): any {
     const currentUserSession = sessionStorage.getItem('currentUser')
     if (!currentUserSession) {
@@ -224,6 +236,12 @@ export class LocalStorageService {
   // #endregion GETTERS
 
   // #region SETTERS
+  setObject(key: string, value: any): void {
+    if (value === null || value === undefined) return;
+    const json = JSON.stringify(value);
+    sessionStorage.setItem(key, json);
+  }
+
   setNavSettingsLocalStorage (navsettings: NavSettings) {
     sessionStorage.setItem('navsettings', JSON.stringify(navsettings))
     this.navsettings = navsettings
@@ -381,6 +399,10 @@ export class LocalStorageService {
   // #endregion SETTERS
 
   // #region REMOVERS
+  removeObject(key: string): void {
+    sessionStorage.removeItem(key);
+  }
+
   removeFormRegistro () {
     sessionStorage.removeItem('FormRegistro')
   }

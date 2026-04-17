@@ -18,7 +18,6 @@ import {
     UploadFilesService,
     NavigationService,
     PTLPaquetesService,
-    SessionStorageService
 } from 'src/app/theme/shared/service';
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -85,7 +84,6 @@ export class GestionPaqueteComponent {
         private _swalService: SwalAlertService,
         private _translate: TranslateService,
         private _localStorageService: LocalStorageService,
-        private _sessionStorageService: SessionStorageService,
         private _uploadService: UploadFilesService,
         private _navigationService: NavigationService
     ) {
@@ -94,7 +92,7 @@ export class GestionPaqueteComponent {
         this.gradientConfig = GradientConfig;
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
         this.navCollapsedMob = false;
-        this.registroId = this._sessionStorageService.getObject<string>('regId') || '';
+        this.registroId = this._localStorageService.getObject<string>('regId') || '';
         console.log('regId', this.registroId);
         if (this.registroId !== '') {
             this.modoEdicion = true;
@@ -372,11 +370,11 @@ export class GestionPaqueteComponent {
     OnEliminarRegistroClick(evento: any) { }
 
     btnGestionarModulosClick() {
-        this._sessionStorageService.setObject('regId', this.registroId );
+        this._localStorageService.setObject('regId', this.registroId );
         this.router.navigate(['aplicaciones/modulos-paquete']);
     }
     btnGestionarItemsClick() {
-        this._sessionStorageService.setObject('regId', this.registroId );
+        this._localStorageService.setObject('regId', this.registroId );
         this.router.navigate(['aplicaciones/items-paquete']);
     }
 }

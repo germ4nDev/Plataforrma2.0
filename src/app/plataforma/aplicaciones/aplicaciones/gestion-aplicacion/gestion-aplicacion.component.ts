@@ -9,7 +9,6 @@ import {
     LocalStorageService,
     PtlAplicacionesService,
     PtllogActividadesService,
-    SessionStorageService,
     SwalAlertService,
     UploadFilesService
 } from 'src/app/theme/shared/service';
@@ -63,7 +62,6 @@ export class GestionAplicacionComponent implements OnInit {
         private translate: TranslateService,
         private _navigationService: NavigationService,
         private _localStorageService: LocalStorageService,
-        private _sessionStorageService: SessionStorageService,
         private _logActividadesService: PtllogActividadesService,
         private _aplicacionesService: PtlAplicacionesService,
         private _swalService: SwalAlertService,
@@ -76,7 +74,7 @@ export class GestionAplicacionComponent implements OnInit {
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
         this.navCollapsedMob = false;
         this._navigationService.getNavigationItems();
-        const regId = this._sessionStorageService.getObject<string>('regId') || '';
+        const regId = this._localStorageService.getObject<string>('regId') || '';
         if (regId !== 'nuevo') {
             this.modoEdicion = true;
             this._aplicacionesService.getAplicacionById(regId).subscribe({

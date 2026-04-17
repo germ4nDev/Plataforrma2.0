@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, OnDestroy, Output } from '@angular/core'
+import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { DataTablesModule } from 'angular-datatables'
 import { Router } from '@angular/router'
@@ -19,7 +19,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import Swal from 'sweetalert2'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
-import { LocalStorageService, PtllogActividadesService, SessionStorageService, UploadFilesService } from 'src/app/theme/shared/service'
+import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 
@@ -56,7 +56,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _logActividadesService: PtllogActividadesService,
-    private _sessionStorageService: SessionStorageService,
+    private _localStorageService: LocalStorageService,
     private _aplicacionesService: PtlAplicacionesService,
     private _uploadService: UploadFilesService
   ) {
@@ -86,7 +86,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
     //   return;
     // }
-    const codigoSuscriptor = 'e1a8fa99-15db-479b-a0a4-9c2be72273c9'
+    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
     this.aplicacionesTransformadas$ = this._aplicacionesService.aplicaciones$.pipe(
       switchMap((apps: PTLAplicacionModel[]) => {
         if (!apps) return of([])
@@ -196,12 +196,12 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
   ]
 
   OnNuevaAplicaicionClick (): void {
-    this._sessionStorageService.setObject('regId', 'nuevo');
+    this._localStorageService.setObject('regId', 'nuevo');
     this.router.navigate(['aplicaciones/gestion-aplicacion'])
   }
 
   OnEditarAplicaicionClick (id: string): void {
-    this._sessionStorageService.setObject('regId', id);
+    this._localStorageService.setObject('regId', id);
     this.router.navigate(['aplicaciones/gestion-aplicacion'])
   }
 

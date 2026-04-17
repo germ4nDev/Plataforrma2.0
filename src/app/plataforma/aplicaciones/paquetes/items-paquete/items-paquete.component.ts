@@ -21,7 +21,6 @@ import {
     PtlAplicacionesService,
     PtltiposValoresService,
     PtlvaloresUnitariosService,
-    SessionStorageService
 } from 'src/app/theme/shared/service'
 import { PtlItemsPaqueteService } from 'src/app/theme/shared/service/ptlitems-paquete.service'
 import { SharedModule } from 'src/app/theme/shared/shared.module'
@@ -77,14 +76,13 @@ export class ItemsPaqueteComponent {
         private _navigationService: NavigationService,
         private _swalService: SwalAlertService,
         private _localstorageService: LocalStorageService,
-        private _sessionStorageService: SessionStorageService,
         private _logActividadesService: PtllogActividadesService,
         private _registrosService: PtlItemsPaqueteService,
         private _tiposValoresService: PtltiposValoresService,
         private _listaPreciosService: PtlvaloresUnitariosService
     ) {
         this.gradientConfig = GradientConfig
-        this.registroId = this._sessionStorageService.getObject<string>('regId') || '';
+        this.registroId = this._localstorageService.getObject<string>('regId') || '';
         console.log('regId', this.registroId)
         this.registrosFiltrado = [];
     }
@@ -322,14 +320,14 @@ export class ItemsPaqueteComponent {
     }
 
     OnNuevoRegistroClick(): void {
-        this._sessionStorageService.setObject('regId', '');
-        this._sessionStorageService.setObject('regPQ', this.registroId);
+        this._localstorageService.setObject('regId', '');
+        this._localstorageService.setObject('regPQ', this.registroId);
         this.router.navigate(['aplicaciones/gestion-itempq'])
     }
 
     OnEditarRegistroClick(id: number): void {
-        this._sessionStorageService.setObject('regId', id);
-        this._sessionStorageService.setObject('regPQ', this.registroId);
+        this._localstorageService.setObject('regId', id);
+        this._localstorageService.setObject('regPQ', this.registroId);
         this.router.navigate(['aplicaciones/gestion-itempq'])
     }
 

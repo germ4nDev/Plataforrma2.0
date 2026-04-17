@@ -26,7 +26,6 @@ import {
     NavigationService,
     PtlvaloresUnitariosService,
     PtltiposValoresService,
-    SessionStorageService
 } from 'src/app/theme/shared/service'
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service'
 import { LoadingService } from 'src/app/theme/shared/service/loading.service'
@@ -79,7 +78,6 @@ export class GestionItempqComponent {
         private _logActividadesService: PtllogActividadesService,
         private _swalAlertService: SwalAlertService,
         private _localStorageService: LocalStorageService,
-        private _sessionStorageService: SessionStorageService,
         private _loadingService: LoadingService,
         private _navigationService: NavigationService
     ) {
@@ -88,8 +86,8 @@ export class GestionItempqComponent {
         this.gradientConfig = GradientConfig
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
         this.navCollapsedMob = false
-        this.registroId = this._sessionStorageService.getObject<string>('regId') || '';
-        this.codigoPaquete = this._sessionStorageService.getObject<string>('regPQ') || '';
+        this.registroId = this._localStorageService.getObject<string>('regId') || '';
+        this.codigoPaquete = this._localStorageService.getObject<string>('regPQ') || '';
         console.log('asociar modulos para', this.codigoPaquete)
         if (this.registroId !== '') {
             this.modoEdicion = true
@@ -243,7 +241,7 @@ export class GestionItempqComponent {
                                 };
                                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                                 this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-                                this._sessionStorageService.setObject('regId', this.codigoPaquete);
+                                this._localStorageService.setObject('regId', this.codigoPaquete);
                                 this.router.navigate(['aplicaciones/items-paquete']);
                             },
                             error: (err) => {
@@ -301,7 +299,7 @@ export class GestionItempqComponent {
                         this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
                         form.resetForm();
                         this.isSubmit = false;
-                        this._sessionStorageService.setObject('regId', this.codigoPaquete);
+                        this._localStorageService.setObject('regId', this.codigoPaquete);
                         this.router.navigate(['aplicaciones/items-paquete']);
                     }
                 },
@@ -320,7 +318,7 @@ export class GestionItempqComponent {
     }
 
     btnRegresarClick() {
-        this._sessionStorageService.setObject('regId', this.codigoPaquete);
+        this._localStorageService.setObject('regId', this.codigoPaquete);
         this.router.navigate(['aplicaciones/modulos-paquete'])
     }
 

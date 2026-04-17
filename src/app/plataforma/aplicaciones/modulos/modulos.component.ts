@@ -22,7 +22,7 @@ import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.mo
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
-import { PtllogActividadesService, SessionStorageService, UploadFilesService } from 'src/app/theme/shared/service'
+import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
@@ -70,7 +70,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
     private _navigationService: NavigationService,
     private _aplicacionesService: PtlAplicacionesService,
     private _logActividadesService: PtllogActividadesService,
-    private _sessionStorageService: SessionStorageService,
+    private _localStorageService: LocalStorageService,
     private _suitesService: PtlSuitesAPService,
     private _registrosService: PtlmodulosApService,
     private _uploadService: UploadFilesService
@@ -179,7 +179,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
     //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
     //   return;
     // }
-    const codigoSuscriptor = 'e1a8fa99-15db-479b-a0a4-9c2be72273c9'
+    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
     this.modulosTransformados$ = this._registrosService.modulos$.pipe(
       switchMap((mods: PTLModuloAP[]) => {
         if (!mods) return of([])
@@ -328,7 +328,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
   }
 
   OnEditarRegistroClick (id: number): void {
-    this._sessionStorageService.setObject('regId', id);
+    this._localStorageService.setObject('regId', id);
     this.router.navigate(['aplicaciones/gestion-modulo'])
   }
 

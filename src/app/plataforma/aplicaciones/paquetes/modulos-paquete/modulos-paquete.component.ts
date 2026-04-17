@@ -21,7 +21,6 @@ import {
     PtlAplicacionesService,
     PtlSuitesAPService,
     PtlmodulosApService,
-    SessionStorageService
 } from 'src/app/theme/shared/service'
 import { SharedModule } from 'src/app/theme/shared/shared.module'
 import Swal from 'sweetalert2'
@@ -77,7 +76,6 @@ export class ModulosPaqueteComponent {
         private _navigationService: NavigationService,
         private _swalService: SwalAlertService,
         private _localStorageService: LocalStorageService,
-        private _sessionStorageService: SessionStorageService,
         private _logActividadesService: PtllogActividadesService,
         private _aplicacionesService: PtlAplicacionesService,
         private _suitesService: PtlSuitesAPService,
@@ -317,14 +315,14 @@ export class ModulosPaqueteComponent {
     }
 
     OnNuevoRegistroClick(): void {
-        this._sessionStorageService.setObject('regId', '');
-        this._sessionStorageService.setObject('regPQ', this.registroId);
+        this._localStorageService.setObject('regId', '');
+        this._localStorageService.setObject('regPQ', this.registroId);
         this.router.navigate(['aplicaciones/gestion-modulopq'], { queryParams: { regId: '', regPQ: this.registroId } })
     }
 
     OnEditarRegistroClick(id: any): void {
-        this._sessionStorageService.setObject('regId', id);
-        this._sessionStorageService.setObject('regPQ', this.registroId);
+        this._localStorageService.setObject('regId', id);
+        this._localStorageService.setObject('regPQ', this.registroId);
         this.router.navigate(['aplicaciones/gestion-itempq'])
     }
 

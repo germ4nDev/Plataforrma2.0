@@ -155,7 +155,7 @@ export class AuthenticationService {
 
   consultarUusuariosSC() {
     console.log('&&&&&&&& usuariosSC');
-    this.usuariosSCSub = this._usuariosSCService._usuariosSC$.subscribe({
+    this.usuariosSCSub = this._usuariosSCService.usuariosSC$.subscribe({
       next: (usuariosSC: PTLUsuarioSCModel[]) => {
         console.log('usuariosSC cargadas con éxito:', usuariosSC.length);
         this.usuariosSC = usuariosSC;
@@ -163,7 +163,7 @@ export class AuthenticationService {
         this.consultarEmpresasSC();
         console.log('usuariosSC:', usuariosSC);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error al cargar los roles de usuariosSC:', err);
         this.usuariosSC = [];
       }
@@ -251,6 +251,7 @@ export class AuthenticationService {
   }
 
   private setSession(user: CurrentUserModel): void {
+    this._localstorageService.setObject('codigoSuscriptor', 'plataforma')
     this._localstorageService.setCurrentUserLocalStorage(user);
     this.currentUserSubject.next(user);
     // === MODIFICACIÓN CLAVE 4: Actualizar estado de login ===
