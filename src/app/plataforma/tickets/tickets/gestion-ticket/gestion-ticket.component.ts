@@ -367,10 +367,11 @@ export class GestionTicketComponent {
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];
     const objUpload = {
-      susc: '0',
-      aplicacion: this._localStorageService.getAplicaicionLocalStorage().nombreAplicacion,
+      susc: this._localStorageService.getAplicaicionLocalStorage().nombreAplicacion,
+      aplicacion: '0',
       tipo: 'tickets'
     };
+    console.log('objUpload', objUpload);
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -380,6 +381,7 @@ export class GestionTicketComponent {
       reader.readAsDataURL(file);
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path: any) => {
+            console.log('resultado++++++++++++++++', path);
           this.userPhotoUrl = path.nombreArchivo;
           this.FormRegistro.capturaTicket = path.nombreArchivo;
         },

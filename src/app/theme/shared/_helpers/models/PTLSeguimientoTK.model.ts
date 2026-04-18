@@ -4,7 +4,9 @@ export class PTLSeguimientoTKModel {
   constructor(
     public seguimientoId?: number,
     public codigoSeguimiento?: string,
+    public codigoRequerimiento?: string,
     public codigoTicket?: string,
+    public nombreSeguimiento?: string,
     public fechaSeguimiento?: string,
     public fecha?: NgbDateStruct,
     public descripcionSeguimiento?: string,

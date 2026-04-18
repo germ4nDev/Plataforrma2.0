@@ -63,7 +63,7 @@
                                 <label
                                     *ngIf="!nombreUsuario.valid && (nombreUsuario.dirty || nombreUsuario.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'USUARIOS.GESTION.REQUERIDONAME' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -78,13 +78,13 @@
                                 <label
                                     *ngIf="!identificacionUsuario.valid && (identificacionUsuario.dirty || identificacionUsuario.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'USUARIOS.GESTION.REQUERIDOIDENTIFICATION' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'USUARIOS.GESTION.COREO' | translate }}</label>
+                                <label class="form-label">{{ 'USUARIOS.GESTION.CORREO' | translate }}</label>
                                 <input type="email" class="form-control form-input" name="correoUsuario"
                                     placeholder="{{ 'USUARIOS.GESTION.CORREOHOLDER' | translate }}"
                                     [ngClass]="{'is-invalid': !correoUsuario.valid && (correoUsuario.dirty || correoUsuario.touched || isSubmit) }"
@@ -92,7 +92,7 @@
                                 <label
                                     *ngIf="!correoUsuario.valid && (correoUsuario.dirty || correoUsuario.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'USUARIOS.GESTION.REQUERIDOCORREO' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                 <label
                                     *ngIf="!userNameUsuario.valid && (userNameUsuario.dirty || userNameUsuario.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'USUARIOS.GESTION.REQUERIDOUSERNAME' | translate }}
                                 </label>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.GESTION.CLAVENEW' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="claveNew" [disabled]="isClaveActual"
-                                    placeholder="{{ 'USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    placeholder="{{ 'USUARIOS.GESTION.CLAVENEWHOLDER' | translate }}"
                                     #claveNew="ngModel" required [(ngModel)]="FormRegistro.claveNew" />
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.GESTION.CLAVECONFIRM' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="claveConfirm" [disabled]="isClaveActual"
-                                    placeholder="{{ 'USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    placeholder="{{ 'USUARIOS.GESTION.CLAVECONFIRMHOLDER' | translate }}"
                                     #claveConfirm="ngModel" required [(ngModel)]="FormRegistro.claveConfirm" />
                             </div>
                         </div>
@@ -151,7 +151,7 @@
                                 <label
                                     *ngIf="!descripcionUsuario.valid && (descripcionUsuario.dirty || descripcionUsuario.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'USUARIOS.GESTION.REQUERIDODESCRIPTION' | translate }}
                                 </label>
                             </div>
                         </div>

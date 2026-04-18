@@ -60,7 +60,7 @@ export class UsuariosComponent implements OnInit {
 
   registrosTransformados$: Observable<PTLUsuarioModel[]> = of([]);
   registrosFiltrado$: Observable<PTLUsuarioModel[]> = of([]);
-  usuairos: PTLUsuarioModel[] = [];
+  usuarios: PTLUsuarioModel[] = [];
   registros: PTLUsuarioModel[] = [];
   //#endregion VARIABLES
 
@@ -121,7 +121,7 @@ export class UsuariosComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'USUARIOS.STATUS',
-      type: 'text'
+      type: 'estado'
     }
   ];
 
@@ -142,8 +142,8 @@ export class UsuariosComponent implements OnInit {
     this.subscriptions.add(
       this._usuariosService.getUsuarios().subscribe((resp: any) => {
         if (resp.ok) {
-          this.usuairos = resp.usuarios;
-          console.log('Todos las usuarios', this.usuairos);
+          this.usuarios = resp.usuarios;
+          console.log('Todos las usuarios', this.usuarios);
           return;
         }
       })
@@ -156,9 +156,9 @@ export class UsuariosComponent implements OnInit {
     this.registrosTransformados$ = this._usuariosService.usuarios$.pipe(
       switchMap((users: PTLUsuarioModel[]) => {
         if (!users) return of([]);
-        this.usuairos = users;
+        this.usuarios = users;
         const transformedUsuarios = users.map((user: any) => {
-          user.nomEstado = user.estadoAplicacion ? 'Activo' : 'Inactivo';
+          user.nomEstado = user.estadoUsuario ? 'Activo' : 'Inactivo';
           user.fotoUsuario = this._uploadService.getFilePath(codigo, 'usuarios', user.fotoUsuario);
           return user as PTLUsuarioModel;
         });
@@ -209,10 +209,6 @@ export class UsuariosComponent implements OnInit {
     );
   }
 
-  getEstado(estado: boolean): string {
-    return estado ? 'Activo' : 'Inactivo';
-  }
-
   OnNuevoRegistroClick() {
     this.router.navigate(['usuarios/gestion-usuario']);
   }
@@ -222,10 +218,10 @@ export class UsuariosComponent implements OnInit {
   }
 
   OnEliminarRegistroClick(id: any) {
-    const usuario = this.usuairos.filter((x) => x.codigoUsuario == id.id)[0];
+    const usuario = this.usuarios.filter((x) => x.codigoUsuario == id.id)[0];
     Swal.fire({
       title: this.translate.instant('USUARIOS.ELIMINARTITULO'),
-      text: `this.translate.instant('USUARIOS.ELIMINARTEXTO') + "${usuario.nombreUsuario}".`,
+      text: this.translate.instant('USUARIOS.ELIMINARTEXTO') + `"${usuario.nombreUsuario}".`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),

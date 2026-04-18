@@ -3,6 +3,7 @@ export class PTLRoleAPModel {
     public roleId?: number,
     public codigoRole?: string,
     public codigoAplicacion?: string,
+    public codigoSuite?: string,
     public nombreRole?: string,
     public descripcionRole?: string,
     public estadoRole?: boolean,

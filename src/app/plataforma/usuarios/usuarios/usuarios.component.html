@@ -48,7 +48,7 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.FILTROS.ESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-input" required>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-input" style="cursor: pointer;">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>

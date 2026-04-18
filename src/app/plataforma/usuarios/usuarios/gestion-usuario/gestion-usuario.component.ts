@@ -181,6 +181,7 @@ export class GestionUsuarioComponent implements OnInit {
       reader.readAsDataURL(file);
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path: any) => {
+            console.log('resultado++++++++++++++++', path);
           this.fileName = path.nombreArchivo;
           this.FormRegistro.fotoUsuario = path.nombreArchivo;
         },

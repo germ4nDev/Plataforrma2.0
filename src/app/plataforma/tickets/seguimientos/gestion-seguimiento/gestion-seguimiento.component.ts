@@ -19,6 +19,7 @@ import {
   LocalStorageService,
   NavigationService,
   PtllogActividadesService,
+  PTLRequerimientosTkService,
   PTLTicketsService,
   SwalAlertService,
   UploadFilesService
@@ -39,6 +40,7 @@ export class GestionSeguimientoComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
   menuItems!: Observable<NavigationItem[]>;
   FormRegistro: PTLSeguimientoTKModel = new PTLSeguimientoTKModel();
+  requerimientosSub?: Subscription;
   requerimientos: PTLRequerimientoTKModel[] = [];
   ticketsSub?: Subscription;
   tickets: PTLTicketAPModel[] = [];
@@ -48,7 +50,9 @@ export class GestionSeguimientoComponent {
   registrosSub?: Subscription;
   form: undefined;
   ticketId: string = '';
+  requerimientoId: string = '';
   codigoRegistro: string = '';
+  codigoRequerimiento: string = '';
 
   isSubmit: boolean = false;
   modoEdicion: boolean = false;
@@ -74,6 +78,7 @@ export class GestionSeguimientoComponent {
     private _localStorageService: LocalStorageService,
     private _registrosService: PTLSeguimientosTKService,
     private _ticketsService: PTLTicketsService,
+    private _requerimientoService: PTLRequerimientosTkService,
     private _uploadService: UploadFilesService,
     private _estadosService: PTLEstadosService,
     private _logActividadesService: PtllogActividadesService,
@@ -82,17 +87,16 @@ export class GestionSeguimientoComponent {
     this.isSubmit = false;
     this.route.queryParams.subscribe((params) => {
       this.codigoRegistro = params['regId'] || '';
-      this.ticketId = params['tickId'] || '';
+      this.codigoRequerimiento = params['codigoRequerimiento'] || '';
       console.log('============ registroId', this.codigoRegistro);
-      console.log('============ ticketId', this.ticketId);
-      if (this.codigoRegistro !== 'nuevo' && this.ticketId == '') {
+      if (this.codigoRegistro != 'nuevo' || this.codigoRequerimiento == '') {
         // console.log('me llena el Id', registroId);
         this.modoEdicion = true;
         this._registrosService.getRegistroById(this.codigoRegistro).subscribe({
           next: (resp: any) => {
             console.log('resp', resp);
             this.FormRegistro = resp.seguimiento;
-            this.selectedFileUrl = this._uploadService.getFilePath('0', 'tickets', resp.seguimiento.capturaSeguimiento);
+            this.selectedFileUrl = this._uploadService.getFilePath('0', 'seguimientos', resp.seguimiento.capturaSeguimiento);
             const fechaString = this.FormRegistro.fechaSeguimiento;
             if (fechaString) {
               const fechaAsig = new Date(fechaString);
@@ -112,6 +116,7 @@ export class GestionSeguimientoComponent {
   ngOnInit() {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
+    this.consultarRequerimientos();
     this.consultarTickets();
     this.consultarEstados();
     this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
@@ -127,17 +132,18 @@ export class GestionSeguimientoComponent {
       this.FormRegistro = form;
       this._localStorageService.removeFormRegistro();
     }
-    if (this.codigoRegistro == 'nuevo' && (this.ticketId == '0' || this.ticketId == undefined || this.ticketId == null)) {
-        console.log('============= no llena el Id', this.codigoRegistro);
-        this.FormRegistro.codigoSeguimiento = uuidv4();
-        this.FormRegistro.codigoTicket = '';
-        this.FormRegistro.estadoSeguimiento = 'PE';
-        this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
-        this.selectedFileUrl = this._uploadService.getFilePath('0', 'tickets', 'no-imagen.png');
-        this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
-        this.modoEdicion = false;
-        console.log('============= FormRegistro', this.FormRegistro);
-      }
+    if (this.codigoRegistro == 'nuevo') {
+      console.log('============= no llena el Id', this.codigoRegistro);
+      this.FormRegistro.codigoSeguimiento = uuidv4();
+      this.FormRegistro.codigoTicket = '';
+      this.FormRegistro.codigoRequerimiento = '';
+      this.FormRegistro.estadoSeguimiento = 'PE';
+      this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
+      this.selectedFileUrl = this._uploadService.getFilePath('0', 'tickets', 'no-imagen.png');
+      this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
+      this.modoEdicion = false;
+      console.log('============= FormRegistro', this.FormRegistro);
+    }
   }
 
   onDateChange(): void {
@@ -156,6 +162,25 @@ export class GestionSeguimientoComponent {
     return dateStruct;
   }
 
+  consultarRequerimientos() {
+    this.requerimientosSub = this._requerimientoService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            console.log('todos los requerimientos', resp.requerimientos);
+            this.requerimientos = resp.requerimientos;
+            return;
+          }
+        }),
+        catchError((err) => {
+          console.log('Ha ocurrido un error', err);
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
   consultarTickets() {
     this.ticketsSub = this._ticketsService
       .getRegistros()
@@ -166,11 +191,9 @@ export class GestionSeguimientoComponent {
             if (this.ticketId != '0' && !this.modoEdicion) {
               this.ticket = this.tickets.filter((x) => x.codigoTicket == this.ticketId)[0];
               this.FormRegistro.codigoTicket = this.ticketId;
-              this.FormRegistro.definicionRequerimiento = this.ticket.definicionRequerimiento;
               this.FormRegistro.codigoSeguimiento = uuidv4();
               this.FormRegistro.estadoSeguimiento = 'PE';
               this.FormRegistro.fecha = this.setFechaRiesgo(new Date());
-              this.selectedFileUrl = this._uploadService.getFilePath('0', 'tickets', 'no-imagen.png');
               this.FormRegistro.capturaSeguimiento = 'no-imagen.png';
             }
             console.log('tickets:', this.tickets);
@@ -210,11 +233,11 @@ export class GestionSeguimientoComponent {
     }
   }
 
-  onCodigoTicketChangeClick(event: any) {
+  onRequerimientoChangeClick(event: any) {
     const value = event.target.value;
-    const ticket = this.tickets.filter((x) => x.codigoTicket == value)[0];
-    this.FormRegistro.codigoTicket = ticket.codigoTicket;
-    this.FormRegistro.definicionRequerimiento = ticket.definicionRequerimiento;
+    const requerimiento = this.requerimientos.filter((x) => x.codigoRequerimiento == value)[0];
+    this.FormRegistro.codigoRequerimiento = requerimiento.codigoRequerimiento;
+    // this.FormRegistro.definicionRequerimiento = re.definicionRequerimiento;
   }
 
   actualizarDescripcionVersion(nuevoContenido: string): void {
@@ -265,53 +288,37 @@ export class GestionSeguimientoComponent {
       const fecha = new Date(year, month - 1, day).toISOString();
       registroData.fechaSeguimiento = fecha;
     }
-    if (this.ticketId != '') {
-      registroData.codigoTicket = this.ticketId;
-    }
-    registroData.estadoTicket = this.FormRegistro.estadoSeguimiento;
     if (this.modoEdicion) {
+      registroData.codigoRequerimiento = this.FormRegistro.codigoRequerimiento || '';
       registroData.capturaSeguimiento = this.FormRegistro.capturaSeguimiento;
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+      registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
       registroData.fechaModificacion = new Date().toISOString();
-      registroData.codigoTicket = this.FormRegistro.codigoTicket || '';
-      registroData.estadoTicket = this.FormRegistro.estadoSeguimiento;
-      this._registrosService.putModificarRegistro(registroData).subscribe({
+      registroData.estadoSeguimiento = this.FormRegistro.estadoSeguimiento;
+      this._registrosService.putModificarRegistro(registroData, this.codigoSeguimiento).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            const ticket = this.tickets.filter((x) => x.codigoTicket == registroData.codigoTicket)[0];
-            ticket.estadoTicket = registroData.estadoSeguimiento;
-            this._ticketsService.putModificarRegistro(ticket).subscribe({
-              next: () => {
-                this._ticketsService.putModificarRegistro(registroData).subscribe(() => console.log('ticket actualizado'));
-                const logData = {
-                  codigoTipoLog: '',
-                  codigoRespuesta: '201',
-                  descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
-                };
-                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-                this.router.navigate(['/tickets/seguimientos/']);
-              },
-              error: (err) => {
-                console.error('Error al actualizar requerimiento', err);
-                const logData = {
-                  codigoTipoLog: '',
-                  codigoRespuesta: '501',
-                  descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-                };
-                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
-                this.router.navigate(['/tickets/seguimientos/']);
-              }
-            });
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
+            if(this.codigoRegistro == 'nuevo'){
+                this.router.navigate(['/tickets/seguimientos/'], { queryParams: { regId: this.codigoRequerimiento} });
+            }
+            else{
+                this.router.navigate(['/tickets/seguimientos/'], { queryParams: { regId: this.FormRegistro.codigoRequerimiento} });
+            }
           } else {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + resp.mensaje
+              descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + resp.mensaje);
+            this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
           }
         },
         error: (err: any) => {
@@ -328,29 +335,34 @@ export class GestionSeguimientoComponent {
     } else {
       console.log('nuevo formregistro', this.FormRegistro);
       registroData.codigoSeguimiento = uuidv4();
+      registroData.codigoTicket = this.FormRegistro.codigoTicket || '';
+      registroData.codigoRequerimiento = this.FormRegistro.codigoRequerimiento || '';
+      registroData.estadoTicket = this.FormRegistro.estadoSeguimiento || '';
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
       registroData.fechaCreacion = new Date().toISOString();
       registroData.codigoUsuarioModificacion = '';
       registroData.fechaModificacion = '';
       registroData.capturaSeguimiento = this.FormRegistro.capturaSeguimiento;
-      registroData.codigoTicket = this.FormRegistro.codigoTicket || '';
-      registroData.estadoTicket = this.FormRegistro.estadoSeguimiento;
       console.log('insertar registro', registroData);
       this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
+          console.log('reesp', resp.seguimiento);
           if (resp.ok) {
-            //   this.actualizarEstadoTicket(registroData);
-            this._ticketsService.putModificarRegistro(registroData).subscribe(() => console.log('ticket actualizado'));
             const logData = {
               codigoTipoLog: '',
-              codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR')
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
-            this.router.navigate(['/tickets/seguimientos/']);
+            if(this.codigoRegistro == 'nuevo'){
+                this.router.navigate(['/tickets/seguimientos/'], { queryParams: { regId: this.codigoRequerimiento} });
+            }
+            else{
+                this.router.navigate(['/tickets/seguimientos/'], { queryParams: { regId: this.FormRegistro.codigoRequerimiento} });
+            }
           }
         },
         error: (err: any) => {
@@ -358,18 +370,22 @@ export class GestionSeguimientoComponent {
           const logData = {
             codigoTipoLog: '',
             codigoRespuesta: '501',
-            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+            descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
           };
           this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err);
         }
       });
     }
   }
 
   btnRegresarClick() {
-    console.log('codigo ticket', this.ticketId);
-    this.router.navigate(['/tickets/seguimientos/'], { queryParams: { regId: this.ticketId } });
+    if(this.codigoRegistro == 'nuevo'){
+        this.router.navigate(['/tickets/seguimientos/'], { queryParams: { regId: this.codigoRequerimiento} });
+    }
+    else{
+        this.router.navigate(['/tickets/seguimientos/'], { queryParams: { regId: this.FormRegistro.codigoRequerimiento} });
+    }
   }
 
   toggleNav(): void {

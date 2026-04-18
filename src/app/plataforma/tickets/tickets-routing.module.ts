@@ -33,6 +33,14 @@ const routes: Routes = [
         {
             path: 'gestion-clases-ticket',
             loadComponent: () => import('./clases-ticket/gestion-clases-ticket/gestion-clases-ticket.component').then(m => m.GestionClasesTicketComponent)
+        },
+        {
+            path: 'requerimientos',
+            loadComponent: () => import('./requerimientos/requerimientos.component').then(m => m.RequerimientosComponent)
+        },
+        {
+            path: 'gestion-requerimiento',
+            loadComponent: () => import('./requerimientos/gestion-requerimiento/gestion-requerimiento.component').then(m => m.GestionRequerimientoComponent)
         }
     ]
   }

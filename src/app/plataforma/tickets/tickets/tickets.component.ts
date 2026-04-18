@@ -4,7 +4,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
-import { Subscription, tap, catchError, of, Observable } from 'rxjs';
+import { Subscription, tap, catchError, of, Observable, BehaviorSubject, switchMap, combineLatest, startWith, map } from 'rxjs';
 import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
@@ -47,8 +47,21 @@ export class TicketsComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
 
   //#region VARIABLES
+  subscriptions = new Subscription();
+  filtroAplicacionSubject = new BehaviorSubject<string>('todos');
+  filtroSuiteSubject = new BehaviorSubject<string>('todos');
+  filtroModuloSubject = new BehaviorSubject<string>('todos');
+  filtroSenderSubject = new BehaviorSubject<string>('todos');
+  filtroAsignadoSubject = new BehaviorSubject<string>('todos');
+  filtroNombreSubject = new BehaviorSubject<string>('');
+  filtroDescripcionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
+
+  registrosTransformados$: Observable<PTLTicketAPModel[]> = of([]);
+  registrosFiltrado$: Observable<PTLTicketAPModel[]> = of([]);
+  ticket: PTLTicketAPModel[] = [];
   registros: PTLTicketAPModel[] = [];
-  registrosFiltrado: PTLTicketAPModel[] = [];
+
   aplicaciones: PTLAplicacionModel[] = [];
   aplicacionesSub?: Subscription;
   estadosTicketSub?: Subscription;
@@ -99,10 +112,20 @@ export class TicketsComponent implements OnInit {
     this.consultarAplicaciones();
     this.consultarSuites();
     this.consultarModulos();
-    this.consultarUsuairos();
+    this.consultarUsuarios();
+    this.consultarRegistros();
     setTimeout(() => {
-      this.consultarRegistros();
-    }, 500);
+      this.setupRegistrosStream();
+    }, 100);
+    this.subscriptions.add(
+      this._ticketsService.cargarRegistros().subscribe(
+        () => console.log('Tickets cargados y guardados en el servicio'),
+        (err) => console.error('Error al cargar Ticket:', err)
+      )
+    );
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   consultarEstadosTicket() {
@@ -164,7 +187,7 @@ export class TicketsComponent implements OnInit {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.modulos = resp.modulos.filter((mod: PTLModuloAP) => mod.codigoPadre !== '0');
+            this.modulos = resp.modulos.filter((mod: PTLModuloAP) => mod.hijos == true);
             return;
           }
         }),
@@ -176,7 +199,7 @@ export class TicketsComponent implements OnInit {
       .subscribe();
   }
 
-  consultarUsuairos() {
+  consultarUsuarios() {
     this.modulosSub = this._usuariosService
       .getUsuarios()
       .pipe(
@@ -276,108 +299,164 @@ export class TicketsComponent implements OnInit {
   ];
 
   consultarRegistros() {
-    this.registrosSub = this._ticketsService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            resp.tickets.forEach((ticket: any) => {
-              ticket.color = ticket.colorPrioridad;
-              ticket.captura = `${base_url}/upload/tickets/${ticket.capturaTicket}`;
-              const app =
-                ticket.codigoAplicacion != '' ? this.aplicaciones.filter((x) => x.codigoAplicacion == ticket.codigoAplicacion)[0] : {};
-              const sui = ticket.codigoSuite != '' ? this.suites.filter((x) => x.codigoSuite == ticket.codigoSuite)[0] : {};
-              const mod = ticket.codigoModulo != '' ? this.modulos.filter((x) => x.codigoModulo == ticket.codigoModulo)[0] : {};
-              const usu =
-                ticket.codigoUsuarioSender != '' ? this.usuarios.filter((x) => x.codigoUsuario == ticket.codigoUsuarioSender)[0] : {};
-              const usuA =
-                ticket.codigoUsuarioAsignado != '' ? this.usuarios.filter((x) => x.codigoUsuario == ticket.codigoUsuarioAsignado)[0] : {};
-              ticket.nomAplicacion = app.nombreAplicacion || '';
-              ticket.nomSuite = sui.nombreSuite || '';
-              ticket.nomModulo = mod.nombreModulo || '';
-              ticket.nomSender = usu.nombreUsuario || '';
-              ticket.nomAsignado = usuA.nombreUsuario || '';
-            });
-            this.registros = resp.tickets;
-            this.registrosFiltrado = this.registros;
-            console.log('Todos las tickets', this.registrosFiltrado);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
-        })
-      )
-      .subscribe();
+    this.subscriptions.add(
+      this._ticketsService.getRegistros().subscribe((resp: any) => {
+        if (resp.ok) {
+          this.ticket = resp.tickets;
+          console.log('Todos los Tickets', this.ticket);
+          return;
+        }
+      })
+    );
   }
 
+  setupRegistrosStream(): void {
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    this.registrosTransformados$ = this._ticketsService.ticket$.pipe(
+      switchMap((tickets: PTLTicketAPModel[]) => {
+        if (!tickets) return of([]);
+        this.ticket = tickets;
+        const transformedApps = tickets.map((ticket: any) => {
+          ticket.color = ticket.colorPrioridad;
+          ticket.captura = `${base_url}/upload/tickets/${ticket.capturaTicket}`;
+          ticket.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == ticket.codigoAplicacion)[0].nombreAplicacion || '';
+          ticket.nomSuite = this.suites.filter((x) => x.codigoSuite == ticket.codigoSuite)[0].nombreSuite || '';
+          ticket.nomModulo = this.modulos.filter((x) => x.codigoModulo == ticket.codigoModulo)[0].nombreModulo || '';
+          ticket.nomSender = this.usuarios.filter((x) => x.codigoUsuario == ticket.codigoUsuarioSender)[0].nombreUsuario || '';
+          ticket.nomAsignado = this.usuarios.filter((x) => x.codigoUsuario == ticket.codigoUsuarioAsignado)[0].nombreUsuario || '';
+          return ticket as PTLTicketAPModel;
+        });
+        this.registros = transformedApps;
+        return of(transformedApps);
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de aplicaciones:', err);
+        return of([]);
+      })
+    );
+    this.registrosFiltrado$ = combineLatest([
+      this.registrosTransformados$.pipe(startWith([])), // Usa la fuente de datos transformada
+      this.filtroAplicacionSubject,
+      this.filtroSuiteSubject,
+      this.filtroModuloSubject,
+      this.filtroSenderSubject,
+      this.filtroAsignadoSubject,
+      this.filtroNombreSubject,
+      this.filtroDescripcionSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([tickets, aplicacion, suite, modulo, sender, asignado, nombre, descripcion, estado]) => {
+        console.log('================== roles 2', tickets);
+        let filteredRegistros = tickets;
+        if (aplicacion !== 'todos') {
+          filteredRegistros = filteredRegistros.filter((reg: any) => reg.codigoAplicacion === aplicacion);
+        }
+        if (suite !== 'todos') {
+          filteredRegistros = filteredRegistros.filter((reg: any) => reg.codigoSuite === suite);
+        }
+        if (modulo !== 'todos') {
+          filteredRegistros = filteredRegistros.filter((reg: any) => reg.codigoModulo === modulo);
+        }
+        if (sender !== 'todos') {
+          filteredRegistros = filteredRegistros.filter((reg: any) => reg.codigoUsuarioSender === sender);
+        }
+        if (asignado !== 'todos') {
+          filteredRegistros = filteredRegistros.filter((reg: any) => reg.codigoUsuarioAsignado === asignado);
+        }
+        if (nombre) {
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.nombreTicket?.toString() || '').toLowerCase().includes(nombre));
+        }
+        if (estado !== 'todos') {
+          filteredRegistros = filteredRegistros.filter((reg) => {
+            // Obtenemos el valor de la base de datos y lo pasamos a minúsculas
+            const estadoReg = (reg.estadoTicket?.toString() || '').toLowerCase();
+            // Pasamos el valor del filtro también a minúsculas para asegurar coincidencia
+            const estadoFiltro = estado.toLowerCase();
+            return estadoReg === estadoFiltro;
+          });
+        }
+        if (descripcion) {
+          const textoFiltro = descripcion.toLowerCase();
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.descripcionTicket || '').toLowerCase().includes(textoFiltro));
+        }
+        return filteredRegistros;
+      })
+    );
+  }
+
+  //   consultarRegistros() {
+  //     this.registrosSub = this._ticketsService
+  //       .getRegistros()
+  //       .pipe(
+  //         tap((resp: any) => {
+  //           if (resp.ok) {
+  //             resp.tickets.forEach((ticket: any) => {
+  //               ticket.color = ticket.colorPrioridad;
+  //               ticket.captura = `${base_url}/upload/tickets/${ticket.capturaTicket}`;
+  //               const app = ticket.codigoAplicacion != '' ? this.aplicaciones.filter((x) => x.codigoAplicacion == ticket.codigoAplicacion)[0] : {};
+  //               const sui = ticket.codigoSuite != '' ? this.suites.filter((x) => x.codigoSuite == ticket.codigoSuite)[0] : {};
+  //               const mod = ticket.codigoModulo != '' ? this.modulos.filter((x) => x.codigoModulo == ticket.codigoModulo)[0] : {};
+  //               const usu = ticket.codigoUsuarioSender != '' ? this.usuarios.filter((x) => x.codigoUsuario == ticket.codigoUsuarioSender)[0] : {};
+  //               const usuA =
+  //                 ticket.codigoUsuarioAsignado != '' ? this.usuarios.filter((x) => x.codigoUsuario == ticket.codigoUsuarioAsignado)[0] : {};
+  //                 ticket.nomAplicacion = app.nombreAplicacion || '';
+  //                 ticket.nomSuite = sui.nombreSuite || '';
+  //                 ticket.nomModulo = mod.nombreModulo || '';
+  //                 ticket.nomSender = usu.nombreUsuario || '';
+  //                 ticket.nomAsignado = usuA.nombreUsuario || '';
+  //             });
+  //             this.registros = resp.tickets;
+  //             this.ticket = this.registros;
+  //             console.log('Todos las tickets', this.ticket);
+  //             return;
+  //           }
+  //         }),
+  //         catchError((err) => {
+  //           console.log('Ha ocurrido un error', err);
+  //           return of(null);
+  //         })
+  //       )
+  //       .subscribe();
+  //   }
+
   onFiltroAplicacionChangeClick(evento: any) {
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => x.codigoAplicacion == evento.target.value);
-    }
+    const value = evento.target.value;
+    this.filtroAplicacionSubject.next(value);
   }
 
   onFiltroSuiteChangeClick(evento: any) {
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => x.codigoSuite == evento.target.value);
-    }
+    const value = evento.target.value;
+    this.filtroSuiteSubject.next(value);
   }
 
   onFiltroModuloChangeClick(evento: any) {
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => x.codigoModulo == evento.target.value);
-    }
+    const value = evento.target.value;
+    this.filtroModuloSubject.next(value);
   }
 
   onFiltroSenderChangeClick(evento: any) {
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => x.codigoUsuarioSender == evento.target.value);
-    }
+    const value = evento.target.value;
+    this.filtroSenderSubject.next(value);
   }
 
   onFiltroAsignadoChangeClick(evento: any) {
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => x.codigoUsuarioAsignado == evento.target.value);
-    }
+    const value = evento.target.value;
+    this.filtroAsignadoSubject.next(value);
   }
 
   onFiltroNombreChangeClick(evento: any) {
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((ticket) => (ticket.nombreTicket || '').toLowerCase().includes(textoFiltro));
-    }
+    const value = evento.target.value;
+    this.filtroNombreSubject.next(value);
   }
 
   onFiltroDescripcionChangeClick(evento: any) {
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((ticket) =>
-        (ticket.descripcionTicket || '').toLowerCase().includes(textoFiltro)
-      );
-    }
+    const value = evento.target.value;
+    this.filtroDescripcionSubject.next(value);
   }
 
   onFiltroEstadoChangeClick(evento: any) {
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => x.estadoTicket == evento.target.value);
-    }
+    const value = evento.target.value;
+    this.filtroEstadoSubject.next(value);
   }
 
   OnNuevoRegistroClick() {
@@ -447,8 +526,8 @@ export class TicketsComponent implements OnInit {
   }
 
   OnOption1Click(event: any) {
-    console.log('ejecutando opcion 1 Seguimientos', event);
-    this.router.navigate(['tickets/seguimientos'], { queryParams: { regId: event } });
+    console.log('ejecutando opcion 1 Requerimiento', event);
+    this.router.navigate(['tickets/requerimientos'], { queryParams: { regId: event } });
   }
 
   OnOption2Click(event: any) {

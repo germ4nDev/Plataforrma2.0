@@ -2,8 +2,12 @@
 <div class="layout-wrapper">
     <aside class="aside-left">
         <div class="card">
-            <div class="nav-tabs-custom"><button>{{ 'PLATAFORMA.MENU' | translate }}</button></div>
-            <ng-container><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></ng-container>
+            <div class="nav-tabs-custom">
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+            </div>
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            </ng-container>
         </div>
     </aside>
     <div class="form-area">
