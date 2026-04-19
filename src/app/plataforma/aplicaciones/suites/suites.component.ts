@@ -43,6 +43,7 @@ export class SuitesComponent implements OnInit, OnDestroy {
   lang = localStorage.getItem('lang')
   menuItems$!: Observable<NavigationItem[]>
   activeTab: 'menu' | 'filters' | 'main' = 'menu'
+  suscriptor: string = ''
 
   subscriptions = new Subscription()
   filtroAplicacionSubject = new BehaviorSubject<string>('todos')
@@ -73,6 +74,7 @@ export class SuitesComponent implements OnInit, OnDestroy {
     private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig
+        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
   }
 
   ngOnInit (): void {
@@ -125,7 +127,6 @@ export class SuitesComponent implements OnInit, OnDestroy {
       console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.')
       return
     }
-    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
     this.suitesSub = this._registrosService
       .geSuitesAP()
       .pipe(
@@ -134,7 +135,7 @@ export class SuitesComponent implements OnInit, OnDestroy {
             resp.suites.forEach((reg: any) => {
               reg.nomEstado = reg.estadoSuite ? 'Activo' : 'Inactivo'
               reg.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion
-              reg.imagenInicio = this._uploadService.getFilePath(codigoSuscriptor, 'suites', reg.imagenInicio)
+              reg.imagenInicio = this._uploadService.getFilePath(this.suscriptor, 'suites', reg.imagenInicio)
             })
             this.registros = resp.suites
             this.registrosFiltrado = resp.suites
@@ -154,7 +155,6 @@ export class SuitesComponent implements OnInit, OnDestroy {
     //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
     //   return;
     // }
-    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
     this.suitesTransformados$ = this._registrosService.suites$.pipe(
       switchMap((sts: PTLSuiteAPModel[]) => {
         if (!sts) return of([])
@@ -162,7 +162,7 @@ export class SuitesComponent implements OnInit, OnDestroy {
         const transformedSuites = sts.map((reg: any) => {
           reg.nomEstado = reg.estadoModulo ? 'Activo' : 'Inactivo'
           reg.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion
-          reg.imagenInicio = this._uploadService.getFilePath(codigoSuscriptor, 'suites', reg.imagenInicio)
+          reg.imagenInicio = this._uploadService.getFilePath(this.suscriptor, 'suites', reg.imagenInicio)
           return reg as PTLSuiteAPModel
         })
         this.suites = transformedSuites

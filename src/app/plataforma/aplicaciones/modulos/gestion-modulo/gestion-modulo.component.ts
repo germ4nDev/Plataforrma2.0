@@ -75,7 +75,7 @@ export class GestionModuloComponent implements OnInit {
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
         this.navCollapsedMob = false;
         this.moduloId = this._localStorageService.getObject<string>('regId') || '';
-        if (this.moduloId != '') {
+        if (this.moduloId != 'nuevo') {
             this.modoEdicion = true;
             this._registrosService.getRegistroById(this.moduloId).subscribe({
                 next: (resp: any) => {

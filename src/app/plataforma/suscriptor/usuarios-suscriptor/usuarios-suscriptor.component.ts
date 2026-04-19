@@ -239,13 +239,13 @@ export class UsuariosSuscriptorComponent implements OnInit {
   OnNuevoRegistroClick () {
     this._localStorageService.setObject('codId', this.codigoSuscriptor)
     this._localStorageService.setObject('regId', 'nuevo')
-    this.router.navigate(['/suscriptor/gestion-usuario'])
+    this.router.navigate(['/suscriptor/gestion-usuario-suscriptor'])
   }
 
   OnEditarRegistroClick (event: any) {
     const id = event.id || event
     this._localStorageService.setObject('regId', 'nuevo')
-    this.router.navigate(['/suscriptor/gestion-usuario'])
+    this.router.navigate(['/suscriptor/gestion-usuario-suscriptor'])
   }
 
   OnEliminarRegistroClick (id: string): void {

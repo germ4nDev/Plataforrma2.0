@@ -159,7 +159,7 @@ export class LocalStorageService {
   }
 
   getSuscriptorPlataformaLocalStorage () {
-    return 'e1a8fa99-15db-479b-a0a4-9c2be72273c9'
+    return 'plataforma'
   }
 
   getSuscriptorLocalStorage (): PTLSuscriptorModel | null {

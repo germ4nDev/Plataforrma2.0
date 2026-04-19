@@ -54,14 +54,13 @@ export class InicioSuitesComponent implements OnInit {
   }
 
   consultarSuites() {
-    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
     this.suitesSub = this._suitesService
       .geSuitesAP()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
             resp.suites.forEach((suite: any) => {
-              suite.imagenInicio = `${base_url}/upload/${codigoSuscriptor}/suites/${suite.imagenInicio}`;
+              suite.imagenInicio = `${base_url}/upload/${this.suscriptor}/suites/${suite.imagenInicio}`;
             });
             console.log('suites', resp.suites);
             this.suites = resp.suites;

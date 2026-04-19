@@ -19,13 +19,21 @@ import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP
 import { PtlmodulosApService } from 'src/app/theme/shared/service/ptlmodulos-ap.service'
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model'
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component'
-import { LocalStorageService, PtllogActividadesService, SwalAlertService } from 'src/app/theme/shared/service'
+import {
+  LocalStorageService,
+  PtlEmpresasScService,
+  PtllogActividadesService,
+  PtlusuariosEmpresasScService,
+  SwalAlertService
+} from 'src/app/theme/shared/service'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model'
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model'
 import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model'
 import { PTLSuscriptoresService, PtlusuariosScService } from 'src/app/theme/shared/service'
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service'
+import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model'
+import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model'
 
 @Component({
   selector: 'app-gestion-usuario-suscrptor',
@@ -45,24 +53,25 @@ export class GestionUsuarioSuscrptorComponent {
   windowWidth: number = 0
   form: undefined
   isSubmit: boolean
-  codigoUsuarioSC: string = ''
   modoEdicion: boolean = false
   aplicacionesSub?: Subscription
   aplicaciones: PTLAplicacionModel[] = []
   suitesSub?: Subscription
   modulosSub?: Subscription
   suites: PTLSuiteAPModel[] = []
-  modulosPadre: PTLModuloAP[] = []
+  empresasSC: PTLEmpresaSCModel[] = []
+  usuariosEmpresasSC: PTLUsuaioEmpresasSCModel[] = []
+  empresasSCSeleccionadas: PTLEmpresaSCModel[] = []
 
-  codigoModulo = uuidv4()
+  codigoUsuarioSC = uuidv4()
   tipoEditorTexto = 'basica'
   lockScreenSubscription: Subscription | undefined
   isLocked: boolean = false
   lockMessage: string = ''
 
-    suscriptores: PTLSuscriptorModel[] = []
-    usuariosSC: PTLUsuarioSCModel[] = []
-    usuarios: PTLUsuarioModel[] = []
+  suscriptores: PTLSuscriptorModel[] = []
+  usuariosSC: PTLUsuarioSCModel[] = []
+  usuarios: PTLUsuarioModel[] = []
   subscriptions = new Subscription()
 
   // #endregion VARIABLES
@@ -72,16 +81,16 @@ export class GestionUsuarioSuscrptorComponent {
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslateService,
-    private _aplicacionesService: PtlAplicacionesService,
-    private _suitesService: PtlSuitesAPService,
+    private _empresasSCService: PtlEmpresasScService,
+    private _usuariosEmpresasService: PtlusuariosEmpresasScService,
     private _registrosService: PTLUsuariosService,
     private _layoutInitializer: LayoutInitializerService,
     private _logActividadesService: PtllogActividadesService,
     private _swalAlertService: SwalAlertService,
     private _localStorageService: LocalStorageService,
-        private _usuariosService: PTLUsuariosService,
-        private _usuariosSCService: PtlusuariosScService,
-        private _suscriptoresService: PTLSuscriptoresService,
+    private _usuariosService: PTLUsuariosService,
+    private _usuariosSCService: PtlusuariosScService,
+    private _suscriptoresService: PTLSuscriptoresService,
     private _navigationService: NavigationService
   ) {
     this.isSubmit = false
@@ -90,13 +99,15 @@ export class GestionUsuarioSuscrptorComponent {
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
     this.navCollapsedMob = false
     this.codigoUsuarioSC = this._localStorageService.getObject<string>('regId') || ''
-    if (this.codigoUsuarioSC != '') {
+    console.log('codigoUsuarioSC', this.codigoUsuarioSC)
+    if (this.codigoUsuarioSC != 'nuevo') {
       this.modoEdicion = true
-      this._registrosService.getUsuarioById(this.codigoUsuarioSC).subscribe({
+      this._usuariosSCService.getUsuarioById(this.codigoUsuarioSC).subscribe({
         next: (resp: any) => {
           this.FormRegistro = resp.usuarioSC
           console.log('formRegistro modulo', this.FormRegistro)
           this.consultarSuscriptores(this.FormRegistro.codigoSuscriptor)
+          this.consultarEmpresasSC(this.FormRegistro.codigoSuscriptor)
           this.consultarUsuarios(this.FormRegistro.codigoUsuario)
         },
         error: () => {
@@ -105,6 +116,7 @@ export class GestionUsuarioSuscrptorComponent {
       })
     } else {
       this.modoEdicion = false
+      this.FormRegistro.codigoUsuarioSC = uuidv4()
     }
     this.route.queryParams.subscribe(params => {})
   }
@@ -131,12 +143,12 @@ export class GestionUsuarioSuscrptorComponent {
     }
     if (!this.modoEdicion) {
       console.log('modo edicion', this.modoEdicion)
-      this.FormRegistro.codigoAplicacion = ''
-      this.FormRegistro.codigoSuite = ''
-      this.FormRegistro.codigoPadre = ''
-      this.FormRegistro.codigoModulo = uuidv4()
-      // this.FormRegistro.codigoModulo = uuidv4();
       console.log('FormRegistro', this.FormRegistro)
+      //   this.FormRegistro.codigoAplicacion = ''
+      //   this.FormRegistro.codigoSuite = ''
+      //   this.FormRegistro.codigoPadre = ''
+      this.FormRegistro.codigoUsuarioSC = uuidv4()
+      // this.FormRegistro.codigoModulo = uuidv4();
     }
   }
 
@@ -164,55 +176,39 @@ export class GestionUsuarioSuscrptorComponent {
     )
   }
 
-  consultarMLodulos (codSuite?: string) {
-    this.modulosSub = this._registrosService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            console.log('todos los modulos', resp.modulos)
-            if (codSuite) {
-              const modulosSuite = resp.modulos.filter((x: { codigoSuite: string }) => x.codigoSuite == codSuite)
-              this.modulosPadre = modulosSuite.filter((x: { hijos: boolean }) => x.hijos == true)
-            } else {
-              this.modulosPadre = resp.modulos.filter((x: { hijos: boolean }) => x.hijos == true)
-            }
-            console.log('Todos las modulos padre', this.modulosPadre)
-            return
-          }
-        }),
-        catchError(err => {
-          console.log('Ha ocurrido un error', err)
-          return of(null)
-        })
-      )
-      .subscribe()
+  consultarEmpresasSC (codSuscriptor?: string) {
+    this.subscriptions.add(
+      this._empresasSCService.cargarRegistros().subscribe((resp: any) => {
+        if (resp.ok) {
+          this.empresasSC = resp.empresasSC.filter((x: { codigoSuscriptor: string | undefined }) => x.codigoSuscriptor == codSuscriptor)
+          console.log('Todos las empresasSC', this.empresasSC)
+          return
+        }
+      })
+    )
   }
 
-  onAplicacionChangeClick (event: any) {
+  onSuscriptorChangeClick (event: any) {
     const value = event.target.value
-    const app = this.aplicaciones.filter(x => x.codigoAplicacion == value)[0]
-    this.FormRegistro.codigoAplicacion = app.codigoAplicacion || ''
-    this.consultarSuites(app.codigoAplicacion)
+    this.consultarEmpresasSC(value)
+    const susc = this.suscriptores.filter(x => x.codigoSuscriptor == value)[0]
+    // this.FormRegistro.codigoAplicacion = app.codigoAplicacion || ''
+    // this.consultarSuites(app.codigoAplicacion)
   }
 
-  onSuiteChangeClick (event: any) {
+  onUsuarioChangeClick (event: any) {
     const value = event.target.value
-    const suite = this.suites.filter(x => x.codigoSuite == value)[0]
-    this.FormRegistro.codigoSuite = suite.codigoSuite || ''
-    this.consultarMLodulos(this.FormRegistro.codigoSuite)
+    const usua = this.usuarios.filter(x => x.codigoUsuario == value)[0]
+    // this.FormRegistro.codigoAplicacion = app.codigoAplicacion || ''
+    // this.consultarSuites(app.codigoAplicacion)
   }
 
-  onCodigoPadreChangeClick (event: any) {
+  onEmpresasSCClickChange (event: any, empresa: PTLEmpresaSCModel) {
     const value = event.target.value
-    this.FormRegistro.codigoPadre = value || ''
-  }
-
-  actualizarDescripcionVersion (nuevoContenido: string): void {
-    this.FormRegistro.descripcionModulo = nuevoContenido
-    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionModulo)
-    // if (this.validationForm && this.isSubmit) {
-    // }
+    const empre = this.empresasSC.filter(x => x.codigoEmpresaSC == value)[0]
+    this.empresasSCSeleccionadas.push(empre)
+    // this.FormRegistro.codigoAplicacion = app.codigoAplicacion || ''
+    // this.consultarSuites(app.codigoAplicacion)
   }
 
   btnGestionarRegistroClick (form: any) {
@@ -220,20 +216,15 @@ export class GestionUsuarioSuscrptorComponent {
     // if (!form.valid) {
     //   return;
     // }
-    if (form.value.hijos == true) {
-      form.value.codigoPadre = '0'
-      form.value.rutaModulo = ''
-    } else {
-      form.value.icon = ''
-    }
-    const registroData = form.value as PTLModuloAP
+    const registroData = form.value as PTLUsuarioSCModel
     console.log('insertar formRegistro', registroData)
+    this.onGestionarUsuarioEmpresa(this.FormRegistro.codigoUsuario || '')
     if (this.modoEdicion) {
       registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion
       registroData.fechaCreacion = this.FormRegistro.fechaCreacion
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
       registroData.fechaModificacion = new Date().toISOString()
-      this._registrosService.putModificarRegistro(registroData, this.codigoUsuarioSC).subscribe({
+      this._usuariosSCService.actualizarUsuario(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             const logData = {
@@ -243,7 +234,7 @@ export class GestionUsuarioSuscrptorComponent {
             }
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
-            this.router.navigate(['/aplicaciones/modulos'])
+            this.router.navigate(['/suscriptores/usuarios-suscriptor'])
           } else {
             const logData = {
               codigoTipoLog: '',
@@ -266,14 +257,13 @@ export class GestionUsuarioSuscrptorComponent {
         }
       })
     } else {
-      //   const registroData = form.value as PTLModuloAP;
-      registroData.codigoModulo = uuidv4()
+      registroData.codigoUsuarioSC = uuidv4()
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
       registroData.fechaCreacion = new Date().toISOString()
       registroData.codigoUsuarioModificacion = ''
       registroData.fechaModificacion = ''
       console.log('insertar registro', registroData)
-      this._registrosService.postCrearRegistro(registroData).subscribe({
+      this._usuariosSCService.crearUsuario(registroData).subscribe({
         next: (resp: any) => {
           console.log('reesp', resp.modulo)
           if (resp.ok) {
@@ -286,7 +276,7 @@ export class GestionUsuarioSuscrptorComponent {
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
             form.resetForm()
             this.isSubmit = false
-            this.router.navigate(['/aplicaciones/modulos'])
+            this.router.navigate(['/suscriptores/usuarios-suscriptor'])
           }
         },
         error: (err: any) => {
@@ -303,8 +293,51 @@ export class GestionUsuarioSuscrptorComponent {
     }
   }
 
+  onGestionarUsuarioEmpresa (codigoUsuario: string) {
+    this.empresasSC.forEach(emp => {
+      if (emp.checked === false) {
+        const existe = this.usuariosEmpresasSC.find(
+          (sel: any) => sel.codigoUsuario == codigoUsuario && sel.codigoEmpresaSC == emp.codigoEmpresaSC
+        )
+        if (existe) {
+          const reg = this.usuariosEmpresasSC.filter(
+            (sel: any) => sel.codigoUsuario == codigoUsuario && sel.codigoEmpresaSC == emp.codigoEmpresaSC
+          )[0]
+          const regCodigo = reg.codigoUsuarioEmpresaSC || ''
+          this._usuariosEmpresasService
+            .deleteEliminarRegistro(regCodigo)
+            .subscribe((data: any) => console.log('usuarios empresa eliminado con exito' + reg))
+        }
+      }
+    })
+
+    if (this.empresasSCSeleccionadas.length > 0) {
+      this.empresasSCSeleccionadas.forEach((empre: any) => {
+        const existe = this.usuariosEmpresasSC.find(
+          (sel: any) => sel.codigoUsuario == codigoUsuario && sel.codigoEmpresaSC == empre.codigoEmpresaSC
+        )
+        console.log('existe', existe)
+        if (!existe) {
+          const usuEmpresa: PTLUsuaioEmpresasSCModel = {
+            codigoUsuarioEmpresaSC: uuidv4(),
+            codigoEmpresaSC: empre.codigoEmpresaSC,
+            codigoUsuarioSC: codigoUsuario,
+            estadoUsuarioEmpresaSC: true,
+            codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
+            fechaCreacion: new Date().toISOString(),
+            codigoUsuarioModificacion: '',
+            fechaModificacion: ''
+          }
+          this._usuariosEmpresasService
+            .postCrearRegistro(usuEmpresa)
+            .subscribe((data: any) => console.log('usuarios empresa creado con exito' + usuEmpresa))
+        }
+      })
+    }
+  }
+
   btnRegresarClick () {
-    this.router.navigate(['/aplicaciones/modulos'])
+    this.router.navigate(['/suscriptores/usuarios-suscriptor'])
   }
 
   toggleNav (): void {

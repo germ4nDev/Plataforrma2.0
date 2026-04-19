@@ -70,6 +70,7 @@ export class GestionPaqueteComponent {
     isLocked: boolean = false;
     isPromocion: boolean = true;
     lockMessage: string = '';
+  suscriptor: string = ''
 
     // constructor
     constructor(
@@ -92,6 +93,7 @@ export class GestionPaqueteComponent {
         this.gradientConfig = GradientConfig;
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
         this.navCollapsedMob = false;
+        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         this.registroId = this._localStorageService.getObject<string>('regId') || '';
         console.log('regId', this.registroId);
         if (this.registroId !== '') {
@@ -191,7 +193,7 @@ export class GestionPaqueteComponent {
     onFileSelectedClick(event: any, tipo: string) {
         const file: File = event.target.files[0];
         const objUpload = {
-            suc: 'plataforma',
+            suc: this.suscriptor,
             tipo: 'paquetes',
             id: '0'
         };

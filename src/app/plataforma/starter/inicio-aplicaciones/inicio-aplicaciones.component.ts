@@ -83,13 +83,12 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
   }
 
   consultarAplicaciones () {
-    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
     this.subscriptions.add(
       this._aplicacionesService.getAplicaciones().subscribe((resp: any) => {
         if (resp.ok) {
           resp.aplicaciones.forEach((app: any) => {
             // app.imagenInicio = this._uploadService.getFilePath('aplicaciones', app.imagenInicio);
-            app.imagenInicio = `${base_url}/upload/${codigoSuscriptor}/aplicaciones/${app.imagenInicio}`
+            app.imagenInicio = `${base_url}/upload/${this.suscriptor}/aplicaciones/${app.imagenInicio}`
           })
           this.aplicaciones = resp.aplicaciones
           this.consultarUusuariosSC()

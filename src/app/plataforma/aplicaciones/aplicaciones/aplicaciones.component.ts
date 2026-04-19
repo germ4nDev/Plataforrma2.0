@@ -22,11 +22,21 @@ import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTL
 import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
+import { VideoPlayerComponent } from 'src/app/theme/shared/components/video-player/video-player.component'
 
 @Component({
   selector: 'app-aplicaciones',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    DatatableComponent,
+    VideoPlayerComponent
+  ],
   templateUrl: './aplicaciones.component.html',
   styleUrl: './aplicaciones.component.scss'
 })
@@ -40,13 +50,14 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
   lang = localStorage.getItem('lang')
   menuItems$!: Observable<NavigationItem[]>
   activeTab: 'menu' | 'filters' | 'main' = 'menu'
-
+  suscriptor: string = ''
   subscriptions = new Subscription()
   filtroCodigoSubject = new BehaviorSubject<string>('todos')
   filtroNombreSubject = new BehaviorSubject<string>('todos')
   filtroDescripcionSubject = new BehaviorSubject<string>('')
   filtroEstadoSubject = new BehaviorSubject<string>('todos')
-
+  tipoMedia: string = ''
+  video: string = ''
   aplicacionesTransformadas$: Observable<PTLAplicacionModel[]> = of([])
   aplicacionesFiltradas$: Observable<PTLAplicacionModel[]> = of([])
   aplicaciones: PTLAplicacionModel[] = []
@@ -61,6 +72,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
   }
 
   ngOnInit (): void {
@@ -80,19 +92,48 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe()
   }
 
+  getFileType (url: string): 'capture' | 'video' | 'documento' | 'desconocido' {
+    if (!url) return 'desconocido'
+
+    const cleanUrl = url.split(/[#?]/)[0]
+    const extension = cleanUrl.split('.').pop()?.toLowerCase() || ''
+
+    const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'bmp']
+    const videoExts = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv']
+    const docExts = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt']
+
+    if (imageExts.includes(extension)) return 'capture'
+    if (videoExts.includes(extension)) return 'video'
+    if (docExts.includes(extension)) return 'documento'
+
+    return 'desconocido'
+  }
+
   setupAplicacionesStream (): void {
     // const suscriptor = this._localStorageService.getSuscriptorLocalStorage() ? this._localStorageService.getSuscriptorLocalStorage()  : {};
     // if (!suscriptor || !suscriptor.codigoSuscriptor) {
     //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
     //   return;
     // }
-    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
     this.aplicacionesTransformadas$ = this._aplicacionesService.aplicaciones$.pipe(
       switchMap((apps: PTLAplicacionModel[]) => {
         if (!apps) return of([])
         const transformedApps = apps.map((app: any) => {
           app.nomEstado = app.estadoAplicacion ? 'Activo' : 'Inactivo'
-          app.captura = this._uploadService.getFilePath(codigoSuscriptor, 'aplicaciones', app.imagenInicio)
+          this.tipoMedia = this.getFileType(this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', app.imagenInicio))
+          if (this.tipoMedia == 'video') {
+            app.capture = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', app.imagenInicio)
+            app.imagenInicio = this._uploadService.getFilePath(this.suscriptor, 'galeria', 'video_pyr.png')
+            app.tipo = 'video'
+            console.log('app captura', app.capture)
+          } else if (this.tipoMedia == 'capture') {
+            app.capture = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', app.imagenInicio)
+            app.imagenInicio = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', app.imagenInicio)
+            app.tipo = 'capture'
+            console.log('app captura', app.capture)
+          }
+          console.log('tipo media', this.tipoMedia)
+
           return app as PTLAplicacionModel
         })
         this.aplicaciones = transformedApps
@@ -132,6 +173,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
           const textoFiltro = descripcion.toLowerCase()
           filteredApps = filteredApps.filter(app => (app.descripcionAplicacion || '').toLowerCase().includes(textoFiltro))
         }
+        console.log('**************data de las aplicaciones', filteredApps)
 
         return filteredApps
       })
@@ -160,7 +202,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
 
   columnasAplicaciopnes: ColumnMetadata[] = [
     {
-      name: 'captura',
+      name: 'imagenInicio',
       header: 'APLICACIONES.FOTO',
       type: 'image',
       isSortable: false
@@ -189,19 +231,19 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
       type: 'text'
     },
     {
-      name: 'captura',
+      name: 'capture',
       header: 'APLICACIONES.IMAGENINICIO',
       type: 'capture'
     }
   ]
 
   OnNuevaAplicaicionClick (): void {
-    this._localStorageService.setObject('regId', 'nuevo');
+    this._localStorageService.setObject('regId', 'nuevo')
     this.router.navigate(['aplicaciones/gestion-aplicacion'])
   }
 
   OnEditarAplicaicionClick (id: string): void {
-    this._localStorageService.setObject('regId', id);
+    this._localStorageService.setObject('regId', id)
     this.router.navigate(['aplicaciones/gestion-aplicacion'])
   }
 
@@ -225,7 +267,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
             }
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
             Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success')
-            this.setupAplicacionesStream();
+            this.setupAplicacionesStream()
           },
           error: () => {
             const logData = {

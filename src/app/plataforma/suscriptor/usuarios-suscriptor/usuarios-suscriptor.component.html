@@ -4,11 +4,11 @@
         <div class="card">
             <div class="nav-tabs-custom">
                 <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-          {{ 'PLATAFORMA.MENU' | translate }}
-        </button>
+                    {{ 'PLATAFORMA.MENU' | translate }}
+                </button>
                 <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-          {{ 'PLATAFORMA.FILTERS' | translate }}
-        </button>
+                    {{ 'PLATAFORMA.FILTERS' | translate }}
+                </button>
             </div>
 
             <ng-container *ngIf="activeTab === 'menu'">
@@ -27,10 +27,10 @@
                     <div class="filtro">
                         <small>{{ 'PLATAFORMA.STATUS' | translate }}</small>
                         <select (change)="onFiltroEstadoChange($event)" class="form-control form-select">
-              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-              <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-              <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
-            </select>
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+                        </select>
                     </div>
                 </div>
             </ng-container>

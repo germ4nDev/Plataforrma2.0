@@ -1,6 +1,6 @@
 export interface ColumnMetadata {
-  name: string;
-  header: string;
+  name: string
+  header: string
   type:
     | 'number'
     | 'price'
@@ -13,8 +13,9 @@ export interface ColumnMetadata {
     | 'estado'
     | 'array_text'
     | 'array_tags'
-    | 'unknown';
-  isSortable?: boolean;
+    | 'unknown'
+    | any
+  isSortable?: boolean
 }
 
 export type ColumnMetadataType =
@@ -25,15 +26,15 @@ export type ColumnMetadataType =
   | 'image'
   | 'capture'
   | 'color_chip'
-  | 'text'
   | 'estado'
   | 'array_text'
   | 'array_tags'
-  | 'unknown';
+  | 'unknown'
+  | any
 
 export interface ColumnMetadata {
-  name: string;
-  header: string;
+  name: string
+  header: string
   type:
     | 'number'
     | 'price'
@@ -46,6 +47,7 @@ export interface ColumnMetadata {
     | 'estado'
     | 'array_text'
     | 'array_tags'
-    | 'unknown';
-  isSortable?: boolean;
+    | 'unknown'
+    | any
+  isSortable?: boolean
 }

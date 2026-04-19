@@ -47,6 +47,7 @@
 @import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
 @import '../node_modules/angular-calendar/css/angular-calendar.css';
 @import './datatables_buttons.scss';
+@import 'video.js/dist/video-js.css';
 
 /* El resto de tu código SCSS... */
 
@@ -1016,21 +1017,24 @@ body.gradient-dark {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #ddd;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .image-table {
     width: 60px;
     object-fit: cover;
-    border: 1px solid #363636;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .capture-table {
-    width: 500px;
+    width: 600px;
     object-fit: cover;
-    border: 1px solid #363636;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.video-table {
+    width: 600px;
+    object-fit: cover;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 

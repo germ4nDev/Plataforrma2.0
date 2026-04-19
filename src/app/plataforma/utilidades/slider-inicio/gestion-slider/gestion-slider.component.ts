@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
-import { GradientConfig } from 'src/app/app-config';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { Router, ActivatedRoute } from '@angular/router'
+import { GradientConfig } from 'src/app/app-config'
 
 // project import
-import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { LocalStorageService, PtlSlidersInicioService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { PTLSlierInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model';
-import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service';
-import { Observable, Subscription } from 'rxjs';
+import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component'
+import { SharedModule } from 'src/app/theme/shared/shared.module'
+import { LocalStorageService, PtlSlidersInicioService, SwalAlertService, UploadFilesService } from 'src/app/theme/shared/service'
+import { TranslateModule, TranslateService } from '@ngx-translate/core'
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component'
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
+import { PTLSlierInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model'
+import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service'
+import { Observable, Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-gestion-slider',
@@ -26,31 +26,32 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class GestionSliderComponent implements OnInit {
   // private props
-  @Output() toggleSidebar = new EventEmitter<void>();
-  FormRegistro: PTLSlierInicioModel = new PTLSlierInicioModel();
-  menuItems!: Observable<NavigationItem[]>;
-  gradientConfig: any;
-  navCollapsed: boolean = false;
-  navCollapsedMob: boolean = false;
-  windowWidth: number = 0;
-  form: undefined;
-  isSubmit: boolean;
-  sliderId: number = 9;
-  modoEdicion: boolean = false;
-  slidersInicioSub?: Subscription;
-  slidersInicio: PTLSlierInicioModel[] = [];
-  tipoEditorTexto = 'basica';
+  @Output() toggleSidebar = new EventEmitter<void>()
+  FormRegistro: PTLSlierInicioModel = new PTLSlierInicioModel()
+  menuItems!: Observable<NavigationItem[]>
+  gradientConfig: any
+  navCollapsed: boolean = false
+  navCollapsedMob: boolean = false
+  windowWidth: number = 0
+  form: undefined
+  isSubmit: boolean
+  sliderId: number = 9
+  modoEdicion: boolean = false
+  slidersInicioSub?: Subscription
+  slidersInicio: PTLSlierInicioModel[] = []
+  tipoEditorTexto = 'basica'
+  suscPlataforma: string = ''
 
-  selectedFile: File | null = null;
-  previewUrl: string | ArrayBuffer | null = null;
-  userPhotoUrl: string = '';
-  fileName: string | null = null;
-  selectedFileUrl: string | null = null;
-  lockScreenSubscription: Subscription | undefined;
-  isLocked: boolean = false;
-  lockMessage: string = '';
+  selectedFile: File | null = null
+  previewUrl: string | ArrayBuffer | null = null
+  userPhotoUrl: string = ''
+  fileName: string | null = null
+  selectedFileUrl: string | null = null
+  lockScreenSubscription: Subscription | undefined
+  isLocked: boolean = false
+  lockMessage: string = ''
   // constructor
-  constructor(
+  constructor (
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslateService,
@@ -62,125 +63,127 @@ export class GestionSliderComponent implements OnInit {
     private _localStorageService: LocalStorageService,
     private _swalService: SwalAlertService
   ) {
-    this.isSubmit = false;
-    GradientConfig.header_fixed_layout = true;
-    this.gradientConfig = GradientConfig;
-    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
-    this.navCollapsedMob = false;
-    this.route.queryParams.subscribe((params) => {
-      this.sliderId = params['regId'];
+    this.isSubmit = false
+    GradientConfig.header_fixed_layout = true
+    this.gradientConfig = GradientConfig
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+    this.navCollapsedMob = false
+    this.route.queryParams.subscribe(params => {
+      this.sliderId = params['regId']
       if (this.sliderId) {
-        this.modoEdicion = true;
+        this.modoEdicion = true
         this._registrosService.getRegistroById(this.sliderId).subscribe({
           next: (resp: any) => {
-            this.selectedFileUrl = this.FormRegistro = resp.sliderInicio;
+            this.selectedFileUrl = this.FormRegistro = resp.sliderInicio
           },
-          error: (err) => {
-            this._swalAlertService.getAlertError('No se pudo obtener el slider por ' + err);
+          error: err => {
+            this._swalAlertService.getAlertError('No se pudo obtener el slider por ' + err)
           }
-        });
+        })
       } else {
-        this.modoEdicion = false;
+        this.modoEdicion = false
       }
-    });
+    })
   }
 
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
-    this._layoutInitializer.applyLayout();
+  ngOnInit () {
+    this._navigationService.getNavigationItems()
+    this.menuItems = this._navigationService.menuItems$
+    this._layoutInitializer.applyLayout()
     this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
       next: (message: string) => {
-        this._localStorageService.setFormRegistro(this.FormRegistro);
-        this.isLocked = true;
-        this.lockMessage = message;
+        this._localStorageService.setFormRegistro(this.FormRegistro)
+        this.isLocked = true
+        this.lockMessage = message
       },
-      error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
-    });
-    const form = this._localStorageService.getFormRegistro();
+      error: err => console.error('Error al suscribirse al evento de bloqueo:', err)
+    })
+    const form = this._localStorageService.getFormRegistro()
     if (form != undefined) {
-      this.FormRegistro = form;
-      this._localStorageService.removeFormRegistro();
+      this.FormRegistro = form
+      this._localStorageService.removeFormRegistro()
     }
   }
 
-  actualizarDescripcionVersion(nuevoContenido: string): void {
-    this.FormRegistro.descripcionSlider = nuevoContenido;
-    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionSlider);
+  actualizarDescripcionVersion (nuevoContenido: string): void {
+    this.FormRegistro.descripcionSlider = nuevoContenido
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionSlider)
     // if (this.validationForm && this.isSubmit) {
     // }
   }
 
-  onFileSelectedClick(event: any) {
-    const file: File = event.target.files[0];
+  onFileSelectedClick (event: any) {
+    const file: File = event.target.files[0]
     const objUpload = {
-      id: '0',
-      tipo: 'sliders'
-    };
+      susc: this.suscPlataforma,
+      tipo: 'sliders',
+      id: '0'
+    }
     if (file) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = (e: any) => {
-        this.selectedFileUrl = e.target.result;
-      };
-      reader.readAsDataURL(file);
+        this.selectedFileUrl = e.target.result
+      }
+      reader.readAsDataURL(file)
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path: any) => {
-          console.log('resultado', path);
-          this.FormRegistro.urlSlider = path.nombreArchivo;
+          console.log('resultado', path)
+          this.FormRegistro.urlSlider = path.nombreArchivo
         },
         error: () => {
-          this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'));
+          this._swalService.getAlertError(this.translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
         }
-      });
+      })
     } else {
-      this.selectedFileUrl = null;
-      this.userPhotoUrl = '';
+      this.selectedFileUrl = null
+      this.userPhotoUrl = ''
     }
   }
 
-  btnGestionarRegistroClick(form: any) {
-    this.isSubmit = true;
+  btnGestionarRegistroClick (form: any) {
+    this.isSubmit = true
     if (!form.valid) {
-      return;
+      return
     }
     if (this.modoEdicion) {
       this._registrosService.putModificarRegistro(this.FormRegistro, this.sliderId).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-            this.router.navigate(['/utilidades/slider-inicio']);
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
+            this.router.navigate(['/utilidades/slider-inicio'])
           } else {
-            this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
+            this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'))
           }
         },
         error: (err: any) => {
-          console.error(err);
-          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
+          console.error(err)
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'))
         }
-      });
+      })
     } else {
       this._registrosService.postCrearRegistro(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
-            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
-            form.resetForm();
-            this.isSubmit = false;
-            this.router.navigate(['/utilidades/slider-inicio']);
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+            form.resetForm()
+            this.isSubmit = false
+            this.router.navigate(['/utilidades/slider-inicio'])
           }
         },
         error: (err: any) => {
-          console.error(err);
-          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'));
+          console.error(err)
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'))
         }
-      });
+      })
     }
   }
 
-  btnRegresarClick() {
-    this.router.navigate(['/utilidades/slider-inicio']);
+  btnRegresarClick () {
+    this.router.navigate(['/utilidades/slider-inicio'])
   }
 
-  toggleNav(): void {
-    this.toggleSidebar.emit();
+  toggleNav (): void {
+    this.toggleSidebar.emit()
   }
 }

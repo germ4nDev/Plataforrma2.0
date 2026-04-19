@@ -60,6 +60,7 @@ export class GestionModulopqComponent {
   lockScreenSubscription: Subscription | undefined
   isLocked: boolean = false
   lockMessage: string = ''
+  suscriptor: string = ''
   // #endregion VARIABLES
 
   // constructor
@@ -83,17 +84,15 @@ export class GestionModulopqComponent {
     this.gradientConfig = GradientConfig
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
     this.navCollapsedMob = false
-    this.route.queryParams.subscribe(params => {
-      this.moduloId = params['regId']
-      this.codigoPaquete = params['regPQ']
-      console.log('asociar modulos para', this.codigoPaquete)
-      if (this.codigoPaquete) {
-        this.modoEdicion = true
-        this.consultarModulosPaquete(this.codigoPaquete)
-      } else {
-        this.modoEdicion = false
-      }
-    })
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+    this.moduloId = this._localStorageService.getObject<string>('regId') || ''
+    this.codigoPaquete = this._localStorageService.getObject<string>('regPQ') || ''
+    if (this.codigoPaquete) {
+      this.modoEdicion = true
+      this.consultarModulosPaquete(this.codigoPaquete)
+    } else {
+      this.modoEdicion = false
+    }
   }
 
   ngOnInit () {

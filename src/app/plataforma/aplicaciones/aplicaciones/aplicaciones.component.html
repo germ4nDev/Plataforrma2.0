@@ -42,8 +42,7 @@
                     <div class="filtro">
                         <small>{{ 'APLICACIONES.FILTROS.FILTRODECRIPCION' | translate }}</small>
                         <!-- El cambio en el input ahora solo notifica al BehaviorSubject -->
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control form-input" placeholder="{{ 'APLICACIONES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
                         <small>{{ 'APLICACIONES.FILTROS.FILTROESTADO' | translate }}</small>
@@ -64,24 +63,11 @@
             <div class="card-body">
                 <!-- CRÍTICO: Se usa el async pipe con el Observable aplicacionesFiltradas$ -->
                 <ng-container *ngIf="aplicacionesFiltradas$ | async as dataFiltrada">
-                    <app-data-table
-                        [data]="dataFiltrada"
-                        [idField]="'codigoAplicacion'"
-                        [tableTitle]="'APLICACIONES.TITLE' | translate"
-                        [metadataColumns]="columnasAplicaciopnes"
-                        [metadataDetailColumns]="columnasDetailRegistros"
-                        [showDetail]="true"
-                        [showActions]="true"
-                        [showNewButton]="true"
-                        [showViewButton]="false"
-                        [showEditButton]="true"
-                        [showDeleteButton]="true"
-                        [newButtonLabel]="'APLICACIONES.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                        (newRecord)="OnNuevaAplicaicionClick()"
-                        (editRecord)="OnEditarAplicaicionClick($event)"
+                    <app-data-table [data]="dataFiltrada" [idField]="'codigoAplicacion'" [tableTitle]="'APLICACIONES.TITLE' | translate" [metadataColumns]="columnasAplicaciopnes" [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true" [showNewButton]="true"
+                        [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [newButtonLabel]="'APLICACIONES.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevaAplicaicionClick()" (editRecord)="OnEditarAplicaicionClick($event)"
                         (deleteRecord)="OnEliminarAplicaicionClick($event)">
                     </app-data-table>
+                    <!-- <app-video-player [src]="video"></app-video-player> -->
                 </ng-container>
             </div>
         </div>

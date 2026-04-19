@@ -27,14 +27,14 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
   images: PTLSlierInicioModel[] = [];
   private readonly defaultPlaceholder = `${base_url}/upload/sliders/imagen-inicio.png`;
   private intervalId: any;
-  suscPlataforma: string = '';
+  suscriptor: string = '';
 
   constructor(
     private _sliderService: PtlSlidersInicioService,
     private _localStorageService: LocalStorageService,
     private _uploadService: UploadFilesService
   ) {
-    this.suscPlataforma = 'plataforma';
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
   }
 
   ngOnInit(): void {
@@ -44,7 +44,7 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
       const newImage = {
         nombreslider: 'Ner Image',
         urlSlider: 'imagen-inicio.png',
-        imageSlider: this._uploadService.getFilePath(this.suscPlataforma, 'sliders', 'imagen-inicio.png')
+        imageSlider: this._uploadService.getFilePath(this.suscriptor, 'sliders', 'imagen-inicio.png')
       };
       this.images.push(newImage);
     } else if (this.tipoSlider == 3) {
@@ -72,7 +72,7 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
         tap((resp: any) => {
           if (resp.ok) {
             resp.slidersInicio.forEach((slider: any) => {
-              slider.imageSlider = this._uploadService.getFilePath(this.suscPlataforma, 'sliders', slider.urlSlider);
+              slider.imageSlider = this._uploadService.getFilePath(this.suscriptor, 'sliders', slider.urlSlider);
             });
             this.images = resp.slidersInicio;
             this.startAutoSlide();

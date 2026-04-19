@@ -17,15 +17,15 @@ import { PTLTiposValoresModel } from 'src/app/theme/shared/_helpers/models/PTLTi
 import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLValoresUnitarios.model'
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component'
 import {
-    PtlAplicacionesService,
-    PtlSuitesAPService,
-    PtlmodulosApService,
-    PtllogActividadesService,
-    SwalAlertService,
-    LocalStorageService,
-    NavigationService,
-    PtlvaloresUnitariosService,
-    PtltiposValoresService,
+  PtlAplicacionesService,
+  PtlSuitesAPService,
+  PtlmodulosApService,
+  PtllogActividadesService,
+  SwalAlertService,
+  LocalStorageService,
+  NavigationService,
+  PtlvaloresUnitariosService,
+  PtltiposValoresService
 } from 'src/app/theme/shared/service'
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service'
 import { LoadingService } from 'src/app/theme/shared/service/loading.service'
@@ -35,294 +35,303 @@ import { SharedModule } from 'src/app/theme/shared/shared.module'
 import { v4 as uuidv4 } from 'uuid'
 
 @Component({
-    selector: 'app-gestion-itempq',
-    standalone: true,
-    imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
-    templateUrl: './gestion-itempq.component.html',
-    styleUrl: './gestion-itempq.component.scss'
+  selector: 'app-gestion-itempq',
+  standalone: true,
+  imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+  templateUrl: './gestion-itempq.component.html',
+  styleUrl: './gestion-itempq.component.scss'
 })
 export class GestionItempqComponent {
-    // #region VARIABLES
-    @Output() toggleSidebar = new EventEmitter<void>()
-    FormRegistro: PTLItemPaquete = new PTLItemPaquete()
-    menuItems$!: Observable<NavigationItem[]>
-    gradientConfig: any
-    navCollapsed: boolean = false
-    navCollapsedMob: boolean = false
-    windowWidth: number = 0
-    form: undefined
-    isSubmit: boolean
-    modoEdicion: boolean = false
-    tiposValorSub?: Subscription
-    tiposValor: PTLTiposValoresModel[] = []
-    listaPreciosSub?: Subscription
-    listaPrecios: PTLValoresUnitarios[] = []
-    itemsSeleccionados: PTLValoresUnitarios[] = []
-    registroId: string = ''
-    codigoPaquete: string = ''
-    tipoEditorTexto = 'basica'
-    lockScreenSubscription: Subscription | undefined
-    isLocked: boolean = false
-    lockMessage: string = ''
-    // #endregion VARIABLES
+  // #region VARIABLES
+  @Output() toggleSidebar = new EventEmitter<void>()
+  FormRegistro: PTLItemPaquete = new PTLItemPaquete()
+  menuItems$!: Observable<NavigationItem[]>
+  gradientConfig: any
+  navCollapsed: boolean = false
+  navCollapsedMob: boolean = false
+  windowWidth: number = 0
+  form: undefined
+  isSubmit: boolean
+  modoEdicion: boolean = false
+  tiposValorSub?: Subscription
+  tiposValor: PTLTiposValoresModel[] = []
+  listaPreciosSub?: Subscription
+  listaPrecios: PTLValoresUnitarios[] = []
+  itemsSeleccionados: PTLValoresUnitarios[] = []
+  registroId: string = ''
+  codigoPaquete: string = ''
+  tipoEditorTexto = 'basica'
+  lockScreenSubscription: Subscription | undefined
+  isLocked: boolean = false
+  lockMessage: string = ''
+  suscriptor: string = ''
+  // #endregion VARIABLES
 
-    // constructor
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private translate: TranslateService,
-        private _registrosService: PtlItemsPaqueteService,
-        private _tiposValoresService: PtltiposValoresService,
-        private _listaPreciosService: PtlvaloresUnitariosService,
-        private _layoutInitializer: LayoutInitializerService,
-        private _logActividadesService: PtllogActividadesService,
-        private _swalAlertService: SwalAlertService,
-        private _localStorageService: LocalStorageService,
-        private _loadingService: LoadingService,
-        private _navigationService: NavigationService
-    ) {
-        this.isSubmit = false
-        GradientConfig.header_fixed_layout = true
-        this.gradientConfig = GradientConfig
-        this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
-        this.navCollapsedMob = false
-        this.registroId = this._localStorageService.getObject<string>('regId') || '';
-        this.codigoPaquete = this._localStorageService.getObject<string>('regPQ') || '';
-        console.log('asociar modulos para', this.codigoPaquete)
-        if (this.registroId !== '') {
-            this.modoEdicion = true
-            this._registrosService.getRegistros().subscribe({
-                next: (resp: any) => {
-                    const itemsPaquete = resp.itemsPaquete.filter((x: { codigoItem: string }) => x.codigoItem === this.registroId)
-                    this.itemsSeleccionados = itemsPaquete
-                    console.log('modulos paquete', itemsPaquete)
-                },
-                error: () => {
-                    this._swalAlertService.getAlertError('No se pudo obtener los Items del Paquete.')
-                }
-            })
-        } else {
-            this.modoEdicion = false
+  // constructor
+  constructor (
+    private router: Router,
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+    private _registrosService: PtlItemsPaqueteService,
+    private _tiposValoresService: PtltiposValoresService,
+    private _listaPreciosService: PtlvaloresUnitariosService,
+    private _layoutInitializer: LayoutInitializerService,
+    private _logActividadesService: PtllogActividadesService,
+    private _swalAlertService: SwalAlertService,
+    private _localStorageService: LocalStorageService,
+    private _loadingService: LoadingService,
+    private _navigationService: NavigationService
+  ) {
+    this.isSubmit = false
+    GradientConfig.header_fixed_layout = true
+    this.gradientConfig = GradientConfig
+    this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
+    this.navCollapsedMob = false
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+    this.registroId = this._localStorageService.getObject<string>('regId') || ''
+    this.codigoPaquete = this._localStorageService.getObject<string>('regPQ') || ''
+    console.log('asociar modulos para', this.codigoPaquete)
+    if (this.registroId !== '') {
+      this.modoEdicion = true
+      this._registrosService.getRegistros().subscribe({
+        next: (resp: any) => {
+          const itemsPaquete = resp.itemsPaquete.filter((x: { codigoItem: string }) => x.codigoItem === this.registroId)
+          this.itemsSeleccionados = itemsPaquete
+          console.log('modulos paquete', itemsPaquete)
+        },
+        error: () => {
+          this._swalAlertService.getAlertError('No se pudo obtener los Items del Paquete.')
         }
+      })
+    } else {
+      this.modoEdicion = false
     }
+  }
 
-    ngOnInit() {
-        this._layoutInitializer.applyLayout()
-        this._navigationService.getNavigationItems()
-        this.menuItems$ = this._navigationService.menuItems$
-        // TODO Replicar en todos los modulos de gestion de datos
-        this.consultarTiposValor()
-        this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
-            next: (message: string) => {
-                this._localStorageService.setFormRegistro(this.FormRegistro)
-                this.isLocked = true
-                this.lockMessage = message
-            },
-            error: err => console.error('Error al suscribirse al evento de bloqueo:', err)
+  ngOnInit () {
+    this._layoutInitializer.applyLayout()
+    this._navigationService.getNavigationItems()
+    this.menuItems$ = this._navigationService.menuItems$
+    // TODO Replicar en todos los modulos de gestion de datos
+    this.consultarTiposValor()
+    this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
+      next: (message: string) => {
+        this._localStorageService.setFormRegistro(this.FormRegistro)
+        this.isLocked = true
+        this.lockMessage = message
+      },
+      error: err => console.error('Error al suscribirse al evento de bloqueo:', err)
+    })
+    const form = this._localStorageService.getFormRegistro()
+    if (form != undefined) {
+      this.FormRegistro = form
+      this._localStorageService.removeFormRegistro()
+    }
+    console.log('modoEdicion', this.modoEdicion)
+
+    if (!this.modoEdicion) {
+      console.log('modo edicion', this.modoEdicion)
+      this.FormRegistro.tipoValorId = 0
+      this.FormRegistro.codigoValor = ''
+      this.FormRegistro.codigoItem = uuidv4()
+      console.log('FormRegistro', this.FormRegistro)
+    }
+  }
+
+  consultarTiposValor () {
+    this.tiposValorSub = this._tiposValoresService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.tiposValor = resp.tiposValor.filter((x: { estadoTipo: boolean }) => x.estadoTipo == true)
+            console.log('las tiposValor', this.tiposValor)
+            return
+          }
+        }),
+        catchError(err => {
+          console.log('Ha ocurrido un error', err)
+          return of(null)
         })
-        const form = this._localStorageService.getFormRegistro()
-        if (form != undefined) {
-            this.FormRegistro = form
-            this._localStorageService.removeFormRegistro()
-        }
-        console.log('modoEdicion', this.modoEdicion)
+      )
+      .subscribe()
+  }
 
-        if (!this.modoEdicion) {
-            console.log('modo edicion', this.modoEdicion)
-            this.FormRegistro.tipoValorId = 0;
-            this.FormRegistro.codigoValor = ''
-            this.FormRegistro.codigoItem = uuidv4()
-            console.log('FormRegistro', this.FormRegistro)
-        }
+  consultarListaPrecios (tipoId: number) {
+    this.listaPreciosSub = this._listaPreciosService
+      .getRegistros()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            const activos = resp.valoresUnitarios.filter((x: { estadoValor: boolean }) => x.estadoValor == true)
+            this.listaPrecios = activos.filter((x: { tipoValorId: number }) => x.tipoValorId == tipoId)
+            console.log('las listaPrecios', this.listaPrecios)
+            return
+          }
+        }),
+        catchError(err => {
+          console.log('Ha ocurrido un error', err)
+          return of(null)
+        })
+      )
+      .subscribe()
+  }
+
+  actualizarDescripcionVersion (nuevoContenido: string): void {
+    this.FormRegistro.descripcionItem = nuevoContenido
+    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionItem)
+    // if (this.validationForm && this.isSubmit) {
+    // }
+  }
+
+  onTipoValorChangeClick (evento: any) {
+    console.log('evento', evento.target.value)
+    const tipo = this.tiposValor.findIndex(x => x.tipoValorId == evento.target.value)
+    const tipoValor = this.tiposValor[tipo]
+    this.consultarListaPrecios(tipoValor.tipoValorId || 0)
+  }
+
+  onValorChangeClick (evento: any) {
+    console.log('asociar el valorlo', evento.target.value)
+    const tipo = this.listaPrecios.findIndex(x => x.codigoValor == evento.target.value)
+    const valor = this.listaPrecios[tipo]
+    this.FormRegistro.nombreItem = valor.nombreValor || ''
+    this.FormRegistro.valorUnitario = valor.valorUnitario || 0
+    this.FormRegistro.cantidad = 0
+    this.FormRegistro.valoresAdicionales = 0
+    this.FormRegistro.valorTotal =
+      this.FormRegistro.cantidad == 0 ? valor.valorUnitario : this.FormRegistro.valorUnitario * this.FormRegistro.cantidad
+  }
+
+  onCantidadChangeClick (evento: any) {
+    console.log('valor evento', Number(evento.target.value))
+    this.FormRegistro.cantidad = Number(evento.target.value)
+    const operacion =
+      Number(this.FormRegistro.cantidad) > 0
+        ? Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad)
+        : Number(this.FormRegistro.valorUnitario)
+    this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales)
+  }
+
+  onValoresAdicionalesChangeClick (evento: any) {
+    console.log('valor evento', Number(evento.target.value))
+    this.FormRegistro.valoresAdicionales = Number(evento.target.value)
+    const operacion =
+      Number(this.FormRegistro.cantidad) > 0
+        ? Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad)
+        : Number(this.FormRegistro.valorUnitario)
+    this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales)
+  }
+
+  btnGestionarRegistroClick (form: NgForm) {
+    this.isSubmit = true
+    if (!form.valid) {
+      return
     }
+    const registroData = form.value as PTLItemPaquete
+    // console.log('gestionar registro', registroData);
 
-    consultarTiposValor() {
-        this.tiposValorSub = this._tiposValoresService
-            .getRegistros()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        this.tiposValor = resp.tiposValor.filter((x: { estadoTipo: boolean }) => x.estadoTipo == true)
-                        console.log('las tiposValor', this.tiposValor)
-                        return
-                    }
-                }),
-                catchError(err => {
-                    console.log('Ha ocurrido un error', err)
-                    return of(null)
-                })
-            )
-            .subscribe()
-    }
-
-    consultarListaPrecios(tipoId: number) {
-        this.listaPreciosSub = this._listaPreciosService
-            .getRegistros()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        const activos = resp.valoresUnitarios.filter((x: { estadoValor: boolean }) => x.estadoValor == true)
-                        this.listaPrecios = activos.filter((x: { tipoValorId: number }) => x.tipoValorId == tipoId)
-                        console.log('las listaPrecios', this.listaPrecios)
-                        return
-                    }
-                }),
-                catchError(err => {
-                    console.log('Ha ocurrido un error', err)
-                    return of(null)
-                })
-            )
-            .subscribe()
-    }
-
-    actualizarDescripcionVersion(nuevoContenido: string): void {
-        this.FormRegistro.descripcionItem = nuevoContenido
-        console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionItem)
-        // if (this.validationForm && this.isSubmit) {
-        // }
-    }
-
-    onTipoValorChangeClick(evento: any) {
-        console.log('evento', evento.target.value);
-        const tipo = this.tiposValor.findIndex(x => x.tipoValorId == evento.target.value);
-        const tipoValor = this.tiposValor[tipo];
-        this.consultarListaPrecios(tipoValor.tipoValorId || 0);
-    }
-
-    onValorChangeClick(evento: any) {
-        console.log('asociar el valorlo', evento.target.value);
-        const tipo = this.listaPrecios.findIndex(x => x.codigoValor == evento.target.value);
-        const valor = this.listaPrecios[tipo];
-        this.FormRegistro.nombreItem = valor.nombreValor || '';
-        this.FormRegistro.valorUnitario = valor.valorUnitario || 0;
-        this.FormRegistro.cantidad = 0;
-        this.FormRegistro.valoresAdicionales = 0;
-        this.FormRegistro.valorTotal = this.FormRegistro.cantidad == 0 ? valor.valorUnitario : this.FormRegistro.valorUnitario * this.FormRegistro.cantidad;
-    }
-
-    onCantidadChangeClick(evento: any) {
-        console.log('valor evento', Number(evento.target.value));
-        this.FormRegistro.cantidad = Number(evento.target.value);
-        const operacion = Number(this.FormRegistro.cantidad) > 0 ? Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad) : Number(this.FormRegistro.valorUnitario);
-        this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales);
-    }
-
-    onValoresAdicionalesChangeClick(evento: any) {
-        console.log('valor evento', Number(evento.target.value));
-        this.FormRegistro.valoresAdicionales = Number(evento.target.value);
-        const operacion = Number(this.FormRegistro.cantidad) > 0 ? Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad) : Number(this.FormRegistro.valorUnitario);
-        this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales);
-    }
-
-    btnGestionarRegistroClick(form: NgForm) {
-        this.isSubmit = true;
-        if (!form.valid) {
-            return;
-        }
-        const registroData = form.value as PTLItemPaquete;
-        // console.log('gestionar registro', registroData);
-
-        if (this.modoEdicion) {
-            registroData.codigoItem = this.FormRegistro.codigoItem;
-            registroData.codigoPaquete = this.codigoPaquete;
-            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            registroData.fechaModificacion = new Date().toISOString();
-            registroData.tipoValorId = Number(this.FormRegistro.tipoValorId);
-            registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad;
+    if (this.modoEdicion) {
+      registroData.codigoItem = this.FormRegistro.codigoItem
+      registroData.codigoPaquete = this.codigoPaquete
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+      registroData.fechaModificacion = new Date().toISOString()
+      registroData.tipoValorId = Number(this.FormRegistro.tipoValorId)
+      registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad
+      this._registrosService.putModificarRegistro(registroData).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
             this._registrosService.putModificarRegistro(registroData).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        this._registrosService.putModificarRegistro(registroData).subscribe({
-                            next: () => {
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '201',
-                                    descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
-                                };
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                                this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-                                this._localStorageService.setObject('regId', this.codigoPaquete);
-                                this.router.navigate(['aplicaciones/items-paquete']);
-                            },
-                            error: (err) => {
-                                console.error('Error al actualizar requerimiento', err);
-                                const logData = {
-                                    codigoTipoLog: '',
-                                    codigoRespuesta: '501',
-                                    descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-                                };
-                                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
-                            }
-                        });
-                    } else {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + resp.mensaje
-                        };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + resp.mensaje);
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err);
-                    const logData = {
-                        codigoTipoLog: '',
-                        codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-                    };
-                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
+              next: () => {
+                const logData = {
+                  codigoTipoLog: '',
+                  codigoRespuesta: '201',
+                  descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
                 }
-            });
-        } else {
-            console.log('nuevo formregistro', this.FormRegistro.codigoPaquete);
-            registroData.codigoItem = uuidv4();
-            registroData.codigoPaquete = this.codigoPaquete;
-            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-            registroData.fechaCreacion = new Date().toISOString();
-            registroData.codigoUsuarioModificacion = '';
-            registroData.fechaModificacion = '';
-            registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad;
-            registroData.tipoValorId = Number(this.FormRegistro.tipoValorId);
-            console.log('insertar registro', registroData);
-            this._registrosService.postCrearRegistro(registroData).subscribe({
-                next: (resp: any) => {
-                    if (resp.ok) {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR')
-                        };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
-                        form.resetForm();
-                        this.isSubmit = false;
-                        this._localStorageService.setObject('regId', this.codigoPaquete);
-                        this.router.navigate(['aplicaciones/items-paquete']);
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err);
-                    const logData = {
-                        codigoTipoLog: '',
-                        codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-                    };
-                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+                this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
+                this._localStorageService.setObject('regId', this.codigoPaquete)
+                this.router.navigate(['aplicaciones/items-paquete'])
+              },
+              error: err => {
+                console.error('Error al actualizar requerimiento', err)
+                const logData = {
+                  codigoTipoLog: '',
+                  codigoRespuesta: '501',
+                  descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
                 }
-            });
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje)
+              }
+            })
+          } else {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + resp.mensaje
+            }
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + resp.mensaje)
+          }
+        },
+        error: (err: any) => {
+          console.error(err)
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+          }
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje)
         }
+      })
+    } else {
+      console.log('nuevo formregistro', this.FormRegistro.codigoPaquete)
+      registroData.codigoItem = uuidv4()
+      registroData.codigoPaquete = this.codigoPaquete
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+      registroData.fechaCreacion = new Date().toISOString()
+      registroData.codigoUsuarioModificacion = ''
+      registroData.fechaModificacion = ''
+      registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad
+      registroData.tipoValorId = Number(this.FormRegistro.tipoValorId)
+      console.log('insertar registro', registroData)
+      this._registrosService.postCrearRegistro(registroData).subscribe({
+        next: (resp: any) => {
+          if (resp.ok) {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '501',
+              descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR')
+            }
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+            form.resetForm()
+            this.isSubmit = false
+            this._localStorageService.setObject('regId', this.codigoPaquete)
+            this.router.navigate(['aplicaciones/items-paquete'])
+          }
+        },
+        error: (err: any) => {
+          console.error(err)
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+          }
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje)
+        }
+      })
     }
+  }
 
-    btnRegresarClick() {
-        this._localStorageService.setObject('regId', this.codigoPaquete);
-        this.router.navigate(['aplicaciones/modulos-paquete'])
-    }
+  btnRegresarClick () {
+    this._localStorageService.setObject('regId', this.codigoPaquete)
+    this.router.navigate(['aplicaciones/modulos-paquete'])
+  }
 
-    toggleNav(): void {
-        this.toggleSidebar.emit()
-    }
+  toggleNav (): void {
+    this.toggleSidebar.emit()
+  }
 }
