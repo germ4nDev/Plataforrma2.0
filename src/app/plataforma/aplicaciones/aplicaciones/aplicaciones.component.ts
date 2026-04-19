@@ -133,7 +133,6 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
             console.log('app captura', app.capture)
           }
           console.log('tipo media', this.tipoMedia)
-
           return app as PTLAplicacionModel
         })
         this.aplicaciones = transformedApps

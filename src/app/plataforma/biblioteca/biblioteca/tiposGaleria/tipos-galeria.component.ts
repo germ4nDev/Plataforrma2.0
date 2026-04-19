@@ -9,35 +9,33 @@ import { Observable, Subscription, of, BehaviorSubject, combineLatest } from 'rx
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 
-import { PTLBiblioteca } from 'src/app/theme/shared/_helpers/models/PTLBiblioteca.model';
+import { PTLTiposGaleria } from 'src/app/theme/shared/_helpers/models/PTLTiposGaleria.model';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { PtlBibliotecaService } from 'src/app/theme/shared/service/ptlbiblioteca.service';
+import { PtlTiposGaleriaService } from 'src/app/theme/shared/service/ptltiposgaleria.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
 import Swal from 'sweetalert2';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
-import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtllogActividadesService } from 'src/app/theme/shared/service';
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
-  selector: 'app-biblioteca',
+  selector: 'app-tipos-galeria',
   standalone: true,
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
-  templateUrl: './biblioteca.component.html',
-  styleUrl: './biblioteca.component.scss'
+  templateUrl: './tipos-galeria.component.html',
+  styleUrl: './tipos-galeria.component.scss'
 })
-export class BibliotecaComponent implements OnInit, OnDestroy {
+export class TiposGaleriaComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
   DataModel: BaseSessionModel = new BaseSessionModel();
   DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
-  moduloTituloExcel: string = '';
   hasFiltersSlot: boolean = false;
   gradientConfig;
-  lang = localStorage.getItem('lang');
   menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
@@ -47,9 +45,9 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
   filtroDescripcionSubject = new BehaviorSubject<string>('');
   filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-  bibliotecaTransformada$: Observable<PTLBiblioteca[]> = of([]);
-  bibliotecaFiltrada$: Observable<PTLBiblioteca[]> = of([]);
-  bibliotecas: PTLBiblioteca[] = [];
+  tiposTransformada$: Observable<PTLTiposGaleria[]> = of([]);
+  tiposFiltrada$: Observable<PTLTiposGaleria[]> = of([]);
+  tipos: PTLTiposGaleria[] = [];
 
   constructor(
     private router: Router,
@@ -57,15 +55,14 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
     private _navigationService: NavigationService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
-    private _bibliotecaService: PtlBibliotecaService,
-    private _uploadService: UploadFilesService
+    private _tiposGaleriaService: PtlTiposGaleriaService
   ) {
     this.gradientConfig = GradientConfig;
   }
 
   cargarDatos(): void {
     this.subscriptions.add(
-      this._bibliotecaService.cargarBiblioteca().subscribe(
+      this._tiposGaleriaService.cargarTiposGaleria().subscribe(
         () => console.log('Datos de Tipos de Galería actualizados'),
         (err) => console.error('Error al cargar Tipos de Galería:', err)
       )
@@ -76,56 +73,57 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
-    this.setupBibliotecaStream();
+    this.setupTiposStream();
+
+    this.subscriptions.add();
     this.cargarDatos();
+    //   this._tiposGaleriaService.cargarTiposGaleria().subscribe(
+    //     () => console.log('Datos de Tipos de Galería cargados'),
+    //     (err) => console.error('Error al cargar Tipos de Galería:', err)
+    //   )
+    // );
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
 
-  setupBibliotecaStream(): void {
-    this.bibliotecaTransformada$ = this._bibliotecaService.biblioteca$.pipe(
-      switchMap((libs: PTLBiblioteca[]) => {
-        if (!libs) return of([]);
-        const transformed = libs.map((lib: any) => {
-          lib.nomEstado = lib.estadoBiblioteca ? 'Activo' : 'Inactivo';
-          lib.imagenBiblioteca = this._uploadService.getFilePath('plataforma', 'biblioteca', lib.imagenBiblioteca);
-
-          return lib as PTLBiblioteca;
+  setupTiposStream(): void {
+    this.tiposTransformada$ = this._tiposGaleriaService.tiposGaleria$.pipe(
+      switchMap((tipos: PTLTiposGaleria[]) => {
+        if (!tipos) return of([]);
+        const transformed = tipos.map((t: any) => {
+          t.nomEstado = t.estadoTipo ? 'Activo' : 'Inactivo';
+          return t as PTLTiposGaleria;
         });
-        this.bibliotecas = transformed;
+        this.tipos = transformed;
         return of(transformed);
       }),
       catchError((err) => {
-        console.error('Error en el stream de biblioteca:', err);
+        console.error('Error en el stream de Tipos de Galería:', err);
         return of([]);
       })
     );
 
-    this.bibliotecaFiltrada$ = combineLatest([
-      this.bibliotecaTransformada$.pipe(startWith([])),
+    this.tiposFiltrada$ = combineLatest([
+      this.tiposTransformada$.pipe(startWith([])),
       this.filtroCodigoSubject,
       this.filtroNombreSubject,
       this.filtroDescripcionSubject,
       this.filtroEstadoSubject
     ]).pipe(
-      map(([libs, codigo, nombre, descripcion, estado]) => {
-        let filtered = libs;
+      map(([tipos, codigo, nombre, descripcion, estado]) => {
+        let filtered = tipos;
 
-        if (codigo !== 'todos') {
-          filtered = filtered.filter((lib) => lib.codigoBiblioteca === codigo);
-        }
-        if (nombre !== 'todos') {
-          filtered = filtered.filter((lib) => lib.nombreBiblioteca === nombre);
-        }
+        if (codigo !== 'todos') filtered = filtered.filter((t) => t.codigoTipo === codigo);
+        if (nombre !== 'todos') filtered = filtered.filter((t) => t.nombreTipo === nombre);
         if (estado !== 'todos') {
           const estadoBoolean = estado === 'true';
-          filtered = filtered.filter((lib) => lib.estadoBiblioteca === estadoBoolean);
+          filtered = filtered.filter((t) => t.estadoTipo === estadoBoolean);
         }
         if (descripcion) {
           const textoFiltro = descripcion.toLowerCase();
-          filtered = filtered.filter((lib) => (lib.descripcionBiblioteca || '').toLowerCase().includes(textoFiltro));
+          filtered = filtered.filter((t) => (t.descripcionTipo || '').toLowerCase().includes(textoFiltro));
         }
         return filtered;
       })
@@ -145,65 +143,45 @@ export class BibliotecaComponent implements OnInit, OnDestroy {
     this.filtroEstadoSubject.next(evento.target.value);
   }
 
-  columnasBiblioteca: ColumnMetadata[] = [
-    {
-      name: 'imagenBiblioteca',
-      header: 'APLICACIONES.FOTO',
-      type: 'image',
-      isSortable: false
-    },
-    { name: 'codigoBiblioteca', header: 'BIBLIOTECA.CODE', type: 'text' },
-    { name: 'nombreBiblioteca', header: 'BIBLIOTECA.NAME', type: 'text' },
-    { name: 'nomEstado', header: 'BIBLIOTECA.STATUS', type: 'estado' }
+  columnasTipos: ColumnMetadata[] = [
+    { name: 'codigoTipo', header: 'TIPOSGALERIA.CODE', type: 'text' },
+    { name: 'nombreTipo', header: 'TIPOSGALERIA.NAME', type: 'text' },
+    { name: 'nomEstado', header: 'TIPOSGALERIA.STATUS', type: 'estado' }
   ];
 
-  columnasDetailRegistros: ColumnMetadata[] = [
-    { name: 'descripcionBiblioteca', header: 'BIBLIOTECA.DESCRIPTION', type: 'text' },
-    {
-      name: 'imagenBiblioteca',
-      header: 'APLICACIONES.IMAGENINICIO',
-      type: 'capture'
+  columnasDetailRegistros: ColumnMetadata[] = [{ name: 'descripcionTipo', header: 'TIPOSGALERIA.DESCRIPTION', type: 'text' }];
+
+  OnNuevoTipoClick(): void {
+    this.router.navigate(['/biblioteca/gestion-tipos-galeria'], { queryParams: { regId: 'nuevo' } });
+  }
+
+  OnEditarTipoClick(id: string): void {
+    this.router.navigate(['/biblioteca/gestion-tipos-galeria'], { queryParams: { regId: id } });
+  }
+
+  OnEliminarTipoClick(evento: any): void {
+    const id = typeof evento === 'string' ? evento : evento?.codigoTipo || evento?.id;
+
+    if (!id) {
+      console.error('No se pudo extraer el ID del registro a eliminar. El evento recibido fue:', evento);
+      return;
     }
-  ];
 
-  OnNuevaBibliotecaClick(): void {
-    this.router.navigate(['biblioteca/gestion-biblioteca'], { queryParams: { regId: 'nuevo' } });
-  }
-
-  OnEditarBibliotecaClick(id: string): void {
-    this.router.navigate(['biblioteca/gestion-biblioteca'], { queryParams: { regId: id } });
-  }
-
-  OnEliminarBibliotecaClick(id: string): void {
     Swal.fire({
-      title: this.translate.instant('BIBLIOTECA.ELIMINARTITULO'),
-      text: this.translate.instant('BIBLIOTECA.ELIMINARTEXTO'),
+      title: this.translate.instant('TIPOSGALERIA.ELIMINARTITULO'),
+      text: this.translate.instant('TIPOSGALERIA.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result) => {
       if (result.isConfirmed) {
-        this._bibliotecaService.eliminarBiblioteca(id).subscribe({
+        this._tiposGaleriaService.eliminarTipoGaleria(id).subscribe({
           next: (resp: any) => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('BIBLIOTECA.ELIMINAREXITOSA')
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire(this.translate.instant('BIBLIOTECA.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            Swal.fire(this.translate.instant('TIPOSGALERIA.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.cargarDatos();
           },
-          error: () => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('BIBLIOTECA.ELIMINARERROR')
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire('Error', this.translate.instant('BIBLIOTECA.ELIMINARERROR'), 'error');
-          }
+          error: () => Swal.fire('Error', this.translate.instant('TIPOSGALERIA.ELIMINARERROR'), 'error')
         });
       }
     });

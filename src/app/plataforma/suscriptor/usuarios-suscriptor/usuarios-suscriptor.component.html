@@ -1,57 +1,70 @@
 <app-nav-bar (toggleSidebar)="toggleNav()"></app-nav-bar>
+
 <div class="layout-wrapper">
-    <aside class="aside-left">
-        <div class="card">
-            <div class="nav-tabs-custom">
-                <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
-                    {{ 'PLATAFORMA.MENU' | translate }}
-                </button>
-                <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
-                    {{ 'PLATAFORMA.FILTERS' | translate }}
-                </button>
-            </div>
+  <aside class="aside-left">
+    <div class="card">
+      <div class="nav-tabs-custom">
+        <button [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'">
+          {{ 'PLATAFORMA.MENU' | translate }}
+        </button>
+        <button [class.active]="activeTab === 'filters'" (click)="activeTab = 'filters'">
+          {{ 'PLATAFORMA.FILTERS' | translate }}
+        </button>
+      </div>
 
-            <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
-            </ng-container>
+      <ng-container *ngIf="activeTab === 'menu'">
+        <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+      </ng-container>
 
-            <ng-container *ngIf="activeTab === 'filters'">
-                <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title">{{ 'USUARIOS.FILTROS.TITULO' | translate }}</h6>
+      <ng-container *ngIf="activeTab === 'filters'">
+        <div class="p-3 filtros-scroll-wrapper">
+          <h6 class="filtros-title">{{ 'USUARIOS.FILTROS.TITULO' | translate }}</h6>
 
-                    <div class="filtro mb-3">
-                        <small>{{ 'USUARIOS.FILTROS.NOMBRE' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChange($event)" class="form-control form-input" placeholder="Nombre..." />
-                    </div>
+          <div class="filtro mb-3">
+            <small>{{ 'USUARIOS.FILTROS.NOMBRE' | translate }}</small>
+            <input type="text" (keyup)="onFiltroNombreChange($event)" class="form-control form-input" placeholder="Nombre..." />
+          </div>
 
-                    <div class="filtro">
-                        <small>{{ 'PLATAFORMA.STATUS' | translate }}</small>
-                        <select (change)="onFiltroEstadoChange($event)" class="form-control form-select">
-                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
-                            <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
-                        </select>
-                    </div>
-                </div>
-            </ng-container>
+          <div class="filtro">
+            <small>{{ 'PLATAFORMA.STATUS' | translate }}</small>
+            <select (change)="onFiltroEstadoChange($event)" class="form-control form-select">
+              <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+              <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
+              <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
+            </select>
+          </div>
         </div>
-    </aside>
-
-    <div class="content-area">
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <ng-container *ngIf="usuariosSCFiltrados$ | async as dataUsuarios; else loading">
-                    <app-data-table [data]="dataUsuarios" [idField]="'idParaTabla'" [tableTitle]="'USUARIOS.TITLE' | translate" [metadataColumns]="columnasUsuarios" [showActions]="true" [showNewButton]="true" [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false"
-                        (newRecord)="OnNuevoRegistroClick()" (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
-                    </app-data-table>
-                </ng-container>
-
-                <ng-template #loading>
-                    <div class="d-flex justify-content-center p-5">
-                        <div class="spinner-border text-primary" role="status"></div>
-                    </div>
-                </ng-template>
-            </div>
-        </div>
+      </ng-container>
     </div>
+  </aside>
+
+  <div class="content-area">
+    <div class="card card-table content-scroll-wrapper">
+      <div class="card-body">
+        <ng-container *ngIf="usuariosFiltrados$ | async as dataUsuarios; else loading">
+          <app-data-table
+            [data]="dataUsuarios"
+            [idField]="'idParaTabla'"
+            [tableTitle]="'USUARIOS.TITLE' | translate"
+            [metadataColumns]="columnasUsuarios"
+            [showActions]="true"
+            [showNewButton]="true"
+            [showEditButton]="true"
+            [showDeleteButton]="true"
+            [showSearchBox]="false"
+            (newRecord)="OnNuevoRegistroClick()"
+            (editRecord)="OnEditarRegistroClick($event)"
+            (deleteRecord)="OnEliminarRegistroClick($event)"
+          >
+          </app-data-table>
+        </ng-container>
+
+        <ng-template #loading>
+          <div class="d-flex justify-content-center p-5">
+            <div class="spinner-border text-primary" role="status"></div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </div>
