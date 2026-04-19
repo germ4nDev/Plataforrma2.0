@@ -4,7 +4,7 @@ import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/cor
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
-import { Subscription, catchError, of, Observable, BehaviorSubject, switchMap, startWith, combineLatest, map } from 'rxjs';
+import { Subscription, catchError, of, Observable, BehaviorSubject, switchMap, startWith, combineLatest, map, tap } from 'rxjs';
 import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -82,58 +82,111 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   }
 
   setupRegistrosStream(): void {
+    // 1. Intentamos obtener el suscriptor
     const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
-    if (!suscriptor || !suscriptor.codigoSuscriptor) {
-      console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
-      return;
-    }
-    const codigoSuscriptor = suscriptor.codigoSuscriptor;
+    const codigoSuscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+
     this.registrosTransformadas$ = this._suscriptoresService.suscriptores$.pipe(
-      switchMap((regs: PTLSuscriptorModel[]) => {
-        if (!regs) return of([]);
-        const transformedRegs = regs.map((reg: any) => {
-          reg.nomEstado = reg.estadoAplicacion ? 'Activo' : 'Inactivo';
-          reg.logoSuscriptor = this._uploadService.getFilePath(codigoSuscriptor, 'suscriptores', reg.logoSuscriptor);
-          return reg as PTLSuscriptorModel;
+      map((regs: PTLSuscriptorModel[]) => {
+        if (!regs || regs.length === 0) return [];
+
+        return regs.map((reg: any) => {
+          const newReg = { ...reg };
+          newReg.nomEstado = newReg.estadoSuscriptor ? 'Activo' : 'Inactivo';
+
+          if (codigoSuscriptor) {
+            newReg.logoSuscriptor = this._uploadService.getFilePath(
+              codigoSuscriptor,
+              'suscriptores',
+              newReg.logoSuscriptor || 'no-imagen.png'
+            );
+          }
+          return newReg as PTLSuscriptorModel;
         });
-        this.registros = transformedRegs;
-        console.log('registros', this.registros);
-        return of(transformedRegs);
       }),
+      tap((regs) => (this.registros = regs)),
       catchError((err) => {
-        console.error('Error en el stream de aplicaciones:', err);
+        console.error('Error en el stream de datos:', err);
         return of([]);
       })
     );
+
     this.registrosFiltrados$ = combineLatest([
       this.registrosTransformadas$.pipe(startWith([])),
-      //   this.filtroCodigoSubject,
       this.filtroNombreSubject,
       this.filtroIdentificacionSubject,
       this.filtroEstadoSubject
     ]).pipe(
       map(([regs, nombre, identificacion, estado]) => {
-        let filteredRegs = regs;
-        console.log('quien putas es estado', estado);
-        // if (codigo !== 'todos') {
-        //   filteredRegs = filteredRegs.filter((app) => app.codigoAplicacion === codigo);
-        // }
-        if (nombre) {
-          const textoFiltro = nombre.toLowerCase();
-          filteredRegs = filteredRegs.filter((reg) => (reg.nombreSuscriptor || '').toLowerCase().includes(textoFiltro));
-        }
-        if (identificacion) {
-          filteredRegs = filteredRegs.filter((reg) => (reg.identificacionSuscriptor || '').toLowerCase().includes(identificacion));
-        }
-        if (estado !== 'todos') {
-          const estadoBoolean = estado === 'true';
-          filteredRegs = filteredRegs.filter((app) => app.estadoSuscriptor === estadoBoolean);
-        }
-        console.log('filtrado2s', filteredRegs);
-        return filteredRegs;
+        return regs.filter((reg) => {
+          const cumpleNombre = !nombre || (reg.nombreSuscriptor || '').toLowerCase().includes(nombre.toLowerCase());
+          const cumpleIdent = !identificacion || (reg.identificacionSuscriptor || '').includes(identificacion);
+          const cumpleEstado = estado === 'todos' || reg.estadoSuscriptor === (estado === 'true');
+          return cumpleNombre && cumpleIdent && cumpleEstado;
+        });
       })
     );
+
+    if (!codigoSuscriptor) {
+      console.warn('Advertencia: No hay código de suscriptor en LocalStorage. Los logos podrían no cargar correctamente.');
+    }
   }
+
+  //   setupRegistrosStream(): void {
+  //     const suscriptor = this._localStorageService.getSuscriptorLocalStorage();
+  //     if (!suscriptor || !suscriptor.codigoSuscriptor) {
+  //       console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
+  //       return;
+  //     }
+  //     const codigoSuscriptor = suscriptor.codigoSuscriptor;
+  //     this.registrosTransformadas$ = this._suscriptoresService.suscriptores$.pipe(
+  //       switchMap((regs: PTLSuscriptorModel[]) => {
+  //         if (!regs) return of([]);
+  //         const transformedRegs = regs.map((reg: any) => {
+  //           // CORRECCIÓN: Usar la propiedad correcta del suscriptor
+  //           reg.nomEstado = reg.estadoSuscriptor ? 'Activo' : 'Inactivo';
+
+  //           // Asegúrate de que logoSuscriptor no venga nulo para evitar errores en getFilePath
+  //           reg.logoSuscriptor = this._uploadService.getFilePath(codigoSuscriptor, 'suscriptores', reg.logoSuscriptor || 'default.png');
+  //           return reg as PTLSuscriptorModel;
+  //         });
+  //         this.registros = transformedRegs;
+  //         return of(transformedRegs);
+  //       }),
+  //       catchError((err) => {
+  //         console.error('Error en el stream de aplicaciones:', err);
+  //         return of([]);
+  //       })
+  //     );
+  //     this.registrosFiltrados$ = combineLatest([
+  //       this.registrosTransformadas$.pipe(startWith([])),
+  //       //   this.filtroCodigoSubject,
+  //       this.filtroNombreSubject,
+  //       this.filtroIdentificacionSubject,
+  //       this.filtroEstadoSubject
+  //     ]).pipe(
+  //       map(([regs, nombre, identificacion, estado]) => {
+  //         let filteredRegs = regs;
+  //         console.log('quien putas es estado', estado);
+  //         // if (codigo !== 'todos') {
+  //         //   filteredRegs = filteredRegs.filter((app) => app.codigoAplicacion === codigo);
+  //         // }
+  //         if (nombre) {
+  //           const textoFiltro = nombre.toLowerCase();
+  //           filteredRegs = filteredRegs.filter((reg) => (reg.nombreSuscriptor || '').toLowerCase().includes(textoFiltro));
+  //         }
+  //         if (identificacion) {
+  //           filteredRegs = filteredRegs.filter((reg) => (reg.identificacionSuscriptor || '').toLowerCase().includes(identificacion));
+  //         }
+  //         if (estado !== 'todos') {
+  //           const estadoBoolean = estado === 'true';
+  //           filteredRegs = filteredRegs.filter((app) => app.estadoSuscriptor === estadoBoolean);
+  //         }
+  //         console.log('filtrado2s', filteredRegs);
+  //         return filteredRegs;
+  //       })
+  //     );
+  //   }
 
   onFiltroNombreChangeClick(evento: any) {
     console.log('filtrar el NOMBRE ', evento.target.value);
@@ -150,33 +203,59 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     this.filtroEstadoSubject.next(evento.target.value);
   }
 
-  columnasRegistros: ColumnMetadata[] = [
+  columnasRegistros: any[] = [
     {
       name: 'logoSuscriptor',
-      header: 'SUSCRIPTORES.CODE',
-      type: 'image'
+      header: 'SUSCRIPTORES.LOGO',
+      type: 'image',
+      isSortable: false,
+      searchable: false
     },
     {
       name: 'nombreSuscriptor',
       header: 'SUSCRIPTORES.NAME',
-      type: 'text'
+      type: 'text',
+      isSortable: true,
+      searchable: false
     },
     {
       name: 'identificacionSuscriptor',
       header: 'SUSCRIPTORES.IDENTIFICATION',
-      type: 'text'
-    },
-    {
-      name: 'correoSuscriptor',
-      header: 'SUSCRIPTORES.STATUS',
-      type: 'text'
+      type: 'text',
+      isSortable: true,
+      searchable: false
     },
     {
       name: 'nomEstado',
       header: 'SUSCRIPTORES.STATUS',
-      type: 'estado'
+      type: 'estado',
+      isSortable: true,
+      searchable: false
     }
   ];
+
+  //   columnasRegistros: ColumnMetadata[] = [
+  //     {
+  //       name: 'logoSuscriptor', // Debe coincidir con la propiedad del objeto
+  //       header: 'SUSCRIPTORES.LOGO', // Cambié el header para que sea coherente
+  //       type: 'image'
+  //     },
+  //     {
+  //       name: 'nombreSuscriptor',
+  //       header: 'SUSCRIPTORES.NAME',
+  //       type: 'text'
+  //     },
+  //     {
+  //       name: 'identificacionSuscriptor',
+  //       header: 'SUSCRIPTORES.IDENTIFICATION',
+  //       type: 'text'
+  //     },
+  //     {
+  //       name: 'nomEstado', // Esta es la propiedad que creamos en el paso anterior
+  //       header: 'SUSCRIPTORES.STATUS',
+  //       type: 'estado'
+  //     }
+  //   ];
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
@@ -247,7 +326,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
         this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
           next: (resp: any) => {
             Swal.fire(this.translate.instant('SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.suscriptorId !== id.id);
+            this.setupRegistrosStream();
           },
           error: (err: any) => {
             Swal.fire('Error', this.translate.instant('SUSCRIPTORES.ELIMINARERROR'), 'error');

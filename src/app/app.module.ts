@@ -20,9 +20,6 @@ import { ChatUserListComponent } from './theme/layout/admin/nav-bar/nav-right/ch
 import { FriendComponent } from './theme/layout/admin/nav-bar/nav-right/chat-user-list/friend/friend.component';
 import { SharedModule } from './theme/shared/shared.module';
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
-import { ErrorInterceptor } from 'src/app/theme/shared/_helpers/error.interceptor';
-import { JwtInterceptor } from 'src/app/theme/shared/_helpers/jwt-interceptor.interceptor';
-import { environment } from 'src/environments/environment';
 
 // third party
 import { ToastrModule } from 'ngx-toastr';
@@ -32,6 +29,9 @@ import { LanguageSelectorComponent } from './theme/shared/components/language-se
 import { NavContentComponent } from './theme/layout/admin/navigation/nav-content/nav-content.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { AuthInterceptor } from './theme/shared/_helpers/auth.interceptor';
+import { environment } from '../environments/environment';
+import { JwtInterceptor } from './theme/shared/_helpers/jwt-interceptor.interceptor';
+import { ErrorInterceptor } from './theme/shared/_helpers/error.interceptor';
 
 const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
 
