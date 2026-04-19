@@ -103,13 +103,13 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     const user = this._localStorageService.getUsuarioLocalStorage()
     console.log('&&&&&&&& usuariosSC')
     this.subscriptions.add(
-      this._usuariosSCService._usuariosSC$.subscribe({
+      this._usuariosSCService.usuariosSC$.subscribe({
         next: (usuariosSC: PTLUsuarioSCModel[]) => {
           this.usuarioSC = usuariosSC.filter(x => x.codigoUsuario == user?.codigoUsuario)[0]
           console.log('usuarioSC:', this.usuarioSC)
           this.consultarRoles()
         },
-        error: err => {
+        error: (err: any) => {
           console.error('Error al cargar los roles de usuariosSC:', err)
           this.usuarioSC = {} as PTLUsuarioSCModel
         }

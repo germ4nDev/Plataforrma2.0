@@ -19,7 +19,7 @@ import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP
 import { PtlmodulosApService } from 'src/app/theme/shared/service/ptlmodulos-ap.service';
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component';
-import { LocalStorageService, PtllogActividadesService, SessionStorageService, SwalAlertService } from 'src/app/theme/shared/service';
+import { LocalStorageService, PtllogActividadesService, SwalAlertService } from 'src/app/theme/shared/service';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
@@ -65,7 +65,6 @@ export class GestionModuloComponent implements OnInit {
         private _registrosService: PtlmodulosApService,
         private _layoutInitializer: LayoutInitializerService,
         private _logActividadesService: PtllogActividadesService,
-        private _sessionStorageService: SessionStorageService,
         private _swalAlertService: SwalAlertService,
         private _localStorageService: LocalStorageService,
         private _navigationService: NavigationService
@@ -75,8 +74,8 @@ export class GestionModuloComponent implements OnInit {
         this.gradientConfig = GradientConfig;
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
         this.navCollapsedMob = false;
-        this.moduloId = this._sessionStorageService.getObject<string>('regId') || '';
-        if (this.moduloId != '') {
+        this.moduloId = this._localStorageService.getObject<string>('regId') || '';
+        if (this.moduloId != 'nuevo') {
             this.modoEdicion = true;
             this._registrosService.getRegistroById(this.moduloId).subscribe({
                 next: (resp: any) => {

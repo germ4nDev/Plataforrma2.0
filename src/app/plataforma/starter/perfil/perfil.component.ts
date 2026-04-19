@@ -69,11 +69,12 @@ export class PerfilComponent implements OnInit {
       if (registroId) {
         console.log('me llena el Id', registroId);
         this.modoEdicion = true;
+        const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
         this._registrosService.getUsuarioById(registroId).subscribe({
           next: (resp: any) => {
             this.FormRegistro = resp.usuario;
             this.claveUsuario = resp.usuario.claveUsuario;
-            this.selectedFileUrl = this._uploadService.getFilePath('0', 'usuarios', resp.usuario.fotoUsuario);
+            this.selectedFileUrl = this._uploadService.getFilePath(codigoSuscriptor, 'usuarios', resp.usuario.fotoUsuario);
             this.FormRegistro.claveNew = '';
             this.FormRegistro.claveConfirm = '';
             // this.codeRegistro = resp.aplicacion.codigoAplicacion;

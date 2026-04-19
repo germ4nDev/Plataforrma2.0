@@ -728,6 +728,60 @@
       "DESCRIPTIONHOLDER": "Ingrese la Descripción del Usuario",
       "STATUS": "Estado Usuario"
     },
+    "ROLES": {
+        "TITLE": "Administración de Roles",
+        "NEW": "Nuevo Role",
+        "UPDATE": "Modificar Role",
+        "DELETE": "Eliminar Role",
+        "CREATE": "Crear Role",
+        "NOMBREAPLICACION": "Aplicación",
+        "NOMBREROL": "Nombre",
+        "DESCRIPCIONROL": "Descripción",
+        "ESTADOROLE": "Estado",
+        "FILTER_CODIGOAPLICACION": "Filtro Aplicación",
+        "FILTER_NAMEROLE": "Filtro Nombre",
+        "FILTER_DESCRIPCIONROLE": "Filtro Descripción",
+        "FILTRO_STATUS": "Filtro Estado",
+        "ELIMINARTITULO": "¿Está seguro de eliminar?",
+        "ELIMINARTEXTO": "¡Será Eliminada el Role ",
+        "ELIMINAREXITOSA": "¡El Role fué eliminado correctamente ",
+        "ELIMINARERROR": "No se pudo eliminar el Role.",
+        "GESTION": {
+            "TITLE": "Crear/Actualizar un Role",
+            "CREATE": "Crear Role",
+            "UPDATE": "Actualizar Role",
+            "NEW": "Nuevo Role",
+            "APLICACION": "Aplicación",
+            "APLICACIONHOLDER": "Seleccione una Aplicación",
+            "NAME": "Nombre Role",
+            "NAMEHOLDER": "Ingrese el Nombre del Role",
+            "DESCRIPTION": "Descripción Role",
+            "DESCRIPTIONHOLDER": "Ingrese la Descripción del Role",
+            "STATUS": "Estado Role"
+        },
+        "ROLESUSUARIOS": {
+            "TITLE": "Administración de Roles de los Usuarios",
+            "FOTO": "Foto",
+            "USUARIO": "Usuario",
+            "APLICACIONES": "Aplicaciones",
+            "SUITES": "Suites",
+            "ROLES": "Roles",
+            "ESTADOROLE": "Estado",
+            "GESTION": {
+                "TITLE": "Gestión de Roles de Usuario",
+                "CREATE": "Crear Usuario/Role",
+                "UPDATE": "Actualizar Usuario/Role",
+                "NEW": "Nuevo Usuario/Role",
+                "USUARIO": "Usuario",
+                "USUARIOHOLDER": "Nombre del Usuario",
+                "APLICACION": "Aplicación",
+                "APLICACIONHOLDER": "Seleccione una Aplicación",
+                "SUITE": "Suite",
+                "SUITEHOLDER": "Sileccione una Suite",
+                "ROLES": "Roles"
+            }
+        }
+    }
     "FILTROS": {
       "TITULO": "Filtros Usuarios",
       "IDENTIFICACIONCHOLDER": "Identificación del Usuario",

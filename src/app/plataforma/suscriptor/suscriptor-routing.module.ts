@@ -14,14 +14,7 @@ const routes: Routes = [
         loadComponent: () =>
           import('./suscriptores/gestion-suscriptor/gestion-suscriptor.component').then((m) => m.GestionSuscriptorComponent)
       },
-      {
-        path: 'conexiones',
-        loadComponent: () => import('./conexiones/conexiones.component').then((m) => m.ConexionesComponent)
-      },
-      {
-        path: 'gestion-conexiones',
-        loadComponent: () => import('./conexiones/gestion-conexion/gestion-conexion.component').then((m) => m.GestionConexionComponent)
-      },
+
       {
         path: 'estadisticas',
         loadComponent: () => import('./estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent)

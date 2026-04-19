@@ -21,7 +21,6 @@ import {
     PtlAplicacionesService,
     PtltiposValoresService,
     PtlvaloresUnitariosService,
-    SessionStorageService
 } from 'src/app/theme/shared/service'
 import { PtlItemsPaqueteService } from 'src/app/theme/shared/service/ptlitems-paquete.service'
 import { SharedModule } from 'src/app/theme/shared/shared.module'
@@ -60,6 +59,7 @@ export class ItemsPaqueteComponent {
     tiposValor: PTLTiposValoresModel[] = []
     listaPreciosSub?: Subscription
     listaPrecios: PTLValoresUnitarios[] = []
+  suscriptor: string = ''
 
     subscriptions = new Subscription()
     filtroValorSubject = new BehaviorSubject<string>('todos')
@@ -76,15 +76,15 @@ export class ItemsPaqueteComponent {
         private translate: TranslateService,
         private _navigationService: NavigationService,
         private _swalService: SwalAlertService,
-        private _localstorageService: LocalStorageService,
-        private _sessionStorageService: SessionStorageService,
+        private _localStorageService: LocalStorageService,
         private _logActividadesService: PtllogActividadesService,
         private _registrosService: PtlItemsPaqueteService,
         private _tiposValoresService: PtltiposValoresService,
         private _listaPreciosService: PtlvaloresUnitariosService
     ) {
         this.gradientConfig = GradientConfig
-        this.registroId = this._sessionStorageService.getObject<string>('regId') || '';
+        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+        this.registroId = this._localStorageService.getObject<string>('regId') || '';
         console.log('regId', this.registroId)
         this.registrosFiltrado = [];
     }
@@ -308,7 +308,7 @@ export class ItemsPaqueteComponent {
     ]
 
     getLanguageUrl(): string {
-        const lang = this._localstorageService.getLanguage() || 'en'
+        const lang = this._localStorageService.getLanguage() || 'en'
         return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`
     }
 
@@ -322,14 +322,14 @@ export class ItemsPaqueteComponent {
     }
 
     OnNuevoRegistroClick(): void {
-        this._sessionStorageService.setObject('regId', '');
-        this._sessionStorageService.setObject('regPQ', this.registroId);
+        this._localStorageService.setObject('regId', '');
+        this._localStorageService.setObject('regPQ', this.registroId);
         this.router.navigate(['aplicaciones/gestion-itempq'])
     }
 
     OnEditarRegistroClick(id: number): void {
-        this._sessionStorageService.setObject('regId', id);
-        this._sessionStorageService.setObject('regPQ', this.registroId);
+        this._localStorageService.setObject('regId', id);
+        this._localStorageService.setObject('regPQ', this.registroId);
         this.router.navigate(['aplicaciones/gestion-itempq'])
     }
 

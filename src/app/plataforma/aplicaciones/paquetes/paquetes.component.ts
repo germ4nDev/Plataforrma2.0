@@ -14,7 +14,7 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { PTLPaqueteModel } from 'src/app/theme/shared/_helpers/models/PTLPaquete.model'
 import { PTLPaquetesService } from 'src/app/theme/shared/service/ptlpaquetes.service'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
-import { LocalStorageService, SessionStorageService, SwalAlertService } from 'src/app/theme/shared/service'
+import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service'
 import { BehaviorSubject, Observable, Subscription, combineLatest, of } from 'rxjs'
 import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators'
 import { GradientConfig } from 'src/app/app-config'
@@ -41,6 +41,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   lang = localStorage.getItem('lang')
   menuItems$!: Observable<NavigationItem[]>
   activeTab: 'menu' | 'filters' | 'main' = 'menu'
+  suscriptor: string = ''
 
   subscriptions = new Subscription()
   filtroNombreSubject = new BehaviorSubject<string>('todos')
@@ -61,14 +62,13 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     private router: Router,
     private translate: TranslateService,
     private _navigationService: NavigationService,
-    private _swalService: SwalAlertService,
-    private _localstorageService: LocalStorageService,
-    private _sessionStorageService: SessionStorageService,
+    private _localStorageService: LocalStorageService,
     private _logActividadesService: PtllogActividadesService,
     private _registrosService: PTLPaquetesService,
     private _aplicacionesService: PtlAplicacionesService
   ) {
     this.gradientConfig = GradientConfig
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
   }
 
   ngOnInit (): void {
@@ -76,6 +76,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     this.menuItems$ = this._navigationService.menuItems$
     this.hasFiltersSlot = true
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications'
+        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
     setTimeout(() => {
       this.setupPaquetesStream()
     }, 100)
@@ -229,7 +230,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   ]
 
   getLanguageUrl (): string {
-    const lang = this._localstorageService.getLanguage() || 'en'
+    const lang = this._localStorageService.getLanguage() || 'en'
     return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`
   }
 
@@ -253,7 +254,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   OnEditarRegistroClick (id: number): void {
-    this._sessionStorageService.setObject('regId', id);
+    this._localStorageService.setObject('regId', id);
     this.router.navigate(['aplicaciones/gestion-paquete'])
   }
 
@@ -294,12 +295,12 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   OnOption1Click (id: any) {
-    this._sessionStorageService.setObject('regId', id);
+    this._localStorageService.setObject('regId', id);
     this.router.navigate(['aplicaciones/modulos-paquete'])
   }
 
   OnOption2Click (id: any) {
-    this._sessionStorageService.setObject('regId', id);
+    this._localStorageService.setObject('regId', id);
     this.router.navigate(['aplicaciones/items-paquete'])
   }
 

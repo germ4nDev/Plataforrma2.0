@@ -46,6 +46,7 @@ export class GestionSuiteComponent implements OnInit {
   aplicaciones: PTLAplicacionModel[] = [];
   codigosuite = uuidv4();
   tipoEditorTexto = 'basica';
+  suscriptor: string = ''
 
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
@@ -76,6 +77,7 @@ export class GestionSuiteComponent implements OnInit {
     this.gradientConfig = GradientConfig;
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false;
     this.navCollapsedMob = false;
+            this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
     this.route.queryParams.subscribe((params) => {
       this.registroId = params['regId'];
       if (this.registroId) {
@@ -84,7 +86,7 @@ export class GestionSuiteComponent implements OnInit {
           next: (resp: any) => {
             this.FormRegistro = resp.suite;
             this.codigosuite = resp.suite.codigoAplicacion;
-            this.selectedFileUrl = this._uploadService.getFilePath('suites', 'suites', resp.suite.imagenInicio);
+            this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor , 'suites', resp.suite.imagenInicio);
           },
           error: () => {
             Swal.fire('Error', 'No se pudo obtener la suite por, ', 'error');
@@ -152,7 +154,7 @@ export class GestionSuiteComponent implements OnInit {
   onFileSelectedClick(event: any) {
     const file: File = event.target.files[0];
     const objUpload = {
-      suc: 'plataforma',
+      suc: this.suscriptor,
       tipo: 'suites',
       id: '0'
     };

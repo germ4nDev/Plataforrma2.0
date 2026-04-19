@@ -36,7 +36,7 @@ export class PtlusuariosScService {
     });
   }
 
-  get _usuariosSC$(): Observable<PTLUsuarioSCModel[]> {
+  get usuariosSC$(): Observable<PTLUsuarioSCModel[]> {
     return this._usuariosSC.asObservable();
   }
 
@@ -59,7 +59,20 @@ export class PtlusuariosScService {
         console.log('data del usuario', resp);
         return {
           ok: true,
-          usuario: resp.usuarioSC
+          usuarioSC: resp.usuarioSC
+        };
+      })
+    );
+  }
+
+  getUsuariosByCode(code: string) {
+    const url = `${base_url}/usuarios-sc/code/${code}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('data del usuario', resp);
+        return {
+          ok: true,
+          usuariosSC: resp.usuariosSC
         };
       })
     );
@@ -77,7 +90,7 @@ export class PtlusuariosScService {
         console.log('data de usuario modificacda', resp);
         return {
           ok: true,
-          usuario: resp.usuarioSC
+          usuarioSC: resp.usuarioSC
         };
       })
     );
@@ -90,7 +103,7 @@ export class PtlusuariosScService {
         console.log('data de usuario modificacda', resp);
         return {
           ok: true,
-          usuario: resp.usuarioSC
+          usuarioSC: resp.usuarioSC
         };
       })
     );
@@ -103,7 +116,7 @@ export class PtlusuariosScService {
         console.log('data de usuario eliminado', resp);
         return {
           ok: true,
-          usuario: resp.usuarioSC
+          usuarioSC: resp.usuarioSC
         };
       })
     );

@@ -74,7 +74,7 @@ export class NavRightComponent implements DoCheck, OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private themeService: ThemeService,
-    private _localstorageService: LocalStorageService,
+    private _localStorageService: LocalStorageService,
     private _uploadService: UploadFilesService,
     private _colorsettingsService: PtlColoresSettingsService,
     private _navigationService: NavigationService,
@@ -88,9 +88,10 @@ export class NavRightComponent implements DoCheck, OnInit {
 
   ngOnInit(): void {
     this.consultarColorsettings();
-    this.suscriptorPlataforma = this._localstorageService.getSuscriptorPlataformaLocalStorage();
-    const userLogg = this._localstorageService.getUsuarioLocalStorage();
-    this.avatarUsuario = this._uploadService.getFilePath(this.suscriptorPlataforma, 'usuarios', userLogg.fotoUsuario);
+    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
+    this.suscriptorPlataforma = 'plataforma';
+    const userLogg = this._localStorageService.getUsuarioLocalStorage();
+    this.avatarUsuario = this._uploadService.getFilePath(codigoSuscriptor, 'usuarios', userLogg.fotoUsuario);
     this.nombreUsuario = userLogg.nombreUsuario || '';
     this.themeService.isDarkTheme$.subscribe((isDark) => {
       this.isDarkTheme = isDark;
@@ -136,7 +137,7 @@ export class NavRightComponent implements DoCheck, OnInit {
   toggleTheme(): void {
     this.themeService.toggleDarkTheme();
     this.isDarkTheme = !this.isDarkTheme;
-    const settings = this._localstorageService.getThemeSettings();
+    const settings = this._localStorageService.getThemeSettings();
     this.iconoTema = settings.isDarkTheme ? 'icon feather icon-sun' : 'icon feather icon-moon';
     this.themeTextKey = settings.isDarkTheme ? 'PLATAFORMA.NAVBAR.THEME_LIGHT' : 'PLATAFORMA.NAVBAR.THEME_DARK';
   }
@@ -159,7 +160,7 @@ export class NavRightComponent implements DoCheck, OnInit {
   }
 
   perfilUsuario() {
-    const user = this._localstorageService.getUsuarioLocalStorage();
+    const user = this._localStorageService.getUsuarioLocalStorage();
     // console.log('ver perfil del usuario', user.usuarioId);
     this.router.navigate(['starter/perfil'], { queryParams: { regId: user.usuarioId } });
   }
