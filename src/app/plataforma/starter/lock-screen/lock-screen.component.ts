@@ -16,6 +16,6 @@ export class LockScreenComponent {
 
     }
     unlokScreen() {
-        this.router.navigate(['/frontal/unlock-screen']);
+        this.router.navigate(['/starter/unlock-screen']);
     }
 }

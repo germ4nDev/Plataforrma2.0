@@ -21,13 +21,14 @@ import {
 } from '@angular/core';
 import { ColumnMetadata } from '../../_helpers/models/ColumnMetadata.model';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { VideoPlayerComponent } from '../video-player/video-player.component';
 
 @Component({
   selector: 'app-data-table',
   standalone: true,
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss'],
-  imports: [CommonModule, TranslateModule, FormsModule]
+  imports: [CommonModule, TranslateModule, FormsModule, VideoPlayerComponent]
 })
 export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   //   @ViewChildren('customButton', { read: ElementRef }) customButtons!: QueryList<ElementRef>;
@@ -38,6 +39,7 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() columnTitles: string[] = [];
   @Input() detailColumns: string[] = [];
   @Input() detailTitles: string[] = [];
+  @Input() videoOptions: any;
 
   @Input() idField: string = 'id';
   @Input() tableTitle: string = '';
@@ -325,6 +327,11 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
     this.editRecord.emit(row[this.idField]);
   }
 
+  //   onEdit(row: any): void {
+  //     console.log('fieldId', this.idField);
+  //     this.editRecord.emit(row[this.idField]);
+  //   }
+
   onBackClick() {
     this.backRecord.emit();
   }
@@ -335,8 +342,12 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   onDelete(row: any): void {
-    this.deleteRecord.emit({ id: row[this.idField] });
+    this.deleteRecord.emit(row[this.idField]);
   }
+
+  //   onDelete(row: any): void {
+  //     this.deleteRecord.emit({ id: row[this.idField] });
+  //   }
 
   onFilter(column: string, event: Event): void {
     const target = event.target as HTMLInputElement;

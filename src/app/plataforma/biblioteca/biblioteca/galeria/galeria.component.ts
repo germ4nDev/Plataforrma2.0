@@ -50,6 +50,7 @@ export class GaleriaComponent implements OnInit, OnDestroy {
   galeriaTransformada$: Observable<PTLGaleria[]> = of([]);
   galeriaFiltrada$: Observable<PTLGaleria[]> = of([]);
   galerias: PTLGaleria[] = [];
+  tipoMedia: string = '';
 
   constructor(
     private router: Router,
@@ -94,13 +95,31 @@ export class GaleriaComponent implements OnInit, OnDestroy {
           const nombreMinuscula = nombreArchivo.toLowerCase();
 
           if (nombreMinuscula.endsWith('.mp4') || nombreMinuscula.endsWith('.avi') || nombreMinuscula.endsWith('.mov')) {
-            gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', 'no-imagen.png');
-          } else if (nombreMinuscula.endsWith('.pdf') || nombreMinuscula.endsWith('.doc')) {
+            const videoUrl = this._uploadService.getFilePath('plataforma', 'galeria', gal.imagenGaleria);
+
+            gal.imagenGaleria = 'assets/images/video-placeholder.png';
+            gal.tipoMediaFila = 'video';
+            gal.options = {
+              fluid: true,
+              aspectRatio: '16:9',
+              autoplay: false,
+              controls: true,
+              sources: [{ src: videoUrl, type: 'video/mp4' }]
+            };
+          } else if (
+            nombreMinuscula.endsWith('.pdf') ||
+            nombreMinuscula.endsWith('.doc') ||
+            nombreMinuscula.endsWith('.docx') ||
+            nombreMinuscula.endsWith('.xls')
+          ) {
             gal.imagenGaleria = 'assets/images/doc-placeholder.png';
+            gal.tipoMediaFila = 'documento';
           } else if (nombreArchivo !== '') {
             gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', gal.imagenGaleria);
+            gal.tipoMediaFila = 'imagen';
           } else {
             gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', 'no-imagen.png');
+            gal.tipoMediaFila = 'imagen';
           }
 
           return gal as PTLGaleria;
@@ -113,7 +132,6 @@ export class GaleriaComponent implements OnInit, OnDestroy {
         return of([]);
       })
     );
-
     this.galeriaFiltrada$ = combineLatest([
       this.galeriaTransformada$.pipe(startWith([])),
       this.filtroCodigoSubject,
@@ -138,6 +156,8 @@ export class GaleriaComponent implements OnInit, OnDestroy {
           const textoFiltro = descripcion.toLowerCase();
           filtered = filtered.filter((gal) => (gal.descripcionGaleria || '').toLowerCase().includes(textoFiltro));
         }
+        console.log('***********data', filtered);
+
         return filtered;
       })
     );
@@ -163,9 +183,10 @@ export class GaleriaComponent implements OnInit, OnDestroy {
     { name: 'nomEstado', header: 'GALERIA.STATUS', type: 'estado' }
   ];
 
-  columnasDetailRegistros: ColumnMetadata[] = [
+  columnasDetailRegistros: any[] = [
     { name: 'descripcionGaleria', header: 'GALERIA.DESCRIPTION', type: 'text' },
-    { name: 'imagenGaleria', header: 'GALERIA.FOTO', type: 'capture' }
+    { name: 'imagenGaleria', header: 'GALERIA.FOTO', type: 'multimedia_dinamico' }
+    // { name: 'imagenGaleria', header: 'GALERIA.FOTO', type: this.tipoMedia }
   ];
 
   OnNuevaGaleriaClick(): void {

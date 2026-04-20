@@ -34,7 +34,8 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
     private _localStorageService: LocalStorageService,
     private _uploadService: UploadFilesService
   ) {
-    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    // this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    this.suscPlataforma = 'plataforma';
   }
 
   ngOnInit(): void {

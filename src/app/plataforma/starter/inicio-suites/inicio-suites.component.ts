@@ -41,8 +41,9 @@ export class InicioSuitesComponent implements OnInit {
     //   this.suscriptor = this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '';
     //   console.log('datos del suscriptor', suscriptor);
     // } else {
-      this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-      console.log('no hay suscriptor suscriptor');
+    //   this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    this.suscriptor = 'plataforma';
+    console.log('no hay suscriptor suscriptor');
     // }
   }
 

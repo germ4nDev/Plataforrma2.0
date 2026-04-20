@@ -53,7 +53,8 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     private _utilidadesService: UtilidadesService,
     private _usuarioRolesService: PtlusuariosRolesApService
   ) {
-    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    // this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    this.suscriptor = 'plataforma';
     console.log('no hay suscriptor suscriptor');
   }
 
