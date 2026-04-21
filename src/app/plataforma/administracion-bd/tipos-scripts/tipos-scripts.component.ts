@@ -16,41 +16,39 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 // Modelos y Servicios
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { PTLScriptsModel } from 'src/app/theme/shared/_helpers/models/PTLScripts.model';
+import { PTLTiposScriptsModel } from 'src/app/theme/shared/_helpers/models/PTLTiposScript.model';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { PTLScriptsService } from 'src/app/theme/shared/service/ptlscripts.service';
+import { PTLTiposScriptsService } from 'src/app/theme/shared/service/ptltipos-scripts.service';
 import { PtllogActividadesService } from 'src/app/theme/shared/service';
 
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-scripts',
+  selector: 'app-tipos-scripts',
   standalone: true,
   imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
-  templateUrl: './scripts.component.html',
-  styleUrl: './scripts.component.scss'
+  templateUrl: './tipos-scripts.component.html',
+  styleUrl: './tipos-scripts.component.scss'
 })
-export class ScriptsComponent implements OnInit {
+export class TiposScriptsComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
   @Output()
   toggleSidebar = new EventEmitter<void>();
 
   //#region VARIABLES
   registrosSub?: Subscription;
-  registros: PTLScriptsModel[] = [];
-  registrosFiltrado: PTLScriptsModel[] = [];
+  registros: PTLTiposScriptsModel[] = [];
+  registrosFiltrado: PTLTiposScriptsModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
-  tituloPagina: string = '';
   gradientConfig;
   hasFiltersSlot: boolean = false;
   menuItems$!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  datatableElement!: DataTableDirective;
 
   constructor(
     private router: Router,
     private translate: TranslateService,
-    private _scriptsService: PTLScriptsService,
+    private _tiposScriptsService: PTLTiposScriptsService,
     private _logActividadesService: PtllogActividadesService,
     private _navigationService: NavigationService
   ) {
@@ -60,53 +58,40 @@ export class ScriptsComponent implements OnInit {
   ngOnInit() {
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
-    console.log('elementos menu componente', this.menuItems$);
     this.hasFiltersSlot = true;
     this.consultarRegistros();
   }
 
   consultarRegistros() {
-    this.registrosSub = this._scriptsService
+    this.registrosSub = this._tiposScriptsService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            resp.scripts.forEach((script: any) => {
-              script.nomEstado = script.estadoScript == true ? 'Activo' : 'Inactivo';
+            resp.tiposScripts.forEach((tipo: any) => {
+              tipo.nomEstado = tipo.estadoTipo == true ? 'Activo' : 'Inactivo';
             });
-            this.registros = resp.scripts;
-            this.registrosFiltrado = resp.scripts;
-            console.log('Todos los scripts', this.registros);
-            return;
+            this.registros = resp.tiposScripts;
+            this.registrosFiltrado = resp.tiposScripts;
           }
         }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
+        catchError((err: any) => {
+          console.error('Ha ocurrido un error al cargar tipos de scripts', err);
           return of(null);
         })
       )
       .subscribe();
   }
 
-  columnasScripts: ColumnMetadata[] = [
-    {
-      name: 'codigoScript',
-      header: 'SCRIPTS.CODIGO',
-      type: 'text'
-    },
-    {
-      name: 'nombreScript',
-      header: 'SCRIPTS.NOMBRE',
-      type: 'text'
-    },
-    {
-      name: 'codigoAplicacion',
-      header: 'SCRIPTS.APLICACION',
-      type: 'text'
-    },
+  columnasTiposScripts: ColumnMetadata[] = [
     {
       name: 'codigoTipo',
-      header: 'SCRIPTS.TIPO',
+      header: 'TIPOS_SCRIPTS.CODIGO',
+      type: 'text'
+    },
+    {
+      name: 'nombreTipo',
+      header: 'TIPOS_SCRIPTS.NOMBRE',
       type: 'text'
     },
     {
@@ -118,54 +103,53 @@ export class ScriptsComponent implements OnInit {
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
-      name: 'descripcionScript',
-      header: 'SCRIPTS.DESCRIPCION',
+      name: 'descripcionTipo',
+      header: 'TIPOS_SCRIPTS.DESCRIPCION',
       type: 'text'
     }
   ];
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['administracion-bd/scripts/gestion-scripts/'], { queryParams: { regId: 'nuevo' } });
+    this.router.navigate(['administracion-bd/tipos-scripts/gestion-tipos-scripts/'], { queryParams: { regId: 'nuevo' } });
   }
 
   OnEditarRegistroClick(id: any) {
-    this.router.navigate(['administracion-bd/scripts/gestion-scripts/'], { queryParams: { regId: id } });
+    this.router.navigate(['administracion-bd/tipos-scripts/gestion-tipos-scripts/'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(evento: any) {
-    const id = typeof evento === 'string' ? evento : evento?.codigoScript || evento?.id;
+    const id = typeof evento === 'string' ? evento : evento?.codigoTipo || evento?.id;
 
     Swal.fire({
-      title: this.translate.instant('SCRIPTS.ELIMINARTITULO'),
-      text: this.translate.instant('SCRIPTS.ELIMINARTEXTO'),
+      title: this.translate.instant('TIPOS_SCRIPTS.ELIMINARTITULO'),
+      text: this.translate.instant('TIPOS_SCRIPTS.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this._scriptsService.deleteEliminarRegistro(id).subscribe({
+        this._tiposScriptsService.deleteEliminarRegistro(id).subscribe({
           next: (resp: any) => {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('SCRIPTS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+              descripcionLog: this.translate.instant('TIPOS_SCRIPTS.ELIMINAREXITOSA') + ' ' + resp.mensaje
             };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire(this.translate.instant('SCRIPTS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this._logActividadesService.postCrearRegistro(logData).subscribe();
+            Swal.fire(this.translate.instant('TIPOS_SCRIPTS.ELIMINAREXITOSA'), resp.mensaje, 'success');
 
-            // Refresca la grilla localmente
-            this.registros = this.registros.filter((s) => s.codigoScript !== id);
-            this.registrosFiltrado = this.registrosFiltrado.filter((s) => s.codigoScript !== id);
+            this.registros = this.registros.filter((t) => t.codigoTipo !== id);
+            this.registrosFiltrado = this.registrosFiltrado.filter((t) => t.codigoTipo !== id);
           },
           error: (err: any) => {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('SCRIPTS.ELIMINARERROR') + ' ' + err.mensaje
+              descripcionLog: this.translate.instant('TIPOS_SCRIPTS.ELIMINARERROR') + ' ' + err.message
             };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire('Error', this.translate.instant('SCRIPTS.ELIMINARERROR'), 'error');
+            this._logActividadesService.postCrearRegistro(logData).subscribe();
+            Swal.fire('Error', this.translate.instant('TIPOS_SCRIPTS.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });
@@ -173,33 +157,31 @@ export class ScriptsComponent implements OnInit {
     });
   }
 
+  // Filtros del menú lateral
   onFiltroNombreChangeClick(evento: any) {
-    console.log('filtrar el NOMBRE ', evento.target.value);
     const textoFiltro = evento.target.value.toLowerCase();
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registros.filter((script) => (script.nombreScript || '').toLowerCase().includes(textoFiltro));
+      this.registrosFiltrado = this.registros.filter((tipo) => (tipo.nombreTipo || '').toLowerCase().includes(textoFiltro));
     }
   }
 
   onFiltroDescripcionChangeClick(evento: any) {
-    console.log('filtrar la descripcion ', evento.target.value);
     const textoFiltro = evento.target.value.toLowerCase();
     if (!textoFiltro) {
       this.registrosFiltrado = [...this.registros];
     } else {
-      this.registrosFiltrado = this.registros.filter((script) => (script.descripcionScript || '').toLowerCase().includes(textoFiltro));
+      this.registrosFiltrado = this.registros.filter((tipo) => (tipo.descripcionTipo || '').toLowerCase().includes(textoFiltro));
     }
   }
 
   onFiltroEstadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
     if (evento.target.value == 'todos') {
       this.registrosFiltrado = this.registros;
     } else {
       const estado = evento.target.value == 'true' ? true : false;
-      this.registrosFiltrado = this.registros.filter((x) => x.estadoScript == estado);
+      this.registrosFiltrado = this.registros.filter((x) => x.estadoTipo == estado);
     }
   }
 

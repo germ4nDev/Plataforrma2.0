@@ -182,6 +182,8 @@ export class ModulosComponent implements OnInit, OnDestroy {
     //   return;
     // }
     const codigoSuscriptor = 'e1a8fa99-15db-479b-a0a4-9c2be72273c9'
+    console.log('todas las aplicaciones', this.aplicaciones);
+
     this.modulosTransformados$ = this._registrosService.modulos$.pipe(
       switchMap((mods: PTLModuloAP[]) => {
         if (!mods) return of([])

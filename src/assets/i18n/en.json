@@ -72,7 +72,7 @@
       "LOGS": "Logs",
       "TIPOSLOGS": "Logs Types",
       "TIPOSVALOR": "Prices Types",
-      "ADMINBD": "Connections",
+      "ADMINBD": "DBs & Servers",
       "TICKETS": "Tickets",
       "SEGUIMIENTOS": "Follow-ups",
       "ROLES": "Roles",
@@ -81,7 +81,8 @@
       "BIBLIOTECA": "Gallery",
       "GALERIA": "Gallery",
       "TIPOS GALERIA": "Gallery Types",
-      "FORMATOS GALERIA": "Gallery Formats"
+      "FORMATOS GALERIA": "Gallery Formats",
+      "SCRIPTS": "Scripts"
     },
     "NAVBAR": {
       "NOTIFICACIONES": "Notifications",
@@ -934,6 +935,27 @@
       "FILTRODECRIPCION": "Description",
       "FILTROESTADO": "Status",
       "DESCRIPCIONCHOLDER": "Search..."
+    }
+  },
+  "SCRIPTS": {
+    "TITLE": "Scripts Management",
+    "NEW": "New Script",
+    "CODIGO": "Code",
+    "NOMBRE": "Name",
+    "APLICACION": "Application",
+    "TIPO": "Script Type",
+    "DESCRIPCION": "Description",
+    "ELIMINARTITULO": "Are you sure?",
+    "ELIMINARTEXTO": "This action will permanently delete the script. You won't be able to revert this!",
+    "ELIMINAREXITOSA": "The script has been successfully deleted.",
+    "ELIMINARERROR": "An error occurred while trying to delete the script.",
+    "FILTROS": {
+      "TITULO": "Search Filters",
+      "FILTRONOMBRE": "Filter by Name",
+      "NOMBRECHOLDER": "Search by name...",
+      "FILTRODECRIPCION": "Filter by Description",
+      "DESCRIPCIONCHOLDER": "Search by description...",
+      "FILTROESTADO": "Filter by Status"
     }
   },
 

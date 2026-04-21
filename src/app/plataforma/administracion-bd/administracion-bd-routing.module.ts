@@ -7,25 +7,32 @@ const routes: Routes = [
     children: [
       {
         path: 'scripts',
-        loadComponent: () => import('./scripts/scripts.component').then(m => m.ScriptsComponent)
+        loadComponent: () => import('./scripts/scripts.component').then((m) => m.ScriptsComponent)
       },
       {
         path: 'gestion-script',
-        loadComponent: () => import('./scripts/gestion-script/gestion-script.component').then(m => m.GestionScriptComponent)
+        loadComponent: () => import('./scripts/gestion-script/gestion-script.component').then((m) => m.GestionScriptComponent)
       },
       {
         path: 'servidores',
-        loadComponent: () => import('./servidores/servidores.component').then(m => m.ServidoresComponent)
+        loadComponent: () => import('./servidores/servidores.component').then((m) => m.ServidoresComponent)
       },
       {
         path: 'gestion-servidor',
-        loadComponent: () => import('./servidores/gestion-servidor/gestion-servidor.component').then(m => m.GestionServidorComponent)
+        loadComponent: () => import('./servidores/gestion-servidor/gestion-servidor.component').then((m) => m.GestionServidorComponent)
       },
       {
         path: 'estadisticas',
-        loadComponent: () => import('./estadisticas/estadisticas.component').then(m => m.EstadisticasComponent)
+        loadComponent: () => import('./estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent)
+      },
+      {
+        path: 'tipos-script',
+        loadComponent: () => import('./tipos-scripts/tipos-scripts.component').then((m) => m.TiposScriptComponent)
+      },
+      {
+        path: 'getion-tipo-script',
+        loadComponent: () => import('./tipos-scripts/gestion-tipo/gestion-tipo.component').then((m) => m.GestionTipoComponent)
       }
-
     ]
   }
 ];

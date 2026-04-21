@@ -76,7 +76,7 @@
       "LOGS": "Logs",
       "TIPOSLOGS": "Tipos Logs",
       "TIPOSVALOR": "Tipos Precio",
-      "ADMINBD": "Conexiones",
+      "ADMINBD": "BDs y Servidores",
       "TICKETS": "Tickets",
       "SEGUIMIENTOS": "Seguimientos",
       "ROLES": "Roles",
@@ -86,7 +86,8 @@
       "BIBLIOTECA": "Biblioteca",
       "GALERIA": "Galería",
       "TIPOS GALERIA": "Tipos Galería",
-      "FORMATOS GALERIA": "Formatos Galería"
+      "FORMATOS GALERIA": "Formatos Galería",
+      "SCRIPTS": "Scripts"
     },
     "NAVBAR": {
       "NOTIFICACIONES": "Notificaciones",
@@ -922,6 +923,27 @@
       "FILTRODECRIPCION": "Descripción",
       "FILTROESTADO": "Estado",
       "DESCRIPCIONCHOLDER": "Buscar..."
+    }
+  },
+  "SCRIPTS": {
+    "TITLE": "Gestión de Scripts",
+    "NEW": "Nuevo Script",
+    "CODIGO": "Código",
+    "NOMBRE": "Nombre",
+    "APLICACION": "Aplicación",
+    "TIPO": "Tipo Script",
+    "DESCRIPCION": "Descripción",
+    "ELIMINARTITULO": "¿Estás seguro?",
+    "ELIMINARTEXTO": "Esta acción eliminará el script permanentemente. ¡No podrás revertir esto!",
+    "ELIMINAREXITOSA": "El script ha sido eliminado correctamente.",
+    "ELIMINARERROR": "Ocurrió un error al intentar eliminar el script.",
+    "FILTROS": {
+      "TITULO": "Filtros de Búsqueda",
+      "FILTRONOMBRE": "Filtrar por Nombre",
+      "NOMBRECHOLDER": "Buscar por nombre...",
+      "FILTRODECRIPCION": "Filtrar por Descripción",
+      "DESCRIPCIONCHOLDER": "Buscar por descripción...",
+      "FILTROESTADO": "Filtrar por Estado"
     }
   },
 
