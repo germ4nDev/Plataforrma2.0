@@ -87,7 +87,8 @@
       "GALERIA": "Galería",
       "TIPOS GALERIA": "Tipos Galería",
       "FORMATOS GALERIA": "Formatos Galería",
-      "SCRIPTS": "Scripts"
+      "SCRIPTS": "Scripts",
+      "TIPOSCRIPTS": "Tipo Scripts"
     },
     "NAVBAR": {
       "NOTIFICACIONES": "Notificaciones",
@@ -928,6 +929,8 @@
   "SCRIPTS": {
     "TITLE": "Gestión de Scripts",
     "NEW": "Nuevo Script",
+    "UPDATE": "Actualizar Script",
+    "CREATE": "Crear Script",
     "CODIGO": "Código",
     "NOMBRE": "Nombre",
     "APLICACION": "Aplicación",
@@ -937,6 +940,28 @@
     "ELIMINARTEXTO": "Esta acción eliminará el script permanentemente. ¡No podrás revertir esto!",
     "ELIMINAREXITOSA": "El script ha sido eliminado correctamente.",
     "ELIMINARERROR": "Ocurrió un error al intentar eliminar el script.",
+    "FILTROS": {
+      "TITULO": "Filtros de Búsqueda",
+      "FILTRONOMBRE": "Filtrar por Nombre",
+      "NOMBRECHOLDER": "Buscar por nombre...",
+      "FILTRODECRIPCION": "Filtrar por Descripción",
+      "DESCRIPCIONCHOLDER": "Buscar por descripción...",
+      "FILTROESTADO": "Filtrar por Estado"
+    }
+  },
+  "TIPOSCRIPTS": {
+    "MENU": "Tipos de Scripts",
+    "TITLE": "Tipos de Scripts",
+    "NEW": "Nuevo Tipo",
+    "CREATE": "Crear Tipo",
+    "UPDATE": "Actualizar Tipo",
+    "CODIGO": "Código Tipo",
+    "NOMBRE": "Nombre",
+    "DESCRIPCION": "Descripción",
+    "ELIMINARTITULO": "¿Estás seguro?",
+    "ELIMINARTEXTO": "Esta acción eliminará el tipo de script permanentemente.",
+    "ELIMINAREXITOSA": "El tipo ha sido eliminado correctamente.",
+    "ELIMINARERROR": "Error al intentar eliminar el tipo.",
     "FILTROS": {
       "TITULO": "Filtros de Búsqueda",
       "FILTRONOMBRE": "Filtrar por Nombre",

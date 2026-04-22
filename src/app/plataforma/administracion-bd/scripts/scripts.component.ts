@@ -125,11 +125,11 @@ export class ScriptsComponent implements OnInit {
   ];
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['administracion-bd/scripts/gestion-scripts/'], { queryParams: { regId: 'nuevo' } });
+    this.router.navigate(['/administracion-bd/scripts/gestion-script'], { queryParams: { regId: 'nuevo' } });
   }
 
   OnEditarRegistroClick(id: any) {
-    this.router.navigate(['administracion-bd/scripts/gestion-scripts/'], { queryParams: { regId: id } });
+    this.router.navigate(['/administracion-bd/scripts/gestion-script'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(evento: any) {

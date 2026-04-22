@@ -10,7 +10,7 @@ const routes: Routes = [
         loadComponent: () => import('./scripts/scripts.component').then((m) => m.ScriptsComponent)
       },
       {
-        path: 'gestion-script',
+        path: 'scripts/gestion-script',
         loadComponent: () => import('./scripts/gestion-script/gestion-script.component').then((m) => m.GestionScriptComponent)
       },
       {
@@ -26,11 +26,11 @@ const routes: Routes = [
         loadComponent: () => import('./estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent)
       },
       {
-        path: 'tipos-script',
-        loadComponent: () => import('./tipos-scripts/tipos-scripts.component').then((m) => m.TiposScriptComponent)
+        path: 'tipos-scripts',
+        loadComponent: () => import('./tipos-scripts/tipos-scripts.component').then((m) => m.TiposScriptsComponent)
       },
       {
-        path: 'getion-tipo-script',
+        path: 'tipos-scripts/gestion-tipo',
         loadComponent: () => import('./tipos-scripts/gestion-tipo/gestion-tipo.component').then((m) => m.GestionTipoComponent)
       }
     ]

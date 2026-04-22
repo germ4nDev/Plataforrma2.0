@@ -14,7 +14,7 @@ export class PTLTiposScriptsService {
   constructor(private http: HttpClient) {}
 
   getRegistros() {
-    const url = `${base_url}/api/tipos-scripts`;
+    const url = `${base_url}/tipos-scripts`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('servicio de tipos de scripts', resp);
@@ -27,7 +27,7 @@ export class PTLTiposScriptsService {
   }
 
   getRegistroById(id: string) {
-    const url = `${base_url}/api/tipos-scripts/${id}`;
+    const url = `${base_url}/tipos-scripts/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de tipo de script', resp);
@@ -40,12 +40,12 @@ export class PTLTiposScriptsService {
   }
 
   postCrearRegistro(tipoScript: PTLTiposScriptsModel) {
-    const url = `${base_url}/api/tipos-scripts`;
+    const url = `${base_url}/tipos-scripts`;
     return this.http.post(url, tipoScript);
   }
 
   putModificarRegistro(tipoScript: PTLTiposScriptsModel) {
-    const url = `${base_url}/api/tipos-scripts`;
+    const url = `${base_url}/tipos-scripts`;
     return this.http.put(url, tipoScript).pipe(
       map((resp: any) => {
         console.log('data de tipo de script modificada', resp);
@@ -58,7 +58,7 @@ export class PTLTiposScriptsService {
   }
 
   deleteEliminarRegistro(_id: string) {
-    const url = `${base_url}/api/tipos-scripts/${_id}`;
+    const url = `${base_url}/tipos-scripts/${_id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de tipo de script eliminado', resp);

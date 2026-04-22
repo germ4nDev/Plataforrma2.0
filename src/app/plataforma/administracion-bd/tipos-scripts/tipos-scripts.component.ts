@@ -110,11 +110,11 @@ export class TiposScriptsComponent implements OnInit {
   ];
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['administracion-bd/tipos-scripts/gestion-tipos-scripts/'], { queryParams: { regId: 'nuevo' } });
+    this.router.navigate(['/administracion-bd/tipos-scripts/gestion-tipo'], { queryParams: { regId: 'nuevo' } });
   }
 
   OnEditarRegistroClick(id: any) {
-    this.router.navigate(['administracion-bd/tipos-scripts/gestion-tipos-scripts/'], { queryParams: { regId: id } });
+    this.router.navigate(['/administracion-bd/tipos-scripts/gestion-tipo'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(evento: any) {

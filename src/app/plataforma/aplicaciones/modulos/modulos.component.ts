@@ -1,31 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { DataTablesModule } from 'angular-datatables'
-import { Router } from '@angular/router'
-import { SharedModule } from 'src/app/theme/shared/shared.module'
-import { TranslateModule, TranslateService } from '@ngx-translate/core'
-import { BehaviorSubject, Observable, Subscription, combineLatest, of } from 'rxjs'
-import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators'
-import { GradientConfig } from 'src/app/app-config'
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DataTablesModule } from 'angular-datatables';
+import { Router } from '@angular/router';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable, Subscription, combineLatest, of } from 'rxjs';
+import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { GradientConfig } from 'src/app/app-config';
 
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
-import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component'
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
-import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service'
-import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service'
-import { PtlmodulosApService } from 'src/app/theme/shared/service/ptlmodulos-ap.service'
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
+import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service';
+import { PtlmodulosApService } from 'src/app/theme/shared/service/ptlmodulos-ap.service';
 
-import Swal from 'sweetalert2'
-import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model'
-import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
-import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
-import { PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service'
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
-import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
-import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
+import Swal from 'sweetalert2';
+import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model';
+import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
+import { PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
 
 @Component({
   selector: 'app-modulos',
@@ -35,36 +35,36 @@ import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTL
   styleUrl: './modulos.component.scss'
 })
 export class ModulosComponent implements OnInit, OnDestroy {
-  @Output() toggleSidebar = new EventEmitter<void>()
-  DataModel: BaseSessionModel = new BaseSessionModel()
-  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
-  moduloTituloExcel: string = ''
-  hasFiltersSlot: boolean = false
-  gradientConfig
-  lang = localStorage.getItem('lang')
-  menuItems$!: Observable<NavigationItem[]>
-  activeTab: 'menu' | 'filters' | 'main' = 'menu'
+  @Output() toggleSidebar = new EventEmitter<void>();
+  DataModel: BaseSessionModel = new BaseSessionModel();
+  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
+  moduloTituloExcel: string = '';
+  hasFiltersSlot: boolean = false;
+  gradientConfig;
+  lang = localStorage.getItem('lang');
+  menuItems$!: Observable<NavigationItem[]>;
+  activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
-  subscriptions = new Subscription()
-  filtroAplicacionSubject = new BehaviorSubject<string>('todos')
-  filtroSuiteSubject = new BehaviorSubject<string>('todos')
-  filtroModuloSubject = new BehaviorSubject<string>('todos')
-  filtroDescripcionSubject = new BehaviorSubject<string>('')
-  filtroEstadoSubject = new BehaviorSubject<string>('todos')
+  subscriptions = new Subscription();
+  filtroAplicacionSubject = new BehaviorSubject<string>('todos');
+  filtroSuiteSubject = new BehaviorSubject<string>('todos');
+  filtroModuloSubject = new BehaviorSubject<string>('todos');
+  filtroDescripcionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-  modulosTransformados$: Observable<PTLModuloAP[]> = of([])
-  modulosFiltrados$: Observable<PTLModuloAP[]> = of([])
-  modulos: PTLModuloAP[] = []
+  modulosTransformados$: Observable<PTLModuloAP[]> = of([]);
+  modulosFiltrados$: Observable<PTLModuloAP[]> = of([]);
+  modulos: PTLModuloAP[] = [];
 
-  aplicaciones: PTLAplicacionModel[] = []
-  aplicacionesSub?: Subscription
-  suites: PTLSuiteAPModel[] = []
-  suitesSub?: Subscription
-  modulosSub?: Subscription
-  modulosPadre: PTLModuloAP[] = []
-  filtroPersonalizado: string = ''
+  aplicaciones: PTLAplicacionModel[] = [];
+  aplicacionesSub?: Subscription;
+  suites: PTLSuiteAPModel[] = [];
+  suitesSub?: Subscription;
+  modulosSub?: Subscription;
+  modulosPadre: PTLModuloAP[] = [];
+  filtroPersonalizado: string = '';
 
-  constructor (
+  constructor(
     private router: Router,
     private translate: TranslateService,
     private _navigationService: NavigationService,
@@ -74,136 +74,137 @@ export class ModulosComponent implements OnInit, OnDestroy {
     private _registrosService: PtlmodulosApService,
     private _uploadService: UploadFilesService
   ) {
-    this.gradientConfig = GradientConfig
+    this.gradientConfig = GradientConfig;
     // this.consultarAplicacines();
     // this.consultarSuites();
     // this.consultarModulosPadre();
   }
 
-  ngOnInit (): void {
-    this._navigationService.getNavigationItems()
-    this.menuItems$ = this._navigationService.menuItems$
-    this.hasFiltersSlot = true
-    this.consultarAplicacines()
-    this.consultarSuites()
-    this.consultarModulosPadre()
-    this.consultarRegistros()
+  ngOnInit(): void {
+    this._navigationService.getNavigationItems();
+    this.menuItems$ = this._navigationService.menuItems$;
+    this.hasFiltersSlot = true;
+    this.consultarAplicacines();
+    this.consultarSuites();
+    this.consultarModulosPadre();
+    this.consultarRegistros();
     setTimeout(() => {
-      this.setupModulosStream()
-    }, 100)
+      this.setupModulosStream();
+    }, 100);
     this.subscriptions.add(
       this._registrosService.cargarRegistros().subscribe(
         () => console.log('Modulos cargadas y guardadas en el servicio'),
-        err => console.error('Error al cargar aplicaciones:', err)
+        (err) => console.error('Error al cargar aplicaciones:', err)
       )
-    )
+    );
     // this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications';
     // this.consultarRegistros();
   }
 
-  ngOnDestroy (): void {
-    this.subscriptions.unsubscribe()
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
-  consultarAplicacines () {
+  consultarAplicacines() {
     this.aplicacionesSub = this._aplicacionesService
       .getAplicaciones()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.aplicaciones = resp.aplicaciones
+            this.aplicaciones = resp.aplicaciones;
             // console.log('aplicaciones 1', this.aplicaciones);
           }
         }),
-        catchError(err => {
-          console.error(err)
-          return of([])
+        catchError((err) => {
+          console.error(err);
+          return of([]);
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
-  consultarSuites (codApp?: string): void {
+  consultarSuites(codApp?: string): void {
     this.suitesSub = this._suitesService
       .geSuitesAP()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
             if (codApp) {
-              this.suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == codApp)
+              this.suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == codApp);
             } else {
-              this.suites = resp.suites
+              this.suites = resp.suites;
             }
             // console.log('suites 1', this.suites);
           }
         }),
-        catchError(err => {
-          console.error(err)
-          return of([])
+        catchError((err) => {
+          console.error(err);
+          return of([]);
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
-  consultarModulosPadre () {
+  consultarModulosPadre() {
     this.modulosSub = this._registrosService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.modulosPadre = resp.modulos.filter((x: { hijos: boolean }) => x.hijos == true)
+            this.modulosPadre = resp.modulos.filter((x: { hijos: boolean }) => x.hijos == true);
             // console.log('modulosPadre 1', this.modulosPadre);
           }
         }),
-        catchError(err => {
-          console.error(err)
-          return of([])
+        catchError((err) => {
+          console.error(err);
+          return of([]);
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
-  consultarRegistros () {
+  consultarRegistros() {
     this.subscriptions.add(
       this._registrosService.getRegistros().subscribe((resp: any) => {
         if (resp.ok) {
-          this.modulos = resp.modulos
-          console.log('Todos las modulos', this.modulos)
-          return
+          this.modulos = resp.modulos;
+          console.log('Todos las modulos', this.modulos);
+          return;
         }
       })
-    )
+    );
   }
 
-  setupModulosStream (): void {
+  setupModulosStream(): void {
     // const suscriptor = this._localStorageService.getSuscriptorLocalStorage() ? this._localStorageService.getSuscriptorLocalStorage()  : {};
     // if (!suscriptor || !suscriptor.codigoSuscriptor) {
     //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
     //   return;
     // }
-    const codigoSuscriptor = 'e1a8fa99-15db-479b-a0a4-9c2be72273c9'
+    const codigoSuscriptor = 'e1a8fa99-15db-479b-a0a4-9c2be72273c9';
     console.log('todas las aplicaciones', this.aplicaciones);
 
     this.modulosTransformados$ = this._registrosService.modulos$.pipe(
       switchMap((mods: PTLModuloAP[]) => {
-        if (!mods) return of([])
-        console.log('todas las modulos', mods)
+        if (!mods) return of([]);
+        console.log('todas las modulos', mods);
         const transformedModulos = mods.map((mod: any) => {
-          mod.nomEstado = mod.estadoModulo ? 'Activo' : 'Inactivo'
-          mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos'
-          mod.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == mod.codigoAplicacion)[0].nombreAplicacion || ''
-          mod.nomSuite = this.suites.filter(x => x.codigoSuite == mod.codigoSuite)[0].nombreSuite || ''
-          mod.nomPadre = mod.codigoPadre != '0' ? this.modulosPadre.filter(x => x.codigoModulo == mod.codigoPadre)[0].nombreModulo : ''
-          return mod as PTLModuloAP
-        })
-        this.modulos = transformedModulos
-        return of(transformedModulos)
-      }),
-      catchError(err => {
-        console.error('Error en el stream de aplicaciones:', err)
-        return of([])
+          mod.nomEstado = mod.estadoModulo ? 'Activo' : 'Inactivo';
+          mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos';
+          mod.nomAplicacion =
+            this.aplicaciones.find((x) => x.codigoAplicacion == mod.codigoAplicacion)?.nombreAplicacion || 'Sin Aplicación';
+          mod.nomSuite = this.suites.find((x) => x.codigoSuite == mod.codigoSuite)?.nombreSuite || 'Sin Suite';
+          mod.nomPadre =
+            mod.codigoPadre != '0'
+              ? this.modulosPadre.find((x) => x.codigoModulo == mod.codigoPadre)?.nombreModulo || 'Padre no encontrado'
+              : '';
+
+          return mod as PTLModuloAP;
+        });
+        this.modulos = transformedModulos;
+        return of(transformedModulos);
       })
-    )
+    );
 
     this.modulosFiltrados$ = combineLatest([
       this.modulosTransformados$.pipe(startWith([])),
@@ -214,33 +215,33 @@ export class ModulosComponent implements OnInit, OnDestroy {
       this.filtroEstadoSubject
     ]).pipe(
       map(([mods, aplicacion, suite, modulo, descripcion, estado]) => {
-        let filteredmodulos = mods
+        let filteredmodulos = mods;
 
         if (aplicacion !== 'todos') {
-          filteredmodulos = filteredmodulos.filter((mod: any) => mod.codigoAplicacion === aplicacion)
+          filteredmodulos = filteredmodulos.filter((mod: any) => mod.codigoAplicacion === aplicacion);
         }
 
         if (suite !== 'todos') {
-          filteredmodulos = filteredmodulos.filter((mod: any) => mod.codigoSuite === suite)
+          filteredmodulos = filteredmodulos.filter((mod: any) => mod.codigoSuite === suite);
         }
 
         if (modulo !== 'todos') {
-          filteredmodulos = filteredmodulos.filter((mod: any) => mod.codigoModulo === modulo)
+          filteredmodulos = filteredmodulos.filter((mod: any) => mod.codigoModulo === modulo);
         }
 
         if (estado !== 'todos') {
-          const estadoBoolean = estado === 'true'
-          filteredmodulos = filteredmodulos.filter((mod: any) => mod.estadoModulo === estado)
+          const estadoBoolean = estado === 'true';
+          filteredmodulos = filteredmodulos.filter((mod: any) => mod.estadoModulo === estado);
         }
 
         if (descripcion) {
-          const textoFiltro = descripcion.toLowerCase()
-          filteredmodulos = filteredmodulos.filter((mod: any) => (mod.descripcionModulo || '').toLowerCase().includes(textoFiltro))
+          const textoFiltro = descripcion.toLowerCase();
+          filteredmodulos = filteredmodulos.filter((mod: any) => (mod.descripcionModulo || '').toLowerCase().includes(textoFiltro));
         }
 
-        return filteredmodulos
+        return filteredmodulos;
       })
-    )
+    );
   }
 
   columnasRegistros: ColumnMetadata[] = [
@@ -264,7 +265,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
       header: 'MODULOS.STATUS',
       type: 'estado'
     }
-  ]
+  ];
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
@@ -292,50 +293,50 @@ export class ModulosComponent implements OnInit, OnDestroy {
       header: 'MODULOS.DESCRIPTION',
       type: 'text'
     }
-  ]
+  ];
 
-  getLanguageUrl (): string {
-    const lang = localStorage.getItem('lang') || 'en'
-    return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`
+  getLanguageUrl(): string {
+    const lang = localStorage.getItem('lang') || 'en';
+    return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`;
   }
 
-  onFiltroCodigoAplicacionChangeClick (evento: any) {
+  onFiltroCodigoAplicacionChangeClick(evento: any) {
     // console.log('filtrar el codigo ', evento.target.value);
-    const value = evento.target.value
-    this.filtroAplicacionSubject.next(value)
+    const value = evento.target.value;
+    this.filtroAplicacionSubject.next(value);
   }
 
-  onFiltroCodigoSuiteChangeClick (evento: any) {
+  onFiltroCodigoSuiteChangeClick(evento: any) {
     // console.log('filtrar el codigo ', evento.target.value);
-    const value = evento.target.value
-    this.filtroSuiteSubject.next(value)
+    const value = evento.target.value;
+    this.filtroSuiteSubject.next(value);
   }
 
-  onFiltroCodigoModuloChangeClick (evento: any) {
+  onFiltroCodigoModuloChangeClick(evento: any) {
     // console.log('filtrar el codigo ', evento.target.value);
-    const value = evento.target.value
-    this.filtroModuloSubject.next(value)
+    const value = evento.target.value;
+    this.filtroModuloSubject.next(value);
   }
 
-  onFiltroDescripcionChangeClick (evento: any): void {
-    const value = evento.target.value
-    this.filtroDescripcionSubject.next(value)
+  onFiltroDescripcionChangeClick(evento: any): void {
+    const value = evento.target.value;
+    this.filtroDescripcionSubject.next(value);
   }
 
-  onFiltroEstadoChangeClick (evento: any): void {
-    const value = evento.target.value
-    this.filtroEstadoSubject.next(value)
+  onFiltroEstadoChangeClick(evento: any): void {
+    const value = evento.target.value;
+    this.filtroEstadoSubject.next(value);
   }
 
-  OnNuevoRegistroClick (): void {
-    this.router.navigate(['aplicaciones/gestion-modulo'])
+  OnNuevoRegistroClick(): void {
+    this.router.navigate(['aplicaciones/gestion-modulo']);
   }
 
-  OnEditarRegistroClick (id: number): void {
-    this.router.navigate(['aplicaciones/gestion-modulo'], { queryParams: { regId: id } })
+  OnEditarRegistroClick(id: number): void {
+    this.router.navigate(['aplicaciones/gestion-modulo'], { queryParams: { regId: id } });
   }
 
-  OnEliminarRegistroClick (id: any): void {
+  OnEliminarRegistroClick(id: any): void {
     Swal.fire({
       title: this.translate.instant('MODULOS.ELIMINARTITULO'),
       text: this.translate.instant('MODULOS.ELIMINARTEXTO'),
@@ -343,7 +344,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then(result => {
+    }).then((result) => {
       if (result.isConfirmed) {
         this._registrosService.deleteEliminarRegistro(id.id).subscribe({
           next: (resp: any) => {
@@ -351,26 +352,26 @@ export class ModulosComponent implements OnInit, OnDestroy {
               codigoTipoLog: '',
               codigoRespuesta: '201',
               descripcionLog: this.translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
-            }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            Swal.fire(this.translate.instant('MODULOS.ELIMINAREXITOSA'), resp.mensaje, 'success')
-            this.setupModulosStream()
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            Swal.fire(this.translate.instant('MODULOS.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            this.setupModulosStream();
           },
-          error: err => {
+          error: (err) => {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
               descripcionLog: this.translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
-            }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            Swal.fire('Error', this.translate.instant('MODULOS.ELIMINARERROR'), 'error')
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            Swal.fire('Error', this.translate.instant('MODULOS.ELIMINARERROR'), 'error');
           }
-        })
+        });
       }
-    })
+    });
   }
 
-  toggleNav (): void {
-    this.toggleSidebar.emit()
+  toggleNav(): void {
+    this.toggleSidebar.emit();
   }
 }
