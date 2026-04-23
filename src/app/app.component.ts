@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core'
+import { NavigationEnd, Router } from '@angular/router'
 import {
   AuthenticationService,
   LocalStorageService,
   PtlAplicacionesService,
   PtlEmpresasScService,
+  PtlidiomasService,
   PtlmodulosApService,
   PTLRolesAPService,
   PtlSuitesAPService,
@@ -13,9 +14,9 @@ import {
   PtlusuariosRolesApService,
   PtlusuariosScService,
   ThemeService
-} from './theme/shared/service';
-import { PtlActividadesService } from './theme/shared/service/ptlactividades.service';
-import { PtlactividadesRolesService } from './theme/shared/service/ptlactividades-roles.service';
+} from './theme/shared/service'
+import { PtlActividadesService } from './theme/shared/service/ptlactividades.service'
+import { PtlactividadesRolesService } from './theme/shared/service/ptlactividades-roles.service'
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,7 @@ import { PtlactividadesRolesService } from './theme/shared/service/ptlactividade
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(
+  constructor (
     private router: Router,
     private themeService: ThemeService,
     private _authenticationService: AuthenticationService,
@@ -38,78 +39,85 @@ export class AppComponent implements OnInit {
     private _usuariosEmpresasService: PtlusuariosEmpresasScService,
     private _empresasSCService: PtlEmpresasScService,
     private _suscriptoresService: PTLSuscriptoresService,
+    private _idiomasService: PtlidiomasService,
     private _rolesAPService: PTLRolesAPService
   ) {}
 
-  ngOnInit() {
-    this.router.events.subscribe((evt) => {
+  ngOnInit () {
+    this.router.events.subscribe(evt => {
       if (evt instanceof NavigationEnd) {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0)
       }
-    });
-    const themeSettings = this._localStorageService.getThemeSettings();
+    })
+    const themeSettings = this._localStorageService.getThemeSettings()
     if (themeSettings) {
-      this.themeService.setDarkTheme(themeSettings.isDarkTheme);
+      this.themeService.setDarkTheme(themeSettings.isDarkTheme)
     }
-    const token = this._localStorageService.getTokenLocalStorage();
+    const token = this._localStorageService.getTokenLocalStorage()
     if (token) {
-      console.log('AppComponent: Token detectado en carga, iniciando carga de datos...');
-      this.loadProtectedData();
+      console.log('AppComponent: Token detectado en carga, iniciando carga de datos...')
+      this.loadProtectedData()
     } else {
-      this.router.navigate(['autenticacion/login']);
+      this.router.navigate(['autenticacion/login'])
     }
-    this._authenticationService.isLoggedIn$.subscribe((isLoggedIn) => {
+    this._authenticationService.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
-        console.log('AppComponent: Notificación de Login exitoso recibida, iniciando carga de datos...');
-        this.loadProtectedData();
+        console.log('AppComponent: Notificación de Login exitoso recibida, iniciando carga de datos...')
+        this.loadProtectedData()
       }
-    });
+    })
   }
 
-  private loadProtectedData(): void {
+  private loadProtectedData (): void {
+    // #region PLATAFORMA
     this._actividadesService.cargarRegistros().subscribe(
       () => console.log('** Actividades cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar roles:', err)
-    );
+      err => console.error('Error al cargar roles:', err)
+    )
     this._actividadesRolesService.cargarRegistros().subscribe(
       () => console.log('** Actividades Roles cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar roles:', err)
-    );
+      err => console.error('Error al cargar roles:', err)
+    )
     this._aplicacionesService.cargarAplicaciones().subscribe(
       () => console.log('** Aplicaciones cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar aplicaciones:', err)
-    );
+      err => console.error('Error al cargar aplicaciones:', err)
+    )
     this._modulosService.cargarRegistros().subscribe(
       () => console.log('** Modulos cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar modulos:', err)
-    );
+      err => console.error('Error al cargar modulos:', err)
+    )
     this._suitesService.cargarRegistros().subscribe(
       () => console.log('** Suites cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar suites:', err)
-    );
+      err => console.error('Error al cargar suites:', err)
+    )
     this._rolesAPService.cargarRegistros().subscribe(
       () => console.log('** Roles cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar roles:', err)
-    );
+      err => console.error('Error al cargar roles:', err)
+    )
     this._usuariosRolesService.cargarRegistros().subscribe(
       () => console.log('** Usuarios Roles cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar roles:', err)
-    );
+      err => console.error('Error al cargar roles:', err)
+    )
     this._suscriptoresService.getRegistros().subscribe(
       () => console.log('** Suscriptores cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar Suscriptores:', err)
-    );
+      err => console.error('Error al cargar Suscriptores:', err)
+    )
     this._empresasSCService.cargarRegistros().subscribe(
       () => console.log('** EmpresasSC cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar EmpresasSC:', err)
-    );
+      err => console.error('Error al cargar EmpresasSC:', err)
+    )
     this._usuariosSCService.cargarRegistros().subscribe(
       () => console.log('** UsuariosSC cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar UsuariosSC:', err)
-    );
+      err => console.error('Error al cargar UsuariosSC:', err)
+    )
     this._usuariosEmpresasService.cargarRegistros().subscribe(
       () => console.log('** UsuariosEmpresasSC cargadas y guardadas en el servicio'),
-      (err) => console.error('Error al cargar UsuariosEmpresasSC:', err)
-    );
+      err => console.error('Error al cargar UsuariosEmpresasSC:', err)
+    )
+    this._idiomasService.cargarRegistros().subscribe(
+      () => console.log('** Idiomas cargadas y guardadas en el servicio'),
+      err => console.error('Error al cargar Idiomas:', err)
+    )
+    // #endregion PLATAFORMA
   }
 }

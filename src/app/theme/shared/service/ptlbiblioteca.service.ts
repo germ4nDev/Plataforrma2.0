@@ -66,7 +66,7 @@ export class PtlBibliotecaService {
     );
   }
 
-  getBibliotecaById(id: number) {
+  getBibliotecaById(id: string) {
     const url = `${base_url}/biblioteca/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {

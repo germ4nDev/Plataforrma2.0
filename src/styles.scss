@@ -58,8 +58,8 @@
     --background-color: #f8f9fa;
     --text-color: #212529;
     --text-subtitle-color: #464e57;
-    --border-color: #dee2e6;
-    --header-color: #f5f5f5;
+    --border-color: #acacac;
+    --header-color: #e2e1e1;
     --color-fin-gradiente: #ffffff;
     --card-background: #ffffff;
     --app-btn-secondary: #dadada;
@@ -80,6 +80,9 @@
     --scrollbar-thumb-color: #c1c1c1;
     --scrollbar-thumb-hover: #5f5f5f;
     --data-table-detail-row: #dfdfdf;
+    --vjs-control-bar-bg: rgba(255, 255, 255, 0.7);
+    --vjs-icon-color: #333333;
+    --vjs-primary-color: var(--app-navbar-color);
 }
 
 // =================================
@@ -89,7 +92,7 @@ body.dark-theme {
     --background-color: #212529;
     --text-color: #b4b4b4;
     --text-subtitle-color: #9c9c9c;
-    --border-color: #474747;
+    --border-color: #494949;
     --header-color: #292828;
     --card-background: #222121;
     --color-fin-gradiente: #000000;
@@ -111,6 +114,9 @@ body.dark-theme {
     --scrollbar-thumb-color: #555;
     --scrollbar-thumb-hover: #777;
     --data-table-detail-row: #3d3d3d;
+    --vjs-control-bar-bg: rgba(30, 30, 30, 0.8);
+    --vjs-icon-color: #f6f4f4;
+    --vjs-primary-color: var(--app-boton-hover-color);
 }
 
 hr.detail-separator {
@@ -164,18 +170,9 @@ hr.detail-separator {
 
 .custom-check-form .form-check-input:checked {
     background-color: var(--app-navbar-color) !important;
-    border-color: var(--app-navbar-color) !important;
+    border-color: var(--border-color) !important;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
 }
-
-
-/* *************************************************************** */
-
-
-/* * ESTILOS GLOBALES DE QUILL EDITOR (TEMA CLARO DEFAULT) */
-
-
-/* *************************************************************** */
 
 .ql-container,
 .ql-toolbar {
@@ -252,7 +249,7 @@ hr.detail-separator {
 ::-webkit-scrollbar-thumb {
     background-color: var(--scrollbar-thumb-color);
     border-radius: 10px;
-    border: 2px solid var(--panel-bg);
+    border: 2px solid var(--border-color);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -263,15 +260,6 @@ body {
     scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
     scrollbar-width: thin;
 }
-
-
-/* *************************************************************** */
-
-
-/* * ESTILOS GLOBALES DE QUILL EDITOR (TEMA OSCURO) */
-
-
-/* *************************************************************** */
 
 
 /* Forzar fondo oscuro para el toolbar y el container */
@@ -379,7 +367,7 @@ body {
 .table {
     background-color: var(--card-background) !important;
     color: var(--text-color) !important;
-    border-color: var(var(--border-color)) !important;
+    border-color: var(--border-color) !important;
     border-radius: 16px !important;
     thead th {
         background-color: var(--header-color) !important;
@@ -389,7 +377,7 @@ body {
     tbody td {
         background-color: var(--card-background) !important;
         color: var(--text-color) !important;
-        border-color: var(var(--border-color)) !important;
+        border-color: var(--border-color) !important;
     }
 }
 
@@ -398,7 +386,7 @@ body {
 .table input {
     background-color: var(--card-background) !important;
     color: var(--text-color) !important;
-    border-color: var(var(--border-color)) !important;
+    border-color: var(--border-color) !important;
 }
 
 .card-header .btn,
@@ -442,6 +430,52 @@ body {
 
 .datatable-title {
     color: var(--text-color) !important;
+}
+
+
+/* =========================================
+   APLICACIÓN DE TEMAS A VIDEO.JS
+   ========================================= */
+
+.video-js .vjs-control-bar,
+.video-js .vjs-menu-button .vjs-menu-content {
+    background-color: var(--vjs-control-bar-bg) !important;
+    color: var(--vjs-icon-color) !important;
+}
+
+.video-js .vjs-button>.vjs-icon-placeholder:before {
+    color: var(--vjs-icon-color) !important;
+}
+
+.video-js .vjs-big-play-button {
+    background-color: var(--app-navbar-color) !important;
+    color: var(--app-texto-color) !important;
+    border-color: var(--app-texto-color) !important;
+}
+
+.video-js .vjs-play-progress,
+.video-js .vjs-volume-level,
+.video-js .vjs-slider-bar {
+    background-color: var(--vjs-primary-color) !important;
+}
+
+.video-js:hover .vjs-big-play-button,
+.video-js .vjs-big-play-button:focus {
+    background-color: var(--app-navbar-color) !important;
+    color: var(--app-texto-color) !important;
+    border-color: var(--app-texto-color) !important;
+}
+
+.video-js.vjs-paused .vjs-control-bar,
+.video-js.vjs-waiting .vjs-control-bar,
+.video-js .vjs-control-bar {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.video-js .vjs-big-play-button {
+    z-index: 2;
 }
 
 hr.detail-separator {
@@ -542,30 +576,33 @@ hr.detail-separator {
     color: var(--text-color) !important;
 }
 
+
+/* * ESTILOS GLOBALES DE LOS NAVTABS */
+
+.nav-tabs-custom {
+    display: flex;
+}
+
 .nav-tabs-custom button {
     flex: 1;
     padding: 10px;
-    border: none;
-    background: transparent;
+    border: 1px solid var(--app-navbar-color);
+    color: var(--text-color);
     cursor: pointer;
     font-weight: 600;
     color: var(--text-color) !important;
     transition: all 0.6s ease;
-}
-
-.nav-tabs-custom button:hover {
-    background-color: var(--app-navbar-color);
-    color: var(--app-texto-color) !important;
-}
-
-.nav-tabs-custom button:active {
-    transform: scale(0.95) !important;
-    color: var(--app-texto-color) !important;
+    background-color: var(--card-background);
 }
 
 .nav-tabs-custom button.active {
     background-color: var(--app-navbar-color);
-    border-bottom: 2px solid var(--aside-tab-active);
+    border-bottom: 2px solid var(--app-navbar-color);
+    color: var(--app-texto-color) !important;
+}
+
+.nav-tabs-custom button:hover {
+    background-color: var(--app-navbar-color);
     color: var(--app-texto-color) !important;
 }
 
@@ -607,23 +644,14 @@ body {
 }
 
 .main-wrapper {
-    /* 1. Limitar ancho para legibilidad en monitores grandes (e.g., 1280px) */
     max-width: 1280px;
-    /* 2. Centrar el contenedor en el centro de la pantalla */
     margin-left: auto;
     margin-right: auto;
-    /* 3. Padding para evitar que el contenido toque los bordes de la ventana/pantalla */
     padding: 32px;
-    /* o 2rem */
-    /* 4. Usar Flexbox para gestionar el espacio entre secciones */
     display: flex;
     flex-direction: column;
-    /* Ajusta el espacio vertical entre las secciones */
     gap: 48px;
-    /* o 3rem, para separar bien el Carrusel del Formulario, etc. */
-    /* 5. Asegurar que ocupe todo el ancho disponible si no alcanza el max-width */
     width: 100%;
-    /* 6. Mejorar la fuente base del sitio */
     font-family: 'Inter', sans-serif;
 }
 
@@ -750,35 +778,6 @@ body {
 
 .card-table {
     margin-top: -1rem !important;
-}
-
-.nav-tabs-custom {
-    display: flex;
-    border-bottom: 1px solid #495057;
-}
-
-.nav-tabs-custom button {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-weight: 600;
-    color: #8a8f94;
-    transition: all 0.6s ease;
-}
-
-.nav-tabs-custom button:hover {
-    background-color: var(--app-navbar-color);
-    color: var(--text-color);
-    cursor: pointer;
-}
-
-.nav-tabs-custom button.active {
-    background-color: var(--app-navbar-color);
-    // background-color: var(--aside-tab-bg);
-    border-bottom: 2px solid var(--aside-tab-active);
-    color: var(--text-color) !important;
 }
 
 .table {
@@ -1033,8 +1032,10 @@ body.gradient-dark {
 }
 
 .video-table {
-    width: 600px;
-    object-fit: cover;
+    width: 700px;
+    align-items: start;
+    align-content: start;
+    text-align: left;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 

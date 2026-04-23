@@ -15,48 +15,48 @@ import {
 import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
-import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
+import { PTLBiblioteca } from 'src/app/theme/shared/_helpers/models/PTLBiblioteca.model'
+import { PtlBibliotecaService } from 'src/app/theme/shared/service/ptlbiblioteca.service'
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component'
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
-import { Observable, Subscription } from 'rxjs'
+import { catchError, Observable, of, Subscription, tap } from 'rxjs'
 import { v4 as uuidv4 } from 'uuid'
 import Swal from 'sweetalert2'
-
-// import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
-// import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
 
 @Component({
-  selector: 'app-gestion-aplicacion',
+  selector: 'app-gestion-biblioteca',
   standalone: true,
   imports: [CommonModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
-  templateUrl: './gestion-aplicacion.component.html',
-  styleUrl: './gestion-aplicacion.component.scss'
+  templateUrl: './gestion-biblioteca.component.html',
+  styleUrl: './gestion-biblioteca.component.scss'
 })
-export class GestionAplicacionComponent implements OnInit {
+export class GestionBibliotecaComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>()
-  FormRegistro: PTLAplicacionModel = new PTLAplicacionModel()
+  FormRegistro: PTLBiblioteca = new PTLBiblioteca()
   logActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
   menuItems$!: Observable<NavigationItem[]>
   gradientConfig: any
   navCollapsed: boolean = false
   navCollapsedMob: boolean = false
   windowWidth: number = 0
+  aplicaciones: PTLAplicacionModel[] = []
+  aplicacionesSub?: Subscription
+
   selectedFile: File | null = null
   previewUrl: string | ArrayBuffer | null = null
   userPhotoUrl: string = ''
   fileName: string | null = null
   selectedFileUrl: string | null = null
 
-  form: undefined
   isSubmit: boolean = false
   modoEdicion: boolean = false
-  codeAplicacion = uuidv4()
+  codeBiblioteca = uuidv4()
   tipoEditorTexto = 'basica'
   lockScreenSubscription: Subscription | undefined
   isLocked: boolean = false
   lockMessage: string = ''
-  suscriptor: string = ''
 
   constructor (
     private router: Router,
@@ -66,6 +66,7 @@ export class GestionAplicacionComponent implements OnInit {
     private _localStorageService: LocalStorageService,
     private _logActividadesService: PtllogActividadesService,
     private _aplicacionesService: PtlAplicacionesService,
+    private _bibliotecaService: PtlBibliotecaService,
     private _swalService: SwalAlertService,
     private _translate: TranslateService,
     private _uploadService: UploadFilesService
@@ -76,26 +77,25 @@ export class GestionAplicacionComponent implements OnInit {
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
     this.navCollapsedMob = false
     this._navigationService.getNavigationItems()
-    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
     const regId = this._localStorageService.getObject<string>('regId') || ''
     if (regId !== 'nuevo') {
       this.modoEdicion = true
-      this._aplicacionesService.getAplicacionById(regId).subscribe({
+      this._bibliotecaService.getBibliotecaById(regId).subscribe({
         next: (resp: any) => {
-          this.FormRegistro = resp.aplicacion
-          this.codeAplicacion = resp.aplicacion.codigoAplicacion
-          this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', resp.aplicacion.imagenInicio)
+          this.FormRegistro = resp.biblioteca
+          this.codeBiblioteca = resp.biblioteca.codigoBiblioteca
         },
         error: () => {
-          Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error')
+          Swal.fire('Error', 'No se pudo obtener la Biblioteca', 'error')
         }
       })
+    } else {
+      this.FormRegistro.imagenBiblioteca = 'no-imagen.png'
     }
-    // this.route.queryParams.subscribe((params) => {
-    //   if (Object.keys(params).length > 0) {
-
-    //   }
-    // });
+    this.route.queryParams.subscribe(params => {
+      if (Object.keys(params).length > 0) {
+      }
+    })
   }
 
   ngOnInit () {
@@ -108,35 +108,59 @@ export class GestionAplicacionComponent implements OnInit {
       },
       error: err => console.error('Error al suscribirse al evento de bloqueo:', err)
     })
+    this.consultarAplicaciones()
     const form = this._localStorageService.getFormRegistro()
     if (form != undefined) {
       this.FormRegistro = form
       this._localStorageService.removeFormRegistro()
     }
+
     if (this.modoEdicion == false) {
-      this.FormRegistro.codigoAplicacion = uuidv4()
-      this.FormRegistro.imagenInicio = 'no-image.png'
+      this.FormRegistro.codigoBiblioteca = uuidv4()
+      this.FormRegistro.estadoBiblioteca = true
       console.log('FormRegistro loading', this.FormRegistro)
     }
     console.log('Inicial formregistro', this.FormRegistro)
-    // const navSettings = this._localStorageService.getNavSettingsLocalStorage();
-    console.log('data del log', this.logActividad)
+  }
+
+  consultarAplicaciones () {
+    this.aplicacionesSub = this._aplicacionesService
+      .getAplicaciones()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.aplicaciones = resp.aplicaciones
+            return
+          }
+        }),
+        catchError(err => {
+          console.log('Ha ocurrido un error', err)
+          return of(null)
+        })
+      )
+      .subscribe()
+  }
+
+  onAplicacionChangeClick (event: any) {
+    const value = event.target.value
+    const app = this.aplicaciones.filter(x => x.codigoAplicacion == value)[0]
+    this.FormRegistro.codigoAplicacion = app.codigoAplicacion || ''
   }
 
   actualizarDescripcionVersion (nuevoContenido: string): void {
-    this.FormRegistro.descripcionAplicacion = nuevoContenido
-    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionAplicacion)
-    // if (this.validationForm && this.isSubmit) {
-    // }
+    this.FormRegistro.descripcionBiblioteca = nuevoContenido
+    console.log('Descripción actualizada:', this.FormRegistro.descripcionBiblioteca)
   }
 
   onFileSelectedClick (event: any) {
     const file: File = event.target.files[0]
     const objUpload = {
-      susc: this.suscriptor,
-      tipo: 'aplicaciones',
+      susc: 'plataforma',
+      tipo: 'biblioteca',
       id: '0'
     }
+    console.log('archivo seleccionado', file)
+
     if (file) {
       const reader = new FileReader()
       reader.onload = (e: any) => {
@@ -146,7 +170,8 @@ export class GestionAplicacionComponent implements OnInit {
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path: any) => {
           console.log('resultado', path)
-          this.FormRegistro.imagenInicio = path.nombreArchivo
+          this.FormRegistro.imagenBiblioteca = path.nombreArchivo
+          this.userPhotoUrl = path.nombreArchivo
         },
         error: () => {
           this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
@@ -158,24 +183,26 @@ export class GestionAplicacionComponent implements OnInit {
     }
   }
 
-  btnGestionarAplicacionClick (form: any) {
+  btnGestionarBibliotecaClick (form: any) {
     // this.isSubmit = true;
+    const registroData = form.value as PTLBiblioteca
+    console.log('formRegistro', form.value)
     if (this.modoEdicion) {
-      this.FormRegistro.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-      this.FormRegistro.fechaModificacion = new Date().toISOString()
-      this._aplicacionesService.actualizarAplicacion(this.FormRegistro).subscribe({
+      registroData.codigoAplicacion = this.FormRegistro.codigoAplicacion
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+      registroData.fechaCreacion = new Date().toISOString()
+      this._bibliotecaService.actualizarBiblioteca(this.FormRegistro).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
+              descripcionLog: this.translate.instant('BIBLIOTECA.UPDATESUCCSESSFULLY')
             }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY'))
+            this._logActividadesService.postCrearRegistro(logData).subscribe()
+            this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.UPDATESUCCSESSFULLY'))
             form.resetForm()
-            // this.isSubmit = false;
-            this.router.navigate(['/aplicaciones/aplicaciones'])
+            this.router.navigate(['/biblioteca/biblioteca'])
           }
         },
         error: (err: any) => {
@@ -183,35 +210,35 @@ export class GestionAplicacionComponent implements OnInit {
           const logData = {
             codigoTipoLog: '',
             codigoRespuesta: '501',
-            descripcionLog: this.translate.instant('APLICACIONES.CREATESUCCSESSFULLY')
+            descripcionLog: this.translate.instant('BIBLIOTECA.UPDATEERROR')
           }
-          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-          this._swalService.getAlertError('No se pudo actualizar la Aplicación')
+          this._logActividadesService.postCrearRegistro(logData).subscribe()
+          this._swalService.getAlertError('No se pudo actualizar la Biblioteca')
         }
       })
     } else {
-      form.aplicacionId = 0
-      const registroData = form.value as PTLAplicacionModel
-      registroData.codigoAplicacion = uuidv4()
-      registroData.imagenInicio = this.FormRegistro.imagenInicio
+      console.log('imagen biblioteca', this.FormRegistro.imagenBiblioteca)
+
+      registroData.codigoBiblioteca = this.FormRegistro.codigoBiblioteca // Mantener el UUID generado
+      registroData.codigoAplicacion = this.FormRegistro.codigoAplicacion
+      registroData.descripcionBiblioteca = this.FormRegistro.descripcionBiblioteca // Asegurar el texto del editor
+      registroData.imagenBiblioteca = this.userPhotoUrl // Asegurar el texto del editor
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
       registroData.fechaCreacion = new Date().toISOString()
-      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-      registroData.fechaModificacion = new Date().toISOString()
-      this._aplicacionesService.crearAplicacion(registroData).subscribe({
+      console.log('Crear biblioteca', registroData)
+
+      this._bibliotecaService.crearBiblioteca(registroData).subscribe({
         next: (resp: any) => {
-          console.log('resp', resp)
           if (resp.ok) {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+              descripcionLog: this.translate.instant('BIBLIOTECA.CREATESUCCSESSFULLY')
             }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.UPDATESUCCSESSFULLY'))
+            this._logActividadesService.postCrearRegistro(logData).subscribe()
+            this._swalService.getAlertSuccess(this.translate.instant('BIBLIOTECA.CREATESUCCSESSFULLY'))
             form.resetForm()
-            // this.isSubmit = false;
-            this.router.navigate(['/aplicaciones/aplicaciones'])
+            this.router.navigate(['/biblioteca/biblioteca'])
           }
         },
         error: (err: any) => {
@@ -219,17 +246,17 @@ export class GestionAplicacionComponent implements OnInit {
           const logData = {
             codigoTipoLog: '',
             codigoRespuesta: '500',
-            descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+            descripcionLog: this.translate.instant('BIBLIOTECA.CREATEERROR')
           }
-          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-          this._swalService.getAlertError('No se pudo crear la Aplicación')
+          this._logActividadesService.postCrearRegistro(logData).subscribe()
+          this._swalService.getAlertError('No se pudo crear la Biblioteca')
         }
       })
     }
   }
 
   btnRegresarClick () {
-    this.router.navigate(['/aplicaciones/aplicaciones'])
+    this.router.navigate(['/bibliotecas/bibliotecas'])
   }
 
   navMobClick () {
