@@ -20,10 +20,10 @@ import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLApli
 import { NavigationService, PtlAplicacionesService, LanguageService, PtlusuariosRolesApService, PtlSuitesAPService, PTLUsuariosService } from 'src/app/theme/shared/service';
 import { of, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';import { PtllogActividadesService, PTLRolesAPService, SwalAlertService } from 'src/app/theme/shared/service';
-import { PTLUsuarioRoleAP } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model';
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
+import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
 //#endregion IMPORTS
 
 @Component({
@@ -50,13 +50,14 @@ export class RolesUsuariosComponent implements OnInit {
   filtroCodigoRoleSubject = new BehaviorSubject<string>('todos');
   filtroCodigoUsuariosRolesSubject = new BehaviorSubject<string>('todos');
   filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  filtroTipoRolSubject = new BehaviorSubject<string>('todos');
 
-  registrosTransformados$: Observable<PTLUsuarioRoleAP[]> = of([]);
-  registrosFiltrado$: Observable<PTLUsuarioRoleAP[]> = of([]);
-  usuariosRoles: PTLUsuarioRoleAP[] = [];
+  registrosTransformados$: Observable<PTLUsuarioRoleAPModel[]> = of([]);
+  registrosFiltrado$: Observable<PTLUsuarioRoleAPModel[]> = of([]);
+  usuariosRoles: PTLUsuarioRoleAPModel[] = [];
   roles: PTLRoleAPModel[] = [];
   usuarios: PTLUsuarioModel[] = [];
-  registros: PTLUsuarioRoleAP[] = [];
+  registros: PTLUsuarioRoleAPModel[] = [];
   aplicaciones: PTLAplicacionModel[] = [];
   suites: PTLSuiteAPModel[] = [];
   //#endregion VARIABLES
@@ -105,7 +106,7 @@ export class RolesUsuariosComponent implements OnInit {
       this._usuariosService.getUsuarios().subscribe((resp: any) => {
         if (resp.ok) {
           this.usuarios = resp.usuarios;
-          console.log('Todos las usuarios', this.usuarios);
+        //   console.log('Todos las usuarios', this.usuarios);
           return;
         }
       })
@@ -117,7 +118,7 @@ export class RolesUsuariosComponent implements OnInit {
       this._aplicacionesService.getAplicaciones().subscribe((resp: any) => {
         if (resp.ok) {
           this.aplicaciones = resp.aplicaciones;
-          console.log('Todos las aplicaciones', this.aplicaciones);
+        //   console.log('Todos las aplicaciones', this.aplicaciones);
           return;
         }
       })
@@ -129,7 +130,7 @@ export class RolesUsuariosComponent implements OnInit {
             this._suitesService.geSuitesAP().subscribe((resp: any) => {
                 if (resp.ok) {
                 this.suites = resp.suites;
-                console.log('Todos los suite', this.suites);
+                // console.log('Todos los suite', this.suites);
                 return;
                 }
             })
@@ -141,7 +142,7 @@ export class RolesUsuariosComponent implements OnInit {
       this._rolesAPService.getRoles().subscribe((resp: any) => {
         if (resp.ok) {
           this.roles = resp.roles;
-          console.log('Todos los roles', this.roles);
+        //   console.log('Todos los roles', this.roles);
           return;
         }
       })
@@ -155,7 +156,7 @@ export class RolesUsuariosComponent implements OnInit {
       type: 'text'
     },
     {
-      name: 'nombreRole',
+      name: 'nomRole',
       header: 'USUARIOS.USUARIOSROLES.NOMBREROL',
       type: 'text'
     },
@@ -167,7 +168,7 @@ export class RolesUsuariosComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'USUARIOS.USUARIOSROLES.ESTADOROLE',
-      type: 'text'
+      type: 'estado'
     }
   ];
 
@@ -186,8 +187,8 @@ export class RolesUsuariosComponent implements OnInit {
 
   setupRolesStream(): void {
     this.registrosTransformados$ = this._usuariosRolesService._usuariosRoles$.pipe(
-      switchMap((usuariosRoles: PTLUsuarioRoleAP[]) => {
-        console.log('================== roles 1', usuariosRoles);
+      switchMap((usuariosRoles: PTLUsuarioRoleAPModel[]) => {
+        // console.log('================== roles 1', usuariosRoles);
         if (!usuariosRoles) return of([]);
         this.usuariosRoles = usuariosRoles
         const transformedApps = usuariosRoles.map((usuarioRole: any) => {
@@ -201,8 +202,11 @@ export class RolesUsuariosComponent implements OnInit {
             ? this.suites.find((x) => x.codigoSuite === usuarioRole.codigoSuite) : null;
             usuarioRole.nomSuite = suiteEncontrada ? suiteEncontrada.nombreSuite : 'N/A';
 
+            usuarioRole.nomUsuario = this.usuarios.filter((x) => x.codigoUsuario == usuarioRole.codigoUsuarioSC)[0].nombreUsuario || '';
+            usuarioRole.nomRole = this.roles.filter((x) => x.codigoRole == usuarioRole.codigoRole)[0].nombreRole || '';
+
             usuarioRole.tipoRol = usuarioRole.codigoAplicacion ? 'Suscriptor' : 'Plataforma';
-            return usuarioRole as PTLUsuarioRoleAP;
+            return usuarioRole as PTLUsuarioRoleAPModel;
         });
         this.registros = transformedApps;
         return of(transformedApps);
@@ -217,12 +221,19 @@ export class RolesUsuariosComponent implements OnInit {
       this.registrosTransformados$.pipe(startWith([])), // Usa la fuente de datos transformada
       this.filtroCodigoRoleSubject,
       this.filtroCodigoUsuariosRolesSubject,
-      this.filtroEstadoSubject
+      this.filtroEstadoSubject,
+      this.filtroTipoRolSubject
     ]).pipe(
-      map(([usuariosRoles, codigoRol, codigoUsuario, estado]) => {
-        console.log('================== roles 2', usuariosRoles);
-
+      map(([usuariosRoles, codigoRol, codigoUsuario, estado, tipoRol]) => {
+        // console.log('================== roles 2', usuariosRoles);
         let filteredRegistros = usuariosRoles;
+
+        if (tipoRol !== 'todos') {
+            filteredRegistros = filteredRegistros.filter((reg) => {
+                const esSuscriptor = reg.codigoAplicacion && reg.codigoAplicacion !== '';
+                return tipoRol === 'suscriptor' ? esSuscriptor : !esSuscriptor;
+            });
+        }
         if (codigoRol !== 'todos') {
           filteredRegistros = filteredRegistros.filter((reg) => reg.codigoRole === codigoRol);
         }
@@ -236,6 +247,11 @@ export class RolesUsuariosComponent implements OnInit {
         return filteredRegistros;
       })
     );
+  }
+
+  onFiltroTipoRolChangeClick(evento: any): void {
+    const value = evento.target.value;
+    this.filtroTipoRolSubject.next(value);
   }
 
   onFiltroCodigoUsuariosRolesChangeClick(evento: any): void {
@@ -254,16 +270,15 @@ export class RolesUsuariosComponent implements OnInit {
   }
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['aplicaciones/gestion-roles']);
+    this.router.navigate(['usuarios/gestion-roles-usuario']);
   }
 
   OnEditarRegistroClick(id: number) {
-    this.router.navigate(['aplicaciones/gestion-roles'], { queryParams: { regId: id } });
+    this.router.navigate(['usuarios/gestion-roles-usuario'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(id: any) {
-    console.log('Eliminar registro', id.id);
-    const nombre = this.registros.filter((x) => x.codigoRole == id.id)[0];
+    // const nombre = this.registros.filter((x) => x.codigoRole == id.id)[0];
     Swal.fire({
       title: this.translate.instant('ROLES.ELIMINARTITULO'),
       text: this.translate.instant('ROLES.ELIMINARTEXTO'),

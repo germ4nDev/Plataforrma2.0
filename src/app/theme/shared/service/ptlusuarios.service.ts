@@ -12,7 +12,7 @@ import { UploadFilesService } from './upload-files.service';
 import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model';
 import { v4 as uuidv4 } from 'uuid';
 import { PtlusuariosScService } from './ptlusuarios-sc.service';
-import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
+import { PTLUsuarioRoleAPModel } from '../_helpers/models/PTLUsuarioRole.model';
 const base_url = environment.apiUrl;
 
 @Injectable({
@@ -138,7 +138,7 @@ export class PTLUsuariosService {
     console.log('servicio usuarios roles', data);
     return this.http.post(url, usuarioSC).pipe(
       map((resp: any) => {
-        const usuarioRole: PTLUsuarioRoleAP = {
+        const usuarioRole: PTLUsuarioRoleAPModel = {
           codigoUsuarioSC: resp.usurioSC.codigoUsuarioSC,
           codigoEmpresaSC: 'e1a8fa99-15db-479b-a0a4-9c2be72273e9',
           codigoRole: 'aa5901bc-9c7d-45e8-bf68-4a0a286e9b99',

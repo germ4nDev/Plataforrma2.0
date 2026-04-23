@@ -4,10 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { map, tap } from 'rxjs/operators';
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
-import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
 import { LocalStorageService } from './local-storage.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SocketService } from './sockets.service';
+import { PTLUsuarioRoleAPModel } from '../_helpers/models/PTLUsuarioRole.model';
 const base_url = environment.apiUrl;
 
 @Injectable({
@@ -15,7 +15,7 @@ const base_url = environment.apiUrl;
 })
 export class PtlusuariosRolesApService {
   user: PTLUsuarioModel = new PTLUsuarioModel();
-  private _usuariosRoles = new BehaviorSubject<PTLUsuarioRoleAP[]>([]);
+  private _usuariosRoles = new BehaviorSubject<PTLUsuarioRoleAPModel[]>([]);
   private _usuariosRolesChange = new Subject<any>();
   _usuariosRolesChange$ = this._usuariosRolesChange.asObservable();
 
@@ -35,7 +35,7 @@ export class PtlusuariosRolesApService {
     });
   }
 
-  get _usuariosRoles$(): Observable<PTLUsuarioRoleAP[]> {
+  get _usuariosRoles$(): Observable<PTLUsuarioRoleAPModel[]> {
     return this._usuariosRoles.asObservable();
   }
 
@@ -43,7 +43,7 @@ export class PtlusuariosRolesApService {
     console.log('Consultando y ordenando usuariosRoles del servidor...');
     const url = `${base_url}/usuarios-roles`;
     return this.http.get(url).pipe(
-      map((resp: any) => resp.usuariosRoles as PTLUsuarioRoleAP[]),
+      map((resp: any) => resp.usuariosRoles as PTLUsuarioRoleAPModel[]),
       tap((RolesOrdenadas) => {
         console.log(`usuariosRoles cargados: ${RolesOrdenadas.length}`);
         this._usuariosRoles.next(RolesOrdenadas);
@@ -77,8 +77,34 @@ export class PtlusuariosRolesApService {
     );
   }
 
-  postUsuarioRole(data: PTLUsuarioRoleAP) {
-    console.log('********** crear el usuarioRp;e', data);
+  getRegistroByCodigoRol(codigoRole: string) {
+    const url = `${base_url}/usuarios-roles/role/${codigoRole}`;
+    return this.http.get(url).pipe(
+      map((resp: any) => {
+        console.log('Ahora sí llega la data correcta:', resp);
+        return {
+          ok: true,
+          usuarioRole: resp.usuarioRole
+        };
+      })
+    );
+  }
+
+  getRegistroByCodigoUsuario(codigoUsuarioSC: string) {
+  const url = `${base_url}/usuarios-roles/usuario/${codigoUsuarioSC}`;
+  return this.http.get(url).pipe(
+    map((resp: any) => {
+      console.log('Roles del usuario cargados:', resp);
+      return {
+        ok: true,
+        usuarioRole: resp.usuarioRole
+      };
+    })
+  );
+}
+
+  postUsuarioRole(data: PTLUsuarioRoleAPModel) {
+    console.log('********** crear el usuarioRole', data);
 
     const url = `${base_url}/usuarios-roles`;
     return this.http.post(url, data).pipe(
@@ -92,7 +118,7 @@ export class PtlusuariosRolesApService {
     );
   }
 
-  putModificarRegistro(role: PTLUsuarioRoleAP) {
+  putModificarRegistro(role: PTLUsuarioRoleAPModel) {
     console.log('data usuRole', role);
     const url = `${base_url}/usuarios-roles/${role.usuarioRoleId}`;
     return this.http.put(url, role).pipe(
@@ -120,16 +146,21 @@ export class PtlusuariosRolesApService {
     );
   }
 
-  deleteTodosRolesByAppIsSuiteId(usId: number, apId: number, suId: number) {
-    const url = `${base_url}/usuarios-roles/clean/${usId}/${apId}/${suId}`;
-    return this.http.delete(url).pipe(
-      map((resp: any) => {
-        console.log('data de role eliminado', resp);
-        return {
-          ok: resp.ok,
-          usuarioRole: resp.usuarioRole
-        };
-      })
-    );
-  }
+    deleteTodosUsuarioRole(codigoRole: string) {
+        const url = `${base_url}/usuarios-roles/clean/${codigoRole}`;
+        return this.http.delete(url).pipe(
+        map((resp: any) => {
+            return resp;
+        })
+        );
+    }
+
+    deleteRolesPorUsuario(codigoUsuarioSC: string) {
+        const url = `${base_url}/usuarios-roles/clean-user/${codigoUsuarioSC}`;
+        return this.http.delete(url).pipe(
+            map((resp: any) => {
+            return resp;
+            })
+        );
+    }
 }

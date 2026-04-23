@@ -21,7 +21,7 @@ import { environment } from 'src/environments/environment';
 import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fullscreen-slider/fullscreen-slider.component';
 import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
-import { PTLUsuarioRoleAP } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
+import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
 
 const base_url = environment.apiUrl;
 
@@ -39,7 +39,7 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
   suscriptor: string = '';
   subscriptions = new Subscription();
   roles: PTLRoleAPModel[] = [];
-  usuariosRoles: PTLUsuarioRoleAP[] = [];
+  usuariosRoles: PTLUsuarioRoleAPModel[] = [];
   usuariosSC: PTLUsuarioSCModel[] = [];
   usuarioSC: PTLUsuarioSCModel = {} as PTLUsuarioSCModel;
 
@@ -125,7 +125,7 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     console.log('acaaaaaaaaa');
     this.subscriptions.add(
       this._usuarioRolesService._usuariosRoles$.subscribe({
-        next: (userRoles: PTLUsuarioRoleAP[]) => {
+        next: (userRoles: PTLUsuarioRoleAPModel[]) => {
           console.log('usuarios roles cargados con éxito:', userRoles.length);
           this.usuariosRoles = userRoles;
           console.log('usuarios roles:', userRoles);
@@ -142,7 +142,7 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     //TODO Validar las aplicaciones y los roles
     const current = this._localStorageService.getCurrentUserLocalStorage();
     const rolesAplicacion = this.roles.filter((x) => x.codigoAplicacion == app.codigoAplicacion);
-    const rolesUsuarioSC: PTLUsuarioRoleAP[] = this.usuariosRoles.filter((x) => x.codigoUsuarioSC == this.usuarioSC?.codigoUsuarioSC);
+    const rolesUsuarioSC: PTLUsuarioRoleAPModel[] = this.usuariosRoles.filter((x) => x.codigoUsuarioSC == this.usuarioSC?.codigoUsuarioSC);
     const rolesUsuarioAplicacion = this._utilidadesService.getRelacional(rolesAplicacion, rolesUsuarioSC, 'codigoRole');
     console.log('Roles en comun', rolesUsuarioAplicacion);
     if (rolesUsuarioAplicacion.length > 0) {

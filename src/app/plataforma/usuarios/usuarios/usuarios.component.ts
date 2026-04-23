@@ -143,7 +143,7 @@ export class UsuariosComponent implements OnInit {
       this._usuariosService.getUsuarios().subscribe((resp: any) => {
         if (resp.ok) {
           this.usuarios = resp.usuarios;
-          console.log('Todos las usuarios', this.usuarios);
+        //   console.log('Todos las usuarios', this.usuarios);
           return;
         }
       })
@@ -180,7 +180,7 @@ export class UsuariosComponent implements OnInit {
       this.filtroEstadoSubject
     ]).pipe(
       map(([users, identificacion, nombre, correo, username, descripcion, estado]) => {
-        console.log('================== roles 2', users);
+        // console.log('================== roles 2', users);
         let filteredRegistros = users;
         if (identificacion) {
           filteredRegistros = filteredRegistros.filter((app) =>

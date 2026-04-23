@@ -59,7 +59,6 @@ export class PTLRolesAPService {
       return this.http.get(url).pipe(
         map((resp: any) => {
           console.log('respuesta servicio', resp);
-          // store user details and jwt token in local storage to keep user logged in between page refreshes
           return {
             ok: true,
             roles: resp.roles

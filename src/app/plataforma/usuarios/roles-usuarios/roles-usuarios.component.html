@@ -20,6 +20,16 @@
                         <h6 class="filtros-title">{{ 'USUARIOS.USUARIOSROLES.FILTROS.TITULO' | translate }}</h6>
                     </DIV>
                     <div class="filtro">
+                        <div class="form-group">
+                            <small>{{ 'USUARIOS.USUARIOSROLES.FILTROS.FILTROTIPOROL' | translate }}</small>
+                            <select (change)="onFiltroTipoRolChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
+                                <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                                <option value="plataforma">{{ 'USUARIOS.USUARIOSROLES.FILTROS.ROLPLATAFORMA' | translate }}</option>
+                                <option value="suscriptor">{{ 'USUARIOS.USUARIOSROLES.FILTROS.ROLSUSCRIPTOR' | translate }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filtro">
                         <small>{{ 'USUARIOS.USUARIOSROLES.FILTROS.FILTROCODIGOUSUARIO' | translate }}</small>
                         <select (change)="onFiltroCodigoUsuariosRolesChangeClick($event)" class="form-control form-select"  style="cursor: pointer;">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
@@ -39,7 +49,7 @@
                     </div>
                     <div class="filtro">
                         <small>{{ 'USUARIOS.USUARIOSROLES.FILTROS.ESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control" style="cursor: pointer;" required>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;" required>
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
@@ -58,16 +68,16 @@
                         [data]="dataFiltrada"
                         [idField]="'usuarioRoleId'"
                         [tableTitle]="'USUARIOS.USUARIOSROLES.TITLE' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                         [metadataColumns]="columnasRegistros"
                         [metadataDetailColumns]="columnasDetailRegistros"
                         [showDetail]="true"
-                        [showActions]="true"
-                        [showNewButton]="true"
+                        [showActions]="false"
+                        [showNewButton]="false"
                         [showViewButton]="false"
-                        [showEditButton]="true"
-                        [showDeleteButton]="true"
+                        [showEditButton]="false"
+                        [showDeleteButton]="false"
                         [newButtonLabel]="'USUARIOS.USUARIOSROLES.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                         (newRecord)="OnNuevoRegistroClick()"
                         (editRecord)="OnEditarRegistroClick($event)"
                         (deleteRecord)="OnEliminarRegistroClick($event)">

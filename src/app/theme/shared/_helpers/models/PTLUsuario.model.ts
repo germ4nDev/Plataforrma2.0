@@ -13,6 +13,7 @@ export class PTLUsuarioModel {
     public estadoUsuario?: boolean,
     public usuarioAdministrador?: boolean,
     public nomEstado?: string,
+    public checked?: boolean,
     public claveActual?: string,
     public claveNew?: string,
     public claveConfirm?: string,

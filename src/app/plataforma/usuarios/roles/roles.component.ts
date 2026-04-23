@@ -101,7 +101,7 @@ export class RolesComponent implements OnInit {
       this._aplicacionesService.getAplicaciones().subscribe((resp: any) => {
         if (resp.ok) {
           this.aplicaciones = resp.aplicaciones;
-          console.log('Todos las aplicaciones', this.aplicaciones);
+        //   console.log('Todos las aplicaciones', this.aplicaciones);
           return;
         }
       })
@@ -113,7 +113,7 @@ export class RolesComponent implements OnInit {
             this._suitesService.geSuitesAP().subscribe((resp: any) => {
                 if (resp.ok) {
                 this.suites = resp.suites;
-                console.log('Todos los suite', this.suites);
+                // console.log('Todos los suite', this.suites);
                 return;
                 }
             })
@@ -129,7 +129,7 @@ export class RolesComponent implements OnInit {
     {
       name: 'nomEstado',
       header: 'USUARIOS.ROLES.ESTADOROLE',
-      type: 'text'
+      type: 'estado'
     },
     {
       name: 'tipoRol',
@@ -159,7 +159,7 @@ export class RolesComponent implements OnInit {
   setupRolesStream(): void {
     this.registrosTransformados$ = this._rolesAPService.roles$.pipe(
       switchMap((roles: PTLRoleAPModel[]) => {
-        console.log('================== roles 1', roles);
+        // console.log('================== roles 1', roles);
         if (!roles) return of([]);
         this.roles = roles
         const transformedApps = roles.map((role: any) => {
@@ -175,7 +175,7 @@ export class RolesComponent implements OnInit {
 
             role.tipoRol = role.codigoAplicacion ? 'Suscriptor' : 'Plataforma';
 
-        //   role.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == role.codigoAplicacion)[0].nombreAplicacion || '';
+          // role.nomAplicacion = this.aplicaciones.filter((x) => x.codigoAplicacion == role.codigoAplicacion)[0].nombreAplicacion || '';
         //   role.nomSuite = this.suites.filter((x) => x.codigoSuite == role.codigoSuite)[0].nombreSuite || '';
           return role as PTLRoleAPModel;
         });
@@ -199,7 +199,7 @@ export class RolesComponent implements OnInit {
       this.filtroTipoRolSubject
     ]).pipe(
       map(([roles, codigorol, codigoapp, codigosuite, nombre, descripcion, estado, tipoRol]) => {
-        console.log('================== roles 2', roles);
+        // console.log('================== roles 2', roles);
 
         let filteredRegistros = roles;
         if (tipoRol !== 'todos') {
@@ -207,7 +207,7 @@ export class RolesComponent implements OnInit {
                 const esSuscriptor = reg.codigoAplicacion && reg.codigoAplicacion !== '';
                 return tipoRol === 'suscriptor' ? esSuscriptor : !esSuscriptor;
             });
-            }
+        }
         if (codigorol !== 'todos') {
           filteredRegistros = filteredRegistros.filter((reg) => reg.codigoRole === codigorol);
         }
@@ -276,7 +276,6 @@ export class RolesComponent implements OnInit {
   }
 
   OnEliminarRegistroClick(id: any) {
-    console.log('Eliminar registro', id.id);
     const nombre = this.registros.filter((x) => x.codigoRole == id.id)[0];
     Swal.fire({
       title: this.translate.instant('USUARIOS.ROLES.ELIMINARTITULO'),
