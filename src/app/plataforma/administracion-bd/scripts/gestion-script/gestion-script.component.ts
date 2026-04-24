@@ -16,18 +16,12 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { PTLScriptsService } from 'src/app/theme/shared/service/ptlscripts.service';
 import { PTLTiposScriptsService } from 'src/app/theme/shared/service/ptltipos-scripts.service';
 import { PTLScriptsModel } from 'src/app/theme/shared/_helpers/models/PTLScripts.model';
+import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service';
 
 @Component({
   selector: 'app-gestion-script',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    TranslateModule,
-    NavBarComponent, // <- Importado para el HTML
-    NavContentComponent // <- Importado para el HTML
-  ],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, TranslateModule, NavBarComponent, NavContentComponent],
   templateUrl: './gestion-script.component.html',
   styleUrl: './gestion-script.component.scss'
 })
@@ -36,6 +30,7 @@ export class GestionScriptComponent implements OnInit {
   esNuevo: boolean = true;
   scriptId: string = '';
   tiposScripts: any[] = [];
+  aplicaciones: any[] = [];
 
   // Variables para el menú lateral
   menuItems$!: Observable<NavigationItem[]>;
@@ -47,31 +42,59 @@ export class GestionScriptComponent implements OnInit {
     private router: Router,
     private _scriptsService: PTLScriptsService,
     private _tiposScriptsService: PTLTiposScriptsService,
+    private _aplicacionesService: PtlAplicacionesService,
     private translate: TranslateService,
-    private _navigationService: NavigationService // <- Inyectamos el servicio
+    private _navigationService: NavigationService
   ) {
     this.crearFormulario();
   }
 
   ngOnInit(): void {
-    // Inicializar menú lateral
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
 
     this.cargarTiposScripts();
+    this.cargarAplicaciones();
+
     this.route.queryParams.subscribe((params) => {
       const regId = params['regId'];
-      if (regId && regId !== 'nuevo') {
+      if (params['regId'] === 'nuevo') {
+        this.esNuevo = true;
+        const numeroAleatorio = Math.floor(Math.random() * 10000)
+          .toString()
+          .padStart(4, '0');
+        const codigoGenerado = `SCR-${numeroAleatorio}`;
+        this.scriptForm.patchValue({
+          codigoScript: codigoGenerado
+        });
+      } else {
         this.esNuevo = false;
         this.scriptId = regId;
         this.cargarScript(regId);
       }
+
+      if (regId && regId !== 'nuevo') {
+        this.esNuevo = false;
+      }
+    });
+  }
+
+  cargarAplicaciones(): void {
+    this._aplicacionesService.getAplicaciones().subscribe({
+      next: (resp: any) => {
+        if (resp.ok) {
+          this.aplicaciones = resp.aplicaciones.filter((a: any) => a.estadoAplicacion === true);
+        } else if (Array.isArray(resp)) {
+          this.aplicaciones = resp.filter((a: any) => a.estadoAplicacion === true);
+        }
+      },
+      error: (err: any) => console.error('Error cargando Aplicaciones', err)
     });
   }
 
   crearFormulario(): void {
     this.scriptForm = this.fb.group({
-      codigoScript: ['', [Validators.required]],
+      codigoScript: [{ value: '', disabled: true }],
       nombreScript: ['', [Validators.required]],
       descripcionScript: [''],
       codigoAplicacion: ['', [Validators.required]],
