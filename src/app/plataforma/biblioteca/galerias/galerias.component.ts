@@ -130,7 +130,6 @@ export class GaleriasComponent implements OnInit, OnDestroy {
         return of([])
       })
     )
-
     this.galeriaFiltrada$ = combineLatest([
       this.galeriaTransformada$.pipe(startWith([])),
       this.filtroCodigoSubject,
