@@ -41,6 +41,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   lang = localStorage.getItem('lang')
   menuItems$!: Observable<NavigationItem[]>
   activeTab: 'menu' | 'filters' | 'main' = 'menu'
+  suscriptor: string = ''
 
   subscriptions = new Subscription()
   filtroNombreSubject = new BehaviorSubject<string>('todos')
@@ -61,13 +62,13 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     private router: Router,
     private translate: TranslateService,
     private _navigationService: NavigationService,
-    private _swalService: SwalAlertService,
-    private _localstorageService: LocalStorageService,
+    private _localStorageService: LocalStorageService,
     private _logActividadesService: PtllogActividadesService,
     private _registrosService: PTLPaquetesService,
     private _aplicacionesService: PtlAplicacionesService
   ) {
     this.gradientConfig = GradientConfig
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
   }
 
   ngOnInit (): void {
@@ -75,6 +76,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     this.menuItems$ = this._navigationService.menuItems$
     this.hasFiltersSlot = true
     this.moduloTituloExcel = this.lang == 'es' ? 'Listado de Suitees' : 'List of Aplications'
+        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
     setTimeout(() => {
       this.setupPaquetesStream()
     }, 100)
@@ -228,7 +230,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   ]
 
   getLanguageUrl (): string {
-    const lang = this._localstorageService.getLanguage() || 'en'
+    const lang = this._localStorageService.getLanguage() || 'en'
     return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`
   }
 
@@ -252,7 +254,8 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   OnEditarRegistroClick (id: number): void {
-    this.router.navigate(['aplicaciones/gestion-paquete'], { queryParams: { regId: id } })
+    this._localStorageService.setObject('regId', id);
+    this.router.navigate(['aplicaciones/gestion-paquete'])
   }
 
   OnEliminarRegistroClick (id: string): void {
@@ -292,11 +295,13 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   OnOption1Click (id: any) {
-    this.router.navigate(['aplicaciones/modulos-paquete'], { queryParams: { regId: id } })
+    this._localStorageService.setObject('regId', id);
+    this.router.navigate(['aplicaciones/modulos-paquete'])
   }
 
   OnOption2Click (id: any) {
-    this.router.navigate(['aplicaciones/items-paquete'], { queryParams: { regId: id } })
+    this._localStorageService.setObject('regId', id);
+    this.router.navigate(['aplicaciones/items-paquete'])
   }
 
   toggleNav (): void {

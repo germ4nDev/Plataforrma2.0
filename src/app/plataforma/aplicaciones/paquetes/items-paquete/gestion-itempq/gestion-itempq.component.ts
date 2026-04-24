@@ -64,6 +64,7 @@ export class GestionItempqComponent {
   lockScreenSubscription: Subscription | undefined
   isLocked: boolean = false
   lockMessage: string = ''
+  suscriptor: string = ''
   // #endregion VARIABLES
 
   // constructor
@@ -86,26 +87,25 @@ export class GestionItempqComponent {
     this.gradientConfig = GradientConfig
     this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
     this.navCollapsedMob = false
-    this.route.queryParams.subscribe(params => {
-      this.registroId = params['regId'];
-      this.codigoPaquete = params['regPQ'];
-      console.log('asociar modulos para', this.codigoPaquete)
-      if (this.registroId !== '') {
-        this.modoEdicion = true
-        this._registrosService.getRegistros().subscribe({
-          next: (resp: any) => {
-            const itemsPaquete = resp.itemsPaquete.filter((x: { codigoItem: string }) => x.codigoItem === this.registroId)
-            this.itemsSeleccionados = itemsPaquete
-            console.log('modulos paquete', itemsPaquete)
-          },
-          error: () => {
-            this._swalAlertService.getAlertError('No se pudo obtener los Items del Paquete.')
-          }
-        })
-      } else {
-        this.modoEdicion = false
-      }
-    })
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+    this.registroId = this._localStorageService.getObject<string>('regId') || ''
+    this.codigoPaquete = this._localStorageService.getObject<string>('regPQ') || ''
+    console.log('asociar modulos para', this.codigoPaquete)
+    if (this.registroId !== '') {
+      this.modoEdicion = true
+      this._registrosService.getRegistros().subscribe({
+        next: (resp: any) => {
+          const itemsPaquete = resp.itemsPaquete.filter((x: { codigoItem: string }) => x.codigoItem === this.registroId)
+          this.itemsSeleccionados = itemsPaquete
+          console.log('modulos paquete', itemsPaquete)
+        },
+        error: () => {
+          this._swalAlertService.getAlertError('No se pudo obtener los Items del Paquete.')
+        }
+      })
+    } else {
+      this.modoEdicion = false
+    }
   }
 
   ngOnInit () {
@@ -127,11 +127,11 @@ export class GestionItempqComponent {
       this.FormRegistro = form
       this._localStorageService.removeFormRegistro()
     }
-          console.log('modoEdicion', this.modoEdicion)
+    console.log('modoEdicion', this.modoEdicion)
 
     if (!this.modoEdicion) {
       console.log('modo edicion', this.modoEdicion)
-      this.FormRegistro.tipoValorId = 0;
+      this.FormRegistro.tipoValorId = 0
       this.FormRegistro.codigoValor = ''
       this.FormRegistro.codigoItem = uuidv4()
       console.log('FormRegistro', this.FormRegistro)
@@ -185,52 +185,59 @@ export class GestionItempqComponent {
   }
 
   onTipoValorChangeClick (evento: any) {
-    console.log('evento', evento.target.value);
-    const tipo = this.tiposValor.findIndex(x => x.tipoValorId == evento.target.value);
-    const tipoValor = this.tiposValor[tipo];
-    this.consultarListaPrecios(tipoValor.tipoValorId || 0);
+    console.log('evento', evento.target.value)
+    const tipo = this.tiposValor.findIndex(x => x.tipoValorId == evento.target.value)
+    const tipoValor = this.tiposValor[tipo]
+    this.consultarListaPrecios(tipoValor.tipoValorId || 0)
   }
 
   onValorChangeClick (evento: any) {
-    console.log('asociar el valorlo', evento.target.value);
-    const tipo = this.listaPrecios.findIndex(x => x.codigoValor == evento.target.value);
-    const valor = this.listaPrecios[tipo];
-    this.FormRegistro.nombreItem = valor.nombreValor || '';
-    this.FormRegistro.valorUnitario = valor.valorUnitario || 0;
-    this.FormRegistro.cantidad = 0;
-    this.FormRegistro.valoresAdicionales = 0;
-    this.FormRegistro.valorTotal = this.FormRegistro.cantidad == 0 ? valor.valorUnitario : this.FormRegistro.valorUnitario * this.FormRegistro.cantidad;
+    console.log('asociar el valorlo', evento.target.value)
+    const tipo = this.listaPrecios.findIndex(x => x.codigoValor == evento.target.value)
+    const valor = this.listaPrecios[tipo]
+    this.FormRegistro.nombreItem = valor.nombreValor || ''
+    this.FormRegistro.valorUnitario = valor.valorUnitario || 0
+    this.FormRegistro.cantidad = 0
+    this.FormRegistro.valoresAdicionales = 0
+    this.FormRegistro.valorTotal =
+      this.FormRegistro.cantidad == 0 ? valor.valorUnitario : this.FormRegistro.valorUnitario * this.FormRegistro.cantidad
   }
 
   onCantidadChangeClick (evento: any) {
-    console.log('valor evento', Number(evento.target.value));
-    this.FormRegistro.cantidad = Number(evento.target.value);
-    const operacion = Number(this.FormRegistro.cantidad) > 0 ?  Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad) : Number(this.FormRegistro.valorUnitario);
-    this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales);
+    console.log('valor evento', Number(evento.target.value))
+    this.FormRegistro.cantidad = Number(evento.target.value)
+    const operacion =
+      Number(this.FormRegistro.cantidad) > 0
+        ? Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad)
+        : Number(this.FormRegistro.valorUnitario)
+    this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales)
   }
 
   onValoresAdicionalesChangeClick (evento: any) {
-    console.log('valor evento', Number(evento.target.value));
-    this.FormRegistro.valoresAdicionales = Number(evento.target.value);
-    const operacion = Number(this.FormRegistro.cantidad) > 0 ?  Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad) : Number(this.FormRegistro.valorUnitario);
-    this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales);
+    console.log('valor evento', Number(evento.target.value))
+    this.FormRegistro.valoresAdicionales = Number(evento.target.value)
+    const operacion =
+      Number(this.FormRegistro.cantidad) > 0
+        ? Number(this.FormRegistro.valorUnitario) * Number(this.FormRegistro.cantidad)
+        : Number(this.FormRegistro.valorUnitario)
+    this.FormRegistro.valorTotal = operacion + Number(this.FormRegistro.valoresAdicionales)
   }
 
   btnGestionarRegistroClick (form: NgForm) {
-    this.isSubmit = true;
+    this.isSubmit = true
     if (!form.valid) {
-      return;
+      return
     }
-    const registroData = form.value as PTLItemPaquete;
+    const registroData = form.value as PTLItemPaquete
     // console.log('gestionar registro', registroData);
 
     if (this.modoEdicion) {
-      registroData.codigoItem = this.FormRegistro.codigoItem;
-      registroData.codigoPaquete = this.codigoPaquete;
-      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-      registroData.fechaModificacion = new Date().toISOString();
-      registroData.tipoValorId = Number(this.FormRegistro.tipoValorId);
-      registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad;
+      registroData.codigoItem = this.FormRegistro.codigoItem
+      registroData.codigoPaquete = this.codigoPaquete
+      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+      registroData.fechaModificacion = new Date().toISOString()
+      registroData.tipoValorId = Number(this.FormRegistro.tipoValorId)
+      registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad
       this._registrosService.putModificarRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
@@ -240,54 +247,55 @@ export class GestionItempqComponent {
                   codigoTipoLog: '',
                   codigoRespuesta: '201',
                   descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
-                };
-                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-                this.router.navigate(['aplicaciones/items-paquete'], { queryParams: { regId: this.codigoPaquete } });
+                }
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+                this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
+                this._localStorageService.setObject('regId', this.codigoPaquete)
+                this.router.navigate(['aplicaciones/items-paquete'])
               },
-              error: (err) => {
-                console.error('Error al actualizar requerimiento', err);
+              error: err => {
+                console.error('Error al actualizar requerimiento', err)
                 const logData = {
                   codigoTipoLog: '',
                   codigoRespuesta: '501',
                   descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-                };
-                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
+                }
+                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+                this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje)
               }
-            });
+            })
           } else {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
               descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + resp.mensaje
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + resp.mensaje);
+            }
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+            this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + resp.mensaje)
           }
         },
         error: (err: any) => {
-          console.error(err);
+          console.error(err)
           const logData = {
             codigoTipoLog: '',
             codigoRespuesta: '501',
             descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-          };
-          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
+          }
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje)
         }
-      });
+      })
     } else {
-      console.log('nuevo formregistro', this.FormRegistro.codigoPaquete);
-      registroData.codigoItem = uuidv4();
-      registroData.codigoPaquete = this.codigoPaquete;
-      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-      registroData.fechaCreacion = new Date().toISOString();
-      registroData.codigoUsuarioModificacion = '';
-      registroData.fechaModificacion = '';
-      registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad;
-      registroData.tipoValorId = Number(this.FormRegistro.tipoValorId);
-      console.log('insertar registro', registroData);
+      console.log('nuevo formregistro', this.FormRegistro.codigoPaquete)
+      registroData.codigoItem = uuidv4()
+      registroData.codigoPaquete = this.codigoPaquete
+      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+      registroData.fechaCreacion = new Date().toISOString()
+      registroData.codigoUsuarioModificacion = ''
+      registroData.fechaModificacion = ''
+      registroData.cantidad = this.FormRegistro.cantidad = 0 ? 1 : this.FormRegistro.cantidad
+      registroData.tipoValorId = Number(this.FormRegistro.tipoValorId)
+      console.log('insertar registro', registroData)
       this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
@@ -295,30 +303,32 @@ export class GestionItempqComponent {
               codigoTipoLog: '',
               codigoRespuesta: '501',
               descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR')
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
-            form.resetForm();
-            this.isSubmit = false;
-            this.router.navigate(['aplicaciones/items-paquete'], { queryParams: { regId: this.codigoPaquete } });
+            }
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+            this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+            form.resetForm()
+            this.isSubmit = false
+            this._localStorageService.setObject('regId', this.codigoPaquete)
+            this.router.navigate(['aplicaciones/items-paquete'])
           }
         },
         error: (err: any) => {
-          console.error(err);
+          console.error(err)
           const logData = {
             codigoTipoLog: '',
             codigoRespuesta: '501',
             descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-          };
-          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje);
+          }
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+          this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ' ' + err.mensaje)
         }
-      });
+      })
     }
   }
 
   btnRegresarClick () {
-    this.router.navigate(['aplicaciones/modulos-paquete'], { queryParams: { regId: this.codigoPaquete } })
+    this._localStorageService.setObject('regId', this.codigoPaquete)
+    this.router.navigate(['aplicaciones/modulos-paquete'])
   }
 
   toggleNav (): void {

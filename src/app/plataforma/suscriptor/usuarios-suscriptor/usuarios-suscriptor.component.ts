@@ -1,63 +1,139 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { DataTablesModule, DataTableDirective } from 'angular-datatables';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
+import { map, startWith, catchError, tap } from 'rxjs/operators';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
   selector: 'app-usuarios-suscriptor',
   standalone: true,
-  imports: [DataTablesModule],
+  imports: [CommonModule, SharedModule, TranslateModule, DatatableComponent, NavBarComponent, NavContentComponent],
   templateUrl: './usuarios-suscriptor.component.html',
   styleUrl: './usuarios-suscriptor.component.scss'
 })
-export class UsuariosSuscriptorComponent implements OnInit, AfterViewInit{
-dtColumnSearchingOptions: object = {};
-  @ViewChild(DataTableDirective)
-  datatableElement!: DataTableDirective;
+export class UsuariosSuscriptorComponent implements OnInit {
+  // Estado de la UI
+  activeTab: 'menu' | 'filters' = 'filters';
+  menuItems!: Observable<NavigationItem[]>;
+  suscriptorId: string = '';
 
-  // life cycle event
+  // Fuente de datos principal
+  private usuariosSubject = new BehaviorSubject<any[]>([]);
+  usuariosFiltrados$!: Observable<any[]>;
+
+  // Subjects para filtros
+  private filtroNombreSubject = new BehaviorSubject<string>('');
+  private filtroEstadoSubject = new BehaviorSubject<string>('todos');
+
+  constructor(
+    private _usuariosService: PTLUsuariosService,
+    private _navigationService: NavigationService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private translate: TranslateService
+  ) {}
+
   ngOnInit() {
-    this.dtColumnSearchingOptions = {
-      ajax: 'fake-data/datatable-data.json',
-      columns: [
-        {
-          title: 'Name',
-          data: 'name'
-        },
-        {
-          title: 'Position',
-          data: 'position'
-        },
-        {
-          title: 'Office',
-          data: 'office'
-        },
-        {
-          title: 'Age',
-          data: 'age'
-        },
-        {
-          title: 'Start Date',
-          data: 'date'
-        },
-        {
-          title: 'Salary',
-          data: 'salary'
-        }
-      ],
-      responsive: true
-    };
+    // 1. Cargar menú lateral
+    this._navigationService.getNavigationItems();
+    this.menuItems = this._navigationService.menuItems$;
+
+    // 2. Escuchar cambios en la URL
+    this.route.queryParams.subscribe((params) => {
+      this.suscriptorId = params['suscriptorId'];
+      if (this.suscriptorId) {
+        this.cargarDatos();
+      }
+    });
+
+    // 3. Configurar el stream de filtrado (Esto corre una sola vez y reacciona a los cambios)
+    this.usuariosFiltrados$ = combineLatest([this.usuariosSubject, this.filtroNombreSubject, this.filtroEstadoSubject]).pipe(
+      map(([usuarios, nombre, estado]) => {
+        return usuarios.filter((u) => {
+          const cumpleNombre = !nombre || (u.colCodigoUsuario || '').toLowerCase().includes(nombre.toLowerCase());
+          const cumpleEstado = estado === 'todos' || String(u.estadoUsuario) === estado;
+          return cumpleNombre && cumpleEstado;
+        });
+      })
+    );
   }
 
-  ngAfterViewInit(): void {
-    this.datatableElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      dtInstance.columns().every(function () {
-        // eslint-disable-next-line
-        const input = $('input', this.footer()) as any;
-        input.on('keyup change', () => {
-          if (this.search() !== input.val()) {
-            this.search(input.val()).draw();
-          }
+  cargarDatos() {
+    this._usuariosService.obtenerUsuariosPorSuscriptor(this.suscriptorId).subscribe({
+      next: (res: any) => {
+        // 1. Extraer la lista según la estructura que envía tu API de Node (usualmente res.usuariosSC)
+        let lista: any[] = [];
+
+        if (res && res.ok && Array.isArray(res.usuariosSC)) {
+          lista = res.usuariosSC;
+        } else if (Array.isArray(res)) {
+          lista = res;
+        }
+
+        // 2. Mapeo riguroso hacia la interfaz de la tabla
+        const datosMapeados = lista.map((u: any) => {
+          return {
+            ...u,
+            // 'idParaTabla' debe ser la llave primaria para que funcionen editar/eliminar
+            idParaTabla: u.codigoUsuarioSC,
+
+            // Mapeo de columnas basado en tu array 'columnasUsuarios'
+            colCodigoUsuario: u.codigoUsuario,
+            colCodigoUsuarioSC: u.codigoUsuarioSC,
+
+            // Manejo del estado para el pipe/tipo 'estado' de tu datatable
+            nomEstado: u.estadoUsuario === true || u.estadoUsuario === 1 ? 'Activo' : 'Inactivo'
+          };
         });
-      });
+
+        this.usuariosSubject.next(datosMapeados);
+      },
+      error: (err) => {
+        console.error('Error al traer usuarios:', err);
+        this.usuariosSubject.next([]);
+      }
     });
   }
+
+  // Configuración de columnas (Basado en tu imagen de la BD)
+  columnasUsuarios = [
+    { name: 'colCodigoUsuarioSC', header: 'USUARIOS.CODIGO_SC', type: 'text' },
+    { name: 'colCodigoUsuario', header: 'USUARIOS.CODIGO_USUARIO', type: 'text' },
+    { name: 'nomEstado', header: 'PLATAFORMA.STATUS', type: 'estado' }
+  ];
+
+  // --- Eventos de Interfaz ---
+
+  onFiltroNombreChange(event: any) {
+    this.filtroNombreSubject.next(event.target.value || '');
+  }
+
+  onFiltroEstadoChange(event: any) {
+    this.filtroEstadoSubject.next(event.target.value || 'todos');
+  }
+
+  OnNuevoRegistroClick() {
+    this.router.navigate(['/suscriptor/gestion-usuario'], {
+      queryParams: { suscriptorId: this.suscriptorId, regId: 'nuevo' }
+    });
+  }
+
+  OnEditarRegistroClick(event: any) {
+    const id = event.id || event;
+    this.router.navigate(['/suscriptor/gestion-usuario'], { queryParams: { regId: id } });
+  }
+
+  OnEliminarRegistroClick(event: any) {
+    console.log('Eliminar usuario:', event.id || event);
+  }
+
+  toggleNav() {}
 }

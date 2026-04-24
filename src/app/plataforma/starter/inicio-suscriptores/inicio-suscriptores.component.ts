@@ -72,11 +72,12 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
   }
 
   consultarSuscriptores() {
+    const codigoSuscriptor = this._localStorageService.getObject<string>('codigoSuscriptor') || ''
     this.subscriptions.add(
       this._suscriptoresService.suscriptores$.subscribe({
         next: (suscriptores: PTLUsuarioSCModel[]) => {
           suscriptores.forEach((susc: any) => {
-            susc.logoSusucriptor = this._uploadService.getFilePath(this.suscriptor, 'suscriptores', susc.logoSusucriptor);
+            susc.logoSusucriptor = this._uploadService.getFilePath(codigoSuscriptor, 'suscriptores', susc.logoSusucriptor);
           });
           this.suscriptores = suscriptores;
           console.log('suscriptores:', this.suscriptores);
@@ -95,14 +96,14 @@ export class InicioSuscriptoresComponent implements OnInit, OnDestroy {
     const user = this._localStorageService.getUsuarioLocalStorage();
     console.log('&&&&&&&& usuariosSC');
     this.subscriptions.add(
-      this._usuariosSCService._usuariosSC$.subscribe({
+      this._usuariosSCService.usuariosSC$.subscribe({
         next: (usuariosSC: PTLUsuarioSCModel[]) => {
           this.usuariosSC = usuariosSC;
           this.usuarioSC = usuariosSC.filter((x) => x.codigoUsuario == user?.codigoUsuario)[0];
           console.log('usuarioSC:', this.usuarioSC);
           this.consultarUusuariosEmpresasSC();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error al cargar los roles de usuariosSC:', err);
           this.usuarioSC = {} as PTLUsuarioSCModel;
         }

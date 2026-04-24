@@ -63,6 +63,10 @@ const routes: Routes = [
       {
         path: 'lista-precios',
         loadChildren: () => import('./plataforma/lista-precios/lista-precios.module').then((module) => module.ListaPreciosModule)
+      },
+      {
+        path: 'biblioteca',
+        loadChildren: () => import('./plataforma/biblioteca/biblioteca.module').then((module) => module.BibliotecaModule)
       }
     ]
   },

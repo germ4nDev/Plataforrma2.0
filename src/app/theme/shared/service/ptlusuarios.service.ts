@@ -19,6 +19,12 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PTLUsuariosService {
+  obtenerUsuariosPorSuscriptor(suscriptorId: string): Observable<PTLUsuarioModel[]> {
+    const url = `${base_url}/usuarios/suscriptor/${suscriptorId}`;
+    // IMPORTANTE: Debe llevar el 'return'
+    return this.http.get<any>(url).pipe(map((resp) => resp.usuarios as PTLUsuarioModel[]));
+  }
+
   usuario: PTLUsuarioModel = new PTLUsuarioModel();
   private _registros = new BehaviorSubject<PTLUsuarioModel[]>([]);
   private _registrosChange = new Subject<any>();
@@ -91,23 +97,23 @@ export class PTLUsuariosService {
   }
 
   verificarClaveActual(codigo: string, clave: string) {
-      const validacion = { codigoAdministrador: codigo, claveActual: clave };
-      return this.http.post(`${environment.apiUrl}/usuarios/validar`, { validacion }).pipe(
-        tap((susc) => {
-          if (!susc) {
-            throw new Error('Usuairo no válido');
-          }
-          return {
-            ok: true,
-            suscriptor: susc
-          };
-        }),
-        catchError((error: HttpErrorResponse) => {
-          const errorMessage = error.error?.msg || 'Error en la validación';
-          return throwError(() => errorMessage);
-        })
-      );
-    }
+    const validacion = { codigoAdministrador: codigo, claveActual: clave };
+    return this.http.post(`${environment.apiUrl}/usuarios/validar`, { validacion }).pipe(
+      tap((susc) => {
+        if (!susc) {
+          throw new Error('Usuairo no válido');
+        }
+        return {
+          ok: true,
+          suscriptor: susc
+        };
+      }),
+      catchError((error: HttpErrorResponse) => {
+        const errorMessage = error.error?.msg || 'Error en la validación';
+        return throwError(() => errorMessage);
+      })
+    );
+  }
 
   crearUsuario(data: PTLUsuarioModel) {
     const url = `${base_url}/usuarios`;

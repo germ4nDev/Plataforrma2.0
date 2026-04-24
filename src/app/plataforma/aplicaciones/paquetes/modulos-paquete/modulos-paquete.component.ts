@@ -52,7 +52,7 @@ export class ModulosPaqueteComponent {
   modulosSub?: Subscription
   suites: PTLSuiteAPModel[] = []
   modulosPadre: PTLModuloAP[] = []
-
+  suscriptor: string = ''
   moduloTituloExcel: string = ''
   filtroPersonalizado: string = ''
   hasFiltersSlot: boolean = false
@@ -75,7 +75,7 @@ export class ModulosPaqueteComponent {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _swalService: SwalAlertService,
-    private _localstorageService: LocalStorageService,
+    private _localStorageService: LocalStorageService,
     private _logActividadesService: PtllogActividadesService,
     private _aplicacionesService: PtlAplicacionesService,
     private _suitesService: PtlSuitesAPService,
@@ -83,11 +83,10 @@ export class ModulosPaqueteComponent {
     private _registrosService: PTLModulosPaqueteService
   ) {
     this.gradientConfig = GradientConfig
-    this.route.queryParams.subscribe(params => {
-      this.registroId = params['regId'] || ''
-      console.log('regId', this.registroId)
-      this.registrosFiltrado = []
-    })
+    this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+    this.registroId = this._localStorageService.getObject<string>('regId') || ''
+    console.log('regId', this.registroId)
+    this.registrosFiltrado = []
   }
 
   ngOnInit (): void {
@@ -310,16 +309,20 @@ export class ModulosPaqueteComponent {
   columnasDetailRegistros: ColumnMetadata[] = []
 
   getLanguageUrl (): string {
-    const lang = this._localstorageService.getLanguage() || 'en'
+    const lang = this._localStorageService.getLanguage() || 'en'
     return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${lang === 'es' ? 'Spanish' : 'English'}.json`
   }
 
   OnNuevoRegistroClick (): void {
+    this._localStorageService.setObject('regId', '')
+    this._localStorageService.setObject('regPQ', this.registroId)
     this.router.navigate(['aplicaciones/gestion-modulopq'], { queryParams: { regId: '', regPQ: this.registroId } })
   }
 
   OnEditarRegistroClick (id: any): void {
-    this.router.navigate(['aplicaciones/gestion-itempq'], { queryParams: { regId: id, regPQ: this.registroId } })
+    this._localStorageService.setObject('regId', id)
+    this._localStorageService.setObject('regPQ', this.registroId)
+    this.router.navigate(['aplicaciones/gestion-itempq'])
   }
 
   OnEliminarRegistroClick (id: any): void {
@@ -332,27 +335,27 @@ export class ModulosPaqueteComponent {
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
     }).then(result => {
-        this._registrosService.deleteEliminarRegistro(id).subscribe({
-          next: (resp: any) => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje
-            }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            this.setupModulosPaquetesStream();
-            Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-          },
-          error: err => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR') + ' ' + err.mensaje
-            }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error')
+      this._registrosService.deleteEliminarRegistro(id).subscribe({
+        next: (resp: any) => {
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '201',
+            descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje
           }
-        })
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+          this.setupModulosPaquetesStream()
+          Swal.fire(this.translate.instant('APLICACIONES.ELIMINAREXITOSA'), resp.mensaje, 'success')
+        },
+        error: err => {
+          const logData = {
+            codigoTipoLog: '',
+            codigoRespuesta: '501',
+            descripcionLog: this.translate.instant('APLICACIONES.ELIMINARERROR') + ' ' + err.mensaje
+          }
+          this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+          Swal.fire('Error', this.translate.instant('APLICACIONES.ELIMINARERROR'), 'error')
+        }
+      })
     })
   }
 
