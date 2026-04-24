@@ -12,7 +12,7 @@ import { GradientConfig } from 'src/app/app-config'
 import { PTLGaleria } from 'src/app/theme/shared/_helpers/models/PTLGaleria.model'
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
-import { PtlGaleriaService } from 'src/app/theme/shared/service/ptlgaleria.service'
+import { PtlGaleriasService } from 'src/app/theme/shared/service/ptlgalerias.service'
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
 
 import Swal from 'sweetalert2'
@@ -42,6 +42,7 @@ export class GaleriasComponent implements OnInit, OnDestroy {
   activeTab: 'menu' | 'filters' | 'main' = 'menu'
   tipoMedia: string = ''
   suscriptor: string = ''
+  codBiblioteca: string = ''
 
   subscriptions = new Subscription()
   filtroCodigoSubject = new BehaviorSubject<string>('todos')
@@ -59,11 +60,18 @@ export class GaleriasComponent implements OnInit, OnDestroy {
     private _navigationService: NavigationService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
-    private _galeriaService: PtlGaleriaService,
+    private _galeriaService: PtlGaleriasService,
     private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig
     this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+        const regId = this._localStorageService.getObject<string>('regId') || ''
+        console.log('galerias para la biblioteca', regId);
+
+        this.codBiblioteca = regId
+        if (regId !== 'nuevo') {
+          this.setupGaleriaStream(regId)
+        }
   }
 
   cargarDatos (): void {
@@ -79,7 +87,7 @@ export class GaleriasComponent implements OnInit, OnDestroy {
     this._navigationService.getNavigationItems()
     this.menuItems$ = this._navigationService.menuItems$
     this.hasFiltersSlot = true
-    this.setupGaleriaStream()
+    this.setupGaleriaStream(this.codBiblioteca)
     this.cargarDatos()
   }
 
@@ -87,14 +95,12 @@ export class GaleriasComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe()
   }
 
-  setupGaleriaStream (): void {
+  setupGaleriaStream (regId: string): void {
     this.galeriaTransformada$ = this._galeriaService.galeria$.pipe(
       switchMap((gals: PTLGaleria[]) => {
         if (!gals) return of([])
         const transformed = gals.map((gal: any) => {
           gal.nomEstado = gal.estadoGaleria ? 'Activo' : 'Inactivo'
-          const nombreArchivo = gal.imagenGaleria || ''
-          const nombreMinuscula = nombreArchivo.toLowerCase()
           this.tipoMedia = this.getFileType(this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', gal.imagenGaleria))
           if (this.tipoMedia == 'video') {
             gal.capture = this._uploadService.getFilePath(this.suscriptor, 'aplicaciones', gal.imagenGaleria)
@@ -114,16 +120,6 @@ export class GaleriasComponent implements OnInit, OnDestroy {
             gal.tipo = 'capture'
             console.log('gal captura', gal.capture)
           }
-          //   if (nombreMinuscula.endsWith('.mp4') || nombreMinuscula.endsWith('.avi') || nombreMinuscula.endsWith('.mov')) {
-          //     gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', 'no-imagen.png')
-          //   } else if (nombreMinuscula.endsWith('.pdf') || nombreMinuscula.endsWith('.doc')) {
-          //     gal.imagenGaleria = 'assets/images/doc-placeholder.png'
-          //   } else if (nombreArchivo !== '') {
-          //     gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', gal.imagenGaleria)
-          //   } else {
-          //     gal.imagenGaleria = this._uploadService.getFilePath('plataforma', 'galeria', 'no-imagen.png')
-          //   }
-
           return gal as PTLGaleria
         })
         this.galerias = transformed
@@ -144,6 +140,7 @@ export class GaleriasComponent implements OnInit, OnDestroy {
     ]).pipe(
       map(([gals, codigo, nombre, descripcion, estado]) => {
         let filtered = gals
+        filtered = filtered.filter(gal => gal.codigoBiblioteca === regId)
 
         if (codigo !== 'todos') {
           filtered = filtered.filter(gal => gal.codigoGaleria === codigo)
@@ -211,13 +208,19 @@ export class GaleriasComponent implements OnInit, OnDestroy {
   ]
 
   OnNuevaGaleriaClick (): void {
+    this._localStorageService.setObject('bibId', this.codBiblioteca)
     this._localStorageService.setObject('regId', 'nuevo')
-    this.router.navigate(['/biblioteca/galeria/gestion-galeria'])
+    this.router.navigate(['/biblioteca/gestion-galeria'])
   }
 
   OnEditarGaleriaClick (id: string): void {
+    this._localStorageService.setObject('bibId', this.codBiblioteca)
     this._localStorageService.setObject('regId', id)
-    this.router.navigate(['/biblioteca/galeria/gestion-galeria'])
+    this.router.navigate(['/biblioteca/gestion-galeria'])
+  }
+
+  OnRegresarBibliotecaClick (): void {
+    this.router.navigate(['/biblioteca/bibliotecas'])
   }
 
   OnEliminarGaleriaClick (evento: any): void {

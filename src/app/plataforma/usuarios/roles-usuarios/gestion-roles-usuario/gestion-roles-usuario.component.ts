@@ -8,7 +8,7 @@ import { catchError, of, Subscription, tap, firstValueFrom, Observable } from 'r
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { PTLRoleAPModel } from '../../../../theme/shared/_helpers/models/PTLRoleAP.model';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
-import { PTLUsuarioRoleAP } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
+import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { v4 as uuidv4 } from 'uuid';
@@ -37,14 +37,14 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 export class GestionRolesUsuarioComponent implements OnInit {
 //   @Output() toggleSidebar = new EventEmitter<void>();
 //   menuItems!: Observable<NavigationItem[]>;
-//   FormRegistro: PTLUsuarioRoleAP = new PTLUsuarioRoleAP();
+//   FormRegistro: PTLUsuarioRoleAPModel = new PTLUsuarioRoleAPModel();
 //   aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
 //   suite: PTLSuiteAPModel = new PTLSuiteAPModel();
 //   usuario: PTLUsuarioModel = new PTLUsuarioModel();
 //   aplicaciones: PTLAplicacionModel[] = [];
 //   usuarios: PTLUsuarioModel[] = [];
 //   rolesAplicacion: PTLRoleAPModel[] = [];
-//   rolesUsuarios: PTLUsuarioRoleAP[] = [];
+//   rolesUsuarios: PTLUsuarioRoleAPModel[] = [];
 //   registrosSub?: Subscription;
 //   usuariosSub?: Subscription;
 //   aplicacionesSub?: Subscription;
@@ -59,7 +59,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
 //   isSubmit: boolean = false;
 //   modoEdicion: boolean = false;
 //   codeRegistro = uuidv4();
-//   rolesSeleccionados: PTLUsuarioRoleAP[] = [];
+//   rolesSeleccionados: PTLUsuarioRoleAPModel[] = [];
 
   constructor(
     // private router: Router,
@@ -338,7 +338,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
 //       .subscribe((elm) => {
 //         // if (this.rolesSeleccionados.length > 0) {
 //         //   this.rolesSeleccionados.forEach((role) => {
-//         //     const newRole: PTLUsuarioRoleAP = {
+//         //     const newRole: PTLUsuarioRoleAPModel = {
 //         //       codigoUsuaio: this.FormRegistro.codigoUsuaio,
 //         //       codigoRole: role.codigoRole,
 //         //       estadoUsuarioRole: true

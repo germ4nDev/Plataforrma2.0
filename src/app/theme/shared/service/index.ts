@@ -55,3 +55,7 @@ export * from './ptlsliders-inicio.service';
 export * from './ptlusuarios-empresas-sc.service';
 export * from './ptlactividades.service';
 export * from './ptlactividades-roles.service';
+export * from './ptlbibliotecas.service';
+export * from './ptlgalerias.service';
+export * from './ptltipos-galeria.service';
+export * from './ptlformatos-galeria.service';

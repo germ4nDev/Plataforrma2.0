@@ -9,11 +9,11 @@ import { Observable, Subscription, of, BehaviorSubject, combineLatest } from 'rx
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 
-import { PTLTiposGaleria } from 'src/app/theme/shared/_helpers/models/PTLTiposGaleria.model';
+import { PTLTipoGaleria } from 'src/app/theme/shared/_helpers/models/PTLTipoGaleria.model';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { PtlTiposGaleriaService } from 'src/app/theme/shared/service/ptltiposgaleria.service';
+import { PtlTiposGaleriaService } from 'src/app/theme/shared/service/ptltipos-galeria.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
 import Swal from 'sweetalert2';
@@ -45,9 +45,9 @@ export class TiposGaleriaComponent implements OnInit, OnDestroy {
   filtroDescripcionSubject = new BehaviorSubject<string>('');
   filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-  tiposTransformada$: Observable<PTLTiposGaleria[]> = of([]);
-  tiposFiltrada$: Observable<PTLTiposGaleria[]> = of([]);
-  tipos: PTLTiposGaleria[] = [];
+  tiposTransformada$: Observable<PTLTipoGaleria[]> = of([]);
+  tiposFiltrada$: Observable<PTLTipoGaleria[]> = of([]);
+  tipos: PTLTipoGaleria[] = [];
 
   constructor(
     private router: Router,
@@ -64,7 +64,7 @@ export class TiposGaleriaComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this._tiposGaleriaService.cargarTiposGaleria().subscribe(
         () => console.log('Datos de Tipos de Galería actualizados'),
-        (err) => console.error('Error al cargar Tipos de Galería:', err)
+        (err: any) => console.error('Error al cargar Tipos de Galería:', err)
       )
     );
   }
@@ -90,11 +90,11 @@ export class TiposGaleriaComponent implements OnInit, OnDestroy {
 
   setupTiposStream(): void {
     this.tiposTransformada$ = this._tiposGaleriaService.tiposGaleria$.pipe(
-      switchMap((tipos: PTLTiposGaleria[]) => {
+      switchMap((tipos: PTLTipoGaleria[]) => {
         if (!tipos) return of([]);
         const transformed = tipos.map((t: any) => {
           t.nomEstado = t.estadoTipo ? 'Activo' : 'Inactivo';
-          return t as PTLTiposGaleria;
+          return t as PTLTipoGaleria;
         });
         this.tipos = transformed;
         return of(transformed);

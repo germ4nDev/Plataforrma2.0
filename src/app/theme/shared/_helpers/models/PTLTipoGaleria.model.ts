@@ -1,4 +1,4 @@
-export class PTLTiposGaleria {
+export class PTLTipoGaleria {
   constructor(
     public tipoId?: number,
     public codigoTipo?: string,

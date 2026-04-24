@@ -81,12 +81,23 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoPadre"> {{ 'MODULOS.GESTION.PADRE' |
+                                <label class="form-control-label" for="codigoBiblioteca"> {{ 'MODULOS.GESTION.PADRE' |
                                     translate }}</label>
                                 <select class="form-control form-input" style="cursor: pointer" name="codigoPadre" id="codigoPadre" #codigoPadre="ngModel" required [(ngModel)]="FormRegistro.codigoPadre" (change)="onCodigoPadreChangeClick($event)">
                                     <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERPADRE' | translate }} </option>
                                     <option [value]="mod.codigoModulo" *ngFor="let mod of modulosPadre"> {{
                                         mod.nombreModulo }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="codigoBiblioteca"> {{ 'MODULOS.GESTION.RBIBLIOTECA' |
+                                    translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer" name="codigoBiblioteca" id="codigoBiblioteca" #codigoBiblioteca="ngModel" required [(ngModel)]="FormRegistro.codigoBiblioteca" (change)="onCodigoBibliotecaChangeClick($event)">
+                                    <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERBIBLIOTECA' | translate }} </option>
+                                    <option [value]="bib.codigoBiblioteca" *ngFor="let bib of listBibliotecas"> {{
+                                        bib.nombreBiblioteca }}</option>
                                 </select>
                             </div>
                         </div>

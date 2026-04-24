@@ -201,57 +201,7 @@ export class RolesUsuariosComponent implements OnInit {
         return;
       }
       this.usuariosRoles = resp.usuariosRoles;
-    //   const registros = resp.usuariosRoles;
 
-    //   const usuarioIds = [...new Set(registros.map((r: any) => r.usuarioId))];
-    //   const aplicacionIds = [...new Set(registros.map((r: any) => r.aplicacionId))];
-    //   const sutesIds = [...new Set(registros.map((r: any) => r.suiteId))];
-    //   const roleIds = [...new Set(registros.map((r: any) => r.roleId))];
-
-    //   const [usuarios, aplicaciones, suites, roles] = await Promise.all([
-    //     Promise.all(usuarioIds.map((id) => this.consultarUsuarioById(id))),
-    //     Promise.all(aplicacionIds.map((id) => this.consultarAplicacionById(id))),
-    //     Promise.all(sutesIds.map((id) => this.consultarSuiteById(id))),
-    //     Promise.all(roleIds.map((id) => this.consultarRoleById(id)))
-    //   ]);
-
-    //   const usuarioMap = new Map(usuarios.map((u) => [u.usuarioId, { ...u, aplicaciones: [] }]));
-    //   const aplicacionMap = new Map(aplicaciones.map((a) => [a.aplicacionId, a]));
-    //   const suiteMap = new Map(suites.map((s) => [s.suiteId, s]));
-    //   const roleMap = new Map(roles.map((r) => [r.roleId, r]));
-
-    //   for (const reg of registros) {
-    //     const user = usuarioMap.get(reg.usuarioId);
-    //     const app = aplicacionMap.get(reg.aplicacionId);
-    //     const suite = suiteMap.get(reg.suiteId);
-    //     const role = { ...roleMap.get(reg.roleId) };
-
-    //     if (!user || !app || !suite || !role) continue;
-
-    //     role.usuarioRoleId = reg.usuarioRoleId;
-    //     role.estadoUsuarioRole = reg.estadoUsuarioRole;
-    //     role.nomEstado = reg.estadoUsuarioRole ? 'Activo' : 'Inactivo';
-
-    //     let appRef = user.aplicaciones.find((a: any) => a.aplicacionId === app.aplicacionId);
-    //     if (!appRef) {
-    //       appRef = { ...app, suites: [] };
-    //       user.aplicaciones.push(appRef);
-    //     }
-
-    //     let suiteRef = appRef.suites.find((s: any) => s.suiteId === suite.suiteId);
-    //     if (!suiteRef) {
-    //       suiteRef = { ...suite, roles: [] };
-    //       appRef.suites.push(suiteRef);
-    //     }
-
-    //     if (!suiteRef.roles.find((r: any) => r.roleId === role.roleId)) {
-    //       suiteRef.roles.push(role);
-    //     }
-    //   }
-    //   //   this.registros = Array.from(usuarioMap.values());
-    //   this.registrosFiltrado = Array.from(usuarioMap.values());
-    //   this.procesarDatosParaDatatable();
-    //   //   this.dtTrigger.next(null);
     } catch (error) {
       console.error('Error en consultarRegistros', error);
     }

@@ -14,7 +14,7 @@ const base_url = environment.apiUrl;
 @Injectable({
   providedIn: 'root'
 })
-export class PtlGaleriaService {
+export class PtlGaleriasService {
   private _galeria = new BehaviorSubject<PTLGaleria[]>([]);
   private _galeriaChange = new Subject<any>();
   galeriaChange$ = this._galeriaChange.asObservable();
@@ -24,7 +24,7 @@ export class PtlGaleriaService {
     private socketService: SocketService,
     private _localstorageService: LocalStorageService
   ) {
-    this.socketService.listen('galeria-actualizadas').subscribe({
+    this.socketService.listen('galerias-actualizadas').subscribe({
       next: (payload) => {
         console.log('Evento de Socket.IO recibido:', payload.msg);
         this._galeriaChange.next(payload);
@@ -40,7 +40,7 @@ export class PtlGaleriaService {
 
   getGaleria() {
     console.log('Consultando galería');
-    const url = `${base_url}/galeria`;
+    const url = `${base_url}/galerias`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         return {
@@ -53,7 +53,7 @@ export class PtlGaleriaService {
 
   cargarGaleria() {
     console.log('Consultando y ordenando galería del servidor...');
-    const url = `${base_url}/galeria`;
+    const url = `${base_url}/galerias`;
     return this.http.get(url).pipe(
       map((resp: any) => (resp.galeria || resp.galerias) as PTLGaleria[]),
       map((galeria: PTLGaleria[]) => {
@@ -65,8 +65,8 @@ export class PtlGaleriaService {
     );
   }
 
-  getGaleriaById(id: number) {
-    const url = `${base_url}/galeria/${id}`;
+  getGaleriaById(id: string) {
+    const url = `${base_url}/galerias/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de galería', resp);
@@ -79,7 +79,7 @@ export class PtlGaleriaService {
   }
 
   getGaleriaByCode(code: string) {
-    const url = `${base_url}/galeria/code/${code}`;
+    const url = `${base_url}/galerias/code/${code}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de la galería', resp.galeria);
@@ -92,7 +92,7 @@ export class PtlGaleriaService {
   }
 
   crearGaleria(data: PTLGaleria) {
-    const url = `${base_url}/galeria`;
+    const url = `${base_url}/galerias`;
     return this.http.post(url, data).pipe(
       map((resp: any) => {
         return {
@@ -104,7 +104,7 @@ export class PtlGaleriaService {
   }
 
   actualizarGaleria(galeria: PTLGaleria) {
-    const url = `${base_url}/galeria/${galeria.codigoGaleria}`;
+    const url = `${base_url}/galerias/${galeria.codigoGaleria}`;
     return this.http.put(url, galeria).pipe(
       map((resp: any) => {
         console.log('data de galería modificada', resp);
@@ -118,7 +118,7 @@ export class PtlGaleriaService {
 
   eliminarGaleria(id: string) {
     console.log('eliminar galería', id);
-    const url = `${base_url}/galeria/${id}`;
+    const url = `${base_url}/galerias/${id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de galería eliminada', resp);

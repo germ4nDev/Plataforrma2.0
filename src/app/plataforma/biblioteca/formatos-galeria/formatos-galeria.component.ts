@@ -9,11 +9,11 @@ import { Observable, Subscription, of, BehaviorSubject, combineLatest } from 'rx
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { GradientConfig } from 'src/app/app-config';
 
-import { PTLFormatosGaleria } from 'src/app/theme/shared/_helpers/models/PTLFormatosGaleria.model';
+import { PTLFormatoGaleria } from 'src/app/theme/shared/_helpers/models/PTLFormatoGaleria.model';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { PtlFormatosGaleriaService } from 'src/app/theme/shared/service/ptlformatosgaleria.service';
+import { PtlformatosGaleriaService } from 'src/app/theme/shared/service/ptlformatos-galeria.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 
 import Swal from 'sweetalert2';
@@ -45,9 +45,9 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
   filtroDescripcionSubject = new BehaviorSubject<string>('');
   filtroEstadoSubject = new BehaviorSubject<string>('todos');
 
-  formatosTransformada$: Observable<PTLFormatosGaleria[]> = of([]);
-  formatosFiltrada$: Observable<PTLFormatosGaleria[]> = of([]);
-  formatos: PTLFormatosGaleria[] = [];
+  formatosTransformada$: Observable<PTLFormatoGaleria[]> = of([]);
+  formatosFiltrada$: Observable<PTLFormatoGaleria[]> = of([]);
+  formatos: PTLFormatoGaleria[] = [];
 
   constructor(
     private router: Router,
@@ -55,7 +55,7 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
     private _navigationService: NavigationService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
-    private _formatosGaleriaService: PtlFormatosGaleriaService
+    private _formatosGaleriaService: PtlformatosGaleriaService
   ) {
     this.gradientConfig = GradientConfig;
   }
@@ -83,11 +83,11 @@ export class FormatosGaleriaComponent implements OnInit, OnDestroy {
 
   setupFormatosStream(): void {
     this.formatosTransformada$ = this._formatosGaleriaService.formatosGaleria$.pipe(
-      switchMap((formatos: PTLFormatosGaleria[]) => {
+      switchMap((formatos: PTLFormatoGaleria[]) => {
         if (!formatos) return of([]);
         const transformed = formatos.map((f: any) => {
           f.nomEstado = f.estadoFormato ? 'Activo' : 'Inactivo';
-          return f as PTLFormatosGaleria;
+          return f as PTLFormatoGaleria;
         });
         this.formatos = transformed;
         return of(transformed);

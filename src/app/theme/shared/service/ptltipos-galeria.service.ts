@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { map, tap } from 'rxjs/operators';
-import { PTLTiposGaleria } from '../_helpers/models/PTLTiposGaleria.model';
+import { PTLTipoGaleria } from '../_helpers/models/PTLTipoGaleria.model';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SocketService } from './sockets.service';
@@ -15,7 +15,7 @@ const base_url = environment.apiUrl;
   providedIn: 'root'
 })
 export class PtlTiposGaleriaService {
-  private _tiposGaleria = new BehaviorSubject<PTLTiposGaleria[]>([]);
+  private _tiposGaleria = new BehaviorSubject<PTLTipoGaleria[]>([]);
   private _tiposGaleriaChange = new Subject<any>();
   tiposGaleriaChange$ = this._tiposGaleriaChange.asObservable();
 
@@ -24,7 +24,7 @@ export class PtlTiposGaleriaService {
     private socketService: SocketService,
     private _localstorageService: LocalStorageService
   ) {
-    this.socketService.listen('tiposGaleria-actualizadas').subscribe({
+    this.socketService.listen('tipos-galeria-actualizadas').subscribe({
       next: (payload) => {
         console.log('Evento de Socket.IO recibido:', payload.msg);
         this._tiposGaleriaChange.next(payload);
@@ -34,13 +34,13 @@ export class PtlTiposGaleriaService {
     });
   }
 
-  get tiposGaleria$(): Observable<PTLTiposGaleria[]> {
+  get tiposGaleria$(): Observable<PTLTipoGaleria[]> {
     return this._tiposGaleria.asObservable();
   }
 
   getTiposGaleria() {
     console.log('Consultando tipos de galería');
-    const url = `${base_url}/tiposGaleria`;
+    const url = `${base_url}/tipos-galeria`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         return {
@@ -53,10 +53,10 @@ export class PtlTiposGaleriaService {
 
   cargarTiposGaleria() {
     console.log('Consultando y ordenando tipos de galería del servidor...');
-    const url = `${base_url}/tiposGaleria`;
+    const url = `${base_url}/tipos-galeria`;
     return this.http.get(url).pipe(
-      map((resp: any) => (resp.tiposGaleria || resp.tipoGaleria) as PTLTiposGaleria[]),
-      map((tipos: PTLTiposGaleria[]) => {
+      map((resp: any) => (resp.tiposGaleria || resp.tipoGaleria) as PTLTipoGaleria[]),
+      map((tipos: PTLTipoGaleria[]) => {
         if (!tipos) return []; // Validación de seguridad por si el backend no trae datos
         return tipos.sort((a: any, b: any) => (a.nombreTipo || '').localeCompare(b.nombreTipo || ''));
       }),
@@ -67,7 +67,7 @@ export class PtlTiposGaleriaService {
   }
 
   getTipoGaleriaById(id: number) {
-    const url = `${base_url}/tiposGaleria/${id}`;
+    const url = `${base_url}/tipos-galeria/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data de tipo galería', resp);
@@ -80,7 +80,7 @@ export class PtlTiposGaleriaService {
   }
 
   getTipoGaleriaByCode(code: string) {
-    const url = `${base_url}/tiposGaleria/code/${code}`;
+    const url = `${base_url}/tipos-galeria/code/${code}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         console.log('data del tipo galería', resp.tipoGaleria);
@@ -92,8 +92,8 @@ export class PtlTiposGaleriaService {
     );
   }
 
-  crearTipoGaleria(data: PTLTiposGaleria) {
-    const url = `${base_url}/tiposGaleria`;
+  crearTipoGaleria(data: PTLTipoGaleria) {
+    const url = `${base_url}/tipos-galeria`;
     return this.http.post(url, data).pipe(
       map((resp: any) => {
         return {
@@ -104,8 +104,8 @@ export class PtlTiposGaleriaService {
     );
   }
 
-  actualizarTipoGaleria(tipo: PTLTiposGaleria) {
-    const url = `${base_url}/tiposGaleria/${tipo.codigoTipo}`;
+  actualizarTipoGaleria(tipo: PTLTipoGaleria) {
+    const url = `${base_url}/tipos-galeria/${tipo.codigoTipo}`;
     return this.http.put(url, tipo).pipe(
       map((resp: any) => {
         console.log('data de tipo galería modificado', resp);
@@ -119,7 +119,7 @@ export class PtlTiposGaleriaService {
 
   eliminarTipoGaleria(id: string) {
     console.log('eliminar tipo galería', id);
-    const url = `${base_url}/tiposGaleria/${id}`; // Corregido: antes era _id.id
+    const url = `${base_url}/tipos-galeria/${id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
         console.log('data de tipo galería eliminada', resp);

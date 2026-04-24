@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { map, tap } from 'rxjs/operators';
-import { PTLFormatosGaleria } from '../_helpers/models/PTLFormatosGaleria.model'; // Asegúrate de que la ruta sea correcta
+import { PTLFormatoGaleria } from '../_helpers/models/PTLFormatoGaleria.model';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SocketService } from './sockets.service';
@@ -14,8 +14,8 @@ const base_url = environment.apiUrl;
 @Injectable({
   providedIn: 'root'
 })
-export class PtlFormatosGaleriaService {
-  private _formatosGaleria = new BehaviorSubject<PTLFormatosGaleria[]>([]);
+export class PtlformatosGaleriaService {
+  private _formatosGaleria = new BehaviorSubject<PTLFormatoGaleria[]>([]);
   private _formatosGaleriaChange = new Subject<any>();
   formatosGaleriaChange$ = this._formatosGaleriaChange.asObservable();
 
@@ -24,7 +24,7 @@ export class PtlFormatosGaleriaService {
     private socketService: SocketService,
     private _localstorageService: LocalStorageService
   ) {
-    this.socketService.listen('formatosGaleria-actualizadas').subscribe({
+    this.socketService.listen('formatos-formatosGaleria-actualizadas').subscribe({
       next: (payload) => {
         console.log('Evento de Socket.IO recibido:', payload.msg);
         this._formatosGaleriaChange.next(payload);
@@ -34,42 +34,42 @@ export class PtlFormatosGaleriaService {
     });
   }
 
-  get formatosGaleria$(): Observable<PTLFormatosGaleria[]> {
+  get formatosGaleria$(): Observable<PTLFormatoGaleria[]> {
     return this._formatosGaleria.asObservable();
   }
 
   getFormatosGaleria() {
-    console.log('Consultando formatos de galería');
-    const url = `${base_url}/formatosGaleria`;
+    console.log('Consultando galería');
+    const url = `${base_url}/formatos-galeria`;
     return this.http.get(url).pipe(
       map((resp: any) => {
         return {
           ok: true,
-          formatosGaleria: resp.formatosGaleria || resp.formatoGaleria
+          formatosGaleria: resp.formatosGaleria || resp.formatosGaleria
         };
       })
     );
   }
 
   cargarFormatosGaleria() {
-    console.log('Consultando y ordenando formatos de galería del servidor...');
-    const url = `${base_url}/formatosGaleria`;
+    console.log('Consultando y ordenando formatosGalería del servidor...');
+    const url = `${base_url}/formatos-galeria`;
     return this.http.get(url).pipe(
-      map((resp: any) => (resp.formatosGaleria || resp.formatoGaleria) as PTLFormatosGaleria[]),
-      map((formatos: PTLFormatosGaleria[]) => {
-        return formatos.sort((a: any, b: any) => (a.nombreFormato || '').localeCompare(b.nombreFormato || ''));
+      map((resp: any) => (resp.formatosGaleria || resp.formatosGaleria) as PTLFormatoGaleria[]),
+      map((formatosGaleria: PTLFormatoGaleria[]) => {
+        return formatosGaleria.sort((a: any, b: any) => (a.nombreFormato || '').localeCompare(b.nombreFormato || ''));
       }),
-      tap((formatosOrdenados) => {
-        this._formatosGaleria.next(formatosOrdenados);
+      tap((formatosGaleriaOrdenada) => {
+        this._formatosGaleria.next(formatosGaleriaOrdenada);
       })
     );
   }
 
-  getFormatoGaleriaById(id: number) {
-    const url = `${base_url}/formatosGaleria/${id}`;
+  getFormatosGaleriaById(id: number) {
+    const url = `${base_url}/formatos-galeria/${id}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('data de formato galería', resp);
+        console.log('data de formatoGalería', resp);
         return {
           ok: true,
           formatoGaleria: resp.formatoGaleria
@@ -78,11 +78,11 @@ export class PtlFormatosGaleriaService {
     );
   }
 
-  getFormatoGaleriaByCode(code: string) {
-    const url = `${base_url}/formatosGaleria/code/${code}`;
+  getFormatosGaleriaByCode(code: string) {
+    const url = `${base_url}/formatos-galeria/code/${code}`;
     return this.http.get(url).pipe(
       map((resp: any) => {
-        console.log('data del formato galería', resp.formatoGaleria);
+        console.log('data de la formao', resp.formatoGaleria);
         return {
           ok: true,
           formatoGaleria: resp.formatoGaleria
@@ -91,8 +91,8 @@ export class PtlFormatosGaleriaService {
     );
   }
 
-  crearFormatoGaleria(data: PTLFormatosGaleria) {
-    const url = `${base_url}/formatosGaleria`;
+  crearFormatoGaleria(data: PTLFormatoGaleria) {
+    const url = `${base_url}/formatos-galeria`;
     return this.http.post(url, data).pipe(
       map((resp: any) => {
         return {
@@ -103,11 +103,11 @@ export class PtlFormatosGaleriaService {
     );
   }
 
-  actualizarFormatoGaleria(formato: PTLFormatosGaleria) {
-    const url = `${base_url}/formatosGaleria/${formato.codigoFormato}`;
-    return this.http.put(url, formato).pipe(
+  actualizarFormatoGaleria(formatoGaleria: PTLFormatoGaleria) {
+    const url = `${base_url}/formatos-galeria/${formatoGaleria.codigoFormato}`;
+    return this.http.put(url, formatoGaleria).pipe(
       map((resp: any) => {
-        console.log('data de formato galería modificado', resp);
+        console.log('data de formato modificada', resp);
         return {
           ok: true,
           formatoGaleria: resp.formatoGaleria
@@ -116,12 +116,12 @@ export class PtlFormatosGaleriaService {
     );
   }
 
-  eliminarFormatoGaleria(_id: any) {
-    console.log('eliminar formato galería', _id);
-    const url = `${base_url}/formatosGaleria/${_id.id}`;
+  eliminarFormatoGaleria(id: string) {
+    console.log('eliminar formato', id);
+    const url = `${base_url}/formatos-galeria/${id}`;
     return this.http.delete(url).pipe(
       map((resp: any) => {
-        console.log('data de formato galería eliminada', resp);
+        console.log('data de formato eliminada', resp);
         return {
           ok: true,
           formatoGaleria: resp.formatoGaleria

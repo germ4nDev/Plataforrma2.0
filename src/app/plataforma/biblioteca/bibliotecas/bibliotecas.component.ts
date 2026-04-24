@@ -13,7 +13,7 @@ import { PTLBiblioteca } from 'src/app/theme/shared/_helpers/models/PTLBibliotec
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
 import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component'
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
-import { PtlBibliotecaService } from 'src/app/theme/shared/service/ptlbiblioteca.service'
+import { PtlBibliotecasService } from 'src/app/theme/shared/service/ptlbibliotecas.service'
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
 
 import Swal from 'sweetalert2'
@@ -50,7 +50,7 @@ export class BibliotecasComponent implements OnInit, OnDestroy {
   bibliotecaTransformada$: Observable<PTLBiblioteca[]> = of([])
   bibliotecaFiltrada$: Observable<PTLBiblioteca[]> = of([])
   bibliotecas: PTLBiblioteca[] = []
-
+suscriptor = ''
   colorOpcion1 = '#27ad15'
   letraOpcion1 = 'G'
 
@@ -60,10 +60,11 @@ export class BibliotecasComponent implements OnInit, OnDestroy {
     private _navigationService: NavigationService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
-    private _bibliotecaService: PtlBibliotecaService,
+    private _bibliotecaService: PtlBibliotecasService,
     private _uploadService: UploadFilesService
   ) {
     this.gradientConfig = GradientConfig
+        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
   }
 
   cargarDatos (): void {
@@ -93,8 +94,8 @@ export class BibliotecasComponent implements OnInit, OnDestroy {
         if (!libs) return of([])
         const transformed = libs.map((lib: any) => {
           lib.nomEstado = lib.estadoBiblioteca ? 'Activo' : 'Inactivo'
-          lib.imagenBiblioteca = this._uploadService.getFilePath('plataforma', 'biblioteca', lib.imagenBiblioteca)
-
+          lib.capture = this._uploadService.getFilePath(this.suscriptor, 'biblioteca', lib.imagenBiblioteca)
+          lib.tipo = 'capture'
           return lib as PTLBiblioteca
         })
         this.bibliotecas = transformed
@@ -150,38 +151,38 @@ export class BibliotecasComponent implements OnInit, OnDestroy {
 
   columnasBiblioteca: ColumnMetadata[] = [
     {
-      name: 'imagenBiblioteca',
-      header: 'APLICACIONES.FOTO',
+      name: 'capture',
+      header: 'BIBLIOTECA.FOTO',
       type: 'image',
       isSortable: false
     },
-    { name: 'codigoBiblioteca', header: 'BIBLIOTECA.CODE', type: 'text' },
     { name: 'nombreBiblioteca', header: 'BIBLIOTECA.NAME', type: 'text' },
     { name: 'nomEstado', header: 'BIBLIOTECA.STATUS', type: 'estado' }
   ]
 
   columnasDetailRegistros: ColumnMetadata[] = [
+    { name: 'codigoAplicacion', header: 'BIBLIOTECA.APLICACION', type: 'text' },
     { name: 'descripcionBiblioteca', header: 'BIBLIOTECA.DESCRIPTION', type: 'text' },
     {
-      name: 'imagenBiblioteca',
-      header: 'APLICACIONES.IMAGENINICIO',
+      name: 'capture',
+      header: 'BIBLIOTECA.IMAGENINICIO',
       type: 'capture'
     }
   ]
 
   OnNuevaBibliotecaClick (): void {
     this._localStorageService.setObject('regId', 'nuevo')
-    this.router.navigate(['bibliotecas/gestion-biblioteca'])
+    this.router.navigate(['biblioteca/gestion-biblioteca'])
   }
 
   OnEditarBibliotecaClick (id: string): void {
     this._localStorageService.setObject('regId', id)
-    this.router.navigate(['bibliotecas/gestion-biblioteca'])
+    this.router.navigate(['biblioteca/gestion-biblioteca'])
   }
 
   OnOption1Click (id: any) {
     this._localStorageService.setObject('regId', id);
-    this.router.navigate(['bibliotecas/galerias'])
+    this.router.navigate(['biblioteca/galeria'])
   }
 
   OnEliminarBibliotecaClick (id: string): void {

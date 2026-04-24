@@ -25,8 +25,10 @@ export class LanguageService {
     private _localStorageService: LocalStorageService,
     private translate: TranslateService
   ) {
-    // const savedLang = localStorage.getItem('lang') || 'es';
     console.log('localLanguage', localStorage.getItem('lang') || 'es')
+    this.cargarRegistros().subscribe({
+      error: (err) => console.error('Error al cargar idiomas en el inicio:', err)
+    });
     this._socketService.listen('idiomas-actualizadas').subscribe({
       next: payload => {
         console.log('Evento de Socket.IO recibido:', payload.msg)
@@ -35,7 +37,6 @@ export class LanguageService {
       },
       error: err => console.error('Error en la escucha de sockets:', err)
     })
-    // this.setLanguage(savedLang);
   }
 
   setLanguage (lang: string) {
@@ -59,6 +60,7 @@ export class LanguageService {
     return this.http.get(url).pipe(
       map((resp: any) => resp.idiomas as PTLIdioma[]),
       tap(idiomasOrder => {
+        console.log('los hps idiomas', idiomasOrder);
         this._idiomas.next(idiomasOrder)
       })
     )

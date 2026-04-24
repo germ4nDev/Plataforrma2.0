@@ -10,8 +10,8 @@ import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/serv
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
-import { PTLTiposGaleria } from 'src/app/theme/shared/_helpers/models/PTLTiposGaleria.model';
-import { PtlTiposGaleriaService } from 'src/app/theme/shared/service/ptltiposgaleria.service';
+import { PTLTipoGaleria } from 'src/app/theme/shared/_helpers/models/PTLTipoGaleria.model';
+import { PtlTiposGaleriaService } from 'src/app/theme/shared/service/ptltipos-galeria.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -28,7 +28,7 @@ import Swal from 'sweetalert2';
 })
 export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
   @Output() toggleSidebar = new EventEmitter<void>();
-  FormRegistro: PTLTiposGaleria = new PTLTiposGaleria();
+  FormRegistro: PTLTipoGaleria = new PTLTipoGaleria();
   menuItems$!: Observable<NavigationItem[]>;
   gradientConfig: any;
   navCollapsed: boolean = false;
@@ -96,14 +96,14 @@ export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
           if (resp.ok) {
             this._swalService.getAlertSuccess(this.translate.instant('TIPOSGALERIA.UPDATESUCCSESSFULLY'));
             form.resetForm();
-            this.router.navigate(['/biblioteca/tiposGaleria']);
+            this.router.navigate(['/biblioteca/tipos-galeria']);
           }
         },
         error: () => this._swalService.getAlertError('No se pudo actualizar')
       });
     } else {
       form.tipoId = 0;
-      const registroData = form.value as PTLTiposGaleria;
+      const registroData = form.value as PTLTipoGaleria;
       registroData.codigoTipo = this.FormRegistro.codigoTipo;
       registroData.descripcionTipo = this.FormRegistro.descripcionTipo;
       registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
@@ -116,7 +116,7 @@ export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
           if (resp.ok) {
             this._swalService.getAlertSuccess(this.translate.instant('TIPOSGALERIA.CREATESUCCSESSFULLY'));
             form.resetForm();
-            this.router.navigate(['/biblioteca/tiposGaleria']);
+            this.router.navigate(['/biblioteca/tipos-galeria']);
           }
         },
         error: () => this._swalService.getAlertError('No se pudo crear')
@@ -125,7 +125,7 @@ export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/biblioteca/tiposGaleria']);
+    this.router.navigate(['/biblioteca/tipos-galeria']);
   }
 
   toggleNav(): void {

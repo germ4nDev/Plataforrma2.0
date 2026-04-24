@@ -91,11 +91,6 @@ export class GestionAplicacionComponent implements OnInit {
         }
       })
     }
-    // this.route.queryParams.subscribe((params) => {
-    //   if (Object.keys(params).length > 0) {
-
-    //   }
-    // });
   }
 
   ngOnInit () {

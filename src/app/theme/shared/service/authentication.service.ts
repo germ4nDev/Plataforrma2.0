@@ -10,7 +10,7 @@ import { jwtDecode } from 'jwt-decode';
 import { LocalStorageService } from './local-storage.service';
 import { CurrentUserModel } from '../_helpers/models/CurrentUser.model';
 import { PtlusuariosRolesApService } from './ptlusuarios-roles-ap.service';
-import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
+import { PTLUsuarioRoleAPModel } from '../_helpers/models/PTLUsuarioRole.model';
 import { PTLRolesAPService } from './ptlroles-ap.service';
 import { PTLRoleAPModel } from '../_helpers/models/PTLRoleAP.model';
 import { PtlEmpresasScService } from './ptlempresas-sc.service';
@@ -39,7 +39,7 @@ export class AuthenticationService {
 
   isValid: boolean = false;
   roles: PTLRoleAPModel[] = [];
-  usuariosRoles: PTLUsuarioRoleAP[] = [];
+  usuariosRoles: PTLUsuarioRoleAPModel[] = [];
   emrpesasSC: PTLEmpresaSCModel[] = [];
   usuariosSC: PTLUsuarioSCModel[] = [];
   usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
@@ -140,7 +140,7 @@ export class AuthenticationService {
   consultarUsuariosRoles() {
     console.log('acaaaaaaaaa');
     this.usuariosRolesSub = this._usuarioRolesService._usuariosRoles$.subscribe({
-      next: (userRoles: PTLUsuarioRoleAP[]) => {
+      next: (userRoles: PTLUsuarioRoleAPModel[]) => {
         console.log('usuarios roles cargados con éxito:', userRoles.length);
         this.usuariosRoles = userRoles;
         this.consultarUusuariosSC();

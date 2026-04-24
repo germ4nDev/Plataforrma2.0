@@ -1,7 +1,8 @@
-export class PTLFormatosGaleria {
+export class PTLFormatoGaleria {
   constructor(
     public formatosGaleriaId?: number,
     public codigoFormato?: string,
+    public codigoTipo?: string,
     public nombreFormato?: string,
     public descripcionFormato?: string,
     public estadoFormato?: boolean,

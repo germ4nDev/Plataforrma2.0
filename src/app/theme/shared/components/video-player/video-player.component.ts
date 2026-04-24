@@ -16,7 +16,7 @@ export class VideoPlayerComponent implements OnDestroy {
   @Input()
   set src (value: string) {
     this._src = value
-    console.log('1. URL recibida:', this._src)
+    console.log('URL recibida:', this._src)
     this.intentarInicializar()
   }
 
@@ -29,7 +29,7 @@ export class VideoPlayerComponent implements OnDestroy {
   set target (content: ElementRef) {
     if (content) {
       this.videoElement = content
-      console.log('2. El elemento de video ya existe en el DOM')
+      console.log('El elemento de video ya existe en el DOM')
       this.intentarInicializar()
     }
   }
@@ -39,11 +39,12 @@ export class VideoPlayerComponent implements OnDestroy {
 
     const cleanUrl = url.split(/[#?]/)[0]
     const extension = cleanUrl.split('.').pop()?.toLowerCase() || ''
+    console.log('formato video', extension);
 
     if (extension == 'mp4') return 'video/mp4'
     else if (extension == 'mov') return 'video/mov'
     else if (extension == 'avi') return 'video/avi'
-    return 'video/mkv'
+    return 'video/mp4'
   }
 
   intentarInicializar () {
