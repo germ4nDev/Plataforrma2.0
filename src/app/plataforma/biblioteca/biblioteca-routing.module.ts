@@ -18,31 +18,31 @@ const routes: Routes = [
       },
       {
         path: 'galeria',
-        loadComponent: () => import('./biblioteca/galeria/galeria.component').then((m) => m.GaleriaComponent)
+        loadComponent: () => import('./galeria/galeria.component').then((m) => m.GaleriaComponent)
       },
       {
         path: 'galeria/gestion-galeria',
-        loadComponent: () => import('./biblioteca/galeria/gestion-galeria/gestion-galeria.component').then((m) => m.GestionGaleriaComponent)
+        loadComponent: () => import('./galeria/gestion-galeria/gestion-galeria.component').then((m) => m.GestionGaleriaComponent)
       },
       {
         path: 'tiposGaleria',
-        loadComponent: () => import('./biblioteca/tiposGaleria/tipos-galeria.component').then((m) => m.TiposGaleriaComponent)
+        loadComponent: () => import('./tiposGaleria/tipos-galeria.component').then((m) => m.TiposGaleriaComponent)
       },
       {
         path: 'gestion-tipos-galeria',
         loadComponent: () =>
-          import('./biblioteca/tiposGaleria/gestion-tiposGaleria/gestion-tipos-galeria.component').then(
+          import('./tiposGaleria/gestion-tiposGaleria/gestion-tipos-galeria.component').then(
             (m) => m.GestionTiposGaleriaComponent
           )
       },
       {
         path: 'formatos-galeria',
-        loadComponent: () => import('./biblioteca/formatosGaleria/formatos-galeria.component').then((m) => m.FormatosGaleriaComponent)
+        loadComponent: () => import('./formatosGaleria/formatos-galeria.component').then((m) => m.FormatosGaleriaComponent)
       },
       {
         path: 'gestion-formatos-galeria',
         loadComponent: () =>
-          import('./biblioteca/formatosGaleria/gestion-formatosGaleria/gestion-formatos-galeria.component').then(
+          import('./formatosGaleria/gestion-formatosGaleria/gestion-formatos-galeria.component').then(
             (m) => m.GestionFormatosGaleriaComponent
           )
       }

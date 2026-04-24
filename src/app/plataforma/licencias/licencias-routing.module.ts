@@ -29,12 +29,7 @@ const routes: Routes = [
       {
         path: 'gestion-pago',
         loadComponent: () => import('./historial-pagos/gestion-pago/gestion-pago.component').then(m => m.GestionPagoComponent)
-      },
-      {
-        path: 'log-actividades',
-        loadComponent: () => import('./log-actividades/log-actividades.component').then(m => m.LogActividadesComponent)
       }
-
     ]
   }
 ];
