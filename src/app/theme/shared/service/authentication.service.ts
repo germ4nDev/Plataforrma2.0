@@ -10,7 +10,6 @@ import { jwtDecode } from 'jwt-decode';
 import { LocalStorageService } from './local-storage.service';
 import { CurrentUserModel } from '../_helpers/models/CurrentUser.model';
 import { PtlusuariosRolesApService } from './ptlusuarios-roles-ap.service';
-import { PTLUsuarioRoleAP } from '../_helpers/models/PTLUsuarioRole.model';
 import { PTLRolesAPService } from './ptlroles-ap.service';
 import { PTLRoleAPModel } from '../_helpers/models/PTLRoleAP.model';
 import { PtlEmpresasScService } from './ptlempresas-sc.service';
@@ -21,6 +20,7 @@ import { PTLUsuaioEmpresasSCModel } from '../_helpers/models/PTLUsuarioEmpresaSC
 import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model';
 import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from './ptlsuscriptores.service';
+import { PTLUsuarioRoleAPModel } from '../_helpers/models/PTLUsuarioRole.model';
 import { PtlActividadesService } from './ptlactividades.service';
 import { PtlactividadesRolesService } from './ptlactividades-roles.service';
 import { PTLActividadModel } from '../_helpers/models/PTLActividades.model';
@@ -39,17 +39,17 @@ export class AuthenticationService {
 
   isValid: boolean = false;
   roles: PTLRoleAPModel[] = [];
-  usuariosRoles: PTLUsuarioRoleAP[] = [];
+  usuariosRoles: PTLUsuarioRoleAPModel[] = [];
   emrpesasSC: PTLEmpresaSCModel[] = [];
   usuariosSC: PTLUsuarioSCModel[] = [];
   usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
   suscriptores: PTLSuscriptorModel[] = [];
   usuariosRolesSub: Subscription | undefined;
-  rolesSub: Subscription | undefined;
-  empresasSCSub: Subscription | undefined;
-  usuariosSCSub: Subscription | undefined;
-  usuariosEmpresasSCSub: Subscription | undefined;
-  suscriptorSub: Subscription | undefined;
+  rolesSubscription: Subscription | undefined;
+  empresasSCSubscription: Subscription | undefined;
+  usuariosSCSubscription: Subscription | undefined;
+  usuariosEmpresasSCSubscription: Subscription | undefined;
+  suscriptorSubscription: Subscription | undefined;
 
   constructor(
     private router: Router,
@@ -140,10 +140,10 @@ export class AuthenticationService {
   consultarUsuariosRoles() {
     console.log('acaaaaaaaaa');
     this.usuariosRolesSub = this._usuarioRolesService._usuariosRoles$.subscribe({
-      next: (userRoles: PTLUsuarioRoleAP[]) => {
+      next: (userRoles: PTLUsuarioRoleAPModel[]) => {
         console.log('usuarios roles cargados con éxito:', userRoles.length);
         this.usuariosRoles = userRoles;
-        this.consultarUusuariosSC();
+        this.consultarUsuariosSC();
         console.log('usuarios roles:', userRoles);
       },
       error: (err) => {
@@ -153,7 +153,7 @@ export class AuthenticationService {
     });
   }
 
-  consultarUusuariosSC() {
+  consultarUsuariosSC() {
     console.log('&&&&&&&& usuariosSC');
     this.usuariosSCSub = this._usuariosSCService.usuariosSC$.subscribe({
       next: (usuariosSC: PTLUsuarioSCModel[]) => {
@@ -193,7 +193,7 @@ export class AuthenticationService {
         console.log('empresasSC cargadas con éxito:', empresasSC.length);
         this.emrpesasSC = empresasSC;
         console.log('EmpresasSC:', empresasSC);
-        this.consultarUusuariosEmpresasSC();
+        this.consultarUsuariosEmpresasSC();
       },
       error: (err) => {
         console.error('Error al cargar los roles de usuario:', err);
@@ -202,7 +202,7 @@ export class AuthenticationService {
     });
   }
 
-  consultarUusuariosEmpresasSC() {
+  consultarUsuariosEmpresasSC() {
     console.log('acaaaaaaaaa');
     this.usuariosEmpresasSCSub = this._usuariosEmpresasSCService._usuariosEmpresas$.subscribe({
       next: (usuariosEmpresas: PTLUsuarioSCModel[]) => {

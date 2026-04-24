@@ -54,6 +54,19 @@ export class PTLRolesAPService {
     );
   }
 
+  getRoles() {
+      const url = `${base_url}/roles/`;
+      return this.http.get(url).pipe(
+        map((resp: any) => {
+          console.log('respuesta servicio', resp);
+          return {
+            ok: true,
+            roles: resp.roles
+          };
+        })
+      );
+    }
+
   getRegistroById(id: string) {
     const url = `${base_url}/roles/${id}`;
     return this.http.get(url).pipe(

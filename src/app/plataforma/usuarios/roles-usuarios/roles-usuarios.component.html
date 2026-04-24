@@ -12,173 +12,80 @@
             </div>
 
             <ng-container *ngIf="activeTab === 'menu'">
-                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+                <app-nav-content [navigationItems]="menuItems$ | async"></app-nav-content>
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <DIV class="text-center">
-                        <h6>{{ 'ROLES.FILTROS.TITULO' | translate }}</h6>
+                        <h6 class="filtros-title">{{ 'USUARIOS.USUARIOSROLES.FILTROS.TITULO' | translate }}</h6>
                     </DIV>
-                    <!-- <div class="filtro">
-                        <small>{{ 'ROLES.FILTROS.IDENTIFICACION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)" class="form-control"
-                            placeholder="{{ 'ROLES.FILTROS.IDENTIFICACIONCHOLDER' | translate }}" />
+                    <div class="filtro">
+                        <div class="form-group">
+                            <small>{{ 'USUARIOS.USUARIOSROLES.FILTROS.FILTROTIPOROL' | translate }}</small>
+                            <select (change)="onFiltroTipoRolChangeClick($event)" class="form-control form-select" style="cursor: pointer;">
+                                <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                                <option value="plataforma">{{ 'USUARIOS.USUARIOSROLES.FILTROS.ROLPLATAFORMA' | translate }}</option>
+                                <option value="suscriptor">{{ 'USUARIOS.USUARIOSROLES.FILTROS.ROLSUSCRIPTOR' | translate }}</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'ROLES.FILTROS.NOMBRE' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control"
-                            placeholder="{{ 'ROLES.FILTROS.NOMBREHOLDER' | translate }}" />
+                        <small>{{ 'USUARIOS.USUARIOSROLES.FILTROS.FILTROCODIGOUSUARIO' | translate }}</small>
+                        <select (change)="onFiltroCodigoUsuariosRolesChangeClick($event)" class="form-control form-select"  style="cursor: pointer;">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="reg.codigoUsuario" *ngFor="let reg of usuarios">
+                                {{ reg.nombreUsuario }}
+                            </option>
+                        </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'ROLES.FILTROS.CORREO' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroCorreoChangeClick($event)" class="form-control"
-                            placeholder="{{ 'ROLES.FILTROS.CORREOHOLDER' | translate }}" />
+                        <small>{{ 'USUARIOS.USUARIOSROLES.FILTROS.FILTROCODIGOROLE' | translate }}</small>
+                        <select (change)="onFiltroCodigoRoleChangeClick($event)" class="form-control form-select"  style="cursor: pointer;">
+                            <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
+                            <option [value]="reg.codigoRole" *ngFor="let reg of roles">
+                                {{ reg.nombreRole }}
+                            </option>
+                        </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'ROLES.FILTROS.USERNAME' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroUsernameChangeClick($event)" class="form-control"
-                            placeholder="{{ 'ROLES.FILTROS.USERNAMEHOLDER' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'ROLES.FILTROS.DECRIPCION' | translate }}</small>
-                        <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)" class="form-control"
-                            placeholder="{{ 'ROLES.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
-                    </div>
-                    <div class="filtro">
-                        <small>{{ 'ROLES.FILTROS.ESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control" required>
+                        <small>{{ 'USUARIOS.USUARIOSROLES.FILTROS.ESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer;" required>
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
                         </select>
-                    </div> -->
+                    </div>
                 </div>
             </ng-container>
         </div>
     </aside>
 
-    <!-- <div class="content-area">
-        <div class="card">
-            <div class="card-header card-header-sticky">
-                <div class="row col-sm-12">
-                    <div class="col-sm-6">
-                        <h4>{{ 'ROLES.ROLESUSUARIOS.TITLE' | translate }}</h4>
-                    </div>
-                    <div class="col-sm-6 justify-content-end d-flex">
-                        <button type="button" (click)="OnNuevoRegistroClick()" class="btn-NuevoRegistro">
-                            {{ 'ROLES.ROLESUSUARIOS.NEW' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card card-table content-scroll-wrapper">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table datatable [dtOptions]="dtColumnSearchingOptions" [dtTrigger]="dtTrigger" class="table row-border" #datatableElement>
-                        <thead>
-                            <tr>
-                                <th>{{ 'ROLES.ROLESUSUARIOS.FOTO' | translate }}</th>
-                                <th>{{ 'ROLES.ROLESUSUARIOS.USUARIO' | translate }}</th>
-                                <th>{{ 'ROLES.ROLESUSUARIOS.APLICACIONES' | translate }}</th>
-                                <th>{{ 'ROLES.ROLESUSUARIOS.SUITES' | translate }}</th>
-                                <th>{{ 'ROLES.ROLESUSUARIOS.ROLES' | translate }}</th>
-                                <th>{{ 'ROLES.ROLESUSUARIOS.ESTADOROLE' | translate }}</th>
-                                <th>{{ 'PLATAFORMA.OPTIONS' | translate }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container *ngFor="let usuario of registros; let iUsu = index">
-                                <ng-container *ngFor="let app of usuario.aplicaciones; let iApp = index">
-                                    <ng-container *ngFor="let suite of app.suites; let iSuite = index">
-                                        <ng-container *ngFor="let role of suite.roles; let iRole = index">
-                                            <tr>
-                                                <td *ngIf="iApp === 0 && iSuite === 0 && iRole === 0"
-                                                    [attr.rowspan]="getTotalRoles(usuario)">
-                                                    <a style="color: blue; text-decoration: underline; cursor: pointer;"
-                                                        (click)="OnEditarUsuarioRolesRegistroClick(usuario.usuarioId)">
-                                                        <img [src]="'assets/images/user/' + usuario.fotoUsuario"
-                                                            class="img-radius wid-40" alt="User-Profile-Image" />
-                                                    </a>
-                                                </td>
-
-                                                <td *ngIf="iApp === 0 && iSuite === 0 && iRole === 0"
-                                                    [attr.rowspan]="getTotalRoles(usuario)">
-                                                    <a style="color: blue; text-decoration: underline; cursor: pointer;"
-                                                        (click)="OnEditarUsuarioRolesRegistroClick(usuario.usuarioId)">
-                                                        {{ usuario.nombreUsuario }}
-                                                    </a>
-                                                </td>
-
-                                                <td *ngIf="iSuite === 0 && iRole === 0"
-                                                    [attr.rowspan]="getTotalRolesAplicacion(app)">
-                                                    {{ app.nombreAplicacion }}
-                                                </td>
-
-                                                <td *ngIf="iRole === 0" [attr.rowspan]="suite.roles.length">
-                                                    {{ suite.nombreSuite }}
-                                                </td>
-
-                                                <td>{{ role.nombreRole }}</td>
-
-                                                <td>{{ role.nomEstado }}</td>
-
-                                                <td style="text-align: center;">
-                                                    <div class="d-flex gap-1">
-                                                        <button type="button" class="btn btn-icon btn-outline-primary"
-                                                            (click)="OnEditarRegistroClick(iRole, iSuite, iApp, iUsu)"
-                                                            [ngClass]="role.estadoUsuarioRole ? 'btn-outline-success' : 'btn-outline-primary'"
-                                                            [title]="getTooltipRoles(iRole, iSuite, iApp, iUsu)">
-                                                            <i class="feather"
-                                                                [ngClass]="role.estadoUsuarioRole ? 'icon-unlock' : 'icon-lock'"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-icon btn-outline-danger"
-                                                            (click)="OnEliminarRegistroClick(iRole, iSuite, iApp, iUsu, usuario.nombreUsuario)"
-                                                            title="Eliminar">
-                                                            <i class="feather icon-trash-2"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </ng-container>
-                                    </ng-container>
-                                </ng-container>
-                            </ng-container>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
     <div class="content-area">
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
-                <!-- <app-data-table
-                    [data]="registrosFiltrado"
-                    [columns]="['fotoUsuario', 'nombreUsuario', 'aplicaciones', 'suites', 'roles']"
-                    [columnTitles]="[
-                      'ROLESUSUARIOS.FOTO' | translate,
-                      'ROLESUSUARIOS.USUARIO' | translate,
-                      'ROLESUSUARIOS.APLICACIONES' | translate,
-                      'ROLESUSUARIOS.SUITES' | translate,
-                      'ROLESUSUARIOS.ROLES' | translate
-                    ]"
-                    [idField]="'usuarioRoleId'"
-                    [tableTitle]="'ROLESUSUARIOS.TITLE' | translate"
-                    [showAvatar]="false"
-                    [showActions]="true"
-                    [showNewButton]="true"
-                    [showViewButton]="false"
-                    [showEditButton]="true"
-                    [showDeleteButton]="true"
-                    [newButtonLabel]="'ROLESUSUARIOS.NEW' | translate"
-                    [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-                    (newRecord)="OnNuevoRegistroClick()"
-                    (editRecord)="OnEditarRegistroClick()"
-                    (deleteRecord)="OnEliminarRegistroClick()">
-                </app-data-table> -->
+                <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
+                    <app-data-table
+                        [data]="dataFiltrada"
+                        [idField]="'usuarioRoleId'"
+                        [tableTitle]="'USUARIOS.USUARIOSROLES.TITLE' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        [metadataColumns]="columnasRegistros"
+                        [metadataDetailColumns]="columnasDetailRegistros"
+                        [showDetail]="true"
+                        [showActions]="false"
+                        [showNewButton]="false"
+                        [showViewButton]="false"
+                        [showEditButton]="false"
+                        [showDeleteButton]="false"
+                        [newButtonLabel]="'USUARIOS.USUARIOSROLES.NEW' | translate"
+                        (newRecord)="OnNuevoRegistroClick()"
+                        (editRecord)="OnEditarRegistroClick($event)"
+                        (deleteRecord)="OnEliminarRegistroClick($event)">
+                    </app-data-table>
+                </ng-container>
+                <ng-template #loading>
+                    <!-- TODO mostrar un indicador de carga -->
+                </ng-template>
             </div>
         </div>
     </div>

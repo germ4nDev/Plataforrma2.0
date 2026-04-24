@@ -26,16 +26,16 @@ export class PtlclasesticketService {
     private http: HttpClient,
     private socketService: SocketService,
     private _localStorageService: LocalStorageService
-) {
-    this.socketService.listen('clasesickets-actualizadas').subscribe({
-      next: (payload) => {
-        console.log('Evento de Socket.IO recibido:', payload.msg);
-        this._registrosChange.next(payload);
-        this.cargarRegistros().subscribe();
-      },
-      error: (err) => console.error('Error en la escucha de sockets:', err)
-    });
-}
+    ) {
+        this.socketService.listen('clasesTickets-actualizadas').subscribe({
+        next: (payload) => {
+            console.log('Evento de Socket.IO recibido:', payload.msg);
+            this._registrosChange.next(payload);
+            this.cargarRegistros().subscribe();
+        },
+        error: (err) => console.error('Error en la escucha de sockets:', err)
+        });
+    }
     get clasesTicket$(): Observable<PTLClaseTicketModel[]> {
         return this._registros.asObservable();
     }

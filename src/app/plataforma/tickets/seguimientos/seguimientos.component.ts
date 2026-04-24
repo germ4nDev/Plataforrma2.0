@@ -4,11 +4,13 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DataTablesModule } from 'angular-datatables';
-import { Subscription, tap, catchError, of, Observable } from 'rxjs';
+import { Subscription, tap, catchError, of, Observable, BehaviorSubject, switchMap, combineLatest, startWith, map } from 'rxjs';
 import { PTLSeguimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLSeguimientoTK.model';
 import {
+  LocalStorageService,
   NavigationService,
   PtllogActividadesService,
+  PTLRequerimientosTkService,
   PTLTicketsService,
   SwalAlertService,
   UploadFilesService
@@ -22,7 +24,6 @@ import { GradientConfig } from 'src/app/app-config';
 import { PTLEstadosService } from 'src/app/theme/shared/service/ptlestados.service';
 import { PTLRequerimientoTKModel } from 'src/app/theme/shared/_helpers/models/PTLRequerimientoTK.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { PTLTicketAPModel } from 'src/app/theme/shared/_helpers/models/PTLTicketAP.model';
 import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
 import Swal from 'sweetalert2';
 
@@ -41,23 +42,33 @@ export class SeguimientosComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
 
   //#region VARIABLES
-  registrosSub?: Subscription;
+  subscriptions = new Subscription();
+  filtroTicketSubject = new BehaviorSubject<string>('todos');
+  filtroRequerimientoSubject = new BehaviorSubject<string>('todos');
+  filtroNombreSubject = new BehaviorSubject<string>('');
+  filtroDescripcionSubject = new BehaviorSubject<string>('');
+  filtroEstadoSubject = new BehaviorSubject<string>('todos');
+
+  registrosTransformados$: Observable<PTLSeguimientoTKModel[]> = of([]);
+  registrosFiltrado$: Observable<PTLSeguimientoTKModel[]> = of([]);
+  seguimiento: PTLSeguimientoTKModel[] = [];
   registros: PTLSeguimientoTKModel[] = [];
-  ticketsSub?: Subscription;
-  tickets: PTLTicketAPModel[] = [];
-  estadosSub?: Subscription;
-  estados: PTLEstadoModel[] = [];
-  registrosFiltrado: PTLSeguimientoTKModel[] = [];
-  requerimientos: PTLRequerimientoTKModel[] = [];
+
+  registrosSub?: Subscription;
+  requerimientoSub?: Subscription;
+  requerimiento: PTLRequerimientoTKModel[] = [];
+  estadosSeguimientoSub?: Subscription;
+  estadosSeguimiento: PTLEstadoModel[] = [];
   lang: string = localStorage.getItem('lang') || '';
   tituloPagina: string = '';
   codigoRegistro: string = '';
+  codigoTicket: string = '';
 
   gradientConfig;
   hasFiltersSlot: boolean = false;
   menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  estadosFiltrados: any[] = [];
+  suscPlataforma: string = '';
   tipoEstado: string = '';
   //#endregion VARIABLES
 
@@ -67,24 +78,21 @@ export class SeguimientosComponent implements OnInit {
     private translate: TranslateService,
     private _navigationService: NavigationService,
     private _seguimientosService: PTLSeguimientosTKService,
-    private _estadosService: PTLEstadosService,
+    private _requerimientoService: PTLRequerimientosTkService,
     private _ticketsService: PTLTicketsService,
     private _swalService: SwalAlertService,
     private _uploadService: UploadFilesService,
-    private _logActividadesService: PtllogActividadesService
+    private _logActividadesService: PtllogActividadesService,
+    private _localStorageService: LocalStorageService,
+    private _estadosSeguimientoService: PTLEstadosService
   ) {
     this.gradientConfig = GradientConfig;
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
     this.route.queryParams.subscribe((params) => {
-      if (params['regId']) {
-        console.log('=============parametros', params);
-        this.codigoRegistro = params['regId'] || '';
-        // if (this.codigoRegistro !== 'nuevo') {
-        //   console.log('me llena el Id', registroId);
-        // } else {
-        //   console.log('no llena el Id', registroId);
-        // }
-      } else {
-        this.codigoRegistro = '0';
+      const regId = params['regId'];
+      this.codigoTicket = params['tcId'] || '';
+      if (regId) {
+        this.filtroRequerimientoSubject.next(regId);
       }
     });
   }
@@ -93,37 +101,53 @@ export class SeguimientosComponent implements OnInit {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
     this.hasFiltersSlot = true;
-    this.consultarEstados();
-    this.consultarTickets();
+    this.consultarEstadosSeguimiento();
+    this.consultarRequerimientos();
+    this.consultarRegistros();
     setTimeout(() => {
-      this.consultarRegistros();
-    }, 500);
+      this.setupRegistrosStream();
+    }, 100);
+    this.subscriptions.add(
+      this._seguimientosService.cargarRegistros().subscribe(
+        () => console.log('Seguimientos cargados y guardados en el servicio'),
+        (err) => console.error('Error al cargar Seguimientos:', err)
+      )
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   columnasRegistros: ColumnMetadata[] = [
     {
-      name: 'codigoSeguimiento',
-      header: 'TICKETS.SEGUIMIENTOS.CODIGOSEGUIMEINTO',
-      type: 'text'
-    },
-    {
       name: 'fechaSeguimiento',
-      header: 'TICKETS.SEGUIMIENTOS.FECHASEGUIMINETO',
+      header: 'TICKETS.SEGUIMIENTOS.FECHASEGUIMIENTO',
       type: 'date'
-    },
-    {
-      name: 'nomTicket',
-      header: 'TICKETS.SEGUIMIENTOS.NOMBRETICKET',
-      type: 'text'
     },
     {
       name: 'estadoSeguimiento',
       header: 'TICKETS.SEGUIMIENTOS.STATUS',
       type: 'estado'
+    },
+    {
+      name: 'nombreSeguimiento',
+      header: 'TICKETS.SEGUIMIENTOS.NOMBRESEGUIMIENTO',
+      type: 'text'
     }
   ];
 
   columnasDetailRegistros: ColumnMetadata[] = [
+    {
+      name: 'codigoRequerimiento',
+      header: 'TICKETS.SEGUIMIENTOS.CODIGOREQUERIMIENTO',
+      type: 'text'
+    },
+    {
+      name: 'nomRequerimiento',
+      header: 'TICKETS.SEGUIMIENTOS.NOMBREREQUERIMIENTO',
+      type: 'text'
+    },
     {
       name: 'descripcionSeguimiento',
       header: 'TICKETS.SEGUIMIENTOS.DESCRIPCIONSEGUIMIENTO',
@@ -136,14 +160,14 @@ export class SeguimientosComponent implements OnInit {
     }
   ];
 
-  consultarTickets() {
-    this.registrosSub = this._ticketsService
+  consultarRequerimientos() {
+    this.registrosSub = this._requerimientoService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
             console.log('requerimiento', resp);
-            this.tickets = resp.tickets;
+            this.requerimiento = resp.requerimientos;
             return;
           }
         }),
@@ -155,14 +179,82 @@ export class SeguimientosComponent implements OnInit {
       .subscribe();
   }
 
-  consultarEstados() {
-    this._estadosService
+  consultarRegistros() {
+    this.subscriptions.add(
+      this._seguimientosService.getRegistros().subscribe((resp: any) => {
+        if (resp.ok) {
+          this.seguimiento = resp.seguimientos;
+          console.log('Todos los seguimientos', this.seguimiento);
+          return;
+        }
+      })
+    );
+  }
+
+  setupRegistrosStream(): void {
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
+    this.registrosTransformados$ = this._seguimientosService.seguimiento$.pipe(
+      switchMap((seguimientos: PTLSeguimientoTKModel[]) => {
+        if (!seguimientos) return of([]);
+        this.seguimiento = seguimientos;
+        const transformedApps = seguimientos.map((seguimiento: any) => {
+          console.log('datos del seguimiento', seguimiento);
+          console.log('todos los requerimiento', this.requerimiento);
+          seguimiento.nomRequerimiento =
+            this.requerimiento.filter((x) => x.codigoRequerimiento == seguimiento.codigoRequerimiento)[0].nombreRequerimiento || '';
+          seguimiento.captura = `${base_url}/upload/seguimientos/${seguimiento.capturaSeguimiento}`;
+          return seguimiento as PTLSeguimientoTKModel;
+        });
+        this.registros = transformedApps;
+        return of(transformedApps);
+      }),
+      catchError((err) => {
+        console.error('Error en el stream de aplicaciones:', err);
+        return of([]);
+      })
+    );
+    this.registrosFiltrado$ = combineLatest([
+      this.registrosTransformados$.pipe(startWith([])), // Usa la fuente de datos transformada
+      this.filtroRequerimientoSubject,
+      this.filtroNombreSubject,
+      this.filtroDescripcionSubject,
+      this.filtroEstadoSubject
+    ]).pipe(
+      map(([seguimientos, requerimiento, nombre, descripcion, estado]) => {
+        console.log('================== roles 2', seguimientos);
+        let filteredRegistros = seguimientos;
+        if (requerimiento !== 'todos') {
+          filteredRegistros = filteredRegistros.filter((reg: any) => reg.codigoRequerimiento === requerimiento);
+        }
+        if (nombre) {
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.nombreSeguimiento?.toString() || '').toLowerCase().includes(nombre));
+        }
+        if (estado !== 'todos') {
+          filteredRegistros = filteredRegistros.filter((reg) => {
+            // Obtenemos el valor de la base de datos y lo pasamos a minúsculas
+            const estadoReg = (reg.estadoSeguimiento?.toString() || '').toLowerCase();
+            // Pasamos el valor del filtro también a minúsculas para asegurar coincidencia
+            const estadoFiltro = estado.toLowerCase();
+            return estadoReg === estadoFiltro;
+          });
+        }
+        if (descripcion) {
+          const textoFiltro = descripcion.toLowerCase();
+          filteredRegistros = filteredRegistros.filter((reg) => (reg.descripcionSeguimiento || '').toLowerCase().includes(textoFiltro));
+        }
+        return filteredRegistros;
+      })
+    );
+  }
+
+  consultarEstadosSeguimiento() {
+    this.estadosSeguimientoSub = this._estadosSeguimientoService
       .getRegistros()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.estados = resp.estados;
-            console.log('Estados:', this.estados);
+            this.estadosSeguimiento = resp.estados;
+            console.log('Estados:', this.estadosSeguimiento);
           }
         }),
         catchError((err) => {
@@ -173,50 +265,15 @@ export class SeguimientosComponent implements OnInit {
       .subscribe();
   }
 
-  consultarRegistros() {
-    this.registrosSub = this._seguimientosService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            resp.seguimientos.forEach((seguimiento: any) => {
-              console.log('datos del seguimiento', seguimiento);
-              console.log('todos los ticket', this.tickets);
-              const ticket = this.tickets.filter((x) => x.codigoTicket == seguimiento.codigoTicket)[0];
-              console.log('datos del ticket', ticket);
-              seguimiento.nomTicket = ticket ? ticket.nombreTicket : '';
-              seguimiento.captura = `${base_url}/upload/seguimientos/${seguimiento.capturaSeguimiento}`;
-            });
-            console.log('========================== Codigo seguimiento', this.codigoRegistro);
-            if (this.codigoRegistro != '0') {
-              this.registros = resp.seguimientos.filter((x: { codigoTicket: string }) => x.codigoTicket == this.codigoRegistro);
-              this.registrosFiltrado = this.registros;
-            } else {
-              this.registros = resp.seguimientos;
-              this.registrosFiltrado = resp.seguimientos;
-            }
-            console.log('Todos las seguimientos', this.registrosFiltrado);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
-        })
-      )
-      .subscribe();
-  }
-
   OnBackRegistroClick() {
-    this.router.navigate(['/tickets/tickets/']);
+    this.router.navigate(['/tickets/requerimientos/'], { queryParams: { regId: this.codigoTicket } });
   }
 
   OnNuevoRegistroClick() {
-    if (this.codigoRegistro != '') {
-      this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { regId: 'nuevo', tickId: this.codigoRegistro } });
-    } else {
-      this.router.navigate(['tickets/gestion-seguimiento'], { queryParams: { regId: 'nuevo', tickId: '0' } });
-    }
+    const codigoRequerimientoSeleccionado = this.filtroRequerimientoSubject.value;
+    this.router.navigate(['tickets/gestion-seguimiento'], {
+      queryParams: { regId: 'nuevo', codigoRequerimiento: codigoRequerimientoSeleccionado }
+    });
   }
 
   OnEditarRegistroClick(id: string) {
@@ -246,9 +303,9 @@ export class SeguimientosComponent implements OnInit {
             if (segui.capturaSeguimiento != 'no-imagen.png') {
               const captura = segui.capturaSeguimiento || '';
               console.log('========== eliminar captura', captura);
-            //   this._uploadService.deleteFilePath('0', 'seguimientos', captura).subscribe((data: any) => {
-            //     console.log('mensaje', data.mensaje);
-            //   });
+              //   this._uploadService.deleteFilePath('0', 'seguimientos', captura).subscribe((data: any) => {
+              //     console.log('mensaje', data.mensaje);
+              //   });
             }
             this._swalService.getAlertSuccess(this.translate.instant('SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
             this.consultarRegistros();
@@ -309,39 +366,24 @@ export class SeguimientosComponent implements OnInit {
     return segIndice;
   }
 
+  onRequerimientoChangeClick(evento: any) {
+    const value = evento.target.value;
+    this.filtroRequerimientoSubject.next(value);
+  }
+
   onFiltroNombreChangeClick(evento: any) {
-    console.log('filtrar el NOMBRE ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      //   this.registrosFiltrado = this.registrosFiltrado.filter((seguimiento) =>
-      //     // (seguimiento.nombreSeguimiento || '').toLowerCase().includes(textoFiltro)
-      //   );
-      console.log('filtrados', this.registrosFiltrado);
-    }
+    const value = evento.target.value;
+    this.filtroNombreSubject.next(value);
   }
 
   onFiltroDescripcionChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((seguimiento) =>
-        (seguimiento.descripcionSeguimiento || '').toLowerCase().includes(textoFiltro)
-      );
-      console.log('filtrados', this.registrosFiltrado);
-    }
+    const value = evento.target.value;
+    this.filtroDescripcionSubject.next(value);
   }
 
   onFiltroEstadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registros.filter((x) => x.estadoSeguimiento == evento.target.value);
-    }
+    const value = evento.target.value;
+    this.filtroEstadoSubject.next(value);
   }
 
   toggleNav(): void {

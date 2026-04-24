@@ -2,8 +2,12 @@
 <div class="layout-wrapper">
     <aside class="aside-left">
         <div class="card">
-            <div class="nav-tabs-custom"><button>{{ 'PLATAFORMA.MENU' | translate }}</button></div>
-            <ng-container><app-nav-content [navigationItems]="menuItems | async"></app-nav-content></ng-container>
+            <div class="nav-tabs-custom">
+                <button>{{ 'PLATAFORMA.MENU' | translate }}</button>
+            </div>
+            <ng-container>
+                <app-nav-content [navigationItems]="menuItems | async"></app-nav-content>
+            </ng-container>
         </div>
     </aside>
     <div class="form-area">
@@ -42,38 +46,53 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-label">{{ 'TICKETS.SEGUIMIENTOS.GESTION.CODE' | translate }}</label>
+                                <label class="form-label">{{ 'TICKETS.GESTION.CODE' | translate }}</label>
                                 <input type="text" class="form-control form-input" name="codigoSeguimiento"
                                     placeholder="{{ 'TICKETS.GESTION.PLACEHOLDERCODE' | translate }}"
                                     [ngClass]="{'is-invalid': !codigoSeguimiento.valid && (codigoSeguimiento.dirty || codigoSeguimiento.touched || isSubmit) }"
-                                    #codigoSeguimiento="ngModel" required [(ngModel)]="FormRegistro.codigoSeguimiento"
-                                    readonly />
+                                    #codigoSeguimiento="ngModel" required [(ngModel)]="FormRegistro.codigoSeguimiento" readonly />
                                 <label
                                     *ngIf="!codigoSeguimiento.valid && (codigoSeguimiento.dirty || codigoSeguimiento.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'TICKETS.GESTION.REQUERIDOCODE' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoTicket">{{
-                                    'TICKETS.SEGUIMIENTOS.GESTION.CODIGOTICKET' | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer;" name="codigoTicket" [disabled]="ticketId !== '0'"
-                                    id="codigoTicket"
-                                    #codigoTicket="ngModel" required [(ngModel)]="FormRegistro.codigoTicket"
-                                    (change)="onCodigoTicketChangeClick($event)">
-                                    <option value="">{{'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERCODIGOTICKET'| translate }}</option>
-                                    <option [value]="tic.codigoTicket" *ngFor="let tic of tickets">{{ tic.nombreTicket }}</option>
+                                <label class="form-control-label" for="codigoRequerimiento">{{
+                                    'TICKETS.SEGUIMIENTOS.GESTION.CODIGOREQUERIMIENTO' | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer;" name="codigoRequerimiento"
+                                    id="codigoRequerimiento"
+                                    #codigoRequerimiento="ngModel" required
+                                    [(ngModel)]="FormRegistro.codigoRequerimiento"
+                                    (change)="onRequerimientoChangeClick($event)">
+                                    <option value="">{{'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERREQUERIMIENTO'| translate }}</option>
+                                    <option [value]="codigo.codigoRequerimiento" *ngFor="let codigo of requerimientos">{{ codigo.nombreRequerimiento }}</option>
                                 </select>
+                                <label
+                                    *ngIf="!codigoRequerimiento.valid && (codigoRequerimiento.dirty || codigoRequerimiento.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'TICKETS.SEGUIMIENTOS.GESTION.REQUERIDOREQUERIMIENTO' | translate }}
+                                </label>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label text-center" for="fecha">
-                                    {{ 'TICKETS.SEGUIMIENTOS.GESTION.DEFINICIONREQUERIMIENTO' | translate }}
-                                </label><br>
-                                <label class="form-control-label" style="color:gray" [innerHTML]="FormRegistro.definicionRequerimiento"></label>
+                                <label class="form-control-label" for="nombreSeguimiento">{{
+                                    'TICKETS.SEGUIMIENTOS.GESTION.NAME' | translate
+                                    }}</label>
+                                <input class="form-control form-input" id="nombreSeguimiento"
+                                    name="nombreSeguimiento" type="text"
+                                    placeholder="{{ 'TICKETS.SEGUIMIENTOS.GESTION.PLACEHOLDERNAME' | translate }}"
+                                    [ngClass]="{'is-invalid': !nombreSeguimiento.valid && (nombreSeguimiento.dirty || nombreSeguimiento.touched || isSubmit)}"
+                                    #nombreSeguimiento="ngModel" required
+                                    [(ngModel)]="FormRegistro.nombreSeguimiento" />
+                                <label
+                                    *ngIf="!nombreSeguimiento.valid && (nombreSeguimiento.dirty || nombreSeguimiento.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'TICKETS.SEGUIMIENTOS.GESTION.REQUERIDONAME' | translate }}
+                                </label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -97,8 +116,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="estadoSeguimiento">{{
-                                    'TICKETS.SEGUIMIENTOS.GESTION.ESTADO' | translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer;" [disabled]="modoEdicion"
+                                    'TICKETS.SEGUIMIENTOS.GESTION.STATUS' | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer;"
                                     name="estadoSeguimiento" id="estadoSeguimiento"
                                     [ngClass]="{ 'is-invalid': !estadoSeguimiento.valid && (estadoSeguimiento.dirty || estadoSeguimiento.touched || isSubmit) }"
                                     #estadoSeguimiento="ngModel" required [(ngModel)]="FormRegistro.estadoSeguimiento"
@@ -109,7 +128,7 @@
                                 <label
                                     *ngIf="!estadoSeguimiento.valid && (estadoSeguimiento.dirty || estadoSeguimiento.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.REQUIRED' | translate }}
+                                    {{ 'TICKETS.SEGUIMIENTOS.GESTION.REQUERIDOESTADO' | translate }}
                                 </label>
                             </div>
                         </div>

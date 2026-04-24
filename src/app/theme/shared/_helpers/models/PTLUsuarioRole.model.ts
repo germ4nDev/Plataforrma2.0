@@ -1,9 +1,12 @@
-export class PTLUsuarioRoleAP {
+export class PTLUsuarioRoleAPModel {
   constructor(
     public usuarioRoleId?: number,
     public codigoUsuarioSC?: string,
     public codigoEmpresaSC?: string,
     public codigoRole?: string,
+    public codigoAplicacion?: string,
+    public codigoSuite?: string,
+    public tipoRol?: string,
     public estadoUsuarioRole?: boolean,
     public checked?: boolean,
     public codigoUsuarioCreacion?: string,
