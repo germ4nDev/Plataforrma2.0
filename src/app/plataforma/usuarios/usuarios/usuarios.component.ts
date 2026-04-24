@@ -99,28 +99,28 @@ export class UsuariosComponent implements OnInit {
   columnasUsuarios: ColumnMetadata[] = [
     {
       name: 'fotoUsuario',
-      header: 'USUARIOS.FOTO',
+      header: 'USUARIOS.USUARIOS.FOTO',
       type: 'avatar',
       isSortable: false
     },
     {
       name: 'identificacionUsuario',
-      header: 'USUARIOS.IDENTIFICACION',
+      header: 'USUARIOS.USUARIOS.IDENTIFICACION',
       type: 'text'
     },
     {
       name: 'nombreUsuario',
-      header: 'USUARIOS.NAME',
+      header: 'USUARIOS.USUARIOS.NAME',
       type: 'text'
     },
     {
       name: 'userNameUsuario',
-      header: 'USUARIOS.USERNAME',
+      header: 'USUARIOS.USUARIOS.USERNAME',
       type: 'text'
     },
     {
       name: 'nomEstado',
-      header: 'USUARIOS.STATUS',
+      header: 'USUARIOS.USUARIOS.STATUS',
       type: 'estado'
     }
   ];
@@ -128,12 +128,12 @@ export class UsuariosComponent implements OnInit {
   columnasDetailRegistros: ColumnMetadata[] = [
     {
       name: 'correoUsuario',
-      header: 'USUARIOS.CORREO',
+      header: 'USUARIOS.USUARIOS.CORREO',
       type: 'text'
     },
     {
       name: 'descripcionUsuario',
-      header: 'USUARIOS.DESCRIPTION',
+      header: 'USUARIOS.USUARIOS.DESCRIPCION',
       type: 'text'
     }
   ];
@@ -220,8 +220,8 @@ export class UsuariosComponent implements OnInit {
   OnEliminarRegistroClick(id: any) {
     const usuario = this.usuarios.filter((x) => x.codigoUsuario == id.id)[0];
     Swal.fire({
-      title: this.translate.instant('USUARIOS.ELIMINARTITULO'),
-      text: this.translate.instant('USUARIOS.ELIMINARTEXTO') + `"${usuario.nombreUsuario}".`,
+      title: this.translate.instant('USUARIOS.USUARIOS.ELIMINARTITULO'),
+      text: this.translate.instant('USUARIOS.USUARIOS.ELIMINARTEXTO') + `"${usuario.nombreUsuario}".`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -230,7 +230,7 @@ export class UsuariosComponent implements OnInit {
       if (result.isConfirmed) {
         this._usuariosService.eliminarUsuairo(id.id).subscribe({
           next: (resp: any) => {
-            this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje);
+            this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje);
             this.subscriptions.add(
               this._usuariosService.cargarRegistros().subscribe(
                 () => console.log('Usuarios cargados y guardados en el servicio'),
@@ -239,7 +239,7 @@ export class UsuariosComponent implements OnInit {
             );
           },
           error: (err: any) => {
-            this._swalService.getAlertError(this.translate.instant('USUARIOS.ELIMINARERROR') + ', ' + err);
+            this._swalService.getAlertError(this.translate.instant('USUARIOS.USUARIOS.ELIMINARERROR') + ', ' + err);
             console.error('Error eliminando', err);
           }
         });

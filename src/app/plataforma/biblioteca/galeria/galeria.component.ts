@@ -11,7 +11,7 @@ import { GradientConfig } from 'src/app/app-config';
 
 import { PTLGaleria } from 'src/app/theme/shared/_helpers/models/PTLGaleria.model';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { NavBarComponent } from '../../../../theme/layout/admin/nav-bar/nav-bar.component';
+import { NavBarComponent } from '../../../theme/layout/admin/nav-bar/nav-bar.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { PtlGaleriaService } from 'src/app/theme/shared/service/ptlgaleria.service';
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service';

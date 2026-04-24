@@ -45,11 +45,11 @@ export class AuthenticationService {
   usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
   suscriptores: PTLSuscriptorModel[] = [];
   usuariosRolesSub: Subscription | undefined;
-  rolesSubscription: Subscription | undefined;
-  empresasSCSubscription: Subscription | undefined;
-  usuariosSCSubscription: Subscription | undefined;
-  usuariosEmpresasSCSubscription: Subscription | undefined;
-  suscriptorSubscription: Subscription | undefined;
+  rolesSub: Subscription | undefined;
+  empresasSCSub: Subscription | undefined;
+  usuariosSCSub: Subscription | undefined;
+  usuariosEmpresasSCSub: Subscription | undefined;
+  suscriptorSub: Subscription | undefined;
 
   constructor(
     private router: Router,

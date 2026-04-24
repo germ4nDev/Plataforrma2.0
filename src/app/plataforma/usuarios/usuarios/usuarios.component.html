@@ -17,38 +17,39 @@
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
                     <DIV class="text-center">
-                        <h6 class="filtros-title">{{ 'USUARIOS.FILTROS.TITULO' | translate }}</h6>
+                        <h6 class="filtros-title">{{ 'USUARIOS.USUARIOS.FILTROS.TITULO' | translate }}</h6>
                     </DIV>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.FILTROS.IDENTIFICACION' | translate }}</small>
+                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.IDENTIFICACION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroIdentificacionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.FILTROS.IDENTIFICACIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.IDENTIFICACIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.FILTROS.NOMBRE' | translate }}</small>
+                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.NOMBRE' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.FILTROS.NOMBREHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.NOMBREHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.FILTROS.CORREO' | translate }}</small>
+                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.CORREO' | translate }}</small>
                         <input type="text" (keyup)="onFiltroCorreoChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.FILTROS.CORREOHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.CORREOHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.FILTROS.USERNAME' | translate }}</small>
+                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.USERNAME' | translate }}</small>
                         <input type="text" (keyup)="onFiltroUsernameChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.FILTROS.USERNAMEHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.USERNAMEHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.FILTROS.DECRIPCION' | translate }}</small>
+                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.DECRIPCION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'USUARIOS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'USUARIOS.USUARIOS.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'USUARIOS.FILTROS.ESTADO' | translate }}</small>
-                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-input" style="cursor: pointer;">
+                        <small>{{ 'USUARIOS.USUARIOS.FILTROS.ESTADO' | translate }}</small>
+                        <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-input"
+                            style="cursor: pointer;">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
                             <option value="false">{{ 'PLATAFORMA.INACTIVE' | translate }}</option>
@@ -63,13 +64,23 @@
         <div class="card card-table content-scroll-wrapper">
             <div class="card-body">
                 <ng-container *ngIf="registrosFiltrado$ | async as dataFiltrada">
-                    <app-data-table [data]="dataFiltrada" [idField]="'codigoUsuario'"
-                        [tableTitle]="'USUARIOS.TITLE' | translate" [metadataColumns]="columnasUsuarios"
-                        [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true"
-                        [showNewButton]="true" [showViewButton]="false" [showEditButton]="true"
-                        [showDeleteButton]="true" [newButtonLabel]="'USUARIOS.NEW' | translate"
-                        [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
-                        (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)">
+                    <app-data-table
+                        [data]="dataFiltrada"
+                        [idField]="'codigoUsuario'"
+                        [tableTitle]="'USUARIOS.USUARIOS.TITLE' | translate"
+                        [metadataColumns]="columnasUsuarios"
+                        [metadataDetailColumns]="columnasDetailRegistros"
+                        [showDetail]="true"
+                        [showActions]="true"
+                        [showNewButton]="true"
+                        [showViewButton]="false"
+                        [showEditButton]="true"
+                        [showDeleteButton]="true"
+                        [newButtonLabel]="'USUARIOS.USUARIOS.NEW' | translate"
+                        [exportLabel]="'PLATAFORMA.EXCEL' | translate"
+                        (newRecord)="OnNuevoRegistroClick()"
+                        (editRecord)="OnEditarRegistroClick($event)"
+                        (deleteRecord)="OnEliminarRegistroClick($event)">
                     </app-data-table>
                 </ng-container>
                 <ng-template #loading>
