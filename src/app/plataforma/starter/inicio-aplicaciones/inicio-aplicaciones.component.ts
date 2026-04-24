@@ -12,7 +12,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 // third party
 import { ColorPickerModule } from 'ngx-color-picker';
-import { PtlAplicacionesService, PTLRolesAPService, PtlusuariosRolesApService, PtlusuariosScService, UtilidadesService } from 'src/app/theme/shared/service';
+import { PtlactividadesRolesService, PtlActividadesService, PtlAplicacionesService, PTLRolesAPService, PtlusuariosRolesApService, PtlusuariosScService, UtilidadesService } from 'src/app/theme/shared/service';
 import { Subscription } from 'rxjs';
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model';
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service';
@@ -22,6 +22,8 @@ import { FullScreenSliderComponent } from 'src/app/theme/shared/components/fulls
 import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model';
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model';
 import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model';
+import { PTLActividadModel } from 'src/app/theme/shared/_helpers/models/PTLActividades.model'
+import { PTLActividadRoleModel } from 'src/app/theme/shared/_helpers/models/PTLActividadesRoles.model'
 
 const base_url = environment.apiUrl;
 
@@ -42,6 +44,8 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
   usuariosRoles: PTLUsuarioRoleAPModel[] = [];
   usuariosSC: PTLUsuarioSCModel[] = [];
   usuarioSC: PTLUsuarioSCModel = {} as PTLUsuarioSCModel;
+  actividades: PTLActividadModel[] = []
+  actividadesRoles: PTLActividadRoleModel[] = []
 
   constructor(
     private router: Router,
@@ -51,7 +55,9 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     private _usuariosSCService: PtlusuariosScService,
     private _rolesService: PTLRolesAPService,
     private _utilidadesService: UtilidadesService,
-    private _usuarioRolesService: PtlusuariosRolesApService
+    private _usuarioRolesService: PtlusuariosRolesApService,
+    private _actividadesService: PtlActividadesService,
+    private _actividadesRolesService: PtlactividadesRolesService,
   ) {
     this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage();
     console.log('no hay suscriptor suscriptor');
@@ -77,7 +83,7 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
             app.imagenInicio = `${base_url}/upload/${this.suscriptor}/aplicaciones/${app.imagenInicio}`;
           });
           this.aplicaciones = resp.aplicaciones;
-          this.consultarUusuariosSC();
+          this.consultarUsuariosSC();
           console.log('Todos las aplicaciones', this.aplicaciones);
           return;
         }
@@ -85,7 +91,7 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     );
   }
 
-  consultarUusuariosSC() {
+  consultarUsuariosSC() {
     const user = this._localStorageService.getUsuarioLocalStorage();
     console.log('&&&&&&&& usuariosSC');
     this.subscriptions.add(
@@ -136,6 +142,42 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  consultarActividades (codApp: string) {
+    console.log('actividades')
+    this.subscriptions.add(
+      this._actividadesService.actividades$.subscribe({
+        next: (actividades: PTLActividadModel[]) => {
+          console.log('actividades cargados con éxito:', actividades.length)
+          const actsApp = actividades.filter(x => x.codigoAplicacion === codApp)
+          this.actividades = actsApp.filter(x => x.estadoActividad === true)
+          console.log('actividades:', actividades)
+        },
+        error: err => {
+          console.error('Error al cargar las actividades:', err)
+          this.actividades = []
+        }
+      })
+    )
+  }
+
+  consultarActividadesRole (codRole: string) {
+    console.log('actividades role')
+    this.subscriptions.add(
+      this._actividadesRolesService.actividadesRoles$.subscribe({
+        next: (actividades: PTLActividadRoleModel[]) => {
+          console.log('actividades role cargados con éxito:', actividades.length)
+          const actsRole = actividades.filter(x => x.codigoRole === codRole)
+          this.actividadesRoles = actsRole.filter(x => x.permiso === true)
+          console.log('actividades:', actividades)
+        },
+        error: err => {
+          console.error('Error al cargar las actividades:', err)
+          this.actividadesRoles = []
+        }
+      })
+    )
   }
 
   ingresarPlataforma(app: PTLAplicacionModel) {

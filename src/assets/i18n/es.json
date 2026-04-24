@@ -21,9 +21,9 @@
         "ENTRAR": "Acceder",
         "ALLDATA": "Seleccionar Todos",
         "COLORSETTING": {
-            "TITLE": "Configuración Colres",
-            "NEW": "Nueva Configuración Colres",
-            "UPDATE": "Editar Configuración Colres",
+            "TITLE": "Configuración Colores",
+            "NEW": "Nueva Configuración Colores",
+            "UPDATE": "Editar Configuración Colores",
             "NAVBARCOLOR": "Color Navbar",
             "TEXTCOLOR": "Color Texto",
             "ICONSCOLOR": "Color Iconos",

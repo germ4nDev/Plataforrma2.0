@@ -21,6 +21,10 @@ import { PTLUsuarioSCModel } from '../_helpers/models/PTLUsuarioSC.model';
 import { PTLSuscriptorModel } from '../_helpers/models/PTLSuscriptor.model';
 import { PTLSuscriptoresService } from './ptlsuscriptores.service';
 import { PTLUsuarioRoleAPModel } from '../_helpers/models/PTLUsuarioRole.model';
+import { PtlActividadesService } from './ptlactividades.service';
+import { PtlactividadesRolesService } from './ptlactividades-roles.service';
+import { PTLActividadModel } from '../_helpers/models/PTLActividades.model';
+import { PTLActividadRoleModel } from '../_helpers/models/PTLActividadesRoles.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -46,7 +50,7 @@ export class AuthenticationService {
   usuariosSC: PTLUsuarioSCModel[] = [];
   usuariosEmpresas: PTLUsuaioEmpresasSCModel[] = [];
   suscriptores: PTLSuscriptorModel[] = [];
-  usuariosRolesSubscription: Subscription | undefined;
+  usuariosRolesSub: Subscription | undefined;
   rolesSubscription: Subscription | undefined;
   empresasSCSubscription: Subscription | undefined;
   usuariosSCSubscription: Subscription | undefined;
@@ -122,13 +126,44 @@ export class AuthenticationService {
     });
   }
 
+  consultarActividades() {
+    console.log('actividades');
+    // this.actividadesSub = this._actividadesService.actividades$.subscribe({
+    //   next: (actividades: PTLActividadModel[]) => {
+    //     console.log('Roles de usuario cargados con éxito:', actividades.length);
+    //     this.actividades = actividades;
+    //     console.log('Roles de usuario:', actividades);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al cargar los actividades de usuario:', err);
+    //     this.roles = [];
+    //   }
+    // });
+  }
+
+  consultarActividadesRoles(codRole: string) {
+    console.log('actividades Role');
+    // this.actividadesRolesSub = this._actividadesRolesService.actividadesRoles$.subscribe({
+    //   next: (actividades: PTLActividadRoleModel[]) => {
+    //     console.log('ActividadRole de usuario cargados con éxito:', actividades.length);
+    //     const actsRole = actividades.filter(x => x.codigoRole === codRole);
+    //     this.actividadesRoles = actsRole.filter(x => x.permiso === true);;
+    //     console.log('Roles de usuario:', actividades);
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al cargar los actividades de usuario:', err);
+    //     this.roles = [];
+    //   }
+    // });
+  }
+
   consultarUsuariosRoles() {
     console.log('acaaaaaaaaa');
-    this.usuariosRolesSubscription = this._usuarioRolesService._usuariosRoles$.subscribe({
+    this.usuariosRolesSub = this._usuarioRolesService._usuariosRoles$.subscribe({
       next: (userRoles: PTLUsuarioRoleAPModel[]) => {
         console.log('usuarios roles cargados con éxito:', userRoles.length);
         this.usuariosRoles = userRoles;
-        this.consultarUusuariosSC();
+        this.consultarUsuariosSC();
         console.log('usuarios roles:', userRoles);
       },
       error: (err) => {
@@ -138,7 +173,7 @@ export class AuthenticationService {
     });
   }
 
-  consultarUusuariosSC() {
+  consultarUsuariosSC() {
     console.log('&&&&&&&& usuariosSC');
     this.usuariosSCSubscription = this._usuariosSCService._usuariosSC$.subscribe({
       next: (usuariosSC: PTLUsuarioSCModel[]) => {
@@ -178,7 +213,7 @@ export class AuthenticationService {
         console.log('empresasSC cargadas con éxito:', empresasSC.length);
         this.emrpesasSC = empresasSC;
         console.log('EmpresasSC:', empresasSC);
-        this.consultarUusuariosEmpresasSC();
+        this.consultarUsuariosEmpresasSC();
       },
       error: (err) => {
         console.error('Error al cargar los roles de usuario:', err);
@@ -187,7 +222,7 @@ export class AuthenticationService {
     });
   }
 
-  consultarUusuariosEmpresasSC() {
+  consultarUsuariosEmpresasSC() {
     console.log('acaaaaaaaaa');
     this.usuariosEmpresasSCSubscription = this._usuariosEmpresasSCService._usuariosEmpresas$.subscribe({
       next: (usuariosEmpresas: PTLUsuarioSCModel[]) => {
