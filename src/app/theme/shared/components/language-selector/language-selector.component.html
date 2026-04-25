@@ -1,3 +1,4 @@
-<button (click)="changeLanguage(oppositeLanguage.code)" class="lang-btn" [title]="selectedLang === 'es' ? 'Switch to English' : 'Cambiar a Español'">
-  <img [src]="oppositeLanguage.flag" width="24" height="24" />
+<button *ngIf="oppositeLanguage" (click)="toggleLanguage()" class="lang-btn">
+  <img [src]="oppositeLanguage.flagIdioma" [alt]="oppositeLanguage.nombreIdioma" width="24" height="24">
+  <!-- {{ oppositeLanguage.nombreIdioma }} -->
 </button>

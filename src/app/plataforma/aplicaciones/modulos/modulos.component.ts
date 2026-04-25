@@ -16,13 +16,14 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service'
 import { PtlSuitesAPService } from 'src/app/theme/shared/service/ptlsuites-ap.service'
 import { PtlmodulosApService } from 'src/app/theme/shared/service/ptlmodulos-ap.service'
+import { PTLBiblioteca } from 'src/app/theme/shared/_helpers/models/PTLBiblioteca.model'
 
 import Swal from 'sweetalert2'
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model'
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
-import { LocalStorageService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service'
+import { LocalStorageService, PtlBibliotecasService, PtllogActividadesService, UploadFilesService } from 'src/app/theme/shared/service'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
@@ -55,6 +56,8 @@ export class ModulosComponent implements OnInit, OnDestroy {
   modulosTransformados$: Observable<PTLModuloAP[]> = of([])
   modulosFiltrados$: Observable<PTLModuloAP[]> = of([])
   modulos: PTLModuloAP[] = []
+  bibliotecasSub?: Subscription
+  listBibliotecas: PTLBiblioteca[] = []
 
   aplicaciones: PTLAplicacionModel[] = []
   aplicacionesSub?: Subscription
@@ -71,6 +74,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
     private _aplicacionesService: PtlAplicacionesService,
     private _logActividadesService: PtllogActividadesService,
     private _localStorageService: LocalStorageService,
+    private _biblioecasService: PtlBibliotecasService,
     private _suitesService: PtlSuitesAPService,
     private _registrosService: PtlmodulosApService,
     private _uploadService: UploadFilesService
@@ -86,6 +90,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
     this.consultarSuites()
     this.consultarModulosPadre()
     this.consultarRegistros()
+    this.consultarBibliotecas()
     setTimeout(() => {
       this.setupModulosStream()
     }, 100)
@@ -104,61 +109,64 @@ export class ModulosComponent implements OnInit, OnDestroy {
   }
 
   consultarAplicacines () {
-    this.aplicacionesSub = this._aplicacionesService
-      .getAplicaciones()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            this.aplicaciones = resp.aplicaciones
-            // console.log('aplicaciones 1', this.aplicaciones);
-          }
-        }),
-        catchError(err => {
-          console.error(err)
-          return of([])
-        })
-      )
-      .subscribe()
+    this.subscriptions.add(
+      this._aplicacionesService.getAplicaciones()
+        .pipe(
+          tap((resp: any) => {
+            if (resp.ok) {
+              this.aplicaciones = resp.aplicaciones
+              // console.log('aplicaciones 1', this.aplicaciones);
+            }
+          }),
+          catchError(err => {
+            console.error(err)
+            return of([])
+          })
+        )
+        .subscribe()
+    )
   }
 
   consultarSuites (codApp?: string): void {
-    this.suitesSub = this._suitesService
-      .geSuitesAP()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            if (codApp) {
-              this.suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == codApp)
-            } else {
-              this.suites = resp.suites
+    this.subscriptions.add(
+      this._suitesService.geSuitesAP()
+        .pipe(
+          tap((resp: any) => {
+            if (resp.ok) {
+              if (codApp) {
+                this.suites = resp.suites.filter((x: { codigoAplicacion: string }) => x.codigoAplicacion == codApp)
+              } else {
+                this.suites = resp.suites
+              }
+              // console.log('suites 1', this.suites);
             }
-            // console.log('suites 1', this.suites);
-          }
-        }),
-        catchError(err => {
-          console.error(err)
-          return of([])
-        })
-      )
-      .subscribe()
+          }),
+          catchError(err => {
+            console.error(err)
+            return of([])
+          })
+        )
+        .subscribe()
+    )
   }
 
   consultarModulosPadre () {
-    this.modulosSub = this._registrosService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            this.modulosPadre = resp.modulos.filter((x: { hijos: boolean }) => x.hijos == true)
-            // console.log('modulosPadre 1', this.modulosPadre);
-          }
-        }),
-        catchError(err => {
-          console.error(err)
-          return of([])
-        })
-      )
-      .subscribe()
+    this.subscriptions.add(
+      this._registrosService.getRegistros()
+        .pipe(
+          tap((resp: any) => {
+            if (resp.ok) {
+              this.modulosPadre = resp.modulos.filter((x: { hijos: boolean }) => x.hijos == true)
+              // console.log('modulosPadre 1', this.modulosPadre);
+            }
+          }),
+          catchError(err => {
+            console.error(err)
+            return of([])
+          })
+        )
+        .subscribe()
+    )
   }
 
   consultarRegistros () {
@@ -171,6 +179,25 @@ export class ModulosComponent implements OnInit, OnDestroy {
         }
       })
     )
+  }
+
+  consultarBibliotecas () {
+    this.bibliotecasSub = this._biblioecasService
+      .getBibliotecas()
+      .pipe(
+        tap((resp: any) => {
+          if (resp.ok) {
+            this.listBibliotecas = resp.biibliotecas.filter((x: { estadoBiblioteca: boolean }) => x.estadoBiblioteca == true)
+            console.log('Todos las bibliotecas padre', this.listBibliotecas)
+            return
+          }
+        }),
+        catchError(err => {
+          console.log('Ha ocurrido un error', err)
+          return of(null)
+        })
+      )
+      .subscribe()
   }
 
   setupModulosStream (): void {
@@ -189,6 +216,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
           mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos'
           mod.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == mod.codigoAplicacion)[0].nombreAplicacion || ''
           mod.nomSuite = this.suites.filter(x => x.codigoSuite == mod.codigoSuite)[0].nombreSuite || ''
+          mod.nomBiblioteca = this.listBibliotecas.filter(x => x.codigoBiblioteca == mod.codigoBiblioteca)[0].nombreBiblioteca || ''
           mod.nomPadre = mod.codigoPadre != '0' ? this.modulosPadre.filter(x => x.codigoModulo == mod.codigoPadre)[0].nombreModulo : ''
           return mod as PTLModuloAP
         })
@@ -328,7 +356,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
   }
 
   OnEditarRegistroClick (id: number): void {
-    this._localStorageService.setObject('regId', id);
+    this._localStorageService.setObject('regId', id)
     this.router.navigate(['aplicaciones/gestion-modulo'])
   }
 

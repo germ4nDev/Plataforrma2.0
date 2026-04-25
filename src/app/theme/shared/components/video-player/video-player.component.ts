@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import videojs from 'video.js'
-import Player from 'video.js/dist/types/player'
 
 @Component({
   selector: 'app-video-player',
@@ -11,98 +10,71 @@ import Player from 'video.js/dist/types/player'
   styleUrls: ['./video-player.component.scss']
 })
 export class VideoPlayerComponent implements OnDestroy {
-private _src: string = '';
-  player: any;
+  private _src: string = ''
+  player: any
 
-  // 1. Usamos un SETTER para el Input. Así sabemos cuándo la URL realmente cambia.
   @Input()
-  set src(value: string) {
-    this._src = value;
-    console.log('1. URL recibida:', this._src);
-    this.intentarInicializar();
+  set src (value: string) {
+    this._src = value
+    console.log('URL recibida:', this._src)
+    this.intentarInicializar()
   }
-  get src(): string { return this._src; }
 
-  // 2. Usamos un SETTER para el ViewChild. Angular llamará a esta función
-  // exactamente cuando la etiqueta <video> ya esté dibujada y lista.
-  private videoElement!: ElementRef;
+  get src (): string {
+    return this._src
+  }
+
+  private videoElement!: ElementRef
   @ViewChild('target', { static: false })
-  set target(content: ElementRef) {
+  set target (content: ElementRef) {
     if (content) {
-      this.videoElement = content;
-      console.log('2. El elemento de video ya existe en el DOM');
-      this.intentarInicializar();
+      this.videoElement = content
+      console.log('El elemento de video ya existe en el DOM')
+      this.intentarInicializar()
     }
   }
 
-  // 3. El motor que une ambas cosas
-  intentarInicializar() {
-    // Solo avanzamos si tenemos ambas cosas: la URL y la etiqueta HTML dibujada
+  getFileType (url: string): 'video/mp4' | 'video/mov' | 'video/avi' | 'video/mkv' | 'desconocido' {
+    if (!url) return 'desconocido'
+
+    const cleanUrl = url.split(/[#?]/)[0]
+    const extension = cleanUrl.split('.').pop()?.toLowerCase() || ''
+    console.log('formato video', extension);
+
+    if (extension == 'mp4') return 'video/mp4'
+    else if (extension == 'mov') return 'video/mov'
+    else if (extension == 'avi') return 'video/avi'
+    return 'video/mp4'
+  }
+
+  intentarInicializar () {
     if (!this._src || this._src === 'undefined' || !this.videoElement) {
-      return; // Salida silenciosa lógica (aún falta algo)
+      return
     }
-
-    console.log('3. Todo listo. Arrancando Video.js...');
-
-    // Si ya había un player viejo, lo matamos
     if (this.player) {
-      this.player.dispose();
-      this.player = null;
+      this.player.dispose()
+      this.player = null
     }
+
+    const formato = this.getFileType(this._src)
+    console.log('formato video', formato);
 
     const options = {
       fluid: true,
       aspectRatio: '16:9',
       controls: true,
       autoplay: false,
-      sources: [{ src: this._src, type: 'video/mp4' }]
-    };
-
-    // Inicializamos sobre el elemento que guardamos en el setter
+      inactivityTimeout: 0,
+      sources: [{ src: this._src, type: formato }]
+    }
     this.player = videojs(this.videoElement.nativeElement, options, () => {
-      console.log('4. REPRODUCTOR INICIALIZADO CON ÉXITO');
-    });
+      console.log('REPRODUCTOR INICIALIZADO CON ÉXITO')
+    })
   }
 
-  ngOnDestroy() {
+  ngOnDestroy () {
     if (this.player) {
-      this.player.dispose();
+      this.player.dispose()
     }
   }
-  //   @ViewChild('target', { static: true }) target!: ElementRef;
-  //   @Input() fluid: boolean = true;
-  //   @Input() aspectRatio: string = '16:9';
-  //   @Input() autoplay: boolean = false;
-  //   @Input() controls: boolean = false;
-  //   @Input() src: string = '';
-  // //   @Input() type: string = '';
-
-  //   options!: {
-  //     fluid: boolean;
-  //     aspectRatio: string;
-  //     autoplay: boolean;
-  //     controls: boolean;
-  //     sources: { src: string; type: string }[];
-  //   };
-
-  //   player!: Player;
-
-  //   ngOnInit(): void {
-  //     console.log('******** Iniciando video player');
-  //     this.options.fluid = true
-  //     this.options.aspectRatio = '16:9'
-  //     this.options.autoplay = false
-  //     this.options.controls = true
-  //     this.options.sources = [{src: this.src, type: 'video/mp4'}]
-  //     console.log('options', this.options);
-  //     this.player = videojs(this.target.nativeElement, this.options, () => {
-  //       console.log('El reproductor está listo');
-  //     });
-  //   }
-
-  //   ngOnDestroy(): void {
-  //     if (this.player) {
-  //       this.player.dispose();
-  //     }
-  //   }
 }

@@ -20,6 +20,13 @@
         "TITULO_GRID_SUITES": "Suites de la Aplicación",
         "ENTRAR": "Acceder",
         "ALLDATA": "Seleccionar Todos",
+        "FILTROTODOS": "Mostrar Todos",
+        "INSERTAR": "El registro se insertó correctamente",
+        "MODIFICAR": "El registro se modificó correctamente",
+        "NOINSERTO": "No se pudo insertar el registro",
+        "NOMODIFICO": "No se pudo actualizar el registro",
+        "VALIDARPASSWORD": "Validar",
+        "PASSWORDNOTMATCH": "Clave actual no coincide.",
         "COLORSETTING": {
             "TITLE": "Configuración Colores",
             "NEW": "Nueva Configuración Colores",
@@ -67,8 +74,8 @@
             "EMPRESAS": "Empresas",
             "USURIOSSC": "Usuarios",
             "USUARIOS": "Usuarios",
-            "SERVIDORES": "Servidores",
-            "CONEXIONES": "Conexiones",
+            "SERVIDORES": "Bases de datos",
+            "CONEXIONES": "Conexiones BD",
             "UTILIDADES": "Utilidades",
             "COLORESNAV": "Colores Navbar",
             "SLIDER": "Imágees Inicio",
@@ -86,10 +93,13 @@
             "ACTIVIDADROLES": "Actividades Roles",
             "CLASESTICKET": "Clases Tickets",
             "REQUERIMIENTOS": "Requerimientos",
+            "SCRIPTS": "Scripts",
+            "SERVERS": "Servidores BD",
+            "IDIOMAS": "Idiomas",
             "BIBLIOTECA": "Biblioteca",
             "GALERIA": "Galería",
-            "TIPOS GALERIA": "Tipos Galería",
-            "FORMATOS GALERIA": "Formatos Galería"
+            "TIPOSGALERIA": "Tipos Galería",
+            "FORMATOSGALERIA": "Formatos Galería"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notificaciones",
@@ -106,13 +116,6 @@
             "THEME_LIGHT": "Tema Claro",
             "CLOSE_SESSION": "Cerrar Sesión"
         },
-        "FILTROTODOS": "Mostrar Todos",
-        "INSERTAR": "El registro se insertó correctamente",
-        "MODIFICAR": "El registro se modificó correctamente",
-        "NOINSERTO": "No se pudo insertar el registro",
-        "NOMODIFICO": "No se pudo actualizar el registro",
-        "VALIDARPASSWORD": "Validar",
-        "PASSWORDNOTMATCH": "Clave actual no coincide.",
         "DATATABLE": {
             "SHOW": "Mostrar",
             "ENTRIES": "Entradas",
@@ -230,6 +233,10 @@
         "ELIMINAREXITOSA": "¡la Aplicación fué eliminada correctamente ",
         "ELIMINARERROR": "No se pudo eliminar el Aplicación.",
         "CREATE": "Crear Aplicación",
+        "TRANSLATEKEY": "Llave traducción",
+        "GESTION": {
+            "FOTO": "Imágen Aplicación"
+        },
         "FILTROS": {
             "TITULO": "Filtros Aplicaciones",
             "FILTROCODIGO": "Código",
@@ -853,7 +860,7 @@
                 "CREATE": "Crear Usuario",
                 "UPDATE": "Actualizar Usuario",
                 "NEW": "Nuevo Usuario",
-                "CODE":"Código",
+                "CODE": "Código",
                 "NAME": "Nombre Usuario",
                 "IDENTIFICACION": "Identificación Usuario",
                 "CORREO": "Correo Usuario",
@@ -864,7 +871,7 @@
                 "DESCRIPTION": "Descripción Usuario",
                 "FOTO": "Foto Usuario",
                 "STATUS": "Estado Usuario",
-                "TIPOROLE":"Tipo Rol",
+                "TIPOROLE": "Tipo Rol",
                 "ROLES": "Roles asociados al Usuario",
                 "ROLESTEXT": "Asocie todos los roles que van a ser asignados",
                 "NAMEHOLDER": "Ingrese el Nombre del Usuario",
@@ -876,13 +883,13 @@
                 "CLAVECONFIRMHOLDER": "Confirme la clave",
                 "DESCRIPTIONHOLDER": "Ingrese la Descripción del Usuario",
                 "FOTOHOLDER": "Ingrese la Foto del Usuario",
-                "REQUERIDONAME":"Por favor, Ingrese un nombre. Este campo es obligatorio.",
-                "REQUERIDOIDENTIFICATION":"Por favor, Ingrese la Identificación. Este campo es obligatorio.",
+                "REQUERIDONAME": "Por favor, Ingrese un nombre. Este campo es obligatorio.",
+                "REQUERIDOIDENTIFICATION": "Por favor, Ingrese la Identificación. Este campo es obligatorio.",
                 "REQUERIDOCORREO": "Porfavor, Ingrese el correo electrónico. Este campo es obligatorio.",
                 "REQUERIDOUSERNAME": "Porfavor, Ingrese el UserName. Este campo es obligatorio.",
                 "REQUERIDODESCRIPTION": "Porfavor, Ingrese la descripción. Este campo es obligatorio.",
-                "ROLPLATAFORMA":"Rol Plataforma",
-                "ROLSUSCRIPTOR":"Rol Suscriptor"
+                "ROLPLATAFORMA": "Rol Plataforma",
+                "ROLSUSCRIPTOR": "Rol Suscriptor"
             },
             "FILTROS": {
                 "TITULO": "Filtros Usuarios",

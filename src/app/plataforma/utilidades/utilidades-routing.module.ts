@@ -15,12 +15,20 @@ const routes: Routes = [
         loadComponent: () => import('./slider-inicio/slider-inicio.component').then(m => m.SliderInicioComponent)
       },
       {
+        path: 'idiomas',
+        loadComponent: () => import('./idiomas/idiomas.component').then(m => m.IdiomasComponent)
+      },
+      {
         path: 'gestion-slider',
         loadComponent: () => import('./slider-inicio/gestion-slider/gestion-slider.component').then(m => m.GestionSliderComponent)
       },
       {
         path: 'gestion-color',
         loadComponent: () => import('./colores-nav/gestion-color/gestion-color.component').then(m => m.GestionColorComponent)
+      },
+      {
+        path: 'gestion-idioma',
+        loadComponent: () => import('./idiomas/gestion-idioma/gestion-idioma.component').then(m => m.GestionIdiomaComponent)
       }
     ]
   }
