@@ -8,7 +8,7 @@ const routes: Routes = [
     // component: LayoutComponent,
     children: [
       {
-        path: 'biblioteca',
+        path: 'bibliotecas',
         loadComponent: () => import('./bibliotecas/bibliotecas.component').then((m) => m.BibliotecasComponent)
       },
       {
@@ -18,14 +18,14 @@ const routes: Routes = [
       },
       {
         path: 'galeria',
-        loadComponent: () => import('./galeria/galeria.component').then((m) => m.GaleriaComponent)
+        loadComponent: () => import('./galerias/galerias.component').then((m) => m.GaleriasComponent)
       },
       {
-        path: 'galeria/gestion-galeria',
-        loadComponent: () => import('./galeria/gestion-galeria/gestion-galeria.component').then((m) => m.GestionGaleriaComponent)
+        path: 'gestion-galeria',
+        loadComponent: () => import('./galerias/gestion-galeria/gestion-galeria.component').then((m) => m.GestionGaleriaComponent)
       },
       {
-        path: 'tiposGaleria',
+        path: 'tipos-galeria',
         loadComponent: () => import('./tipos-galeria/tipos-galeria.component').then((m) => m.TiposGaleriaComponent)
       },
       {
@@ -54,4 +54,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class BibliotecaRoutingModule {}
+export class BibliotecasRoutingModule {}

@@ -17,15 +17,6 @@ const routes: Routes = [
           import('./aplicaciones/gestion-aplicacion/gestion-aplicacion.component').then((m) => m.GestionAplicacionComponent)
       },
       {
-        path: 'roles',
-        loadComponent: () => import('./roles/roles.component').then((m) => m.RolesComponent)
-      },
-      {
-        path: 'gestion-roles',
-        loadComponent: () =>
-          import('./roles/gestion-roles/gestion-roles.component').then((m) => m.GestionRolesComponent)
-      },
-      {
         path: 'suites',
         loadComponent: () => import('./suites/suites.component').then((m) => m.SuitesComponent)
       },
