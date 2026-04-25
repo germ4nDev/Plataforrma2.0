@@ -843,6 +843,7 @@ export class NavigationService implements OnInit, OnDestroy {
       .getRegistros()
       .pipe(
         tap((resp: any) => {
+            console.log('respuesta modulos', resp);
           if (resp.ok) {
             this.modulos = resp.modulos;
           }

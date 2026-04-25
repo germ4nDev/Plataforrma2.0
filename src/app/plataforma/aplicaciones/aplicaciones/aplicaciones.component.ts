@@ -34,8 +34,7 @@ import { VideoPlayerComponent } from 'src/app/theme/shared/components/video-play
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent,
-    VideoPlayerComponent
+    DatatableComponent
   ],
   templateUrl: './aplicaciones.component.html',
   styleUrl: './aplicaciones.component.scss'
@@ -50,12 +49,12 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
   lang = localStorage.getItem('lang')
   menuItems$!: Observable<NavigationItem[]>
   activeTab: 'menu' | 'filters' | 'main' = 'menu'
-  suscriptor: string = ''
   subscriptions = new Subscription()
   filtroCodigoSubject = new BehaviorSubject<string>('todos')
   filtroNombreSubject = new BehaviorSubject<string>('todos')
   filtroDescripcionSubject = new BehaviorSubject<string>('')
   filtroEstadoSubject = new BehaviorSubject<string>('todos')
+  suscriptor: string = ''
   tipoMedia: string = ''
   video: string = ''
   aplicacionesTransformadas$: Observable<PTLAplicacionModel[]> = of([])

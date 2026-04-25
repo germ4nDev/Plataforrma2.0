@@ -9,12 +9,12 @@ const routes: Routes = [
     children: [
       {
         path: 'biblioteca',
-        loadComponent: () => import('./biblioteca/biblioteca.component').then((m) => m.BibliotecaComponent)
+        loadComponent: () => import('./bibliotecas/bibliotecas.component').then((m) => m.BibliotecasComponent)
       },
       {
         path: 'gestion-biblioteca',
         loadComponent: () =>
-          import('./biblioteca/gestion-biblioteca/gestion-biblioteca.component').then((m) => m.GestionBibliotecaComponent)
+          import('./bibliotecas/gestion-biblioteca/gestion-biblioteca.component').then((m) => m.GestionBibliotecaComponent)
       },
       {
         path: 'galeria',
@@ -26,23 +26,23 @@ const routes: Routes = [
       },
       {
         path: 'tiposGaleria',
-        loadComponent: () => import('./tiposGaleria/tipos-galeria.component').then((m) => m.TiposGaleriaComponent)
+        loadComponent: () => import('./tipos-galeria/tipos-galeria.component').then((m) => m.TiposGaleriaComponent)
       },
       {
         path: 'gestion-tipos-galeria',
         loadComponent: () =>
-          import('./tiposGaleria/gestion-tiposGaleria/gestion-tipos-galeria.component').then(
+          import('./tipos-galeria/gestion-tiposGaleria/gestion-tipos-galeria.component').then(
             (m) => m.GestionTiposGaleriaComponent
           )
       },
       {
         path: 'formatos-galeria',
-        loadComponent: () => import('./formatosGaleria/formatos-galeria.component').then((m) => m.FormatosGaleriaComponent)
+        loadComponent: () => import('./formatos-galeria/formatos-galeria.component').then((m) => m.FormatosGaleriaComponent)
       },
       {
         path: 'gestion-formatos-galeria',
         loadComponent: () =>
-          import('./formatosGaleria/gestion-formatosGaleria/gestion-formatos-galeria.component').then(
+          import('./formatos-galeria/gestion-formatos-galeria/gestion-formatos-galeria.component').then(
             (m) => m.GestionFormatosGaleriaComponent
           )
       }
