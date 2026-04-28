@@ -20,15 +20,20 @@
                         </h4>
                     </div>
                     <div class="d-flex">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnGestionarUsuarioClick(validationForm)">
+                        <button *ngIf="!modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarUsuarioClick(validationForm)">
                             {{ 'USUARIOS.USUARIOS.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnGestionarUsuarioClick(validationForm)">
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarUsuarioClick(validationForm)">
                             {{ 'USUARIOS.USUARIOS.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
@@ -41,9 +46,14 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CODE' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="codigoUsuario" placeholder="{{'USUARIOS.USUARIOS.GESTION.CODEHOLDER' | translate }}" [ngClass]="{'is-invalid': !codigoUsuario.valid && (codigoUsuario.dirty || codigoUsuario.touched || isSubmit) }"
-                                    #codigoUsuario="ngModel" required [(ngModel)]="FormRegistro.codigoUsuario" readonly />
-                                <label *ngIf="!codigoUsuario.valid && (codigoUsuario.dirty || codigoUsuario.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <input type="text" class="form-control form-input" name="codigoUsuario"
+                                    placeholder="{{'USUARIOS.USUARIOS.GESTION.CODEHOLDER' | translate }}"
+                                    [ngClass]="{'is-invalid': !codigoUsuario.valid && (codigoUsuario.dirty || codigoUsuario.touched || isSubmit) }"
+                                    #codigoUsuario="ngModel" required [(ngModel)]="FormRegistro.codigoUsuario"
+                                    readonly />
+                                <label
+                                    *ngIf="!codigoUsuario.valid && (codigoUsuario.dirty || codigoUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'PLATAFORMA.REQUIRED | translate }}
                                 </label>
                             </div>
@@ -53,9 +63,13 @@
                                 <label class="form-control-label" for="nombreUsuario">{{
                                     'USUARIOS.USUARIOS.GESTION.NAME' |
                                     translate }}</label>
-                                <input class="form-control  form-input" id="nombreUsuario" name="nombreUsuario" type="text" placeholder="{{ 'USUARIOS.USUARIOS.GESTION.NAMEHOLDER' | translate }}" [ngClass]="{'is-invalid': !nombreUsuario.valid && (nombreUsuario.dirty || nombreUsuario.touched || isSubmit)}"
+                                <input class="form-control  form-input" id="nombreUsuario" name="nombreUsuario"
+                                    type="text" placeholder="{{ 'USUARIOS.USUARIOS.GESTION.NAMEHOLDER' | translate }}"
+                                    [ngClass]="{'is-invalid': !nombreUsuario.valid && (nombreUsuario.dirty || nombreUsuario.touched || isSubmit)}"
                                     #nombreUsuario="ngModel" required [(ngModel)]="FormRegistro.nombreUsuario" />
-                                <label *ngIf="!nombreUsuario.valid && (nombreUsuario.dirty || nombreUsuario.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!nombreUsuario.valid && (nombreUsuario.dirty || nombreUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'USUARIOS.USUARIOS.GESTION.REQUERIDONAME' | translate }}
                                 </label>
                             </div>
@@ -64,9 +78,14 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.IDENTIFICACION' | translate
                                     }}</label>
-                                <input type="text" class="form-control form-input" name="identificacionUsuario" placeholder="{{ 'USUARIOS.USUARIOS.GESTION.INDENTIFICACIONHOLDER' | translate }}" [ngClass]="{'is-invalid': !identificacionUsuario.valid && (identificacionUsuario.dirty || identificacionUsuario.touched || isSubmit) }"
-                                    #identificacionUsuario="ngModel" required [(ngModel)]="FormRegistro.identificacionUsuario" />
-                                <label *ngIf="!identificacionUsuario.valid && (identificacionUsuario.dirty || identificacionUsuario.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <input type="text" class="form-control form-input" name="identificacionUsuario"
+                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.INDENTIFICACIONHOLDER' | translate }}"
+                                    [ngClass]="{'is-invalid': !identificacionUsuario.valid && (identificacionUsuario.dirty || identificacionUsuario.touched || isSubmit) }"
+                                    #identificacionUsuario="ngModel" required
+                                    [(ngModel)]="FormRegistro.identificacionUsuario" />
+                                <label
+                                    *ngIf="!identificacionUsuario.valid && (identificacionUsuario.dirty || identificacionUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'USUARIOS.USUARIOS.GESTION.REQUERIDOIDENTIFICATION' | translate }}
                                 </label>
                             </div>
@@ -74,9 +93,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CORREO' | translate }}</label>
-                                <input type="email" class="form-control form-input" name="correoUsuario" placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CORREOHOLDER' | translate }}" [ngClass]="{'is-invalid': !correoUsuario.valid && (correoUsuario.dirty || correoUsuario.touched || isSubmit) }"
+                                <input type="email" class="form-control form-input" name="correoUsuario"
+                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CORREOHOLDER' | translate }}"
+                                    [ngClass]="{'is-invalid': !correoUsuario.valid && (correoUsuario.dirty || correoUsuario.touched || isSubmit) }"
                                     #correoUsuario="ngModel" required [(ngModel)]="FormRegistro.correoUsuario" />
-                                <label *ngIf="!correoUsuario.valid && (correoUsuario.dirty || correoUsuario.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!correoUsuario.valid && (correoUsuario.dirty || correoUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'USUARIOS.USUARIOS.GESTION.REQUERIDOCORREO' | translate }}
                                 </label>
                             </div>
@@ -84,9 +107,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.USERNAME' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="userNameUsuario" placeholder="{{ 'USUARIOS.USUARIOS.GESTION.USERNAMEHOLDER' | translate }}" [ngClass]="{'is-invalid': !userNameUsuario.valid && (userNameUsuario.dirty || userNameUsuario.touched || isSubmit) }"
+                                <input type="text" class="form-control form-input" name="userNameUsuario"
+                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.USERNAMEHOLDER' | translate }}"
+                                    [ngClass]="{'is-invalid': !userNameUsuario.valid && (userNameUsuario.dirty || userNameUsuario.touched || isSubmit) }"
                                     #userNameUsuario="ngModel" required [(ngModel)]="FormRegistro.userNameUsuario" />
-                                <label *ngIf="!userNameUsuario.valid && (userNameUsuario.dirty || userNameUsuario.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!userNameUsuario.valid && (userNameUsuario.dirty || userNameUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'USUARIOS.USUARIOS.GESTION.REQUERIDOUSERNAME' | translate }}
                                 </label>
                             </div>
@@ -95,31 +122,45 @@
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVEACTUAL' | translate
                                     }}</label>
-                                <input type="text" class="form-control form-input" name="claveUsuario" (ngModelChange)="validarClaveActual($event)" placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}" #claveUsuario="ngModel" required [(ngModel)]="FormRegistro.claveUsuario"
-                                />
+                                <input type="text" class="form-control form-input" name="claveUsuario"
+                                    (ngModelChange)="validarClaveActual($event)"
+                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVEACTUALHOLDER' | translate }}"
+                                    #claveUsuario="ngModel" required [(ngModel)]="FormRegistro.claveUsuario" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVENEW' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="claveNew" [disabled]="isClaveActual" placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVENEWHOLDER' | translate }}" #claveNew="ngModel" required [(ngModel)]="FormRegistro.claveNew" />
+                                <input type="text" class="form-control form-input" name="claveNew"
+                                    [disabled]="isClaveActual"
+                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVENEWHOLDER' | translate }}"
+                                    #claveNew="ngModel" required [(ngModel)]="FormRegistro.claveNew" />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.CLAVECONFIRM' | translate
                                     }}</label>
-                                <input type="text" class="form-control form-input" name="claveConfirm" [disabled]="isClaveActual" placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVECONFIRMHOLDER' | translate }}" #claveConfirm="ngModel" required [(ngModel)]="FormRegistro.claveConfirm" />
+                                <input type="text" class="form-control form-input" name="claveConfirm"
+                                    [disabled]="isClaveActual"
+                                    placeholder="{{ 'USUARIOS.USUARIOS.GESTION.CLAVECONFIRMHOLDER' | translate }}"
+                                    #claveConfirm="ngModel" required [(ngModel)]="FormRegistro.claveConfirm" />
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.DESCRIPTION' | translate
                                     }}</label>
-                                <app-text-editor [toolbarType]="tipoEditorTexto" [contentHtml]="FormRegistro.descripcionUsuario ?? ''" (contentHtmlChange)="actualizarDescripcionRegistro($event)" name="descripcionUsuario" [(ngModel)]="FormRegistro.descripcionUsuario" [ngClass]="{'is-invalid': !descripcionUsuario.valid && (descripcionUsuario.dirty || descripcionUsuario.touched || isSubmit)}"
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
+                                    [contentHtml]="FormRegistro.descripcionUsuario ?? ''"
+                                    (contentHtmlChange)="actualizarDescripcionRegistro($event)"
+                                    name="descripcionUsuario" [(ngModel)]="FormRegistro.descripcionUsuario"
+                                    [ngClass]="{'is-invalid': !descripcionUsuario.valid && (descripcionUsuario.dirty || descripcionUsuario.touched || isSubmit)}"
                                     #descripcionUsuario="ngModel" required rows="5">
                                 </app-text-editor>
-                                <label *ngIf="!descripcionUsuario.valid && (descripcionUsuario.dirty || descripcionUsuario.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!descripcionUsuario.valid && (descripcionUsuario.dirty || descripcionUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'USUARIOS.USUARIOS.GESTION.REQUERIDODESCRIPTION' | translate }}
                                 </label>
                             </div>
@@ -132,7 +173,8 @@
                                     <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
                                         {{ 'Seleccionar archivo' | translate }}
                                     </label>
-                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*" id="fileUploadInput" class="form-control form-input d-none" name="fotoUsuario">
+                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
+                                        id="fileUploadInput" class="form-control form-input d-none" name="fotoUsuario">
                                 </div>
                             </div>
                         </div>
@@ -199,8 +241,8 @@
                                 <br />
                                 <h4 class="titles">{{ 'USUARIOS.USUARIOS.GESTION.ROLES' | translate }}</h4>
                                 <h6 class="sub-titles">{{ 'USUARIOS.USUARIOS.GESTION.ROLESTEXT' | translate }}</h6>
-
-                                <button type="button" class="btn btn-primary btn-NuevoRegistro transition" (click)="btnAsociarTodosRolesClick()" [disabled]="!tipoRolSeleccionado">
+                                <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
+                                    (click)="btnAsociarTodosRolesClick()" [disabled]="!tipoRolSeleccionado">
                                     {{ 'PLATAFORMA.ALLDATA' | translate }}
                                 </button>
                                 <br><br>
@@ -208,49 +250,116 @@
                             <div class="row" *ngIf="tipoRolSeleccionado == 'suscriptor'">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="codigoAplicacion"> {{
-                                            'USUARIOS.ROLES.GESTION.SUITE' |
-                                            translate }}</label>
-                                        <select class="form-control input-md form-select" style="cursor: pointer" name="codigoAplicacion" id="codigoAplicacion" ngModel [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }" #codigoAplicacion="ngModel"
-                                            required (ngModelChange)="onAplicacionchangeClick($event)">
-                                            <option value="">{{ 'USUARIOS.ROLES.GESTION.APLICACIONHOLDER' |
-                                                translate }}</option>
-                                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">
-                                                {{ app.nombreAplicacion }}</option>
+                                        <label class="form-control-label" for="codigoAplicacion">{{
+                                            'USUARIOS.USUARIOS.GESTION.APLICACION' | translate }}</label>
+                                        <select class="form-control input-md form-select" style="cursor: pointer"
+                                            name="codigoAplicacion" id="codigoAplicacion"
+                                            [(ngModel)]="codAplicacion"
+                                            [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
+                                            #codigoAplicacion="ngModel" required
+                                            (ngModelChange)="onAplicacionchangeClick($event)">
+                                            <option value="">{{ 'USUARIOS.USUARIOS.GESTION.APLICACIONHOLDER' | translate
+                                                }}
+                                            </option>
+                                            <option [value]="app.codigoAplicacion" *ngFor="let app of aplicaciones">{{
+                                                app.nombreAplicacion }}</option>
                                         </select>
+                                        <label
+                                            *ngIf="!codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit)"
+                                            class="error jquery-validation-error small form-text invalid-feedback">
+                                            {{ 'USUARIOS.USUARIOS.GESTION.REQUERIDOAPLICACION' | translate }}
+                                        </label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-control-label" for="codigoSuite"> {{
-                                            'USUARIOS.ROLES.GESTION.SUITE' |
-                                            translate }}</label>
-                                        <select class="form-control input-md form-select" style="cursor: pointer" name="codigoSuite" id="codigoSuite" ngModel [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }" #codigoSuite="ngModel" required
+                                            'USUARIOS.USUARIOS.GESTION.SUITE' | translate }}
+                                        </label>
+                                        <select class="form-control form-input" style="cursor: pointer"
+                                            name="codigoSuite" id="codigoSuite"
+                                            [(ngModel)]="codSuite"
+                                            [ngClass]="{ 'is-invalid': !codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit) }"
+                                            #codigoSuite="ngModel" required
                                             (ngModelChange)="onSuiteChangeClick($event)">
-                                            <option value="">{{ 'USUARIOS.ROLES.GESTION.APLICACIONHOLDER' |
-                                                translate }}</option>
-                                            <option [value]="app.codigoAplicacion" *ngFor="let app of suites">{{
-                                                app.nombreSuite }}</option>
+                                            <option value="">{{ 'USUARIOS.USUARIOS.GESTION.PLACEHOLDERSUITE' | translate
+                                                }}
+                                            </option>
+                                            <option [value]="sui.codigoSuite" *ngFor="let sui of suites"> {{
+                                                sui.nombreSuite
+                                                }}
+                                            </option>
                                         </select>
+                                        <label
+                                            *ngIf="!codigoSuite.valid && (codigoSuite.dirty || codigoSuite.touched || isSubmit)"
+                                            class="error jquery-validation-error small form-text invalid-feedback">
+                                            {{ 'USUARIOS.USUARIOS.GESTION.REQUERIDOSUITE' | translate }}
+                                        </label>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-12" *ngIf="tipoRolSeleccionado == 'plataforma'">
-
-                                    </div> -->
                             <div class="col-md-6 mb-2" *ngFor="let role of roles; let i = index">
                                 <div class="form-check custom-check-form">
-                                    <input class="form-check-input" type="checkbox" [(ngModel)]="role.checked" (change)="toggleRolSeleccionado(role)" [disabled]="!tipoRolSeleccionado" [name]="'roleCheck_' + i" [id]="'role_' + i">
+                                    <input class="form-check-input" type="checkbox" [(ngModel)]="role.checked"
+                                        (change)="toggleRolSeleccionado(role)" [disabled]="!tipoRolSeleccionado"
+                                        [name]="'roleCheck_' + i" [id]="'role_' + i">
 
-                                    <label class="form-check-label text-white ml-2" [for]="'role_' + i" style="cursor: pointer;">
+                                    <label class="form-check-label text-white ml-2" [for]="'role_' + i"
+                                        style="cursor: pointer;">
                                         {{ role.nombreRole }}
                                     </label>
                                 </div>
                             </div>
                             <br><br>
-                        </div>
-                        <div *ngIf="roles && roles.length == 0">
-                            <br><br>
+                            <div class="row mt-4" *ngIf="rolesAsignadosAlUsuario.length > 0">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <label class="form-control-label"><i class="feather icon-eye"></i> {{ 'USUARIOS.USUARIOS.GESTION.TITULORESUMENROLES' | translate }}</label>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label class="form-control-label">
+                                                        <strong>{{ 'USUARIOS.USUARIOS.GESTION.ROLESPLATAFORMA' | translate }}</strong>
+                                                    </label>
+                                                    <div *ngIf="rolesSeleccionadosPlataforma.length === 0" class="text-muted small">
+                                                        {{ 'USUARIOS.USUARIOS.GESTION.SINSELECCIONAR' | translate }}
+                                                    </div>
+
+                                                    <div class="d-flex flex-column">
+                                                        <div *ngFor="let rol of rolesSeleccionadosPlataforma" class="mb-1 p-1">
+                                                            <span>{{ rol.nombreRole }}</span>
+                                                            <i class="feather icon-x text-danger" style="cursor: pointer;"
+                                                            (click)="eliminarRolDesdeResumen(rol)"
+                                                            title="{{ 'USUARIOS.USUARIOS.GESTION.ELIMINARLIST' | translate }}"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 border-left"> <label class="form-control-label">
+                                                        <strong>{{ 'USUARIOS.USUARIOS.GESTION.ROLESSUSCRIPTOR' | translate }}</strong>
+                                                    </label>
+                                                    <div *ngIf="rolesSeleccionadosSuscriptor.length === 0" class="text-muted small">
+                                                        {{ 'USUARIOS.USUARIOS.GESTION.SINSELECCIONAR' | translate }}
+                                                    </div>
+
+                                                    <div class="d-flex flex-column">
+                                                        <div *ngFor="let rol of rolesSeleccionadosSuscriptor" class="mb-1 p-1">
+                                                            <span>
+                                                                <small class="text-color"><strong>[{{ obtenerNombreApp(rol.codigoAplicacion) + ' - ' + obtenerNombreSuite(rol.codigoSuite) }}]</strong></small>
+                                                                {{ rol.nombreRole }}
+                                                            </span>
+                                                            <i class="feather icon-x text-danger" style="cursor: pointer;"
+                                                            (click)="eliminarRolDesdeResumen(rol)"
+                                                            title="{{ 'USUARIOS.USUARIOS.GESTION.ELIMINARLIST' | translate }}"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -258,12 +367,3 @@
         </div>
     </div>
 </div>
-<!-- <select class="form-control input-md form-select"
-        style="cursor: pointer"
-        name="codigoAplicacion"
-        id="codigoAplicacion"
-        ngModel
-        [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
-        #codigoAplicacion="ngModel"
-        required
-        (ngModelChange)="onAplicacionchangeClick($event)" -->
