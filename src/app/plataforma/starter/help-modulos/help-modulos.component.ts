@@ -13,11 +13,12 @@ import {
   PtlTiposGaleriaService,
   LocalStorageService
 } from 'src/app/theme/shared/service'
+import { LanguageSelectorComponent } from "src/app/theme/shared/components/language-selector/language-selector.component";
 
 @Component({
   selector: 'app-help-modulos',
   standalone: true,
-  imports: [NavBarComponent, BibliotecaComponent],
+  imports: [NavBarComponent, BibliotecaComponent, LanguageSelectorComponent],
   templateUrl: './help-modulos.component.html',
   styleUrl: './help-modulos.component.scss'
 })

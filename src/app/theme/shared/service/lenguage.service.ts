@@ -54,6 +54,10 @@ export class LanguageService {
     return this._idiomas.asObservable()
   }
 
+    getRegistrosActuales (): PTLIdioma[] {
+      return this._idiomas.getValue()
+    }
+
   cargarRegistros () {
     console.log('Consultando y ordenando actividadesRoles del servidor...')
     const url = `${base_url}/idiomas`

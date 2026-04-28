@@ -123,7 +123,7 @@ export class UnlockScreenComponent implements OnInit {
     }
 
     cancelarUnlock() {
-        this.router.navigate(['/frontal/lock-screen']);
+        this.router.navigate(['/starter/lock-screen']);
     }
 
 }
