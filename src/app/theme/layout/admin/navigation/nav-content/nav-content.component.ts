@@ -51,12 +51,12 @@ export class NavContentComponent implements OnInit, AfterViewInit {
 
     this._navigationService.getNavigationItems();
     this.menuItems$ = this._navigationService.menuItems$;
-    this.menuSubscription = this.menuItems$.subscribe(items => {
-        // console.log('Todos los items del menu', items);
-      if (items && items.length > 0) {
-        // console.log('Primer elemento del menú (Suite/Group):', items);
-      }
-    });
+    // this.menuSubscription = this.menuItems$.subscribe(items => {
+    //     // console.log('Todos los items del menu', items);
+    //   if (items && items.length > 0) {
+    //     // console.log('Primer elemento del menú (Suite/Group):', items);
+    //   }
+    // });
     if (this.windowWidth < 992) {
       GradientConfig.layout = 'vertical';
       setTimeout(() => {

@@ -110,7 +110,8 @@ export class ModulosComponent implements OnInit, OnDestroy {
 
   consultarAplicacines () {
     this.subscriptions.add(
-      this._aplicacionesService.getAplicaciones()
+      this._aplicacionesService
+        .getAplicaciones()
         .pipe(
           tap((resp: any) => {
             if (resp.ok) {
@@ -129,7 +130,8 @@ export class ModulosComponent implements OnInit, OnDestroy {
 
   consultarSuites (codApp?: string): void {
     this.subscriptions.add(
-      this._suitesService.geSuitesAP()
+      this._suitesService
+        .geSuitesAP()
         .pipe(
           tap((resp: any) => {
             if (resp.ok) {
@@ -152,7 +154,8 @@ export class ModulosComponent implements OnInit, OnDestroy {
 
   consultarModulosPadre () {
     this.subscriptions.add(
-      this._registrosService.getRegistros()
+      this._registrosService
+        .getRegistros()
         .pipe(
           tap((resp: any) => {
             if (resp.ok) {
@@ -187,7 +190,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.listBibliotecas = resp.biibliotecas.filter((x: { estadoBiblioteca: boolean }) => x.estadoBiblioteca == true)
+            this.listBibliotecas = resp.bibliotecas.filter((x: { estadoBiblioteca: boolean }) => x.estadoBiblioteca == true)
             console.log('Todos las bibliotecas padre', this.listBibliotecas)
             return
           }
@@ -210,17 +213,20 @@ export class ModulosComponent implements OnInit, OnDestroy {
     this.modulosTransformados$ = this._registrosService.modulos$.pipe(
       switchMap((mods: PTLModuloAP[]) => {
         if (!mods) return of([])
-        console.log('todas las modulos', mods)
         const transformedModulos = mods.map((mod: any) => {
           mod.nomEstado = mod.estadoModulo ? 'Activo' : 'Inactivo'
           mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos'
           mod.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == mod.codigoAplicacion)[0].nombreAplicacion || ''
           mod.nomSuite = this.suites.filter(x => x.codigoSuite == mod.codigoSuite)[0].nombreSuite || ''
-        //   mod.nomBiblioteca = this.listBibliotecas.filter(x => x.codigoModulo == mod.codigoModulo)[0].nombreBiblioteca || ''
+          console.log('listBibliotecas', this.listBibliotecas)
+          const biblioteca = this.listBibliotecas.filter(x => x.codigoModulo == mod.codigoModulo)[0]
+          mod.codigoBiblioteca = biblioteca != undefined ? biblioteca.codigoBiblioteca : ''
+          mod.nomBiblioteca = biblioteca != undefined ? biblioteca.nombreBiblioteca : ''
           mod.nomPadre = mod.codigoPadre != '0' ? this.modulosPadre.filter(x => x.codigoModulo == mod.codigoPadre)[0].nombreModulo : ''
           return mod as PTLModuloAP
         })
         this.modulos = transformedModulos
+        console.log('todas las modulos', this.modulos)
         return of(transformedModulos)
       }),
       catchError(err => {

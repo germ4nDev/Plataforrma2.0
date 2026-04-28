@@ -1,149 +1,143 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @angular-eslint/contextual-lifecycle */
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { PtlAplicacionesService } from './ptlaplicaciones.service';
-import { PtlSuitesAPService } from './ptlsuites-ap.service';
-import { PtlmodulosApService } from './ptlmodulos-ap.service';
-import { Subscription, Observable, BehaviorSubject, tap, catchError, of, Subject } from 'rxjs';
-import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model';
-import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model';
-import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model';
-import { LocalStorageService } from './local-storage.service';
-import { TranslateService } from '@ngx-translate/core';
-import { LanguageService } from './lenguage.service';
-import { Router } from '@angular/router';
-import { NavigationItem } from '../_helpers/models/Navigation.model';
+import { Injectable, OnDestroy, OnInit } from '@angular/core'
+import { PtlmodulosApService } from './ptlmodulos-ap.service'
+import { Subscription, Observable, BehaviorSubject, tap, catchError, of, Subject } from 'rxjs'
+import { PTLAplicacionModel } from '../_helpers/models/PTLAplicacion.model'
+import { PTLModuloAP } from '../_helpers/models/PTLModuloAP.model'
+import { PTLSuiteAPModel } from '../_helpers/models/PTLSuiteAP.model'
+import { LocalStorageService } from './local-storage.service'
+import { TranslateService } from '@ngx-translate/core'
+import { LanguageService } from './lenguage.service'
+import { Router } from '@angular/router'
+import { NavigationItem } from '../_helpers/models/Navigation.model'
+import { PtlBibliotecasService } from './ptlbibliotecas.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class NavigationService implements OnInit, OnDestroy {
-  aplicaciones: PTLAplicacionModel[] = [];
-  suites: PTLSuiteAPModel[] = [];
-  suitesApp: PTLSuiteAPModel[] = [];
-  modulos: PTLModuloAP[] = [];
-  modulosSu: PTLModuloAP[] = [];
-  modulosSu2: PTLModuloAP[] = [];
-  aplicacionesSub?: Subscription;
-  suitesSub?: Subscription;
-  modulosSub?: Subscription;
-  aplicacion: PTLAplicacionModel = new PTLAplicacionModel();
-  suite: PTLSuiteAPModel = new PTLSuiteAPModel();
-  modulo: PTLModuloAP = new PTLModuloAP();
-  modulo2: PTLModuloAP = new PTLModuloAP();
+  aplicaciones: PTLAplicacionModel[] = []
+  suites: PTLSuiteAPModel[] = []
+  suitesApp: PTLSuiteAPModel[] = []
+  modulos: PTLModuloAP[] = []
+  modulosSu: PTLModuloAP[] = []
+  modulosSu2: PTLModuloAP[] = []
+  aplicacionesSub?: Subscription
+  suitesSub?: Subscription
+  modulosSub?: Subscription
+  aplicacion: PTLAplicacionModel = new PTLAplicacionModel()
+  suite: PTLSuiteAPModel = new PTLSuiteAPModel()
+  modulo: PTLModuloAP = new PTLModuloAP()
+  modulo2: PTLModuloAP = new PTLModuloAP()
 
-  menuSubject = new BehaviorSubject<NavigationItem[]>([]);
-  menuItems$: Observable<NavigationItem[]> = this.menuSubject.asObservable();
-  langSubscription: Subscription | undefined;
-  lockScreenSubject = new Subject<string>();
-  lockScreenEvent$: Observable<string> = this.lockScreenSubject.asObservable();
+  menuSubject = new BehaviorSubject<NavigationItem[]>([])
+  menuItems$: Observable<NavigationItem[]> = this.menuSubject.asObservable()
+  langSubscription: Subscription | undefined
+  lockScreenSubject = new Subject<string>()
+  lockScreenEvent$: Observable<string> = this.lockScreenSubject.asObservable()
 
-  constructor(
+  constructor (
     private router: Router,
-    private _aplicacionesService: PtlAplicacionesService,
-    private _suitesService: PtlSuitesAPService,
     private _modulosService: PtlmodulosApService,
+    private _bibliotecasService: PtlBibliotecasService,
     private _localStorageService: LocalStorageService,
     private _languageService: LanguageService,
     private translate: TranslateService
   ) {
-    this.langSubscription = this._languageService.currentLang$.subscribe((lang) => {
-      console.log(`[NavigationService] Detectado cambio de idioma a: ${lang}. Actualizando menú.`);
-      this.getNavigationItems();
-    });
-    this.consultarModulos();
+    this.langSubscription = this._languageService.currentLang$.subscribe(lang => {
+      console.log(`[NavigationService] Detectado cambio de idioma a: ${lang}. Actualizando menú.`)
+      this.getNavigationItems()
+    })
   }
 
-  ngOnInit() {
-    this.consultarAplicacines();
-    this.consultarSuites();
-  }
+  ngOnInit () {}
 
-  ngOnDestroy(): void {
+  ngOnDestroy (): void {
     if (this.langSubscription) {
-      this.langSubscription.unsubscribe();
+      this.langSubscription.unsubscribe()
     }
   }
 
-  emitLockScreen(message: string): void {
+  emitLockScreen (message: string): void {
     // console.log('Navigation: Emitiendo evento de bloqueo:', message);
-    this.lockScreenSubject.next(message);
+    this.lockScreenSubject.next(message)
   }
 
-  private getAbsoluteUrl(url: string | undefined): string | undefined {
+  private getAbsoluteUrl (url: string | undefined): string | undefined {
     if (!url) {
-      return undefined;
+      return undefined
     }
-    return url.startsWith('/') ? url : `/${url}`;
+    return url.startsWith('/') ? url : `/${url}`
   }
 
-  private createTranslationKey(base: string, name: string): string {
-    if (!name) return `${base}.DEFAULT`;
+  private createTranslationKey (base: string, name: string): string {
+    if (!name) return `${base}.DEFAULT`
     const safeName = name
       .toUpperCase()
       .replace(/[^A-Z0-9]/g, '_')
-      .replace(/_{2,}/g, '_');
-    return `${base}.${safeName}`;
+      .replace(/_{2,}/g, '_')
+    return `${base}.${safeName}`
   }
 
-  private sortMenuItems(items: NavigationItem[]): NavigationItem[] {
+  private sortMenuItems (items: NavigationItem[]): NavigationItem[] {
     if (!items || items.length === 0) {
-      return [];
+      return []
     }
 
     items.sort((a, b) => {
-      const titleA = a.title || '';
-      const titleB = b.title || '';
-      return titleA.localeCompare(titleB, 'es', { sensitivity: 'base' });
-    });
+      const titleA = a.title || ''
+      const titleB = b.title || ''
+      return titleA.localeCompare(titleB, 'es', { sensitivity: 'base' })
+    })
 
-    items.forEach((item) => {
+    items.forEach(item => {
       if (item.children && item.children.length > 0) {
-        item.children = this.sortMenuItems(item.children);
+        item.children = this.sortMenuItems(item.children)
       }
-    });
+    })
 
-    return items;
+    return items
   }
 
-  private consultarNodosHijos(codModulo: string, modulos: PTLModuloAP[]) {
-    const hijos = modulos.filter((x) => x.codigoPadre == codModulo);
-    return hijos;
+  private consultarNodosHijos (codModulo: string, modulos: PTLModuloAP[]) {
+    const hijos = modulos.filter(x => x.codigoPadre == codModulo)
+    return hijos
   }
 
-  private buildMenuItems(modulosPadre: PTLModuloAP[], todosLosModulos: PTLModuloAP[]): NavigationItem[] {
-    const menuItems: NavigationItem[] = [];
+  private buildMenuItems (modulosPadre: PTLModuloAP[], todosLosModulos: PTLModuloAP[]): NavigationItem[] {
+    const menuItems: NavigationItem[] = []
     modulosPadre.forEach((modulo: any) => {
-      const childrenNodes = this.consultarNodosHijos(modulo.codigoModulo, todosLosModulos);
-      const hasChildren = modulo.hijos == true;
-      const type: 'collapse' | 'item' = hasChildren ? 'collapse' : 'item';
-      const titleKey = this.translate.instant('PLATAFORMA.MODULOS.' + modulo.translateKey);
+      const childrenNodes = this.consultarNodosHijos(modulo.codigoModulo, todosLosModulos)
+      const hasChildren = modulo.hijos == true
+      const type: 'collapse' | 'item' = hasChildren ? 'collapse' : 'item'
+      const titleKey = this.translate.instant('PLATAFORMA.MODULOS.' + modulo.translateKey)
       const item: NavigationItem = {
         id: modulo.codigoModulo,
         title: titleKey,
         type: type,
         icon: modulo.icon
-      };
-      if (hasChildren) {
-        item.children = this.buildMenuItems(childrenNodes, todosLosModulos);
-      } else {
-        item.url = this.getAbsoluteUrl(modulo.rutaModulo);
       }
-      menuItems.push(item);
-    });
-    return menuItems;
+      if (hasChildren) {
+        item.children = this.buildMenuItems(childrenNodes, todosLosModulos)
+      } else {
+        item.url = this.getAbsoluteUrl(modulo.rutaModulo)
+      }
+      menuItems.push(item)
+    })
+    return menuItems
   }
 
-  private getAplicacionSuiteItems(todosLosModulos: PTLModuloAP[]): NavigationItem[] {
-    const codigoSuiteActual = this.suite.codigoSuite;
-    const modulosDeLaSuite = todosLosModulos.filter((x) => x.codigoSuite === codigoSuiteActual);
+  private getAplicacionSuiteItems (todosLosModulos: PTLModuloAP[]): NavigationItem[] {
+    const codigoSuiteActual = this.suite.codigoSuite
+    const modulosDeLaSuite = todosLosModulos.filter(x => x.codigoSuite === codigoSuiteActual)
     if (modulosDeLaSuite.length === 0) {
-      return [];
+      return []
     }
-    const modulosPadreRaiz = modulosDeLaSuite.filter((x) => x.codigoPadre === '0');
-    let hijosDelNodoSuite = this.buildMenuItems(modulosPadreRaiz, modulosDeLaSuite);
-    hijosDelNodoSuite = this.sortMenuItems(hijosDelNodoSuite);
-    const suiteTitleKey = this.translate.instant('PLATAFORMA.SUITES.' + this.suite.translateKey);
+    const modulosPadreRaiz = modulosDeLaSuite.filter(x => x.codigoPadre === '0')
+    let hijosDelNodoSuite = this.buildMenuItems(modulosPadreRaiz, modulosDeLaSuite)
+    hijosDelNodoSuite = this.sortMenuItems(hijosDelNodoSuite)
+    const suiteTitleKey = this.translate.instant('PLATAFORMA.SUITES.' + this.suite.translateKey)
 
     const nodoSuite: NavigationItem = {
       id: this.suite.codigoSuite || '',
@@ -151,8 +145,8 @@ export class NavigationService implements OnInit, OnDestroy {
       type: 'group',
       icon: 'feather icon-monitor',
       children: hijosDelNodoSuite
-    };
-    return [nodoSuite];
+    }
+    return [nodoSuite]
   }
 
   //   private getPlataformaItems(): NavigationItem[] {
@@ -779,96 +773,45 @@ export class NavigationService implements OnInit, OnDestroy {
   //     ];
   //   }
 
-  consultarAplicacines() {
-    this.aplicacionesSub = this._aplicacionesService
-      .getAplicaciones()
-      .pipe(
-        tap((resp) => {
-          if (resp.ok) {
-            this.aplicaciones = resp.aplicaciones;
-          }
-        }),
-        catchError((err) => {
-          console.error(err);
-          return of([]);
-        })
-      )
-      .subscribe();
-  }
-
-  consultarSuites(): void {
-    this.suitesSub = this._suitesService
-      .geSuitesAP()
-      .pipe(
-        tap((resp) => {
-          if (resp.ok) {
-            this.suites = resp.suites;
-          }
-        }),
-        catchError((err) => {
-          console.error(err);
-          return of([]);
-        })
-      )
-      .subscribe();
-  }
-
-  getNavigationItems(): void {
+  getNavigationItems (): void {
     //// console.log('2');
-    this.aplicacion = this._localStorageService.getAplicaicionLocalStorage();
-    this.suite = this._localStorageService.getSuiteLocalStorage();
-    const codigoApp = this.aplicacion.codigoAplicacion;
+    this.aplicacion = this._localStorageService.getAplicaicionLocalStorage()
+    this.suite = this._localStorageService.getSuiteLocalStorage()
+    const codigoApp = this.aplicacion.codigoAplicacion
     // console.log('==============codigo aplicacion', codigoApp);
     switch (codigoApp) {
       case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
-        this._modulosService.getRegistros().subscribe((data) => {
-          const nuevosModulos = data.modulos;
+        this._modulosService.getRegistros().subscribe(data => {
+          const nuevosModulos = data.modulos
           if (nuevosModulos.length > 0) {
-            const ordenado = nuevosModulos.sort((a:any, b:any) => a.nombreModulo - b.nombreModulo);
-            const menu = this.getAplicacionSuiteItems(ordenado);
-            this.menuSubject.next(menu);
+            const ordenado = nuevosModulos.sort((a: any, b: any) => a.nombreModulo - b.nombreModulo)
+            const menu = this.getAplicacionSuiteItems(ordenado)
+            this.menuSubject.next(menu)
           } else {
-            this.menuSubject.next([]);
+            this.menuSubject.next([])
           }
-        });
-        break;
+        })
+        break
       default:
-        this.menuSubject.next([]);
-        break;
+        this.menuSubject.next([])
+        break
     }
   }
 
-  consultarModulos() {
-    this.modulosSub = this._modulosService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-            console.log('respuesta modulos', resp);
-          if (resp.ok) {
-            this.modulos = resp.modulos;
-          }
-        }),
-        catchError((err) => {
-          console.error(err);
-          return of([]);
-        })
-      )
-      .subscribe();
-  }
-
-  navigateNodoMenu(url: any) {
-    // console.log('todos los modulos', this.modulos);
-    // console.log('navegar a otro mnodulo', url);
-    // // console.log('id', id);
-    const modulo = this.modulos.filter((x) => x.codigoModulo == url.id)[0];
-    // console.log('modulo', modulo);
+  navigateNodoMenu (url: any) {
+    const bibliotecas = this._bibliotecasService.getBibliotecasActuales()
+    const modulos = this._modulosService.getModulosActuales()
+    const modulo = modulos.filter(x => x.codigoModulo == url.id)[0]
+    const biblio = bibliotecas.filter(x => x.codigoModulo == url.id)[0]
     if (modulo) {
-      this._localStorageService.setModuloLocalStorage(modulo);
+      modulo.codigoBiblioteca = biblio.codigoBiblioteca || ''
+      modulo.nomBiblioteca = biblio.nombreBiblioteca || ''
+      this._localStorageService.setModuloLocalStorage(modulo)
     }
     if (modulo.codigoModulo !== undefined) {
-      this.router.navigate([modulo.rutaModulo], { queryParams: { regId: modulo.codigoModulo } });
+      this.router.navigate([modulo.rutaModulo], { queryParams: { regId: modulo.codigoModulo } })
     } else {
-      this.router.navigate([modulo.rutaModulo]);
+      this.router.navigate([modulo.rutaModulo])
     }
   }
 }
