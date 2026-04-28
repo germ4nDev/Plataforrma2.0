@@ -20,11 +20,9 @@
                         </li>
                         <li class="notification">
                             <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-1.jpg"
-                                    alt="Generic placeholder image" />
+                                <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="Generic placeholder image" />
                                 <div class="media-body">
-                                    <p><strong>John Doe</strong><span class="n-time text-muted"><i
-                                                class="icon feather icon-clock"></i>30 min</span></p>
+                                    <p><strong>John Doe</strong><span class="n-time text-muted"><i class="icon feather icon-clock"></i>30 min</span></p>
                                     <p>New ticket Added</p>
                                 </div>
                             </div>
@@ -34,128 +32,167 @@
                         </li>
                         <li class="notification">
                             <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-2.jpg"
-                                    alt="Generic placeholder image" />
+                                <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image" />
                                 <div class="media-body">
-                                    <p><strong>Joseph William</strong><span class="n-time text-muted"><i
-                                                data-feather="clock"></i>30 min</span></p>
+                                    <p><strong>Joseph William</strong><span class="n-time text-muted"><i data-feather="clock"></i>30 min</span></p>
                                     <p>Purchase New Theme and make payment</p>
                                 </div>
                             </div>
                         </li>
                         <li class="notification">
                             <div class="media">
-                                <img class="img-radius" src="assets/images/user/avatar-3.jpg"
-                                    alt="Generic placeholder image" />
+                                <img class="img-radius" src="assets/images/user/avatar-3.jpg" alt="Generic placeholder image" />
                                 <div class="media-body">
-                                    <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i
-                                                class="icon feather icon-clock m-r-10"></i>30 min</span></p>
-                                    <p>currently login</p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="noti-footer">
-                        <a href="javascript:">{{ 'PLATAFORMA.NAVBAR.SHOW' | translate }}</a>
-                    </div>
+                                    <p><strong>Sara Soudein</strong
+                    ><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>30 min</span></p
+                  >
+                  <p>currently login</p>
                 </div>
+              </div>
+            </li>
+          </ul>
+          <div class="noti-footer">
+            <a href="javascript:">{{ 'PLATAFORMA.NAVBAR.SHOW' | translate }}</a>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li (click)="this.visibleUserList = !this.visibleUserList">
+      <div class="dropdown">
+        <a href="javascript:" class="displayChatbox dropdown-toggle">
+          <i class="icon feather icon-mail icon-lg icon-style" title="Mail InBox"></i>
+          <span class="badge bg-success"><span class="sr-only"></span></span>
+        </a>
+      </div>
+    </li>
+    <li>
+      <i
+        class="icon feather icon-monitor icon-lg icon-style"
+        title="{{ 'PLATAFORMA.NAVBAR.EMPRESAS' | translate }}"
+        (click)="empresasScreen()"
+        style="cursor: pointer"
+      ></i>
+    </li>
+    <li>
+      <i
+        class="icon feather icon-grid icon-lg icon-style"
+        title="{{ 'PLATAFORMA.NAVBAR.APLICACIONES' | translate }}"
+        (click)="aplicacionesScreen()"
+        style="cursor: pointer"
+      ></i>
+    </li>
+    <li>
+      <i
+        class="icon feather icon-home icon-lg icon-style"
+        title="{{ 'PLATAFORMA.NAVBAR.SUITES' | translate }}"
+        (click)="suitesScreen()"
+        style="cursor: pointer"
+      ></i>
+    </li>
+    <li>
+      <i
+        class="icon feather icon-help-circle icon-lg icon-style"
+        title="{{ 'PLATAFORMA.NAVBAR.HELP' | translate }}"
+        (click)="helpsClick()"
+        style="cursor: pointer"
+      ></i>
+    </li>
+    <li>
+      <app-language-selector></app-language-selector>
+    </li>
+    <li>
+      <div class="dropdown drp-user" ngbDropdown placement="auto">
+        <a href="javascript:" ngbDropdownToggle>
+          <img src="{{ avatarUsuario }}" class="img-radius wid-40" alt="User-Profile-Image" />
+        </a>
+        <div class="dropdown-menu dropdown-menu-end profile-notification drop-menu" ngbDropdownMenu>
+          <div class="pro-head">
+            <img src="{{ avatarUsuario }}" class="img-radius avatar-panel" alt="User-Profile-Image" />
+          </div>
+          <ul class="pro-body">
+            <div class="text-center">
+              <p style="font-size: large">{{ nombreUsuario }}</p>
             </div>
-        </li>
-        <li (click)="this.visibleUserList = !this.visibleUserList">
-            <div class="dropdown">
-                <a href="javascript:" class="displayChatbox dropdown-toggle">
-                    <i class="icon feather icon-mail icon-lg icon-style" title="Mail InBox"></i>
-                    <span class="badge bg-success"><span class="sr-only"></span></span>
-                </a>
-            </div>
-        </li>
-        <li>
-            <i class="icon feather icon-monitor icon-lg icon-style"
-                title="{{'PLATAFORMA.NAVBAR.EMPRESAS' | translate }}" (click)="empresasScreen()"
-                style="cursor: pointer;"></i>
-        </li>
-        <li>
-            <i class="icon feather icon-grid icon-lg icon-style"
-                title="{{'PLATAFORMA.NAVBAR.APLICACIONES' | translate }}" (click)="aplicacionesScreen()"
-                style="cursor: pointer;"></i>
-        </li>
-        <li>
-            <i class="icon feather icon-home icon-lg icon-style" title="{{'PLATAFORMA.NAVBAR.SUITES' | translate }}"
-                (click)="suitesScreen()" style="cursor: pointer;"></i>
-        </li>
-        <li>
-            <app-language-selector></app-language-selector>
-        </li>
-        <li>
-            <div class="dropdown drp-user" ngbDropdown placement="auto">
+            <li
+              ><a href="javascript:" class="dropdown-item" (click)="perfilUsuario()"
+                ><i class="feather icon-user"></i> {{ 'PLATAFORMA.NAVBAR.PROFILE' | translate }}</a
+              ></li
+            >
+            <li
+              ><a href="javascript:" class="dropdown-item"
+                ><i class="feather icon-mail"></i> {{ 'PLATAFORMA.NAVBAR.MESSAGES' | translate }}</a
+              ></li
+            >
+            <li
+              ><a href="javascript:" class="dropdown-item" (click)="lockscreen()"
+                ><i class="feather icon-lock"></i> {{ 'PLATAFORMA.NAVBAR.LOCK' | translate }}</a
+              ></li
+            >
+            <li>
+              <a href="javascript:" class="dropdown-item" (click)="toggleTheme()">
+                <i class="{{ iconoTema }} icon-lg"></i>{{ themeTextKey | translate }}
+              </a>
+            </li>
+            <li>
+              <div class="dropdown" ngbDropdown placement="auto">
                 <a href="javascript:" ngbDropdownToggle>
-                    <img src="{{ avatarUsuario }}" class="img-radius wid-40" alt="User-Profile-Image" />
+                  <i class="icon feather icon-droplet icon-lg" title="Color del Navbar"></i
+                  >{{ 'PLATAFORMA.NAVBAR.NAVBARCOLOR' | translate }}
                 </a>
-                <div class="dropdown-menu dropdown-menu-end profile-notification drop-menu" ngbDropdownMenu>
-                    <div class="pro-head">
-                        <img src="{{ avatarUsuario }}" class="img-radius avatar-panel" alt="User-Profile-Image" />
-                    </div>
-                    <ul class="pro-body">
-                        <div class="text-center">
-                            <p style="font-size: large;">{{ nombreUsuario }}</p>
-                        </div>
-                        <li><a href="javascript:" class="dropdown-item" (click)="perfilUsuario()"><i
-                                    class="feather icon-user"></i> {{'PLATAFORMA.NAVBAR.PROFILE' | translate }}</a></li>
-                        <li><a href="javascript:" class="dropdown-item"><i class="feather icon-mail"></i> {{
-                                'PLATAFORMA.NAVBAR.MESSAGES' | translate }}</a></li>
-                        <li><a href="javascript:" class="dropdown-item" (click)="lockscreen()"><i
-                                    class="feather icon-lock"></i> {{
-                                'PLATAFORMA.NAVBAR.LOCK' | translate }}</a></li>
-                        <li>
-                            <a href="javascript:" class="dropdown-item" (click)="toggleTheme()">
-                                <i class="{{ iconoTema }} icon-lg"></i>{{ themeTextKey | translate }}
-                            </a>
-                        </li>
-                        <li>
-                            <div class="dropdown" ngbDropdown placement="auto">
-                                <a href="javascript:" ngbDropdownToggle>
-                                    <i class="icon feather icon-droplet icon-lg" title="Color del Navbar"></i>{{
-                                    'PLATAFORMA.NAVBAR.NAVBARCOLOR' | translate }}
-                                </a>
-                                <div ngbDropdownMenu class="dropdown-menu-end drop-menu">
-                                    <ul class="pro-body">
-                                        <li class="d-flex flex-wrap p-2 gap-2">
-                                            <div *ngFor="let color of colorPalette; let i = index" class="color-box"
-                                                [style.background-color]="color.color"
-                                                [class.selected]="color.color === navbarColor"
-                                                (click)="navbarColor = color.color; onNavbarColorChange(i)"
-                                                [title]="color.color">
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <hr>
-                        <li><a href="javascript:" class="dud-logout" title="Logout" (click)="logout()">
-                                <i class="feather icon-log-out"></i>{{
-                                'PLATAFORMA.NAVBAR.CLOSE_SESSION' | translate }}</a></li>
-                    </ul>
+                <div ngbDropdownMenu class="dropdown-menu-end drop-menu">
+                  <ul class="pro-body">
+                    <li class="d-flex flex-wrap p-2 gap-2">
+                      <div
+                        *ngFor="let color of colorPalette; let i = index"
+                        class="color-box"
+                        [style.background-color]="color.color"
+                        [class.selected]="color.color === navbarColor"
+                        (click)="navbarColor = color.color; onNavbarColorChange(i)"
+                        [title]="color.color"
+                      >
+                      </div>
+                    </li>
+                  </ul>
                 </div>
-            </div>
-        </li>
-    </ul>
-    <section *ngIf="visibleUserList && !gradientConfig.isRtlLayout" class="header-user-list"
-        [ngClass]="{ open: visibleUserList }" [@slideInOutLeft]>
-        <app-chat-user-list (ChatToggle)="onChatToggle($event)"
-            (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"></app-chat-user-list>
-    </section>
-    <section *ngIf="chatMessage && !gradientConfig.isRtlLayout" class="header-chat" [ngClass]="{ open: chatMessage }"
-        [@slideInOutLeft]>
-        <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
-    </section>
-    <section *ngIf="visibleUserList && gradientConfig.isRtlLayout" class="header-user-list"
-        [ngClass]="{ open: visibleUserList }" [@slideInOutRight]>
-        <app-chat-user-list (ChatToggle)="onChatToggle($event)"
-            (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"></app-chat-user-list>
-    </section>
-    <section *ngIf="chatMessage && gradientConfig.isRtlLayout" class="header-chat" [ngClass]="{ open: chatMessage }"
-        [@slideInOutRight]>
-        <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
-    </section>
+              </div>
+            </li>
+            <hr />
+            <li
+              ><a href="javascript:" class="dud-logout" title="Logout" (click)="logout()">
+                <i class="feather icon-log-out"></i>{{ 'PLATAFORMA.NAVBAR.CLOSE_SESSION' | translate }}</a
+              ></li
+            >
+          </ul>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <section
+    *ngIf="visibleUserList && !gradientConfig.isRtlLayout"
+    class="header-user-list"
+    [ngClass]="{ open: visibleUserList }"
+    [@slideInOutLeft]
+  >
+    <app-chat-user-list
+      (ChatToggle)="onChatToggle($event)"
+      (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"
+    ></app-chat-user-list>
+  </section>
+  <section *ngIf="chatMessage && !gradientConfig.isRtlLayout" class="header-chat" [ngClass]="{ open: chatMessage }" [@slideInOutLeft]>
+    <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
+  </section>
+  <section
+    *ngIf="visibleUserList && gradientConfig.isRtlLayout"
+    class="header-user-list"
+    [ngClass]="{ open: visibleUserList }"
+    [@slideInOutRight]
+  >
+    <app-chat-user-list
+      (ChatToggle)="onChatToggle($event)"
+      (ChatCollapse)="visibleUserList = !visibleUserList; chatMessage = false"
+    ></app-chat-user-list>
+  </section>
+  <section *ngIf="chatMessage && gradientConfig.isRtlLayout" class="header-chat" [ngClass]="{ open: chatMessage }" [@slideInOutRight]>
+    <app-chat-msg (ChatToggle)="chatMessage = !chatMessage" [friendId]="friendId"></app-chat-msg>
+  </section>
 </div>

@@ -78,7 +78,7 @@ export class NavItemComponent {
   }
 
   onNavigareClick(url: any) {
-    // console.log('navegar a esta mierda', url);
+    // console.log('navegar a esta ruta', url);
     this._navigationService.navigateNodoMenu(url);
   }
 }

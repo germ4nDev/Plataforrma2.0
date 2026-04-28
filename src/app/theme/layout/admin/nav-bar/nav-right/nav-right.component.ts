@@ -190,6 +190,10 @@ export class NavRightComponent implements DoCheck, OnInit {
     this.router.navigate(['/starter/inicio-suites']);
   }
 
+  helpsClick() {
+    this.router.navigate(['/starter/help-modulos']);
+  }
+
   logout() {
     this.authenticationService.logout();
   }
