@@ -69,7 +69,7 @@ suscriptor = ''
 
   cargarDatos (): void {
     this.subscriptions.add(
-      this._bibliotecaService.cargarBiblioteca().subscribe(
+      this._bibliotecaService.cargarBibliotecas().subscribe(
         () => console.log('Datos de Tipos de Galería actualizados'),
         err => console.error('Error al cargar Tipos de Galería:', err)
       )

@@ -104,7 +104,6 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
     this.consultarAplicaciones()
     this.consultarSuites()
     this.consultarMLodulos()
-    this.consultarBibliotecas()
     this._layoutInitializer.applyLayout()
     // TODO Replicar en todos los modulos de gestion de datos
     this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
@@ -204,25 +203,6 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
       .subscribe()
   }
 
-  consultarBibliotecas () {
-    this.bibliotecasSub = this._biblioecasService
-      .getBibliotecas()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            this.listBibliotecas = resp.biibliotecas.filter((x: { estadoBiblioteca: boolean }) => x.estadoBiblioteca == true)
-            console.log('Todos las bibliotecas padre', this.listBibliotecas)
-            return
-          }
-        }),
-        catchError(err => {
-          console.log('Ha ocurrido un error', err)
-          return of(null)
-        })
-      )
-      .subscribe()
-  }
-
   onAplicacionChangeClick (event: any) {
     const value = event.target.value
     const app = this.aplicaciones.filter(x => x.codigoAplicacion == value)[0]
@@ -240,11 +220,6 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
   onCodigoPadreChangeClick (event: any) {
     const value = event.target.value
     this.FormRegistro.codigoPadre = value || ''
-  }
-
-  onCodigoBibliotecaChangeClick (event: any) {
-    const value = event.target.value
-    this.FormRegistro.codigoBiblioteca = value || ''
   }
 
   actualizarDescripcionVersion (nuevoContenido: string): void {
