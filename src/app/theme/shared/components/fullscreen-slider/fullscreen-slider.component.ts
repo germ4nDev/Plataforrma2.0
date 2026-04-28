@@ -45,7 +45,9 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
         nombreslider: 'Ner Image',
         urlSlider: 'imagen-inicio.png',
         imageSlider: this._uploadService.getFilePath(this.suscriptor, 'sliders', 'imagen-inicio.png')
-      };
+
+    };
+    console.log('que me trae el color',newImage);
       this.images.push(newImage);
     } else if (this.tipoSlider == 3) {
       console.log('slides', this.slides);
@@ -73,6 +75,8 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
           if (resp.ok) {
             resp.slidersInicio.forEach((slider: any) => {
               slider.imageSlider = this._uploadService.getFilePath(this.suscriptor, 'sliders', slider.urlSlider);
+            console.log('slides', slider.imageSlider);
+
             });
             this.images = resp.slidersInicio;
             this.startAutoSlide();
