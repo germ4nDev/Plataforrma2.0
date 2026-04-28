@@ -15,23 +15,23 @@ const base_url = environment.apiUrl
   providedIn: 'root'
 })
 export class PtlBibliotecasService {
-  private _biblioteca = new BehaviorSubject<PTLBiblioteca[]>([])
-  private _bibliotecaChange = new Subject<any>()
-  bibliotecaChange$ = this._bibliotecaChange.asObservable()
+  private _bibliotecas = new BehaviorSubject<PTLBiblioteca[]>([])
+  private _bibliotecasChange = new Subject<any>()
+  bibliotecasChange$ = this._bibliotecasChange.asObservable()
 
   constructor (private http: HttpClient, private socketService: SocketService, private _localstorageService: LocalStorageService) {
     this.socketService.listen('biblioteca-actualizada').subscribe({
       next: payload => {
         console.log('Evento de Socket.IO recibido:', payload.msg)
-        this._bibliotecaChange.next(payload)
-        this.cargarBiblioteca().subscribe()
+        this._bibliotecasChange.next(payload)
+        this.cargarBibliotecas().subscribe()
       },
       error: err => console.error('Error en la escucha de sockets:', err)
     })
   }
 
   get biblioteca$ (): Observable<PTLBiblioteca[]> {
-    return this._biblioteca.asObservable()
+    return this._bibliotecas.asObservable()
   }
 
   getBibliotecas () {
@@ -48,7 +48,7 @@ export class PtlBibliotecasService {
     )
   }
 
-  cargarBiblioteca () {
+  cargarBibliotecas () {
     console.log('Consultando y ordenando biblioteca del servidor...')
     const url = `${base_url}/bibliotecas`
     return this.http.get(url).pipe(
@@ -58,7 +58,7 @@ export class PtlBibliotecasService {
         return bibliotecas.sort((a: any, b: any) => (a.nombreBiblioteca || '').localeCompare(b.nombreBiblioteca || ''))
       }),
       tap(bibliotecaOrdenada => {
-        this._biblioteca.next(bibliotecaOrdenada)
+        this._bibliotecas.next(bibliotecaOrdenada)
       })
     )
   }

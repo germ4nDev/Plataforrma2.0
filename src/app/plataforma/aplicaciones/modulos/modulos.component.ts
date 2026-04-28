@@ -216,7 +216,7 @@ export class ModulosComponent implements OnInit, OnDestroy {
           mod.nomHijos = mod.hijos ? 'Con Hijos' : 'Sin Hijos'
           mod.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == mod.codigoAplicacion)[0].nombreAplicacion || ''
           mod.nomSuite = this.suites.filter(x => x.codigoSuite == mod.codigoSuite)[0].nombreSuite || ''
-          mod.nomBiblioteca = this.listBibliotecas.filter(x => x.codigoBiblioteca == mod.codigoBiblioteca)[0].nombreBiblioteca || ''
+        //   mod.nomBiblioteca = this.listBibliotecas.filter(x => x.codigoModulo == mod.codigoModulo)[0].nombreBiblioteca || ''
           mod.nomPadre = mod.codigoPadre != '0' ? this.modulosPadre.filter(x => x.codigoModulo == mod.codigoPadre)[0].nombreModulo : ''
           return mod as PTLModuloAP
         })
