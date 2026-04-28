@@ -15,6 +15,7 @@ export class PTLModuloAP {
     public hijos?: boolean,
     public checked?: boolean,
     public codigoBiblioteca?: string,
+    public nomBiblioteca?: string,
     public codigoUsuarioCreacion?: string,
     public fechaCreacion?: string,
     public codigoUsuarioModificacion?: string,

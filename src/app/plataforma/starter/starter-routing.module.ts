@@ -37,6 +37,10 @@ const routes: Routes = [
       {
         path: 'unlock-screen',
         loadComponent: () => import('./lock-screen/unlock-screen/unlock-screen.component').then((m) => m.UnlockScreenComponent)
+      },
+      {
+        path: 'help-modulos',
+        loadComponent: () => import('./help-modulos/help-modulos.component').then((m) => m.HelpModulosComponent)
       }
     ]
   }

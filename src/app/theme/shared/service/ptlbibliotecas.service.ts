@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core'
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 
 import { map, tap, catchError } from 'rxjs/operators'
-import { throwError } from 'rxjs';
+import { throwError } from 'rxjs'
 import { PTLBiblioteca } from '../_helpers/models/PTLBiblioteca.model' // Asegúrate de que la ruta sea correcta
 import { environment } from 'src/environments/environment'
 import { BehaviorSubject, Observable, Subject } from 'rxjs'
@@ -34,15 +34,19 @@ export class PtlBibliotecasService {
     return this._bibliotecas.asObservable()
   }
 
+  getBibliotecasActuales (): PTLBiblioteca[] {
+    return this._bibliotecas.getValue()
+  }
+
   getBibliotecas () {
-    console.log('Consultando biblioteca')
     const url = `${base_url}/bibliotecas`
     return this.http.get(url).pipe(
       map((resp: any) => {
+        console.log('Consultando TODAS biblioteca', resp.bibliotecas)
         return {
           ok: true,
           // Se asume que el backend ahora devuelve el array en la propiedad 'biblioteca'
-          biblioteca: resp.biblioteca
+          bibliotecas: resp.bibliotecas
         }
       })
     )
@@ -57,8 +61,8 @@ export class PtlBibliotecasService {
         console.log('Todas las bibliotecas', bibliotecas)
         return bibliotecas.sort((a: any, b: any) => (a.nombreBiblioteca || '').localeCompare(b.nombreBiblioteca || ''))
       }),
-      tap(bibliotecaOrdenada => {
-        this._bibliotecas.next(bibliotecaOrdenada)
+      tap(bibliotecasOrdenada => {
+        this._bibliotecas.next(bibliotecasOrdenada)
       })
     )
   }
