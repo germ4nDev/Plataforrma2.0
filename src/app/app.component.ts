@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core'
 import { NavigationEnd, Router } from '@angular/router'
 import {
   AuthenticationService,
+  LanguageService,
   LocalStorageService,
   PtlAplicacionesService,
   PtlBibliotecasService,
   PtlEmpresasScService,
   PtlformatosGaleriaService,
   PtlGaleriasService,
+  PtlidiomasService,
   PtlmodulosApService,
   PTLRolesAPService,
   PtlSuitesAPService,
@@ -45,6 +47,7 @@ export class AppComponent implements OnInit {
     private _formatosGaleriaService: PtlformatosGaleriaService,
     private _tiposGaleriaService: PtlTiposGaleriaService,
     private _empresasSCService: PtlEmpresasScService,
+    private _idiomasService: LanguageService,
     private _suscriptoresService: PTLSuscriptoresService,
     private _rolesAPService: PTLRolesAPService
   ) {}
@@ -132,6 +135,10 @@ export class AppComponent implements OnInit {
       err => console.error('Error al cargar formatosGaleria:', err)
     )
     this._tiposGaleriaService.cargarTiposGaleria().subscribe(
+      () => console.log('** tiposGaleria cargadas y guardadas en el servicio'),
+      err => console.error('Error al cargar tiposGaleria:', err)
+    )
+    this._idiomasService.cargarRegistros().subscribe(
       () => console.log('** tiposGaleria cargadas y guardadas en el servicio'),
       err => console.error('Error al cargar tiposGaleria:', err)
     )

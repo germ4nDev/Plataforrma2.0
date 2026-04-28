@@ -34,6 +34,10 @@ export class PtlidiomasService {
     return this._idiomas.asObservable()
   }
 
+  getRegistrosActuales (): PTLIdioma[] {
+      return this._idiomas.getValue()
+    }
+
   getRegistros () {
     // console.log('4');
     const url = `${base_url}/idiomas`
