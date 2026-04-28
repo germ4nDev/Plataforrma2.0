@@ -44,7 +44,7 @@
                     <div class="row mb-4">
                         <div class="col-md-12">
                             <label class="form-label">{{ 'USUARIOS.ROLES.GESTION.TIPOROLE' | translate }}</label>
-                            <div class="radio-buttons d-flex justify-content-center gap-4">
+                            <div class="radio-buttons">
                                 <label class="radio-button" [ngClass]="{'cursor-blocked': modoEdicion}">
                                     <input name="tipoRol" type="radio" value="plataforma"
                                     [(ngModel)]="tipoRolSeleccionado"
@@ -79,7 +79,7 @@
                         </div>
                         <div class="col-md-6" *ngIf="tipoRolSeleccionado === 'suscriptor'">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoAplicacion">{{'USUARIOS.ROLES.GESTION.APLICACION' | translate }}</label>
+                                <label class="form-control-label" for="codigoAplicacion">{{ 'USUARIOS.ROLES.GESTION.APLICACION' | translate }}</label>
                                 <select class="form-control input-md form-select" style="cursor: pointer" name="codigoAplicacion" id="codigoAplicacion"
                                     [ngClass]="{ 'is-invalid': !codigoAplicacion.valid && (codigoAplicacion.dirty || codigoAplicacion.touched || isSubmit) }"
                                     #codigoAplicacion="ngModel" required [(ngModel)]="FormRegistro.codigoAplicacion"

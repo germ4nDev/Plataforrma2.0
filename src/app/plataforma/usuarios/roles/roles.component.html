@@ -48,7 +48,7 @@
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'MODULOS.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
+                        <small>{{ 'USUARIOS.ROLES.FILTROS.FILTROCODIGOSUITE' | translate }}</small>
                         <select (change)="onFiltroCodigoSuiteChangeClick($event)" class="form-control form-select"  style="cursor: pointer;">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
                             <option [value]="reg.codigoSuite" *ngFor="let reg of suites">

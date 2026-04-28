@@ -142,7 +142,7 @@ export class RolesUsuariosComponent implements OnInit {
       this._rolesAPService.getRoles().subscribe((resp: any) => {
         if (resp.ok) {
           this.roles = resp.roles;
-        //   console.log('Todos los roles', this.roles);
+        //    console.log('Todos los roles', this.roles);
           return;
         }
       })
@@ -188,7 +188,7 @@ export class RolesUsuariosComponent implements OnInit {
   setupRolesStream(): void {
     this.registrosTransformados$ = this._usuariosRolesService._usuariosRoles$.pipe(
       switchMap((usuariosRoles: PTLUsuarioRoleAPModel[]) => {
-        // console.log('================== roles 1', usuariosRoles);
+        //  console.log('================== roles 1', usuariosRoles);
         if (!usuariosRoles) return of([]);
         this.usuariosRoles = usuariosRoles
         const transformedApps = usuariosRoles.map((usuarioRole: any) => {
