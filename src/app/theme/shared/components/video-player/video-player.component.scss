@@ -1,5 +1,4 @@
-.video-js {
-    width: 100% !important;
-    height: auto !important;
-    max-width: 800px;
+:host {
+    display: block;
+    width: 100%;
 }

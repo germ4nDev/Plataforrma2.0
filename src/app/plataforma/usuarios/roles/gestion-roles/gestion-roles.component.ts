@@ -64,9 +64,9 @@ export class GestionRolesComponent implements OnInit {
     private _navigationService: NavigationService,
     private _registrosService: PTLRolesAPService,
     private _aplicacionesService: PtlAplicacionesService,
+    private _suitesService: PtlSuitesAPService,
     private _usuariosService: PTLUsuariosService,
     private _usuariosRolesService: PtlusuariosRolesApService,
-    private _suitesService: PtlSuitesAPService,
     private _localStorageService: LocalStorageService,
     private _swalAlertService: SwalAlertService
   ) {
@@ -216,7 +216,7 @@ export class GestionRolesComponent implements OnInit {
     const value = event.target.value;
     const app = this.aplicaciones.filter((x) => x.codigoAplicacion == value)[0];
     this.FormRegistro.codigoAplicacion = value;
-    this.suitesApp = this.suites.filter((x) => x.aplicacionId == app.aplicacionId);
+    this.suitesApp = this.suites.filter((x) => x.codigoAplicacion == app.codigoAplicacion);
   }
 
   onSuiteChangeClick(event: any) {

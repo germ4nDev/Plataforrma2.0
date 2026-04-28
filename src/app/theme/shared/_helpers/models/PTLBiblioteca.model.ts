@@ -2,6 +2,8 @@ export class PTLBiblioteca {
   constructor(
     public bibliotecaId?: number,
     public codigoAplicacion?: string,
+    public codigoSuite?: string,
+    public codigoModulo?: string,
     public codigoBiblioteca?: string,
     public nombreBiblioteca?: string,
     public descripcionBiblioteca?: string,

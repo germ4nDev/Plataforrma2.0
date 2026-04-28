@@ -22,7 +22,6 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { Observable, Subscription } from 'rxjs'
 import { v4 as uuidv4 } from 'uuid'
 import Swal from 'sweetalert2'
-import videojs from 'video.js'
 
 // import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
 // import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
@@ -92,11 +91,6 @@ export class GestionAplicacionComponent implements OnInit {
         }
       })
     }
-    // this.route.queryParams.subscribe((params) => {
-    //   if (Object.keys(params).length > 0) {
-
-    //   }
-    // });
   }
 
   ngOnInit () {

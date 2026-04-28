@@ -66,7 +66,7 @@ const routes: Routes = [
       },
       {
         path: 'biblioteca',
-        loadChildren: () => import('./plataforma/biblioteca/biblioteca.module').then((module) => module.BibliotecaModule)
+        loadChildren: () => import('./plataforma/biblioteca/bibliotecas.module').then((module) => module.BibliotecasModule)
       }
     ]
   },

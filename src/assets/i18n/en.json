@@ -20,6 +20,13 @@
         "TITULO_GRID_SUITES": "Application Suites",
         "ENTRAR": "Access",
         "ALLDATA": "Select All",
+        "FILTROTODOS": "Show All",
+        "INSERTAR": "Record inserted successfully",
+        "MODIFICAR": "Record updated successfully",
+        "NOINSERTO": "Could not insert record",
+        "NOMODIFICO": "Could not update record",
+        "VALIDARPASSWORD": "Validate",
+        "PASSWORDNOTMATCH": "Current password does not match.",
         "COLORSETTING": {
             "TITLE": "Color Settings",
             "NEW": "New Color Settings",
@@ -67,8 +74,8 @@
             "EMPRESAS": "Companies",
             "USURIOSSC": "Users",
             "USUARIOS": "Users",
-            "SERVIDORES": "Servers",
-            "CONEXIONES": "Connections",
+            "SERVIDORES": "Databases",
+            "CONEXIONES": "BD Connections",
             "UTILIDADES": "Utilities",
             "COLORESNAV": "Navbar Colors",
             "SLIDER": "Home Images",
@@ -86,10 +93,13 @@
             "ACTIVIDADROLES": "Role Activities",
             "CLASESTICKET": "Ticket Classes",
             "REQUERIMIENTOS": "Requirements",
+            "SCRIPTS": "Scripts",
+            "SERVERS": "DB Servidores",
+            "IDIOMAS": "Languages",
             "BIBLIOTECA": "Library",
             "GALERIA": "Gallery",
-            "TIPOS GALERIA": "Gallery Types",
-            "FORMATOS GALERIA": "Gallery Formats"
+            "TIPOSGALERIA": "Gallery Types",
+            "FORMATOSGALERIA": "Gallery Formats"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notifications",
@@ -106,13 +116,6 @@
             "THEME_LIGHT": "Light Theme",
             "CLOSE_SESSION": "Sign Out"
         },
-        "FILTROTODOS": "Show All",
-        "INSERTAR": "Record inserted successfully",
-        "MODIFICAR": "Record updated successfully",
-        "NOINSERTO": "Could not insert record",
-        "NOMODIFICO": "Could not update record",
-        "VALIDARPASSWORD": "Validate",
-        "PASSWORDNOTMATCH": "Current password does not match.",
         "DATATABLE": {
             "SHOW": "Show",
             "ENTRIES": "Entries",
@@ -230,6 +233,10 @@
         "ELIMINAREXITOSA": "The application was deleted successfully: ",
         "ELIMINARERROR": "Could not delete the application.",
         "CREATE": "Create Application",
+        "TRANSLATEKEY": "Translate Key",
+        "GESTION": {
+            "FOTO": "Aplication Image"
+        },
         "FILTROS": {
             "TITULO": "Application Filters",
             "FILTROCODIGO": "Code",

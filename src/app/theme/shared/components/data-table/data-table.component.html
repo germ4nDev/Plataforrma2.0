@@ -163,19 +163,11 @@
                                                     <ng-container *ngSwitchCase="'image'">
                                                         <img [src]="row[detailColumn.name]" [alt]="'Image'" class="image-table">
                                                     </ng-container>
-                                                    <!-- <ng-container *ngSwitchCase="'capture'">
-                                                        <img [src]="row.capture" [alt]="'Capture'" class="capture-table">
-                                                    </ng-container>
-                                                    <ng-container *ngSwitchCase="'video'">
-                                                        <div *ngIf="row[detailColumn.capture]">
-                                                            <app-video-player [src]="row[detailColumn.capture]" class="capture-table"></app-video-player>
-                                                        </div>
-                                                    </ng-container> -->
                                                     <ng-container *ngSwitchCase="'capture'">
                                                         <ng-container [ngSwitch]="row.tipo">
                                                             <img *ngSwitchCase="'capture'" [src]="row.capture" [alt]="'Capture'" class="capture-table">
-                                                            <div *ngSwitchCase="'video'">
-                                                                <app-video-player [src]="row.capture" class="video-table"></app-video-player>
+                                                            <div *ngSwitchCase="'video'" class="video-table">
+                                                                <app-video-player [src]="row.capture"></app-video-player>
                                                             </div>
                                                             <div *ngSwitchDefault>
                                                                 <a [href]="row[detailColumn.capture]" target="_blank" style="color: cyan;">
