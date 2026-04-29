@@ -39,6 +39,11 @@ export class PtlSuitesAPService {
     return this._suites.asObservable();
   }
 
+    getSuitesActuales (): PTLSuiteAPModel[] {
+        return this._suites.getValue()
+      }
+
+
   geSuitesAP() {
     return this.http.get<PTLSuiteAPModel>(`${environment.apiUrl}/suites`).pipe(
       map((resp: any) => {
