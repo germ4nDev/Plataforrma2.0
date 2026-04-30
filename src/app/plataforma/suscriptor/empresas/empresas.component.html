@@ -16,9 +16,9 @@
             </ng-container>
             <ng-container *ngIf="activeTab === 'filters'">
                 <div class="p-3 filtros-scroll-wrapper">
-                    <h6 class="filtros-title text-center">{{ 'EMPRESASSC.FILTROS.TITULO' | translate }}</h6>
+                    <h6 class="filtros-title text-center">{{ 'SUSCRIPTOR.EMPRESAS.FILTROS.TITULO' | translate }}</h6>
                     <div class="filtro">
-                        <small>{{ 'EMPRESASSC.FILTROS.FILTROSUSCRIPTOR' | translate }}</small>
+                        <small>{{ 'SUSCRIPTOR.EMPRESAS.FILTROS.FILTROSUSCRIPTOR' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer;"
                             (change)="onFiltroSuscriptorChangeClick($event)">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
@@ -27,18 +27,18 @@
                         </select>
                     </div>
                     <div class="filtro">
-                        <small>{{ 'EMPRESASSC.FILTROS.FILTRONOMBRE' | translate }}</small>
+                        <small>{{ 'SUSCRIPTOR.EMPRESAS.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <input type="text" (keyup)="onFiltroNombreChangeClick($event)" class="form-control form-input"
-                            placeholder="{{ 'EMPRESASSC.FILTROS.NOMBRECHOLDER' | translate }}" />
+                            placeholder="{{ 'SUSCRIPTOR.EMPRESAS.FILTROS.PLACEHOLDERNOMBRE' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'EMPRESASSC.FILTROS.FILTRODECRIPCION' | translate }}</small>
+                        <small>{{ 'SUSCRIPTOR.EMPRESAS.FILTROS.FILTRODECRIPCION' | translate }}</small>
                         <input type="text" (keyup)="onFiltroDescripcionChangeClick($event)"
                             class="form-control form-input"
-                            placeholder="{{ 'EMPRESASSC.FILTROS.DESCRIPCIONCHOLDER' | translate }}" />
+                            placeholder="{{ 'SUSCRIPTOR.EMPRESAS.FILTROS.PLACEHOLDERDESCRIPCION' | translate }}" />
                     </div>
                     <div class="filtro">
-                        <small>{{ 'EMPRESASSC.FILTROS.FILTROESTADO' | translate }}</small>
+                        <small>{{ 'SUSCRIPTOR.EMPRESAS.FILTROS.FILTROESTADO' | translate }}</small>
                         <select class="form-control form-select" style="cursor: pointer;"
                             (change)="onFiltroEstadoChangeClick($event)">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
@@ -57,8 +57,8 @@
                 <app-data-table
                     [data]="registrosFiltrado"
                     [idField]="'codigoTicket'"
-                    [tableTitle]="'EMPRESASSC.TITLE' | translate"
-                    [newButtonLabel]="'EMPRESASSC.NEW' | translate"
+                    [tableTitle]="'SUSCRIPTOR.EMPRESAS.TITLE' | translate"
+                    [newButtonLabel]="'SUSCRIPTOR.EMPRESAS.NEW' | translate"
                     [exportLabel]="'PLATAFORMA.EXCEL' | translate"
                     [metadataColumns]="columnasRegistros"
                     [metadataDetailColumns]="columnasDetailRegistros"
@@ -70,7 +70,7 @@
                     [showDeleteButton]="true"
                     [showOption1Button]="false"
                     [colorOpcion1]="colorOpcion1"
-                    [tooltipOption1]="'EMPRESASSC.REQUES' | translate"
+                    [tooltipOption1]="'SUSCRIPTOR.EMPRESAS.REQUES' | translate"
                     [letraOpcion1]="letraOpcion1"
                     (newRecord)="OnNuevoRegistroClick()"
                     (editRecord)="OnEditarRegistroClick($event)"

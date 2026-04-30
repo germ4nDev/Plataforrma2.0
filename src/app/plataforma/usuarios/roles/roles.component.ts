@@ -294,7 +294,9 @@ export class RolesComponent implements OnInit {
               descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje);
+            this._rolesAPService.cargarRegistros().subscribe(() => {
+                this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINAREXITOSA'));
+            });
           },
           error: (err: any) => {
             const logData = {

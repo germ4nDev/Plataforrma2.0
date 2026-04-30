@@ -72,6 +72,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     suitesSub?: Subscription
     suites: PTLSuiteAPModel[] = []
     suitesApp: PTLSuiteAPModel[] = []
+    mostrarSeleccionRoles: boolean = false;
 
     constructor(
         private router: Router,
@@ -318,20 +319,6 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         }
     }
 
-    // cargarRolesAsociados(codigoUsuario: string) {
-    //     this._usuariosRolesService.getRegistroByCodigoUsuario(codigoUsuario).subscribe({
-    //         next: (resp: any) => {
-    //             if (resp.ok && Array.isArray(resp.usuarioRole)){
-    //                 // Guardamos solo los IDs de los roles que el usuario ya tiene en la DB
-    //                 this.rolesAsignadosAlUsuario = resp.usuarioRole.map((ur: any) => ur.codigoRole)
-
-    //                 // Por defecto, al entrar a modificar, queremos ver Plataforma
-    //                 this.tipoRolSeleccionado = 'plataforma'
-    //                 this.consultarRoles() // Esto dibujará la lista filtrada y marcará los checks
-    //             }
-    //         }
-    //     })
-    // }
     cargarRolesAsociados(codigoUsuario: string) {
         this._usuariosRolesService.getRegistroByCodigoUsuario(codigoUsuario).subscribe({
             next: (resp: any) => {
@@ -586,6 +573,10 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         if (rolEnLista) {
             rolEnLista.checked = false;
         }
+    }
+
+    btnAsociarMasClick() {
+        this.mostrarSeleccionRoles = !this.mostrarSeleccionRoles;
     }
 
     btnRegresarClick() {

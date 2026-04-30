@@ -103,17 +103,17 @@ export class EmpresasComponent implements OnInit {
   columnasRegistros: ColumnMetadata[] = [
     {
       name: 'nombreEmpresa',
-      header: 'EMPRESESASSC.NOMBREEMPRESA',
+      header: 'SUSCRIPTOR.EMPRESAS.NOMBREEMPRESA',
       type: 'date'
     },
     {
       name: 'descripcionEmpresa',
-      header: 'EMPRESESASSC.DESCRIPCION',
+      header: 'SUSCRIPTOR.EMPRESAS.DESCRIPCION',
       type: 'text'
     },
     {
       name: 'nomEstado',
-      header: 'EMPRESESASSC.ESTADOEMPRESA',
+      header: 'SUSCRIPTOR.EMPRESAS.ESTADOEMPRESA',
       type: 'estado'
     }
   ];
@@ -121,12 +121,12 @@ export class EmpresasComponent implements OnInit {
   columnasDetailRegistros: ColumnMetadata[] = [
     {
       name: 'codigoSuscriptor',
-      header: 'EMPRESESASSC.CODIGOSUSCRIPTOR',
+      header: 'SUSCRIPTOR.EMPRESAS.CODIGOSUSCRIPTOR',
       type: 'text'
     },
     {
       name: 'codigoEmpresa',
-      header: 'EMPRESESASSC.CODIGOEMPRESA',
+      header: 'SUSCRIPTOR.EMPRESAS.CODIGOEMPRESA',
       type: 'text'
     }
   ];
@@ -201,8 +201,8 @@ export class EmpresasComponent implements OnInit {
 
   OnEliminarRegistroClick(id: any) {
     Swal.fire({
-      title: this.translate.instant('EMPRESESASSC.ELIMINARTITULO'),
-      text: this.translate.instant('EMPRESESASSC.ELIMINARTEXTO'),
+      title: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTITULO'),
+      text: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -216,20 +216,20 @@ export class EmpresasComponent implements OnInit {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+              descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertSuccess(this.translate.instant('EMPRESESASSC.ELIMINAREXITOSA') + ' ' + resp.mensaje);
+            this._swalService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
             this.consultarRegistros();
           },
           error: (err: any) => {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
+              descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertError(this.translate.instant('EMPRESESASSC.ELIMINARERROR') + ' ' + err.mensaje);
+            this._swalService.getAlertError(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje);
             console.error('Error eliminando', err);
           }
         });
