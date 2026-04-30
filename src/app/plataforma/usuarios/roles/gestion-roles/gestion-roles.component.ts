@@ -233,11 +233,14 @@ export class GestionRolesComponent implements OnInit {
   btnGestionarRegistroClick(form: any) {
     this.isSubmit = true;
 
-    const usuariosSeleccionados = this.usuarios.filter((u) => u.checked);
+    // const usuariosSeleccionados = this.usuarios.filter((u) => u.checked);
+    const usuariosAProcesar = this.usuarios.filter((u) => u.checked);
+    // console.log('------------QUE ME TRAE USUARIO A PROCESAR------', usuariosAProcesar);
+
 
     if (!form.valid) return;
 
-    if (usuariosSeleccionados.length === 0) {
+    if (usuariosAProcesar.length === 0) {
       this._swalAlertService.getAlertError('Debe seleccionar al menos un usuario.');
       return;
     }
@@ -248,6 +251,10 @@ export class GestionRolesComponent implements OnInit {
       registroData.codigoAplicacion = '';
       registroData.codigoSuite = '';
     }
+    const datosParaRelacion = {
+        ...registroData,
+        tipoRol: this.tipoRolSeleccionado // <-- Aquí garantizamos que no sea null
+    };
 
     if (this.modoEdicion) {
       registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
@@ -256,12 +263,13 @@ export class GestionRolesComponent implements OnInit {
       this._registrosService.putModificarRegistro(registroData).subscribe({
         next: (resp: any) => {
           if (resp.ok) {
+            // this.procesarRelaciones(registroData.codigoRole!);
+            this.procesarRelaciones(registroData.codigoRole!, usuariosAProcesar, datosParaRelacion);
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
               descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
             };
-            this.procesarRelaciones(registroData.codigoRole!);
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             this.router.navigate(['/usuarios/roles']);
@@ -289,13 +297,14 @@ export class GestionRolesComponent implements OnInit {
 
       this._registrosService.postCrearRegistro(registroData).subscribe({
         next: (resp: any) => {
-          if (resp.ok) {
+            if (resp.ok) {
+            // this.procesarRelaciones(registroData.codigoRole || '');
+            this.procesarRelaciones(registroData.codigoRole || '', usuariosAProcesar, datosParaRelacion);
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
               descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
             };
-            this.procesarRelaciones(registroData.codigoRole || '');
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
@@ -316,21 +325,20 @@ export class GestionRolesComponent implements OnInit {
     }
   }
 
-  procesarRelaciones(codigoRole: string) {
+  procesarRelaciones(codigoRole: string, usuariosSeleccionados: any[], datosCompletos: any) {
     this._usuariosRolesService.deleteTodosUsuarioRole(codigoRole).subscribe({
       next: (resp: any) => {
-        const usuariosSeleccionados = this.usuarios.filter((u) => u.checked);
-        // console.log('++++++QUEMETRAEEE++++', usuariosSeleccionados)
+        // console.log('++++++QUEMETRAEEUSAURIOSESELECCIONADOS++++', usuariosSeleccionados)
         usuariosSeleccionados.forEach((usuario) => {
           const nuevaRelacion = {
             codigoUsuarioSC: usuario.codigoUsuario,
-            codigoRole: codigoRole,
             codigoEmpresaSC: '',
-            codigoAplicacion: this.FormRegistro.codigoAplicacion || '',
-            codigoSuite: this.FormRegistro.codigoSuite || '',
-            tipoRol: this.tipoRolSeleccionado,
+            codigoRole: codigoRole,
+            codigoAplicacion: datosCompletos.codigoAplicacion || '',
+            codigoSuite: datosCompletos.codigoSuite || '',
+            tipoRol: datosCompletos.tipoRol,
             estadoUsuarioRole: true,
-            // Auditoría usando tu localStorage
+            // Auditoría
             codigoUsuarioCreacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,
             fechaCreacion: new Date().toISOString(),
             codigoUsuarioModificacion: this._localStorageService.getUsuarioLocalStorage().codigoUsuario,

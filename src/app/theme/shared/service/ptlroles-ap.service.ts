@@ -95,7 +95,7 @@ export class PTLRolesAPService {
 
   postCrearRegistro(data: PTLRoleAPModel) {
     const url = `${base_url}/roles`;
-    console.log('servicio tickets', data);
+    console.log('servicio de roles', data);
     return this.http.post(url, data).pipe(
       map((resp: any) => {
         return {

@@ -17,27 +17,27 @@
 
       <ng-container *ngIf="activeTab === 'filters'">
         <div class="p-3 filtros-scroll-wrapper">
-          <h6 class="filtros-title">{{ 'SUSCRIPTORES.FILTROS.TITULO' | translate }}</h6>
+          <h6 class="filtros-title">{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.TITULO' | translate }}</h6>
           <div class="filtro">
-            <small>{{ 'SUSCRIPTORES.FILTROS.FILTRONOMBRE' | translate }}</small>
+            <small>{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.FILTRONOMBRE' | translate }}</small>
             <input
               type="text"
               (keyup)="onFiltroNombreChangeClick($event)"
               class="form-control form-input"
-              placeholder="{{ 'SUSCRIPTORES.FILTROS.NOMBRECHOLDER' | translate }}"
+              placeholder="{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.NOMBRECHOLDER' | translate }}"
             />
           </div>
           <div class="filtro">
-            <small>{{ 'SUSCRIPTORES.FILTROS.FILTROIDENTIFICACION' | translate }}</small>
+            <small>{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.FILTROIDENTIFICACION' | translate }}</small>
             <input
               type="text"
               (keyup)="onFiltroIdentificacionChangeClick($event)"
               class="form-control form-input"
-              placeholder="{{ 'SUSCRIPTORES.FILTROS.IDENTIFICACIONHOLDER' | translate }}"
+              placeholder="{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.IDENTIFICACIONHOLDER' | translate }}"
             />
           </div>
           <div class="filtro">
-            <small>{{ 'SUSCRIPTORES.FILTROS.FILTROESTADO' | translate }}</small>
+            <small>{{ 'SUSCRIPTOR.SUSCRIPTORES.FILTROS.FILTROESTADO' | translate }}</small>
             <select (change)="onFiltroEstadoChangeClick($event)" class="form-control form-select" style="cursor: pointer">
               <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
               <option value="true">{{ 'PLATAFORMA.ACTIVE' | translate }}</option>
@@ -56,11 +56,11 @@
           <app-data-table
             [data]="dataFiltrada"
             [idField]="'codigoSuscriptor'"
-            [tableTitle]="'SUSCRIPTORES.TITLE' | translate"
-            [newButtonLabel]="'SUSCRIPTORES.NEW' | translate"
+            [tableTitle]="'SUSCRIPTOR.SUSCRIPTORES.TITLE' | translate"
+            [newButtonLabel]="'SUSCRIPTOR.SUSCRIPTORES.NEW' | translate"
             [exportLabel]="'PLATAFORMA.EXCEL' | translate"
-            [tooltipOption1]="'SUSCRIPTORES.EMPRESAS' | translate"
-            [tooltipOption2]="'SUSCRIPTORES.USUARIOS' | translate"
+            [tooltipOption1]="'SUSCRIPTOR.SUSCRIPTORES.EMPRESAS' | translate"
+            [tooltipOption2]="'SUSCRIPTOR.SUSCRIPTORES.USUARIOS' | translate"
             [colorOpcion1]="colorOpcion1"
             [letraOpcion1]="letraOpcion1"
             [colorOpcion2]="colorOpcion2"

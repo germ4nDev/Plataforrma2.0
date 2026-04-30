@@ -184,7 +184,7 @@ export class RequerimientosComponent implements OnInit {
       this.filtroEstadoSubject
     ]).pipe(
       map(([requerimientos, ticket, nombre, descripcion, estado]) => {
-        console.log('================== FILTROS', requerimientos);
+        // console.log('================== FILTROS', requerimientos);
         let filteredRegistros = requerimientos;
         if (ticket !== 'todos') {
           filteredRegistros = filteredRegistros.filter((reg: any) => reg.codigoTicket === ticket);
@@ -224,7 +224,7 @@ export class RequerimientosComponent implements OnInit {
   }
 
   OnEliminarRegistroClick(id: any): void {
-    console.log('+++ME TRAE EL ID???', id);
+    // console.log('+++ME TRAE EL ID???', id);
 
     Swal.fire({
       title: this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARTITULO'),
@@ -244,6 +244,7 @@ export class RequerimientosComponent implements OnInit {
                 (err) => console.error('Error al cargar los Requerimientos:', err)
               )
             );
+            this.setupRegistrosStream();
           },
           error: (err: any) => {
             this._swalService.getAlertError(this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARERROR') + ', ' + err);

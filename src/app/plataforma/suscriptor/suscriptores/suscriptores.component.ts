@@ -206,28 +206,28 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   columnasRegistros: any[] = [
     {
       name: 'logoSuscriptor',
-      header: 'SUSCRIPTORES.LOGO',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.LOGO',
       type: 'image',
       isSortable: false,
       searchable: false
     },
     {
       name: 'nombreSuscriptor',
-      header: 'SUSCRIPTORES.NAME',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.NAME',
       type: 'text',
       isSortable: true,
       searchable: false
     },
     {
       name: 'identificacionSuscriptor',
-      header: 'SUSCRIPTORES.IDENTIFICATION',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.IDENTIFICATION',
       type: 'text',
       isSortable: true,
       searchable: false
     },
     {
       name: 'nomEstado',
-      header: 'SUSCRIPTORES.STATUS',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.STATUS',
       type: 'estado',
       isSortable: true,
       searchable: false
@@ -260,37 +260,37 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   columnasDetailRegistros: ColumnMetadata[] = [
     {
       name: 'codigoSuscriptor',
-      header: 'SUSCRIPTORES.CODE',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.CODE',
       type: 'text'
     },
     {
       name: 'direccionSuscriptor',
-      header: 'SUSCRIPTORES.CODE',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.DIRECCION',
       type: 'text'
     },
     {
       name: 'telefonoContacto',
-      header: 'SUSCRIPTORES.CODE',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.TELEFONO',
       type: 'text'
     },
     {
       name: 'numeroEmpresas',
-      header: 'SUSCRIPTORES.CODE',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.NUMEROEMPRESA',
       type: 'text'
     },
     {
       name: 'numeroUsuarios',
-      header: 'SUSCRIPTORES.CODE',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.NUMEROUSUARIO',
       type: 'text'
     },
     {
       name: 'usuarioAdministrador',
-      header: 'SUSCRIPTORES.CODE',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.USUARIOADMIN',
       type: 'text'
     },
     {
       name: 'descripcionSuscriptor',
-      header: 'SUSCRIPTORES.DESCRIPTION',
+      header: 'SUSCRIPTOR.SUSCRIPTORES.DESCRIPTION',
       type: 'text'
     }
   ];
@@ -313,8 +313,8 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
 
   OnEliminarRegistroClick(id: any) {
     Swal.fire({
-      title: this.translate.instant('SUSCRIPTORES.ELIMINARTITULO'),
-      text: this.translate.instant('SUSCRIPTORES.ELIMINARTEXTO'),
+      title: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTITULO'),
+      text: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTEXTO'),
       icon: 'warning',
       //theme: 'datk',
       customClass: this._swalService.getSwalCustomClass(),
@@ -325,11 +325,11 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
           next: (resp: any) => {
-            Swal.fire(this.translate.instant('SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+            Swal.fire(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
             this.setupRegistrosStream();
           },
           error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('SUSCRIPTORES.ELIMINARERROR'), 'error');
+            Swal.fire('Error', this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARERROR'), 'error');
             console.error('Error eliminando', err);
           }
         });
