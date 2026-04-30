@@ -799,13 +799,15 @@ export class NavigationService implements OnInit, OnDestroy {
   }
 
   navigateNodoMenu (url: any) {
-    const bibliotecas = this._bibliotecasService.getBibliotecasActuales()
+    // const bibliotecas = this._bibliotecasService.getBibliotecasActuales()
     const modulos = this._modulosService.getModulosActuales()
     const modulo = modulos.filter(x => x.codigoModulo == url.id)[0]
-    const biblio = bibliotecas.filter(x => x.codigoModulo == url.id)[0]
+    // const biblio = bibliotecas.filter(x => x.codigoModulo == url.id)[0]
+    // console.log('bibioteca', biblio);
+
     if (modulo) {
-      modulo.codigoBiblioteca = biblio.codigoBiblioteca || ''
-      modulo.nomBiblioteca = biblio.nombreBiblioteca || ''
+    //   modulo.codigoBiblioteca = biblio.codigoBiblioteca || ''
+    //   modulo.nomBiblioteca = biblio.nombreBiblioteca || ''
       this._localStorageService.setModuloLocalStorage(modulo)
     }
     if (modulo.codigoModulo !== undefined) {
