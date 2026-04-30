@@ -220,32 +220,32 @@ export class TicketsComponent implements OnInit {
   columnasRegistros: ColumnMetadata[] = [
     {
       name: 'color',
-      header: 'TICKETS.COLOR',
+      header: 'TICKETS.TICKETS.COLOR',
       type: 'color_chip'
     },
     {
       name: 'fechaTicket',
-      header: 'TICKETS.FECHACREACION',
+      header: 'TICKETS.TICKETS.FECHACREACION',
       type: 'date'
     },
     {
       name: 'nombreTicket',
-      header: 'TICKETS.NOMBRETICKET',
+      header: 'TICKETS.TICKETS.NOMBRETICKET',
       type: 'text'
     },
     {
       name: 'nomSender',
-      header: 'TICKETS.NOMUSUARIOSENDER',
+      header: 'TICKETS.TICKETS.NOMUSUARIOSENDER',
       type: 'text'
     },
     {
       name: 'prioridad',
-      header: 'TICKETS.PRIORIDAD',
+      header: 'TICKETS.TICKETS.PRIORIDAD',
       type: 'text'
     },
     {
       name: 'estadoTicket',
-      header: 'TICKETS.ESTADOTICKET',
+      header: 'TICKETS.TICKETS.ESTADOTICKET',
       type: 'estado'
     }
   ];
@@ -253,47 +253,47 @@ export class TicketsComponent implements OnInit {
   columnasDetailRegistros: ColumnMetadata[] = [
     {
       name: 'codigoTicket',
-      header: 'TICKETS.CODIGOTICKET',
+      header: 'TICKETS.TICKETS.CODIGOTICKET',
       type: 'text'
     },
     {
       name: 'nomAplicacion',
-      header: 'TICKETS.NOMMAPLICACION',
+      header: 'TICKETS.TICKETS.NOMMAPLICACION',
       type: 'text'
     },
     {
       name: 'nomSuite',
-      header: 'TICKETS.NOMBRESUITE',
+      header: 'TICKETS.TICKETS.NOMBRESUITE',
       type: 'text'
     },
     {
       name: 'nomModulo',
-      header: 'TICKETS.NOMBREMODULO',
+      header: 'TICKETS.TICKETS.NOMBREMODULO',
       type: 'text'
     },
     {
       name: 'fechaAsignacion',
-      header: 'TICKETS.FECHAASIGNACION',
+      header: 'TICKETS.TICKETS.FECHAASIGNACION',
       type: 'date'
     },
     {
       name: 'nomAsignado',
-      header: 'TICKETS.NOMUSUARIOASIGNADO',
+      header: 'TICKETS.TICKETS.NOMUSUARIOASIGNADO',
       type: 'text'
     },
     {
       name: 'descripcionTicket',
-      header: 'TICKETS.DESCRIPCIONTICKET',
+      header: 'TICKETS.TICKETS.DESCRIPCIONTICKET',
       type: 'text'
     },
     {
       name: 'definicionRequerimiento',
-      header: 'TICKETS.DEFINICIONREQUERIMIENTO',
+      header: 'TICKETS.TICKETS.DEFINICIONREQUERIMIENTO',
       type: 'text'
     },
     {
       name: 'captura',
-      header: 'TICKETS.CAPTURA',
+      header: 'TICKETS.TICKETS.CAPTURA',
       type: 'capture'
     }
   ];
@@ -303,7 +303,7 @@ export class TicketsComponent implements OnInit {
       this._ticketsService.getRegistros().subscribe((resp: any) => {
         if (resp.ok) {
           this.ticket = resp.tickets;
-          console.log('Todos los Tickets', this.ticket);
+        //   console.log('Todos los Tickets', this.ticket);
           return;
         }
       })
@@ -346,7 +346,7 @@ export class TicketsComponent implements OnInit {
       this.filtroEstadoSubject
     ]).pipe(
       map(([tickets, aplicacion, suite, modulo, sender, asignado, nombre, descripcion, estado]) => {
-        console.log('================== roles 2', tickets);
+        // console.log('================== roles 2', tickets);
         let filteredRegistros = tickets;
         if (aplicacion !== 'todos') {
           filteredRegistros = filteredRegistros.filter((reg: any) => reg.codigoAplicacion === aplicacion);
@@ -383,41 +383,6 @@ export class TicketsComponent implements OnInit {
       })
     );
   }
-
-  //   consultarRegistros() {
-  //     this.registrosSub = this._ticketsService
-  //       .getRegistros()
-  //       .pipe(
-  //         tap((resp: any) => {
-  //           if (resp.ok) {
-  //             resp.tickets.forEach((ticket: any) => {
-  //               ticket.color = ticket.colorPrioridad;
-  //               ticket.captura = `${base_url}/upload/tickets/${ticket.capturaTicket}`;
-  //               const app = ticket.codigoAplicacion != '' ? this.aplicaciones.filter((x) => x.codigoAplicacion == ticket.codigoAplicacion)[0] : {};
-  //               const sui = ticket.codigoSuite != '' ? this.suites.filter((x) => x.codigoSuite == ticket.codigoSuite)[0] : {};
-  //               const mod = ticket.codigoModulo != '' ? this.modulos.filter((x) => x.codigoModulo == ticket.codigoModulo)[0] : {};
-  //               const usu = ticket.codigoUsuarioSender != '' ? this.usuarios.filter((x) => x.codigoUsuario == ticket.codigoUsuarioSender)[0] : {};
-  //               const usuA =
-  //                 ticket.codigoUsuarioAsignado != '' ? this.usuarios.filter((x) => x.codigoUsuario == ticket.codigoUsuarioAsignado)[0] : {};
-  //                 ticket.nomAplicacion = app.nombreAplicacion || '';
-  //                 ticket.nomSuite = sui.nombreSuite || '';
-  //                 ticket.nomModulo = mod.nombreModulo || '';
-  //                 ticket.nomSender = usu.nombreUsuario || '';
-  //                 ticket.nomAsignado = usuA.nombreUsuario || '';
-  //             });
-  //             this.registros = resp.tickets;
-  //             this.ticket = this.registros;
-  //             console.log('Todos las tickets', this.ticket);
-  //             return;
-  //           }
-  //         }),
-  //         catchError((err) => {
-  //           console.log('Ha ocurrido un error', err);
-  //           return of(null);
-  //         })
-  //       )
-  //       .subscribe();
-  //   }
 
   onFiltroAplicacionChangeClick(evento: any) {
     const value = evento.target.value;
@@ -469,8 +434,8 @@ export class TicketsComponent implements OnInit {
 
   OnEliminarRegistroClick(id: any) {
     Swal.fire({
-      title: this.translate.instant('TICKETS.ELIMINARTITULO'),
-      text: this.translate.instant('TICKETS.ELIMINARTEXTO'),
+      title: this.translate.instant('TICKETS.TICKETS.ELIMINARTITULO'),
+      text: this.translate.instant('TICKETS.TICKETS.ELIMINARTEXTO'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -484,11 +449,11 @@ export class TicketsComponent implements OnInit {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('MODULOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+              descripcionLog: this.translate.instant('TICKETS.TICKETS.ELIMINAREXITOSA') + ' ' + resp.mensaje
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             if (ticket.capturaTicket != 'no-imagen.png') {
-              console.log('esta es la captura del ticket', ticket.capturaTicket);
+            //   console.log('esta es la captura del ticket', ticket.capturaTicket);
               //   const captura = ticket.capturaTicket || '';
               //   this._uploadService.deleteFilePath('0', 'tickets', captura).subscribe((data: any) => {
               //     console.log('mensaje', data.mensaje);
@@ -503,17 +468,18 @@ export class TicketsComponent implements OnInit {
                 });
               }
             });
-            this._swalService.getAlertSuccess(this.translate.instant('TICKETS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
-            this.consultarRegistros();
+            this._ticketsService.cargarRegistros().subscribe(() => {
+                this._swalService.getAlertSuccess(this.translate.instant('TICKETS.TICKETS.ELIMINAREXITOSA'));
+            });
           },
           error: (err: any) => {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('MODULOS.ELIMINARERROR') + ' ' + err.mensaje
+              descripcionLog: this.translate.instant('TICKETS.MODULOS.ELIMINARERROR') + ' ' + err.mensaje
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertError(this.translate.instant('TICKETS.ELIMINARERROR') + ' ' + err.mensaje);
+            this._swalService.getAlertError(this.translate.instant('TICKETS.TICKETS.ELIMINARERROR') + ' ' + err.mensaje);
             console.error('Error eliminando', err);
           }
         });
@@ -526,7 +492,7 @@ export class TicketsComponent implements OnInit {
   }
 
   OnOption1Click(event: any) {
-    console.log('ejecutando opcion 1 Requerimiento', event);
+    // console.log('ejecutando opcion 1 Requerimiento', event);
     this.router.navigate(['tickets/requerimientos'], { queryParams: { regId: event } });
   }
 

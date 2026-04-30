@@ -148,7 +148,7 @@ export class ClasesTicketComponent implements OnInit{
         this.filtroEstadoSubject
         ]).pipe(
             map(([clasesTickets, nombre, descripcion, estado]) => {
-                console.log('================== roles 2', clasesTickets);
+                // console.log('================== roles 2', clasesTickets);
                 let filteredRegistros = clasesTickets;
                 if (nombre) {
                 filteredRegistros = filteredRegistros.filter((reg) => (reg.claseTicket?.toString() || '').toLowerCase().includes(nombre));
@@ -181,12 +181,12 @@ export class ClasesTicketComponent implements OnInit{
 
     OnEditarRegistroClick(id: number): void {
         this.router.navigate(['tickets/gestion-clases-ticket'], { queryParams: { regId: id } });
-        console.log('+++++ME MANDA EL ID', id);
+        // console.log('+++++ME MANDA EL ID', id);
 
     }
 
     OnEliminarRegistroClick(id: any): void {
-        console.log('+++ME TRAE EL ID???', id);
+        // console.log('+++ME TRAE EL ID???', id);
 
         Swal.fire({
           title: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTITULO'),
@@ -206,6 +206,7 @@ export class ClasesTicketComponent implements OnInit{
                     (err) => console.error('Error al cargar las clases:', err)
                 )
                 );
+                this.setupRegistrosStream();
             },
             error: (err: any) => {
                 this._swalService.getAlertError(this.translate.instant('TICKETS.CLASESTICKET.ELIMINARERROR') + ', ' + err);

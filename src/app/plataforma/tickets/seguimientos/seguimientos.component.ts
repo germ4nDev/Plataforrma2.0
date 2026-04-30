@@ -221,7 +221,7 @@ export class SeguimientosComponent implements OnInit {
       this.filtroEstadoSubject
     ]).pipe(
       map(([seguimientos, requerimiento, nombre, descripcion, estado]) => {
-        console.log('================== roles 2', seguimientos);
+        // console.log('================== roles 2', seguimientos);
         let filteredRegistros = seguimientos;
         if (requerimiento !== 'todos') {
           filteredRegistros = filteredRegistros.filter((reg: any) => reg.codigoRequerimiento === requerimiento);
@@ -281,9 +281,16 @@ export class SeguimientosComponent implements OnInit {
   }
 
   OnEliminarRegistroClick(id: any) {
+    const seguimiento = this.seguimiento.filter((x) => x.codigoSeguimiento == id.id)[0];
     Swal.fire({
-      title: this.translate.instant('SEGUIMIENTOS.ELIMINARTITULO'),
-      text: this.translate.instant('SEGUIMIENTOS.ELIMINARTEXTO') + `Registro.!`,
+      title: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTITULO'),
+    //   text: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTEXTO') + `"${seguimiento.nombreSeguimiento}".`,
+      html: `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${seguimiento.nombreSeguimiento}"</b></small>
+        `,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
@@ -295,7 +302,7 @@ export class SeguimientosComponent implements OnInit {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+              descripcionLog: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             const segui = this.registros.filter((x) => x.codigoSeguimiento == id.id)[0];
@@ -307,8 +314,9 @@ export class SeguimientosComponent implements OnInit {
               //     console.log('mensaje', data.mensaje);
               //   });
             }
-            this._swalService.getAlertSuccess(this.translate.instant('SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
-            this.consultarRegistros();
+            this._seguimientosService.cargarRegistros().subscribe(() => {
+                this._swalService.getAlertSuccess(this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINAREXITOSA'));
+            });
           },
           error: (err: any) => {
             const logData = {
