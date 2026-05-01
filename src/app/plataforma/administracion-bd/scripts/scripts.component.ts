@@ -32,8 +32,7 @@ import Swal from 'sweetalert2';
 })
 export class ScriptsComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
-  @Output()
-  toggleSidebar = new EventEmitter<void>();
+  @Output() toggleSidebar = new EventEmitter<void>();
 
   //#region VARIABLES
   registrosSub?: Subscription;
@@ -125,16 +124,15 @@ export class ScriptsComponent implements OnInit {
   ];
 
   OnNuevoRegistroClick() {
-    this.router.navigate(['/administracion-bd/scripts/gestion-script'], { queryParams: { regId: 'nuevo' } });
+    this.router.navigate(['/administracion-bd/gestion-script'], { queryParams: { regId: 'nuevo' } });
   }
 
   OnEditarRegistroClick(id: any) {
-    this.router.navigate(['/administracion-bd/scripts/gestion-script'], { queryParams: { regId: id } });
+    this.router.navigate(['/administracion-bd/gestion-script'], { queryParams: { regId: id } });
   }
 
   OnEliminarRegistroClick(evento: any) {
     const id = typeof evento === 'string' ? evento : evento?.codigoScript || evento?.id;
-
     Swal.fire({
       title: this.translate.instant('SCRIPTS.ELIMINARTITULO'),
       text: this.translate.instant('SCRIPTS.ELIMINARTEXTO'),
