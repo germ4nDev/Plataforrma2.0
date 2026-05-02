@@ -1,70 +1,80 @@
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //#region IMPORTS
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DataTablesModule } from 'angular-datatables';
-import { Router } from '@angular/router';
-import { GradientConfig } from 'src/app/app-config';
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
-import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
-import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model';
-import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model';
-import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
-import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap } from 'rxjs';
-import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { DataTablesModule } from 'angular-datatables'
+import { Router } from '@angular/router'
+import { GradientConfig } from 'src/app/app-config'
+import { SharedModule } from 'src/app/theme/shared/shared.module'
+import { TranslateModule } from '@ngx-translate/core'
+import { TranslateService } from '@ngx-translate/core'
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
+import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
+import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model'
+import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap } from 'rxjs'
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component'
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
 import {
   NavigationService,
   SwalAlertService,
   UploadFilesService,
   PTLUsuariosService,
   LocalStorageService
-} from 'src/app/theme/shared/service';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { of, Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
+} from 'src/app/theme/shared/service'
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
+import { of, Subscription } from 'rxjs'
+import Swal from 'sweetalert2'
+import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
 //#endregion IMPORTS
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    DatatableComponent,
+    DataLoaderComponent
+  ],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.scss'
 })
 export class UsuariosComponent implements OnInit {
   //#region VARIABLES
-  @Output() toggleSidebar = new EventEmitter<void>();
-  DataModel: BaseSessionModel = new BaseSessionModel();
-  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel();
-  moduloTituloExcel: string = '';
-  hasFiltersSlot: boolean = false;
-  gradientConfig;
-  lang = localStorage.getItem('lang');
-  menuItems$!: Observable<NavigationItem[]>;
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  tituloPagina: string = '';
-  suscPlataforma: string = '';
+  @Output() toggleSidebar = new EventEmitter<void>()
+  DataModel: BaseSessionModel = new BaseSessionModel()
+  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
+  moduloTituloExcel: string = ''
+  hasFiltersSlot: boolean = false
+  gradientConfig
+  lang = localStorage.getItem('lang')
+  menuItems$!: Observable<NavigationItem[]>
+  activeTab: 'menu' | 'filters' | 'main' = 'menu'
+  tituloPagina: string = ''
+  suscPlataforma: string = ''
 
-  subscriptions = new Subscription();
-  filtroIdentificacionSubject = new BehaviorSubject<string>('');
-  filtroNombreSubject = new BehaviorSubject<string>('');
-  filtroCorreoSubject = new BehaviorSubject<string>('');
-  filtroUsernameSubject = new BehaviorSubject<string>('');
-  filtroDescripcionSubject = new BehaviorSubject<string>('');
-  filtroEstadoSubject = new BehaviorSubject<string>('todos');
+  subscriptions = new Subscription()
+  filtroIdentificacionSubject = new BehaviorSubject<string>('')
+  filtroNombreSubject = new BehaviorSubject<string>('')
+  filtroCorreoSubject = new BehaviorSubject<string>('')
+  filtroUsernameSubject = new BehaviorSubject<string>('')
+  filtroDescripcionSubject = new BehaviorSubject<string>('')
+  filtroEstadoSubject = new BehaviorSubject<string>('todos')
 
-  registrosTransformados$: Observable<PTLUsuarioModel[]> = of([]);
-  registrosFiltrado$: Observable<PTLUsuarioModel[]> = of([]);
-  usuarios: PTLUsuarioModel[] = [];
-  registros: PTLUsuarioModel[] = [];
+  registrosTransformados$: Observable<PTLUsuarioModel[]> = of([])
+  registrosFiltrado$: Observable<PTLUsuarioModel[]> = of([])
+  usuarios: PTLUsuarioModel[] = []
+  registros: PTLUsuarioModel[] = []
   //#endregion VARIABLES
 
-  constructor(
+  constructor (
     private router: Router,
     private translate: TranslateService,
     private _navigationService: NavigationService,
@@ -73,27 +83,27 @@ export class UsuariosComponent implements OnInit {
     private _localStorageService: LocalStorageService,
     private _uploadService: UploadFilesService
   ) {
-    this.gradientConfig = GradientConfig;
+    this.gradientConfig = GradientConfig
   }
 
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems$ = this._navigationService.menuItems$;
-    this.hasFiltersSlot = true;
-    this.consultarRegistros();
+  ngOnInit () {
+    this._navigationService.getNavigationItems()
+    this.menuItems$ = this._navigationService.menuItems$
+    this.hasFiltersSlot = true
+    this.consultarRegistros()
     setTimeout(() => {
-      this.setupRegistrosStream();
-    }, 100);
+      this.setupRegistrosStream()
+    }, 100)
     this.subscriptions.add(
       this._usuariosService.cargarRegistros().subscribe(
         () => console.log('Usuarios cargados y guardados en el servicio'),
-        (err) => console.error('Error al cargar usuarios:', err)
+        err => console.error('Error al cargar usuarios:', err)
       )
-    );
+    )
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  ngOnDestroy (): void {
+    this.subscriptions.unsubscribe()
   }
 
   columnasUsuarios: ColumnMetadata[] = [
@@ -123,7 +133,7 @@ export class UsuariosComponent implements OnInit {
       header: 'USUARIOS.USUARIOS.STATUS',
       type: 'estado'
     }
-  ];
+  ]
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
@@ -136,40 +146,42 @@ export class UsuariosComponent implements OnInit {
       header: 'USUARIOS.USUARIOS.DESCRIPCION',
       type: 'text'
     }
-  ];
+  ]
 
-  consultarRegistros() {
+  consultarRegistros () {
     this.subscriptions.add(
       this._usuariosService.getUsuarios().subscribe((resp: any) => {
         if (resp.ok) {
-          this.usuarios = resp.usuarios;
-        //   console.log('Todos las usuarios', this.usuarios);
-          return;
+          this.usuarios = resp.usuarios
+          //   console.log('Todos las usuarios', this.usuarios);
+          return
         }
       })
-    );
+    )
   }
 
-  setupRegistrosStream(): void {
-    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-    let codigo = this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || this._localStorageService.getSuscriptorPlataformaLocalStorage();
+  setupRegistrosStream (): void {
+    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
+    let codigo =
+      this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor ||
+      this._localStorageService.getSuscriptorPlataformaLocalStorage()
     this.registrosTransformados$ = this._usuariosService.usuarios$.pipe(
       switchMap((users: PTLUsuarioModel[]) => {
-        if (!users) return of([]);
-        this.usuarios = users;
+        if (!users) return of([])
+        this.usuarios = users
         const transformedUsuarios = users.map((user: any) => {
-          user.nomEstado = user.estadoUsuario ? 'Activo' : 'Inactivo';
-          user.fotoUsuario = this._uploadService.getFilePath(codigo, 'usuarios', user.fotoUsuario);
-          return user as PTLUsuarioModel;
-        });
-        this.registros = transformedUsuarios;
-        return of(transformedUsuarios);
+          user.nomEstado = user.estadoUsuario ? 'Activo' : 'Inactivo'
+          user.fotoUsuario = this._uploadService.getFilePath(codigo, 'usuarios', user.fotoUsuario)
+          return user as PTLUsuarioModel
+        })
+        this.registros = transformedUsuarios
+        return of(transformedUsuarios)
       }),
-      catchError((err) => {
-        console.error('Error en el stream de aplicaciones:', err);
-        return of([]);
+      catchError(err => {
+        console.error('Error en el stream de aplicaciones:', err)
+        return of([])
       })
-    );
+    )
     this.registrosFiltrado$ = combineLatest([
       this.registrosTransformados$.pipe(startWith([])),
       this.filtroIdentificacionSubject,
@@ -181,44 +193,44 @@ export class UsuariosComponent implements OnInit {
     ]).pipe(
       map(([users, identificacion, nombre, correo, username, descripcion, estado]) => {
         // console.log('================== roles 2', users);
-        let filteredRegistros = users;
+        let filteredRegistros = users
         if (identificacion) {
-          filteredRegistros = filteredRegistros.filter((app) =>
+          filteredRegistros = filteredRegistros.filter(app =>
             (app.identificacionUsuario?.toString() || '').toLowerCase().includes(identificacion)
-          );
+          )
         }
         if (nombre) {
-          filteredRegistros = filteredRegistros.filter((reg) => (reg.nombreUsuario?.toString() || '').toLowerCase().includes(nombre));
+          filteredRegistros = filteredRegistros.filter(reg => (reg.nombreUsuario?.toString() || '').toLowerCase().includes(nombre))
         }
         if (correo) {
-          filteredRegistros = filteredRegistros.filter((reg) => (reg.correoUsuario?.toString() || '').toLowerCase().includes(correo));
+          filteredRegistros = filteredRegistros.filter(reg => (reg.correoUsuario?.toString() || '').toLowerCase().includes(correo))
         }
         if (username) {
-          filteredRegistros = filteredRegistros.filter((reg) => (reg.userNameUsuario?.toString() || '').toLowerCase().includes(username));
+          filteredRegistros = filteredRegistros.filter(reg => (reg.userNameUsuario?.toString() || '').toLowerCase().includes(username))
         }
         if (estado !== 'todos') {
-          const estadoBoolean = estado === 'true';
-          filteredRegistros = filteredRegistros.filter((reg) => reg.estadoUsuario === estadoBoolean);
+          const estadoBoolean = estado === 'true'
+          filteredRegistros = filteredRegistros.filter(reg => reg.estadoUsuario === estadoBoolean)
         }
         if (descripcion) {
-          const textoFiltro = descripcion.toLowerCase();
-          filteredRegistros = filteredRegistros.filter((reg) => (reg.descripcionUsuario || '').toLowerCase().includes(textoFiltro));
+          const textoFiltro = descripcion.toLowerCase()
+          filteredRegistros = filteredRegistros.filter(reg => (reg.descripcionUsuario || '').toLowerCase().includes(textoFiltro))
         }
-        return filteredRegistros;
+        return filteredRegistros
       })
-    );
+    )
   }
 
-  OnNuevoRegistroClick() {
-    this.router.navigate(['usuarios/gestion-usuario']);
+  OnNuevoRegistroClick () {
+    this.router.navigate(['usuarios/gestion-usuario'])
   }
 
-  OnEditarRegistroClick(id: number) {
-    this.router.navigate(['usuarios/gestion-usuario'], { queryParams: { regId: id } });
+  OnEditarRegistroClick (id: number) {
+    this.router.navigate(['usuarios/gestion-usuario'], { queryParams: { regId: id } })
   }
 
-  OnEliminarRegistroClick(id: any) {
-    const usuario = this.usuarios.filter((x) => x.codigoUsuario == id.id)[0];
+  OnEliminarRegistroClick (id: any) {
+    const usuario = this.usuarios.filter(x => x.codigoUsuario == id.id)[0]
     Swal.fire({
       title: this.translate.instant('USUARIOS.USUARIOS.ELIMINARTITULO'),
       text: this.translate.instant('USUARIOS.USUARIOS.ELIMINARTEXTO') + `"${usuario.nombreUsuario}".`,
@@ -230,54 +242,54 @@ export class UsuariosComponent implements OnInit {
       if (result.isConfirmed) {
         this._usuariosService.eliminarUsuairo(id.id).subscribe({
           next: (resp: any) => {
-            this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje);
+            this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje)
             this.subscriptions.add(
               this._usuariosService.cargarRegistros().subscribe(
                 () => console.log('Usuarios cargados y guardados en el servicio'),
-                (err) => console.error('Error al cargar usuarios:', err)
+                err => console.error('Error al cargar usuarios:', err)
               )
-            );
+            )
           },
           error: (err: any) => {
-            this._swalService.getAlertError(this.translate.instant('USUARIOS.USUARIOS.ELIMINARERROR') + ', ' + err);
-            console.error('Error eliminando', err);
+            this._swalService.getAlertError(this.translate.instant('USUARIOS.USUARIOS.ELIMINARERROR') + ', ' + err)
+            console.error('Error eliminando', err)
           }
-        });
+        })
       }
-    });
+    })
   }
 
-  onFiltroIdentificacionChangeClick(evento: any) {
-    const value = evento.target.value;
-    this.filtroIdentificacionSubject.next(value);
+  onFiltroIdentificacionChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroIdentificacionSubject.next(value)
   }
 
-  onFiltroNombreChangeClick(evento: any) {
-    const value = evento.target.value;
-    this.filtroNombreSubject.next(value);
+  onFiltroNombreChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroNombreSubject.next(value)
   }
 
-  onFiltroCorreoChangeClick(evento: any) {
-    const value = evento.target.value;
-    this.filtroCorreoSubject.next(value);
+  onFiltroCorreoChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroCorreoSubject.next(value)
   }
 
-  onFiltroUsernameChangeClick(evento: any) {
-    const value = evento.target.value;
-    this.filtroUsernameSubject.next(value);
+  onFiltroUsernameChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroUsernameSubject.next(value)
   }
 
-  onFiltroDescripcionChangeClick(evento: any) {
-    const value = evento.target.value;
-    this.filtroDescripcionSubject.next(value);
+  onFiltroDescripcionChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroDescripcionSubject.next(value)
   }
 
-  onFiltroEstadoChangeClick(evento: any) {
-    const value = evento.target.value;
-    this.filtroEstadoSubject.next(value);
+  onFiltroEstadoChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroEstadoSubject.next(value)
   }
 
-  toggleNav(): void {
-    this.toggleSidebar.emit();
+  toggleNav (): void {
+    this.toggleSidebar.emit()
   }
 }

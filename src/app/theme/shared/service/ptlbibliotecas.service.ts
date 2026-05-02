@@ -20,7 +20,7 @@ export class PtlBibliotecasService {
   bibliotecasChange$ = this._bibliotecasChange.asObservable()
 
   constructor (private http: HttpClient, private socketService: SocketService, private _localstorageService: LocalStorageService) {
-    this.socketService.listen('biblioteca-actualizada').subscribe({
+    this.socketService.listen('bibliotecas-actualizadas').subscribe({
       next: payload => {
         console.log('Evento de Socket.IO recibido:', payload.msg)
         this._bibliotecasChange.next(payload)

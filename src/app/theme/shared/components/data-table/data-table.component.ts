@@ -68,7 +68,6 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
   //   @Input() autoplay: boolean = false
   //   @Input() controls: boolean = false
   @Input() src: string = ''
-  //   @Input() type: string = 'video/mp4'
 
   @Input() showDetail: boolean = false
   @Input() showSearchBox: boolean = true
