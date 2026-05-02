@@ -28,6 +28,7 @@
     "VALIDARPASSWORD": "Validate",
     "PASSWORDNOTMATCH": "Current password does not match.",
     "SELECT_FILE": "Select File",
+    "SOCIAL": "Social Network",
     "COLORSETTING": {
       "TITLE": "Color Settings",
       "NEW": "New Color Settings",
@@ -330,7 +331,36 @@
   },
   "AUTENTICACION": {
     "LOGIN": {
-      "TITLE": "Login Users"
+      "TITLE": "User Access",
+      "USERNAME": "Enter Username",
+      "USER_REQ": "Username is required",
+      "PASSWORD": "Enter Password",
+      "PASS_REQ": "Password is required",
+      "REMEMBER_ME": "Remember me",
+      "ACCESS": "Login",
+      "CHANGE_PASS_Q": "Change Password",
+      "RESET_PASS_Q": "Reset Password",
+      "CHANGE_PASS_T": "Here",
+      "RESET_PASS_T": "Here",
+      "SOCIAL_NETWORKS": "Social Networks"
+    },
+    "CHANGEPASSWORD": {
+      "TITLE": "Change Password",
+      "ACTUAL": "Current Password *",
+      "NEW": "New Password *",
+      "CONFIRM": "Confirm New Password *",
+      "CHANGE": "Change Password",
+      "NEWPASSWORD": "New Password",
+      "BACK": "Back"
+    },
+    "PERFILCONFIGURATION": {},
+    "RESETPASSWORD": {
+      "TITLE": "Reset Password",
+      "ACTUAL": "Current Password",
+      "CHANGE": "Reset Password",
+      "EMAIL": "Email registered when creating the account",
+      "NEWPASSWORD": "New generated password",
+      "BACK": "Back"
     }
   },
   "BIBLIOTECA": {

@@ -27,11 +27,22 @@ import {
   SwalAlertService,
   ThemeService
 } from 'src/app/theme/shared/service'
+import { SocialNetworksComponent } from 'src/app/theme/shared/components/social-networks/social-networks.component'
+import { PTLIdioma } from 'src/app/theme/shared/_helpers/models/PTLIdioma.model'
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, LanguageSelectorComponent, SharedModule, TranslateModule, FullScreenSliderComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    LanguageSelectorComponent,
+    SharedModule,
+    TranslateModule,
+    FullScreenSliderComponent,
+    SocialNetworksComponent
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -55,6 +66,7 @@ export class LoginComponent implements OnInit {
   loading: boolean = false
   submitted: boolean = false
   remember: boolean = false
+  idiomas: PTLIdioma[] = []
   //#endregion VARIABLES
 
   constructor (
@@ -65,6 +77,7 @@ export class LoginComponent implements OnInit {
     private _localstorageService: LocalStorageService,
     private _swalService: SwalAlertService,
     private _themeService: ThemeService,
+    private _languagesService: LanguageService,
     private _authenticationService: AuthenticationService
   ) {
     this.translate.use(localStorage.getItem('lang') || 'es')
@@ -86,6 +99,8 @@ export class LoginComponent implements OnInit {
       this.classList.toggle('icon-eye-off')
     })
     this.returnUrl = this.route.snapshot.queryParams['returnUrl']
+    this.idiomas = this._languagesService.getRegistrosActuales()
+    console.log('idiomas actualoes', this.idiomas)
   }
 
   OnDestroy () {
@@ -171,6 +186,13 @@ export class LoginComponent implements OnInit {
     //   this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
     //   this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTSUPSCRIPTOR'));
     // }
+  }
+
+  onChangePasswordClick () {
+    this.router.navigate(['/autenticacion/change-password'])
+  }
+  onResetPasswordClick () {
+    this.router.navigate(['/autenticacion/reset-password'])
   }
 
   toggleTheme () {

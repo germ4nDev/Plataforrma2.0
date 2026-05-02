@@ -141,6 +141,10 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
+  preserveOrder = (a: any, b: any): number => {
+    return 0
+  }
+
   processDataAndColumns (): void {
     if (!this.data || this.data.length === 0) {
       this.finalColumns = []
@@ -211,7 +215,8 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
       name: key,
       header: key,
       type: type,
-      isSortable: type !== 'avatar' && type !== 'image'&& type !== 'video' && type !== 'capture' && type !== 'array_text' && type !== 'array_tags'
+      isSortable:
+        type !== 'avatar' && type !== 'image' && type !== 'video' && type !== 'capture' && type !== 'array_text' && type !== 'array_tags'
     }
   }
 
