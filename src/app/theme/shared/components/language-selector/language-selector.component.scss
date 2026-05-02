@@ -1,11 +1,10 @@
-
 .lang-btn {
   background: transparent;
   border: none;
   padding: 0;
   box-shadow: none;
   cursor: pointer;
-
+  z-index: 1010;
   &:focus,
   &:hover {
     outline: none;

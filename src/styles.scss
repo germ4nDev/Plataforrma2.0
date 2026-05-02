@@ -62,6 +62,7 @@
   --header-color: #f5f5f5;
   --color-fin-gradiente: #ffffff;
   --card-background: #ffffff;
+  --app-table-header: #d6d6d6;
   --app-btn-secondary: #dadada;
   --app-btn-secondary-texto: #333;
   --app-btn-inactive: #f8f9fa;
@@ -93,6 +94,7 @@ body.dark-theme {
   --header-color: #292828;
   --card-background: #222121;
   --color-fin-gradiente: #000000;
+  --app-table-header: #313131;
   --app-btn-secondary: #313131;
   --app-btn-secondary-texto: #ccc;
   --app-btn-inactive: #212529;
@@ -347,17 +349,19 @@ body {
 .table {
   background-color: var(--card-background) !important;
   color: var(--text-color) !important;
-  border-color: var(var(--border-color)) !important;
+  border: none;
   border-radius: 16px !important;
   thead th {
-    background-color: var(--header-color) !important;
-    color: var(--text-color) !important;
-    border-color: var(--border-color) !important;
+    // background-color: var(--app-table-header) !important;
+    background-color: color-mix(in srgb, var(--app-navbar-color) 60%, transparent);
+    color: var(--app-texto-color) !important;
+    border: none;
+    // border-color: var(--border-color) !important;
   }
   tbody td {
     background-color: var(--card-background) !important;
     color: var(--text-color) !important;
-    border-color: var(var(--border-color)) !important;
+    border: none;
   }
 }
 
@@ -752,7 +756,6 @@ body {
 .table {
   border-collapse: collapse;
   thead tr th {
-    border-bottom: 1px solid #5f5f5f;
     border-top: none;
   }
   tbody td {
@@ -801,8 +804,6 @@ table tr {
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: #fff;
-  color: #464545;
   text-align: center;
 }
 

@@ -72,6 +72,24 @@ export class UsuariosComponent implements OnInit {
   registrosFiltrado$: Observable<PTLUsuarioModel[]> = of([])
   usuarios: PTLUsuarioModel[] = []
   registros: PTLUsuarioModel[] = []
+
+  rolesUsuario = [
+    {
+      aplicacion: 'Plataforma',
+      suite: 'Administracion',
+      role: 'ROLE_USUARIO'
+    },
+    {
+      aplicacion: 'Plataforma',
+      suite: 'Administracion',
+      role: 'ROLE_ADMINISTRADOR'
+    },
+    {
+      aplicacion: 'Qplus',
+      suite: 'Sistemas de Gestion',
+      role: 'ROLE_ADMINSOCUMENTOS'
+    }
+  ]
   //#endregion VARIABLES
 
   constructor (
@@ -145,6 +163,11 @@ export class UsuariosComponent implements OnInit {
       name: 'descripcionUsuario',
       header: 'USUARIOS.USUARIOS.DESCRIPCION',
       type: 'text'
+    },
+    {
+      name: 'rolesUsuario',
+      header: 'USUARIOS.USUARIOS.ROLES',
+      type: 'json-tabla'
     }
   ]
 
@@ -162,9 +185,7 @@ export class UsuariosComponent implements OnInit {
 
   setupRegistrosStream (): void {
     this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-    let codigo =
-      this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor ||
-      this._localStorageService.getSuscriptorPlataformaLocalStorage()
+    let codigo = this._localStorageService.getSuscriptorPlataformaLocalStorage()
     this.registrosTransformados$ = this._usuariosService.usuarios$.pipe(
       switchMap((users: PTLUsuarioModel[]) => {
         if (!users) return of([])
@@ -172,8 +193,10 @@ export class UsuariosComponent implements OnInit {
         const transformedUsuarios = users.map((user: any) => {
           user.nomEstado = user.estadoUsuario ? 'Activo' : 'Inactivo'
           user.fotoUsuario = this._uploadService.getFilePath(codigo, 'usuarios', user.fotoUsuario)
+          user.rolesUsuario = this.rolesUsuario || []
           return user as PTLUsuarioModel
         })
+        console.log('usuarios datatable', transformedUsuarios)
         this.registros = transformedUsuarios
         return of(transformedUsuarios)
       }),

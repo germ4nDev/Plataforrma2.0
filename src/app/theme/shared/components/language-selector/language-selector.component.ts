@@ -4,7 +4,7 @@ import { LanguageService } from '../../service/lenguage.service'
 import { NgSelectModule } from '@ng-select/ng-select'
 import { FormsModule } from '@angular/forms'
 import { CommonModule } from '@angular/common'
-import { catchError, combineLatest, map, Observable, of, startWith, Subscription, switchMap, tap } from 'rxjs'
+import { Observable, of, Subscription } from 'rxjs'
 import { PTLIdioma } from '../../_helpers/models/PTLIdioma.model'
 import { LocalStorageService, PtlidiomasService, UploadFilesService } from '../../service'
 
@@ -23,72 +23,65 @@ export class LanguageSelectorComponent implements OnInit, OnDestroy {
   suscPlataforma = ''
   defaultLang: PTLIdioma = new PTLIdioma()
   registrosSub = new Subscription()
-  //   availableLanguages = [
-  //     { code: 'en', label: 'English', flag: 'assets/flags/united-states.png' },
-  //     { code: 'es', label: 'Español', flag: 'assets/flags/colombia.png' }
-  //   ];
 
   constructor (
     private translate: TranslateService,
     private _localStorageService: LocalStorageService,
     private _uploadService: UploadFilesService,
-    private languageService: LanguageService
+    private _languageService: LanguageService,
+    private _ptlIdiomasService: PtlidiomasService
   ) {
     this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
   }
 
   ngOnInit (): void {
-    this.selectedLang = localStorage.getItem('lang') || 'es';
-    this.languageService.setLanguage(this.selectedLang);
-
-    this.setupLanguagesStream();
+    this.selectedLang = localStorage.getItem('lang') || 'es'
+    this._languageService.setLanguage(this.selectedLang)
+    this.setupLanguagesStream()
   }
 
   ngOnDestroy (): void {
     this.registrosSub.unsubscribe()
   }
 
-  //   setupLanguagesStream (): void {
-  //     this.languages = this.languageService.getRegistrosActuales()
-  //     this.languages.forEach(lang => {
-  //       lang.flagIdioma = this._uploadService.getFilePath(this.suscPlataforma, 'idiomas', lang.flagIdioma || '')
-  //     })
-  //     console.log('Array de idiomas activos listo para usar:', this.languages)
-  //   }
-
-  setupLanguagesStream(): void {
-    // Usamos el observable idiomas$ para "esperar" a que el servicio tenga los datos
-    const sub = this.languageService.idiomas$.subscribe({
+  setupLanguagesStream (): void {
+    const sub = this._languageService.idiomas$.subscribe({
       next: (apps: PTLIdioma[]) => {
-        // Solo procesamos si el array trae datos (cuando el backend responde)
         if (apps && apps.length > 0) {
-
-          // Obtenemos el suscriptor en este momento por seguridad
-          const plataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
-
+          const plataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
           this.languages = apps.map(lang => {
-            // Creamos una copia para no modificar el objeto original del servicio
             return {
               ...lang,
               flagIdioma: this._uploadService.getFilePath(plataforma, 'idiomas', lang.flagIdioma || '')
-            };
-          });
-
-          console.log('Idiomas cargados reactivamente en el Navbar:', this.languages);
+            }
+          })
+          console.log('Idiomas cargados reactivamente en el Navbar:', this.languages)
+        } else {
+          this.cargarIdiomasDesdeBackend()
         }
       },
-      error: (err) => console.error('Error en el stream del Navbar:', err)
-    });
+      error: err => console.error('Error en el stream del Navbar:', err)
+    })
 
-    this.registrosSub.add(sub);
+    this.registrosSub.add(sub)
+  }
+
+  cargarIdiomasDesdeBackend (): void {
+    const subHttp = this._ptlIdiomasService.cargarRegistros().subscribe({
+      next: (idiomasDesdeApi: PTLIdioma[]) => {
+        console.log('idiomas', idiomasDesdeApi)
+      },
+      error: err => console.error('Error al traer idiomas desde la API:', err)
+    })
+    this.registrosSub.add(subHttp)
   }
 
   changeLanguage (langCode: string) {
     this.translate.use(langCode)
-    this.languageService.setLanguage(langCode)
+    this._languageService.setLanguage(langCode)
     this.selectedLang = langCode
     localStorage.setItem('lang', langCode)
-    console.log('nuevo idioa hp', langCode)
+    console.log('Nuevo idioma seleccionado:', langCode)
   }
 
   get oppositeLanguage (): PTLIdioma | null {

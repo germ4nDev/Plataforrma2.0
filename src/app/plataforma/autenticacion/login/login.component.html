@@ -1,13 +1,13 @@
-<div class="auth-wrapper align-items-stretch aut-bg-img">
-  <app-full-screen-slider [tipoSlider]="1"></app-full-screen-slider>
-  <nav class="navbar fixed-top navbar-expand-lg">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#"></a>
-      <div class="nav-right">
-        <app-language-selector></app-language-selector>
-      </div>
+<app-full-screen-slider [tipoSlider]="1"></app-full-screen-slider>
+<nav class="navbar fixed-top navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"></a>
+    <div class="nav-right">
+      <app-language-selector></app-language-selector>
     </div>
-  </nav>
+  </div>
+</nav>
+<div class="auth-wrapper align-items-stretch aut-bg-img">
   <div class="cardlogin card-body login-overlay"
     ><br />
     <div class="card-title">
@@ -20,7 +20,7 @@
         <span class="input-group-text form-input" id="basic-addon1"><i class="feather icon-user"></i></span>
         <input
           type="text"
-          placeholder="{{ 'LOGIN.USERNAME' | translate }}"
+          placeholder="{{ 'AUTENTICACION.LOGIN.USERNAME' | translate }}"
           formControlName="username"
           class="form-control form-input"
           [ngClass]="{ 'is-invalid': usernameControl?.invalid && (usernameControl?.dirty || usernameControl?.touched) }"
@@ -70,6 +70,14 @@
       @if (error) {
       <div class="alert alert-danger mt-3 mb-0">{{ error }}</div>
       }
+      <!-- <div class="d-flex justify-content-center">
+        <button class="btn btn-secundary btn-NuevoRegistro" (click)="onChangePasswordClick()">{{
+          'AUTENTICACION.RESETPASSWORD.BACK' | translate
+        }}</button>
+        <button class="btn btn-primary btn-NuevoRegistro" (click)="onResetPasswordClick()">{{
+          'AUTENTICACION.RESETPASSWORD.CHANGE' | translate
+        }}</button>
+      </div> -->
       <div class="d-grid text-center">
         <br />
         <p class="text-muted"
@@ -82,21 +90,6 @@
         </p>
       </div>
     </form>
-    <div class="text-center">
-      <p
-        ><b>{{ 'AUTENTICACION.LOGIN.SOCIAL_NETWORKS' | translate }}</b></p
-      >
-      <button class="btn text-white bg-facebook mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="facebook"
-        ><i class="fab fa-facebook-f"></i
-      ></button>
-      <button class="btn text-white bg-googlePlus mb-2 me-2 wid-40 px-0 hei-40 rounded-circle" title="Google"
-        ><i class="fab fa-google-plus-g"></i
-      ></button>
-      <button class="btn text-white bg-twitter mb-2 wid-40 px-0 hei-40 rounded-circle" title="Twitter"
-        ><i class="fab fa-twitter"></i
-      ></button>
-    </div>
-    <br /><br />
-    <div class="card-footer text-center"> © 2025 D&M Software Solutions SAS. </div>
+    <app-social-networks></app-social-networks>
   </div>
 </div>
