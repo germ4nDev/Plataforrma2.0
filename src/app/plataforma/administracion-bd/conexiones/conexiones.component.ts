@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DataTablesModule, DataTableDirective } from 'angular-datatables';
-import { Subscription, tap, catchError, of, Observable } from 'rxjs';
-import { GradientConfig } from 'src/app/app-config';
-import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
-import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
-import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model';
-import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model';
-import { PtlAplicacionesService, PtllogActividadesService } from 'src/app/theme/shared/service';
-import { NavigationService } from 'src/app/theme/shared/service/navigation.service';
-import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service';
-import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service';
-import { SharedModule } from 'src/app/theme/shared/shared.module';
-import Swal from 'sweetalert2';
-import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
-import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
+import { CommonModule } from '@angular/common'
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core'
+import { Router } from '@angular/router'
+import { TranslateModule, TranslateService } from '@ngx-translate/core'
+import { DataTablesModule, DataTableDirective } from 'angular-datatables'
+import { Subscription, tap, catchError, of, Observable } from 'rxjs'
+import { GradientConfig } from 'src/app/app-config'
+import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component'
+import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
+import { PTLConexionBDModel } from 'src/app/theme/shared/_helpers/models/PTLConexionBD.model'
+import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model'
+import { PtlAplicacionesService, PtllogActividadesService } from 'src/app/theme/shared/service'
+import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
+import { PTLConexionesBDSTService } from 'src/app/theme/shared/service/ptlconexiones-bd-st.service'
+import { PTLSuscriptoresService } from 'src/app/theme/shared/service/ptlsuscriptores.service'
+import { SharedModule } from 'src/app/theme/shared/shared.module'
+import Swal from 'sweetalert2'
+import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
+import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
+import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 
 @Component({
   selector: 'app-conexciones',
@@ -30,22 +30,22 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 export class ConexionesComponent implements OnInit {
   @ViewChild(DataTableDirective, { static: false })
   @Output()
-  toggleSidebar = new EventEmitter<void>();
+  toggleSidebar = new EventEmitter<void>()
   //#region VARIABLES
-  registrosSub?: Subscription;
-  registros: PTLConexionBDModel[] = [];
-  registrosFiltrado: PTLConexionBDModel[] = [];
-  lang: string = localStorage.getItem('lang') || '';
-  tituloPagina: string = '';
-  gradientConfig;
-  hasFiltersSlot: boolean = false;
-  menuItems$!: Observable<NavigationItem[]>;
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  datatableElement!: DataTableDirective;
-  suscriptores: PTLSuscriptorModel[] = [];
+  registrosSub?: Subscription
+  registros: PTLConexionBDModel[] = []
+  registrosFiltrado: PTLConexionBDModel[] = []
+  lang: string = localStorage.getItem('lang') || ''
+  tituloPagina: string = ''
+  gradientConfig
+  hasFiltersSlot: boolean = false
+  menuItems$!: Observable<NavigationItem[]>
+  activeTab: 'menu' | 'filters' | 'main' = 'menu'
+  datatableElement!: DataTableDirective
+  suscriptores: PTLSuscriptorModel[] = []
   //#endregion VARIABLES
 
-  constructor(
+  constructor (
     private router: Router,
     private translate: TranslateService,
     private _conexionService: PTLConexionesBDSTService,
@@ -54,20 +54,20 @@ export class ConexionesComponent implements OnInit {
     private _suscriptoresService: PTLSuscriptoresService,
     private _navigationService: NavigationService
   ) {
-    this.gradientConfig = GradientConfig;
+    this.gradientConfig = GradientConfig
   }
 
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems$ = this._navigationService.menuItems$;
-    console.log('elementos menu componente', this.menuItems$);
-    this.hasFiltersSlot = true;
-    this.consultarRegistros();
+  ngOnInit () {
+    this._navigationService.getNavigationItems()
+    this.menuItems$ = this._navigationService.menuItems$
+    console.log('elementos menu componente', this.menuItems$)
+    this.hasFiltersSlot = true
+    this.consultarRegistros()
   }
 
-  consultarRegistros() {
+  consultarRegistros () {
     // this.consultarAplicaciones();
-    this.consultarSuscriptores();
+    this.consultarSuscriptores()
     this.registrosSub = this._conexionService
       .getRegistros()
       .pipe(
@@ -75,23 +75,23 @@ export class ConexionesComponent implements OnInit {
           if (resp.ok) {
             resp.conexiones.forEach((conexion: any) => {
               //   const app = this.aplicaciones.filter((x) => x.aplicacionId == conexion.aplicacionId)[0];
-              const susc = this.suscriptores.filter((x) => x.suscriptorId == conexion.suscriptorId)[0];
+              const susc = this.suscriptores.filter(x => x.suscriptorId == conexion.suscriptorId)[0]
               //   conexion.nombreAplicacion = app.nombreAplicacion;
-              conexion.nombreSuscriptor = susc.nombreSuscriptor;
-              conexion.nomEstado = conexion.estadoConexion == true ? 'Activo' : 'Inactivo';
-            });
-            this.registros = resp.conexiones;
-            this.registrosFiltrado = resp.conexiones;
-            console.log('Todos las conexiones', this.registros);
-            return;
+              conexion.nombreSuscriptor = susc.nombreSuscriptor
+              conexion.nomEstado = conexion.estadoConexion == true ? 'Activo' : 'Inactivo'
+            })
+            this.registros = resp.conexiones
+            this.registrosFiltrado = resp.conexiones
+            console.log('Todos las conexiones', this.registros)
+            return
           }
         }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
+        catchError(err => {
+          console.log('Ha ocurrido un error', err)
+          return of(null)
         })
       )
-      .subscribe();
+      .subscribe()
   }
 
   columnasCnexiones: ColumnMetadata[] = [
@@ -120,7 +120,7 @@ export class ConexionesComponent implements OnInit {
       header: 'USUARIOS.STATUS',
       type: 'text'
     }
-  ];
+  ]
 
   columnasDetailRegistros: ColumnMetadata[] = [
     {
@@ -128,36 +128,36 @@ export class ConexionesComponent implements OnInit {
       header: 'CONEXIONES.DESCRIPCIONCONEXIONN',
       type: 'text'
     }
-  ];
+  ]
 
-  consultarSuscriptores() {
+  consultarSuscriptores () {
     this.registrosSub = this._suscriptoresService
       .getSuscriptores()
       .pipe(
         tap((resp: any) => {
           if (resp.ok) {
-            this.suscriptores = resp.suscriptores;
-            console.log('Todos las suscriptores', this.suscriptores);
-            return;
+            this.suscriptores = resp.suscriptores
+            console.log('Todos las suscriptores', this.suscriptores)
+            return
           }
         }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
+        catchError(err => {
+          console.log('Ha ocurrido un error', err)
+          return of(null)
         })
       )
-      .subscribe();
+      .subscribe()
   }
 
-  OnNuevoRegistroClick() {
-    this.router.navigate(['administracion-bd/gestion-conexion/']);
+  OnNuevoRegistroClick () {
+    this.router.navigate(['administracion-bd/gestion-conexion/'])
   }
 
-  OnEditarRegistroClick(id: number) {
-    this.router.navigate(['administracion-bd/gestion-conexion/'], { queryParams: { regId: id } });
+  OnEditarRegistroClick (id: number) {
+    this.router.navigate(['administracion-bd/gestion-conexion/'], { queryParams: { regId: id } })
   }
 
-  OnEliminarRegistroClick(id: any) {
+  OnEliminarRegistroClick (id: any) {
     Swal.fire({
       title: this.translate.instant('CONEXIONES.ELIMINARTITULO'),
       text: this.translate.instant('CONEXIONES.ELIMINARTEXTO'),
@@ -173,85 +173,85 @@ export class ConexionesComponent implements OnInit {
               codigoTipoLog: '',
               codigoRespuesta: '201',
               descripcionLog: this.translate.instant('CONEXIONES.ELIMINAREXITOSA') + ' ' + resp.mensaje
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire(this.translate.instant('CONEXIONES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.registros = this.registros.filter((s) => s.conexionId !== id.id);
+            }
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+            Swal.fire(this.translate.instant('CONEXIONES.ELIMINAREXITOSA'), resp.mensaje, 'success')
+            this.registros = this.registros.filter(s => s.conexionId !== id.id)
           },
           error: (err: any) => {
             const logData = {
               codigoTipoLog: '',
               codigoRespuesta: '501',
               descripcionLog: this.translate.instant('CONEXIONES.ELIMINARERROR') + ' ' + err
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            Swal.fire('Error', this.translate.instant('CONEXIONES.ELIMINARERROR'), 'error');
-            console.error('Error eliminando', err);
+            }
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+            Swal.fire('Error', this.translate.instant('CONEXIONES.ELIMINARERROR'), 'error')
+            console.error('Error eliminando', err)
           }
-        });
+        })
       }
-    });
+    })
   }
 
-  onFiltroNombreApliChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
+  onFiltroNombreApliChangeClick (evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value)
+    const textoFiltro = evento.target.value.toLowerCase()
     if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
+      this.registrosFiltrado = [...this.registros]
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
+      this.registrosFiltrado = this.registrosFiltrado.filter(suscriptor =>
         (suscriptor.nombreServidor || '').toLowerCase().includes(textoFiltro)
-      );
-      console.log('filtrados', this.registrosFiltrado);
+      )
+      console.log('filtrados', this.registrosFiltrado)
     }
   }
 
-  onFiltroNombreSuscripChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
+  onFiltroNombreSuscripChangeClick (evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value)
+    const textoFiltro = evento.target.value.toLowerCase()
     if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
+      this.registrosFiltrado = [...this.registros]
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((suscriptor) =>
+      this.registrosFiltrado = this.registrosFiltrado.filter(suscriptor =>
         (suscriptor.nombreSuscriptor || '').toLowerCase().includes(textoFiltro)
-      );
-      console.log('filtrados', this.registrosFiltrado);
+      )
+      console.log('filtrados', this.registrosFiltrado)
     }
   }
 
-  onFiltroNombreServeChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
+  onFiltroNombreServeChangeClick (evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value)
+    const textoFiltro = evento.target.value.toLowerCase()
     if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
+      this.registrosFiltrado = [...this.registros]
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((server) => (server.nombreServidor || '').toLowerCase().includes(textoFiltro));
-      console.log('filtrados', this.registrosFiltrado);
+      this.registrosFiltrado = this.registrosFiltrado.filter(server => (server.nombreServidor || '').toLowerCase().includes(textoFiltro))
+      console.log('filtrados', this.registrosFiltrado)
     }
   }
 
-  onFiltroNombreBDChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
+  onFiltroNombreBDChangeClick (evento: any) {
+    console.log('filtrar el descripcion ', evento.target.value)
+    const textoFiltro = evento.target.value.toLowerCase()
     if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
+      this.registrosFiltrado = [...this.registros]
     } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((bd) => (bd.BDNombre || '').toLowerCase().includes(textoFiltro));
-      console.log('filtrados', this.registrosFiltrado);
+      this.registrosFiltrado = this.registrosFiltrado.filter(bd => (bd.BDNombre || '').toLowerCase().includes(textoFiltro))
+      console.log('filtrados', this.registrosFiltrado)
     }
   }
 
-  onFiltroEstadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
+  onFiltroEstadoChangeClick (evento: any) {
+    console.log('filtrar el estado ', evento.target.value)
     if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
+      this.registrosFiltrado = this.registros
     } else {
-      const estado = evento.target.value == 'true' ? true : false;
-      this.registrosFiltrado = this.registros.filter((x) => x.estadoConexion == estado);
+      const estado = evento.target.value == 'true' ? true : false
+      this.registrosFiltrado = this.registros.filter(x => x.estadoConexion == estado)
     }
   }
 
-  toggleNav(): void {
-    this.toggleSidebar.emit();
+  toggleNav (): void {
+    this.toggleSidebar.emit()
   }
 }

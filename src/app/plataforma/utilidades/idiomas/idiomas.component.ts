@@ -24,6 +24,7 @@ import { environment } from 'src/environments/environment'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { LocalStorageService, PtlidiomasService, UploadFilesService } from 'src/app/theme/shared/service'
 import { PTLIdioma } from 'src/app/theme/shared/_helpers/models/PTLIdioma.model'
+import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
 
 const base_url = environment.apiUrl
 //#endregion IMPORTS
@@ -31,7 +32,16 @@ const base_url = environment.apiUrl
 @Component({
   selector: 'app-idiomas',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    DatatableComponent,
+    DataLoaderComponent
+  ],
   templateUrl: './idiomas.component.html',
   styleUrl: './idiomas.component.scss'
 })
@@ -78,6 +88,7 @@ export class IdiomasComponent implements OnInit, OnDestroy {
     console.log('elementos menu componente', this.menuItems)
     // this.consultarRegistros()
     this.hasFiltersSlot = true
+    this.consultarRegistros()
     this.setupRegistrosStream()
     this.subscriptions.add(
       this._registrosService.getRegistros().subscribe(
@@ -91,18 +102,23 @@ export class IdiomasComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe()
   }
 
+  consultarRegistros () {
+    this.idiomas = this._languageService.getRegistrosActuales()
+    this.registrosFiltrado = this.idiomas
+    console.log('registrosFiltrado', this.registrosFiltrado)
+  }
+
   setupRegistrosStream (): void {
     // const suscriptor = this._localStorageService.getSuscriptorLocalStorage() ? this._localStorageService.getSuscriptorLocalStorage()  : {};
     // if (!suscriptor || !suscriptor.codigoSuscriptor) {
     //   console.error('Error: No se pudo obtener el suscriptor o su código. Operación de carga de registros abortada.');
     //   return;
     // }
-    this.idiomasTransformadas$ = this._registrosService.idiomas$.pipe(
+    this.idiomasTransformadas$ = this._languageService.idiomas$.pipe(
       switchMap((idioms: PTLIdioma[]) => {
         if (!idioms) return of([])
         const transformedIdiomas = idioms.map((idio: any) => {
           idio.nomEstado = idio.estadoIdioma ? 'Activo' : 'Inactivo'
-        //   idio.flagIdioma = this._uploadService.getFilePath(this.suscPlataforma, 'idiomas', idio.flagIdioma)
           idio.capture = this._uploadService.getFilePath(this.suscPlataforma, 'idiomas', idio.flagIdioma)
           idio.tipo = 'capture'
           return idio as PTLIdioma
@@ -144,30 +160,6 @@ export class IdiomasComponent implements OnInit, OnDestroy {
         return filteredIdioms
       })
     )
-  }
-
-  consultarRegistros () {
-    this.registrosSub = this._registrosService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            resp.IdiomasComponent.forEach((idioma: any) => {
-              idioma.nomEstado = idioma.estadoIdioma == true ? 'Activo' : 'Inactivo'
-              idioma.flagIdioma = this._uploadService.getFilePath(this.suscPlataforma, 'idiomas', idioma.urlSlider)
-            })
-            this.registros = resp.idiomas
-            this.registrosFiltrado = resp.idiomas
-            console.log('Todos las usuarios', this.registros)
-            return
-          }
-        }),
-        catchError(err => {
-          console.log('Ha ocurrido un error', err)
-          return of(null)
-        })
-      )
-      .subscribe()
   }
 
   columnasRegistros: ColumnMetadata[] = [

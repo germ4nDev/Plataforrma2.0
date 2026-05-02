@@ -35,8 +35,8 @@ export class PtlidiomasService {
   }
 
   getRegistrosActuales (): PTLIdioma[] {
-      return this._idiomas.getValue()
-    }
+    return this._idiomas.getValue()
+  }
 
   getRegistros () {
     // console.log('4');
@@ -67,7 +67,7 @@ export class PtlidiomasService {
   }
 
   getRegistroById (id: string) {
-    console.log('buscar el idioma', id);
+    console.log('buscar el idioma', id)
     const url = `${base_url}/idiomas/${id}`
     return this.http.get(url).pipe(
       map((resp: any) => {
@@ -80,7 +80,7 @@ export class PtlidiomasService {
   }
 
   postCrearRegistro (data: any) {
-        console.log('data del idioma', data)
+    console.log('data del idioma', data)
     const url = `${base_url}/idiomas`
     return this.http.post(url, data).pipe(
       map((resp: any) => {
@@ -95,7 +95,7 @@ export class PtlidiomasService {
 
   putModificarRegistro (idioma: PTLIdioma) {
     const url = `${base_url}/idiomas/${idioma.codigoIdioma}`
-    console.log('servicio de idiomas', idioma);
+    console.log('servicio de idiomas', idioma)
     return this.http.put(url, idioma).pipe(
       map((resp: any) => {
         return {

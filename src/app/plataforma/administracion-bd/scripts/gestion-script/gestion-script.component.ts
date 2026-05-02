@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit, Output, EventEmitter } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'
 import { TranslateModule, TranslateService } from '@ngx-translate/core'
 import { GradientConfig } from 'src/app/app-config'
@@ -43,7 +43,7 @@ export class GestionScriptComponent implements OnInit {
   modoEdicion: boolean = false
   gradientConfig: any
   suscriptor: string = ''
-  tipoEditorTexto = 'basica';
+  tipoEditorTexto = 'basica'
 
   //   scriptForm!: FormGroup
   //   esNuevo: boolean = true
@@ -51,9 +51,9 @@ export class GestionScriptComponent implements OnInit {
 
   tiposScripts: PTLTiposScriptsModel[] = []
   aplicaciones: PTLAplicacionModel[] = []
-  lockScreenSubscription: Subscription | undefined;
-  isLocked: boolean = false;
-  lockMessage: string = '';
+  lockScreenSubscription: Subscription | undefined
+  isLocked: boolean = false
+  lockMessage: string = ''
 
   selectedFile: File | null = null
   previewUrl: string | ArrayBuffer | null = null
@@ -81,25 +81,23 @@ export class GestionScriptComponent implements OnInit {
     GradientConfig.header_fixed_layout = true
     this.gradientConfig = GradientConfig
     this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-    this.route.queryParams.subscribe(params => {
-      this.registroId = params['regId']
-      if (this.registroId) {
-        this.modoEdicion = true
-        this._scriptsService.getRegistroById(this.registroId).subscribe({
-          next: (resp: any) => {
-            this.FormRegistro = resp.script
-            this.codigoScript = resp.script.codigoScript
-            this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'suites', resp.suite.imagenInicio)
-          },
-          error: () => {
-            Swal.fire('Error', 'No se pudo obtener script por ese codigo', 'error')
-          }
-        })
-      } else {
-        this.FormRegistro.codigoScript = uuidv4()
-        this.modoEdicion = false
-      }
-    })
+    this.registroId = this._localStorageService.getObject<string>('regId') || 'nuevo'
+    if (this.registroId != 'nuevo') {
+      this.modoEdicion = true
+      this._scriptsService.getRegistroById(this.registroId).subscribe({
+        next: (resp: any) => {
+          this.FormRegistro = resp.script
+          this.codigoScript = resp.script.codigoScript
+          this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'suites', resp.suite.imagenInicio)
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo obtener script por ese codigo', 'error')
+        }
+      })
+    } else {
+      this.FormRegistro.codigoScript = uuidv4()
+      this.modoEdicion = false
+    }
   }
 
   ngOnInit (): void {
@@ -120,7 +118,13 @@ export class GestionScriptComponent implements OnInit {
       this.FormRegistro = form
       this._localStorageService.removeFormRegistro()
     }
-
+    if (!this.modoEdicion) {
+      console.log('modo edicion', this.modoEdicion)
+      this.FormRegistro.codigoScript = uuidv4()
+      this.FormRegistro.codigoAplicacion = ''
+      // this.FormRegistro.codigoModulo = uuidv4();
+      console.log('FormRegistro', this.FormRegistro)
+    }
     // this.route.queryParams.subscribe(params => {
     //   const regId = params['regId']
     //   if (params['regId'] === 'nuevo') {
@@ -157,16 +161,16 @@ export class GestionScriptComponent implements OnInit {
     })
   }
 
-//   crearFormulario (): void {
-//     this.scriptForm = this.fb.group({
-//       codigoScript: [{ value: '', disabled: true }],
-//       nombreScript: ['', [Validators.required]],
-//       descripcionScript: [''],
-//       codigoAplicacion: ['', [Validators.required]],
-//       codigoTipo: ['', [Validators.required]],
-//       estadoScript: [true, [Validators.required]]
-//     })
-//   }
+  //   crearFormulario (): void {
+  //     this.scriptForm = this.fb.group({
+  //       codigoScript: [{ value: '', disabled: true }],
+  //       nombreScript: ['', [Validators.required]],
+  //       descripcionScript: [''],
+  //       codigoAplicacion: ['', [Validators.required]],
+  //       codigoTipo: ['', [Validators.required]],
+  //       estadoScript: [true, [Validators.required]]
+  //     })
+  //   }
 
   cargarTiposScripts (): void {
     this._tiposScriptsService.getRegistros().subscribe({
@@ -179,40 +183,46 @@ export class GestionScriptComponent implements OnInit {
     })
   }
 
-  onAplicacionchangeClick(event: any) {
-    const value = event.target.value;
-    const app = this.aplicaciones.filter((x) => x.codigoAplicacion == value)[0];
-    this.FormRegistro.codigoAplicacion = app.codigoAplicacion || '';
+  onAplicacionChangeClick (event: any) {
+    const value = event.target.value
+    const app = this.aplicaciones.filter(x => x.codigoAplicacion == value)[0]
+    this.FormRegistro.codigoAplicacion = app.codigoAplicacion || ''
   }
 
-  actualizarDescripcionVersion(nuevoContenido: string): void {
-    this.FormRegistro.descripcionScript = nuevoContenido;
-    console.log('Descripción de descripcionScript actualizada:', this.FormRegistro.descripcionScript);
+  onTipoScriptChangeClick (event: any) {
+    const value = event.target.value
+    const tipo = this.tiposScripts.filter(x => x.codigoTipo == value)[0]
+    this.FormRegistro.codigoTipo = tipo.codigoTipo || ''
+  }
+
+  actualizarDescripcionVersion (nuevoContenido: string): void {
+    this.FormRegistro.descripcionScript = nuevoContenido
+    console.log('Descripción de descripcionScript actualizada:', this.FormRegistro.descripcionScript)
     // if (this.validationForm && this.isSubmit) {
     // }
   }
 
-//   cargarScript (id: string): void {
-//     this._scriptsService.getRegistroById(id).subscribe({
-//       next: (resp: any) => {
-//         if (resp.ok && resp.script) {
-//           this.scriptForm.patchValue({
-//             codigoScript: resp.script.codigoScript,
-//             nombreScript: resp.script.nombreScript,
-//             descripcionScript: resp.script.descripcionScript,
-//             codigoAplicacion: resp.script.codigoAplicacion,
-//             codigoTipo: resp.script.codigoTipo,
-//             estadoScript: resp.script.estadoScript
-//           })
-//           this.scriptForm.get('codigoScript')?.disable()
-//         }
-//       },
-//       error: () => {
-//         Swal.fire('Error', 'No se pudo cargar la información del script', 'error')
-//         this.volver()
-//       }
-//     })
-//   }
+  //   cargarScript (id: string): void {
+  //     this._scriptsService.getRegistroById(id).subscribe({
+  //       next: (resp: any) => {
+  //         if (resp.ok && resp.script) {
+  //           this.scriptForm.patchValue({
+  //             codigoScript: resp.script.codigoScript,
+  //             nombreScript: resp.script.nombreScript,
+  //             descripcionScript: resp.script.descripcionScript,
+  //             codigoAplicacion: resp.script.codigoAplicacion,
+  //             codigoTipo: resp.script.codigoTipo,
+  //             estadoScript: resp.script.estadoScript
+  //           })
+  //           this.scriptForm.get('codigoScript')?.disable()
+  //         }
+  //       },
+  //       error: () => {
+  //         Swal.fire('Error', 'No se pudo cargar la información del script', 'error')
+  //         this.volver()
+  //       }
+  //     })
+  //   }
 
   onFileSelectedClick (event: any) {
     const file: File = event.target.files[0]
@@ -222,11 +232,11 @@ export class GestionScriptComponent implements OnInit {
       id: '0'
     }
     if (file) {
-    //   const reader = new FileReader()
-    //   reader.onload = (e: any) => {
-    //     this.selectedFileUrl = e.target.result
-    //   }
-    //   reader.readAsDataURL(file)
+      //   const reader = new FileReader()
+      //   reader.onload = (e: any) => {
+      //     this.selectedFileUrl = e.target.result
+      //   }
+      //   reader.readAsDataURL(file)
       this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
         next: (path: any) => {
           console.log('resultado', path)
@@ -321,44 +331,44 @@ export class GestionScriptComponent implements OnInit {
     }
   }
 
-//   guardar (): void {
-//     if (this.scriptForm.invalid) {
-//       Object.values(this.scriptForm.controls).forEach(control => control.markAsTouched())
-//       return
-//     }
+  //   guardar (): void {
+  //     if (this.scriptForm.invalid) {
+  //       Object.values(this.scriptForm.controls).forEach(control => control.markAsTouched())
+  //       return
+  //     }
 
-//     const scriptData: PTLScriptsModel = {
-//       ...this.scriptForm.getRawValue(),
-//       codigoUsuarioCreacion: 'ADMIN',
-//       fechaCreacion: new Date().toISOString(),
-//       codigoUsuarioModificacion: 'ADMIN',
-//       fechaModificacion: new Date().toISOString()
-//     }
+  //     const scriptData: PTLScriptsModel = {
+  //       ...this.scriptForm.getRawValue(),
+  //       codigoUsuarioCreacion: 'ADMIN',
+  //       fechaCreacion: new Date().toISOString(),
+  //       codigoUsuarioModificacion: 'ADMIN',
+  //       fechaModificacion: new Date().toISOString()
+  //     }
 
-//     if (this.esNuevo) {
-//       this._scriptsService.postCrearRegistro(scriptData).subscribe({
-//         next: () => {
-//           Swal.fire('Éxito', 'Script creado correctamente', 'success')
-//           this.volver()
-//         },
-//         error: err => {
-//           console.error(err)
-//           Swal.fire('Error', 'Ocurrió un error al crear el script', 'error')
-//         }
-//       })
-//     } else {
-//       this._scriptsService.putModificarRegistro(scriptData).subscribe({
-//         next: () => {
-//           Swal.fire('Éxito', 'Script actualizado correctamente', 'success')
-//           this.volver()
-//         },
-//         error: err => {
-//           console.error(err)
-//           Swal.fire('Error', 'Ocurrió un error al actualizar el script', 'error')
-//         }
-//       })
-//     }
-//   }
+  //     if (this.esNuevo) {
+  //       this._scriptsService.postCrearRegistro(scriptData).subscribe({
+  //         next: () => {
+  //           Swal.fire('Éxito', 'Script creado correctamente', 'success')
+  //           this.volver()
+  //         },
+  //         error: err => {
+  //           console.error(err)
+  //           Swal.fire('Error', 'Ocurrió un error al crear el script', 'error')
+  //         }
+  //       })
+  //     } else {
+  //       this._scriptsService.putModificarRegistro(scriptData).subscribe({
+  //         next: () => {
+  //           Swal.fire('Éxito', 'Script actualizado correctamente', 'success')
+  //           this.volver()
+  //         },
+  //         error: err => {
+  //           console.error(err)
+  //           Swal.fire('Error', 'Ocurrió un error al actualizar el script', 'error')
+  //         }
+  //       })
+  //     }
+  //   }
 
   //   campoNoValido(campo: string): boolean {
   //     return this.scriptForm.get(campo)?.invalid && this.scriptForm.get(campo)?.touched ? true : false;

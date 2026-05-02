@@ -328,6 +328,11 @@
     "VERSIONES": {},
     "ESTADISTICAS": {}
   },
+  "AUTENTICACION": {
+    "LOGIN": {
+      "TITLE": "Acceso Usuarios"
+    }
+  },
   "BIBLIOTECA": {
     "TITULO": "Biblioteca",
     "TITLE": "Administración de Bibliotecas",
