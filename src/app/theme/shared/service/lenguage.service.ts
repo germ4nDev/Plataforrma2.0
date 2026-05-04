@@ -26,9 +26,10 @@ export class LanguageService {
     private translate: TranslateService
   ) {
     console.log('localLanguage', localStorage.getItem('lang') || 'es')
+    this.setLanguage(localStorage.getItem('lang') || 'es')
     this.cargarRegistros().subscribe({
-      error: (err) => console.error('Error al cargar idiomas en el inicio:', err)
-    });
+      error: err => console.error('Error al cargar idiomas en el inicio:', err)
+    })
     this._socketService.listen('idiomas-actualizadas').subscribe({
       next: payload => {
         console.log('Evento de Socket.IO recibido:', payload.msg)
@@ -41,6 +42,7 @@ export class LanguageService {
 
   setLanguage (lang: string) {
     this.translate.use(lang)
+    this._localStorageService.setLanguage(lang)
     localStorage.setItem('lang', lang)
     console.log('New localLanguage', lang)
     this.currentLangSubject.next(lang)
@@ -54,17 +56,17 @@ export class LanguageService {
     return this._idiomas.asObservable()
   }
 
-    getRegistrosActuales (): PTLIdioma[] {
-      return this._idiomas.getValue()
-    }
+  getRegistrosActuales (): PTLIdioma[] {
+    return this._idiomas.getValue()
+  }
 
   cargarRegistros () {
-    console.log('Consultando y ordenando actividadesRoles del servidor...')
+    console.log('Consultando y ordenando idiomas del servidor...')
     const url = `${base_url}/idiomas`
     return this.http.get(url).pipe(
       map((resp: any) => resp.idiomas as PTLIdioma[]),
       tap(idiomasOrder => {
-        console.log('los hps idiomas', idiomasOrder);
+        console.log('los hps idiomas', idiomasOrder)
         this._idiomas.next(idiomasOrder)
       })
     )

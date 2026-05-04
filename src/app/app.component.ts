@@ -139,8 +139,8 @@ export class AppComponent implements OnInit {
       err => console.error('Error al cargar tiposGaleria:', err)
     )
     this._idiomasService.cargarRegistros().subscribe(
-      () => console.log('** tiposGaleria cargadas y guardadas en el servicio'),
-      err => console.error('Error al cargar tiposGaleria:', err)
+      () => console.log('** idiomas cargados y guardados en el servicio'),
+      err => console.error('Error al cargar idiomas:', err)
     )
   }
 }

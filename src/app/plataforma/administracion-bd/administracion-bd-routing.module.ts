@@ -10,7 +10,7 @@ const routes: Routes = [
         loadComponent: () => import('./scripts/scripts.component').then((m) => m.ScriptsComponent)
       },
       {
-        path: 'scripts/gestion-script',
+        path: 'gestion-script',
         loadComponent: () => import('./scripts/gestion-script/gestion-script.component').then((m) => m.GestionScriptComponent)
       },
       {
@@ -30,7 +30,7 @@ const routes: Routes = [
         loadComponent: () => import('./tipos-scripts/tipos-scripts.component').then((m) => m.TiposScriptsComponent)
       },
       {
-        path: 'tipos-scripts/gestion-tipo',
+        path: 'gestion-tipo',
         loadComponent: () => import('./tipos-scripts/gestion-tipo/gestion-tipo.component').then((m) => m.GestionTipoComponent)
       }
     ]

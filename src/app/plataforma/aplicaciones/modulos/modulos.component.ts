@@ -27,11 +27,21 @@ import { LocalStorageService, PtlBibliotecasService, PtllogActividadesService, U
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
+import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
 
 @Component({
   selector: 'app-modulos',
   standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+  imports: [
+    CommonModule,
+    DataTablesModule,
+    SharedModule,
+    TranslateModule,
+    NavBarComponent,
+    NavContentComponent,
+    DatatableComponent,
+    DataLoaderComponent
+  ],
   templateUrl: './modulos.component.html',
   styleUrl: './modulos.component.scss'
 })

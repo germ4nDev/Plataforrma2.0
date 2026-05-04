@@ -41,8 +41,8 @@
             <div class="card-body">
                 <ng-container *ngIf="paquetesFiltrados$ | async as dataFiltrada">
                     <app-data-table [data]="dataFiltrada" [idField]="'codigoPaquete'" [tableTitle]="'PAQUETES.TITLE' | translate" [metadataColumns]="columnasPaquetes" [metadataDetailColumns]="columnasDetailRegistros" [showDetail]="true" [showActions]="true" [showNewButton]="true"
-                        [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showOption1Button]="true" [colorOpcion1]="colorOpcion1" [tooltipOption1]="'PAQUETES.MODULOS' | translate" [letraOpcion1]="letraOpcion1" [showOption2Button]="true"
-                        [colorOpcion2]="colorOpcion2" [tooltipOption2]="'PAQUETES.ITEMS' | translate" [letraOpcion2]="letraOpcion2" [newButtonLabel]="'PAQUETES.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
+                        [showViewButton]="false" [showEditButton]="true" [showDeleteButton]="true" [showSearchBox]="false" [showOption1Button]="true" [colorOpcion1]="colorOpcion1" [tooltipOption1]="'PAQUETES.MODULOS' | translate" [letraOpcion1]="letraOpcion1"
+                        [showOption2Button]="true" [colorOpcion2]="colorOpcion2" [tooltipOption2]="'PAQUETES.ITEMS' | translate" [letraOpcion2]="letraOpcion2" [newButtonLabel]="'PAQUETES.NEW' | translate" [exportLabel]="'PLATAFORMA.EXCEL' | translate" (newRecord)="OnNuevoRegistroClick()"
                         (editRecord)="OnEditarRegistroClick($event)" (deleteRecord)="OnEliminarRegistroClick($event)" (option1Record)="OnOption1Click($event)" (option2Record)="OnOption2Click($event)">
                     </app-data-table>
                 </ng-container>

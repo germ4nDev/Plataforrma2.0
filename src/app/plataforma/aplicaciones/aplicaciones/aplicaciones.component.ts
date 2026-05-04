@@ -23,6 +23,7 @@ import { LocalStorageService, PtllogActividadesService, UploadFilesService } fro
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { VideoPlayerComponent } from 'src/app/theme/shared/components/video-player/video-player.component'
+import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
 
 @Component({
   selector: 'app-aplicaciones',
@@ -34,7 +35,8 @@ import { VideoPlayerComponent } from 'src/app/theme/shared/components/video-play
     TranslateModule,
     NavBarComponent,
     NavContentComponent,
-    DatatableComponent
+    DatatableComponent,
+    DataLoaderComponent
   ],
   templateUrl: './aplicaciones.component.html',
   styleUrl: './aplicaciones.component.scss'

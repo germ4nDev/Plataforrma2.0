@@ -28,6 +28,7 @@
     "VALIDARPASSWORD": "Validar",
     "PASSWORDNOTMATCH": "Clave actual no coincide.",
     "SELECT_FILE": "Seleccionar Archivo",
+    "SOCIAL": "Redes Sociales",
     "COLORSETTING": {
       "TITLE": "Configuración Colores",
       "NEW": "Nueva Configuración Colores",
@@ -327,6 +328,39 @@
     "SUITES": {},
     "VERSIONES": {},
     "ESTADISTICAS": {}
+  },
+  "AUTENTICACION": {
+    "LOGIN": {
+      "TITLE": "Acceso Usuarios",
+      "USERNAME": "Ingrese el Usuario",
+      "USER_REQ": "El Usuario es requerido",
+      "PASSWORD": "Ingrese la Clave",
+      "PASS_REQ": "La Clave es requerida",
+      "REMEMBER_ME": "Recordarme",
+      "ACCESS": "Iniciar Sesión",
+      "CHANGE_PASS_Q": "Cambiar Clave",
+      "RESET_PASS_Q": "Resetear la Clave",
+      "CHANGE_PASS_T": "Aquí",
+      "RESET_PASS_T": "Aquí",
+      "SOCIAL_NETWORKS": "Redes Sociales"
+    },
+    "CHANGEPASSWORD": {
+      "TITLE": "Cambiar la Clave",
+      "ACTUAL": "Clave Actual *",
+      "NEW": "Nueva Clave *",
+      "CONFIRM": "Confirmar la nueva Clave *",
+      "CHANGE": "Cambiar Clave",
+      "BACK": "Regresar"
+    },
+    "PERFILCONFIGURATION": {},
+    "RESETPASSWORD": {
+      "TITLE": "Resetear la Clave",
+      "ACTUAL": "Cambiar la Clave",
+      "CHANGE": "Cambiar la Clave",
+      "EMAIL": "Email registado al crear la cuenta",
+      "NEWPASSWORD": "Nueva clave generada",
+      "BACK": "Regresar"
+    }
   },
   "BIBLIOTECA": {
     "BIBLIOTECAS": {
