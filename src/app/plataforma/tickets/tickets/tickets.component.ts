@@ -433,15 +433,28 @@ export class TicketsComponent implements OnInit {
   }
 
   OnEliminarRegistroClick(id: any) {
-    Swal.fire({
-      title: this.translate.instant('TICKETS.TICKETS.ELIMINARTITULO'),
-      text: this.translate.instant('TICKETS.TICKETS.ELIMINARTEXTO'),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then((result: any) => {
-      if (result.isConfirmed) {
+    // Swal.fire({
+    //   title: this.translate.instant('TICKETS.TICKETS.ELIMINARTITULO'),
+    //   text: this.translate.instant('TICKETS.TICKETS.ELIMINARTEXTO'),
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+    //   cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+    // }).then((result: any) => {
+    //   if (result.isConfirmed) {
+    const ticket = this.ticket.find((x) => x.codigoTicket == id.id);
+    const titulo = this.translate.instant('TICKETS.TICKETS.ELIMINARTITULO');
+    const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+    const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+    const htmlBody = `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('TICKETS.TICKETS.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${ticket?.nombreTicket}"</b></small>
+    `;
+    this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+    .then((confirmado) => {
+      if (confirmado) {
         console.log('id', id.id);
         const ticket = this.registros.filter((x) => x.codigoTicket == id.id)[0];
         this._ticketsService.deleteEliminarRegistro(id.id).subscribe({
