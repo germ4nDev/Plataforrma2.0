@@ -1011,6 +1011,7 @@
       "IDENTIFICACION": "Identification",
       "CORREO": "Email",
       "USERNAME": "Username",
+      "ROLES": "User Role",
       "FILTER_IDENTIFICACION": "Identification Filter",
       "FILTER_CORREO": "Email Filter",
       "FILTER_USERNAME": "Username Filter",

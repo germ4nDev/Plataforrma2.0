@@ -19,15 +19,20 @@
                         <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'USUARIOSSC.UPDATE' | translate }}</h4>
                     </div>
                     <div class="d-flex">
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnRegresarClick()">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnGestionarRegistroClick(validationForm)">
+                        <button *ngIf="!modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'USUARIOSSC.GESTION.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro btn-animacion" (click)="btnGestionarRegistroClick(validationForm)">
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'USUARIOSSC.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
@@ -41,9 +46,13 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoUsuarioSC">{{ 'USUARIOSSC.GESTION.CODE' |
                                     translate }}</label>
-                                <input class="form-control form-input" id="codigoUsuarioSC" name="codigoUsuarioSC" type="text" placeholder="{{ 'USUARIOSSC.GESTION.PLACEHOLDERNAME' | translate }}" [ngClass]="{ 'is-invalid': !codigoUsuarioSC.valid && (codigoUsuarioSC.dirty || codigoUsuarioSC.touched || isSubmit) }"
+                                <input class="form-control form-input" id="codigoUsuarioSC" name="codigoUsuarioSC"
+                                    type="text" placeholder="{{ 'USUARIOSSC.GESTION.PLACEHOLDERNAME' | translate }}"
+                                    [ngClass]="{ 'is-invalid': !codigoUsuarioSC.valid && (codigoUsuarioSC.dirty || codigoUsuarioSC.touched || isSubmit) }"
                                     #codigoUsuarioSC="ngModel" required [(ngModel)]="FormRegistro.codigoUsuarioSC" />
-                                <label *ngIf="!codigoUsuarioSC.valid && (codigoUsuarioSC.dirty || codigoUsuarioSC.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!codigoUsuarioSC.valid && (codigoUsuarioSC.dirty || codigoUsuarioSC.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'USUARIOSSC.GESTION.REQUERIDOCODE' | translate }}
                                 </label>
                             </div>
@@ -51,16 +60,20 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoSuscriptor"> {{
-                                    'USUARIOSSC.GESTION.SUSCRIPTOR' |
-                                    translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer" name="codigoSuscriptor" id="codigoSuscriptor" [ngClass]="{ 'is-invalid': !codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit) }" #codigoSuscriptor="ngModel"
-                                    required [(ngModel)]="FormRegistro.codigoSuscriptor" (change)="onSuscriptorChangeClick($event)">
+                                    'USUARIOSSC.GESTION.SUSCRIPTOR' | translate }}</label>
+                                <select class="form-control form-input" style="cursor: pointer" name="codigoSuscriptor"
+                                    id="codigoSuscriptor"
+                                    [ngClass]="{ 'is-invalid': !codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit) }"
+                                    #codigoSuscriptor="ngModel" required [(ngModel)]="FormRegistro.codigoSuscriptor"
+                                    (change)="onSuscriptorChangeClick($event)">
                                     <option value="">{{ 'USUARIOSSC.GESTION.PLACEHOLDERSUSCRIPTOR' | translate }}
                                     </option>
                                     <option [value]="susc.codigoSuscriptor" *ngFor="let susc of suscriptores"> {{
                                         susc.nombreSuscriptor }}</option>
                                 </select>
-                                <label *ngIf="!codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'USUARIOSSC.GESTION.REQUERIDOSUSCRIPTOR' | translate }}
                                 </label>
                             </div>
@@ -69,14 +82,18 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="codigoUsuario"> {{ 'USUARIOSSC.GESTION.SUITE' |
                                     translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer" name="codigoUsuario" id="codigoUsuario" [ngClass]="{ 'is-invalid': !codigoUsuario.valid && (codigoUsuario.dirty || codigoUsuario.touched || isSubmit) }" #codigoUsuario="ngModel" required
-                                    [(ngModel)]="FormRegistro.codigoUsuario" (change)="onUsuarioChangeClick($event)">
+                                <select class="form-control form-input" style="cursor: pointer" name="codigoUsuario"
+                                    id="codigoUsuario"
+                                    [ngClass]="{ 'is-invalid': !codigoUsuario.valid && (codigoUsuario.dirty || codigoUsuario.touched || isSubmit) }"
+                                    #codigoUsuario="ngModel" required [(ngModel)]="FormRegistro.codigoUsuario"
+                                    (change)="onUsuarioChangeClick($event)">
                                     <option value="">{{ 'USUARIOSSC.GESTION.PLACEHOLDERSUITE' | translate }} </option>
                                     <option [value]="sui.codigoUsuario" *ngFor="let sui of usuarios"> {{
-                                        sui.nombreUsuario }}
-                                    </option>
+                                        sui.nombreUsuario }} </option>
                                 </select>
-                                <label *ngIf="!codigoUsuario.valid && (codigoUsuario.dirty || codigoUsuario.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!codigoUsuario.valid && (codigoUsuario.dirty || codigoUsuario.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'USUARIOSSC.GESTION.REQUERIDOAPLICACION' | translate }}
                                 </label>
                             </div>
@@ -87,13 +104,13 @@
                                 <div class="radio-buttons">
                                     <label class="radio-button">
                                         <input name="estadoModulo" type="radio" [value]="true"
-                                            [(ngModel)]="FormRegistro.estadoUsuario" />
+                                            [(ngModel)]="FormRegistro.estadoUsuarioSC" />
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.ACTIVE' | translate }}</label>
                                     </label>
                                     <label class="radio-button">
                                         <input name="estadoModulo" type="radio" [value]="false"
-                                            [(ngModel)]="FormRegistro.estadoUsuario" />
+                                            [(ngModel)]="FormRegistro.estadoUsuarioSC" />
                                         <div class="radio-circle"></div>
                                         <label class="radio-label">{{ 'PLATAFORMA.INACTIVE' | translate }}</label>
                                     </label>
@@ -105,17 +122,19 @@
                             <div class="col-md-6 text-center">
                                 <h4>{{ 'USUARIOSSC.GESTION.EMPRESASTITLE' | translate }}</h4>
                             </div>
-                            <div class="col-md-12" style="max-height: 400px; overflow-y: auto;">
+                            <div class="col-md-12" style="max-height: 400px; overflow-y: auto">
                                 <div class="row">
                                     <div class="col-md-6 mb-2" *ngFor="let empresa of empresasSC; let i = index">
                                         <div class="form-check custom-check-form">
-                                            <input class="form-check-input" type="checkbox" [(ngModel)]="empresa.checked" [name]="'empreCheck_' + i" [id]="'empre_' + i" (change)="onEmpresasSCClickChange($event, empresa)">
+                                            <input class="form-check-input" type="checkbox"
+                                                [(ngModel)]="empresa.checked" [name]="'empreCheck_' + i"
+                                                [id]="'empre_' + i"
+                                                (change)="onEmpresasSCClickChange($event, empresa)" />
                                             <label class="form-check-label text-white ml-2" [for]="'dimen_' + i">
                                                 {{ empresa.nombreEmpresa }}
                                             </label>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

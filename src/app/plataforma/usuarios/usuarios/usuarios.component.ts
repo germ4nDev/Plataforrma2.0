@@ -22,12 +22,26 @@ import {
   SwalAlertService,
   UploadFilesService,
   PTLUsuariosService,
-  LocalStorageService
+  LocalStorageService,
+  PtlAplicacionesService,
+  PtlSuitesAPService,
+  PtlusuariosRolesApService,
+  PTLRolesAPService,
+  PtlusuariosScService,
+  PTLSuscriptoresService,
+  PtlEmpresasScService
 } from 'src/app/theme/shared/service'
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
 import { of, Subscription } from 'rxjs'
 import Swal from 'sweetalert2'
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
+import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
+import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model'
+import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model'
+import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model'
+import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model'
+import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model'
 //#endregion IMPORTS
 
 @Component({
@@ -72,6 +86,13 @@ export class UsuariosComponent implements OnInit {
   registrosFiltrado$: Observable<PTLUsuarioModel[]> = of([])
   usuarios: PTLUsuarioModel[] = []
   registros: PTLUsuarioModel[] = []
+  aplicaciones: PTLAplicacionModel[] = []
+  suites: PTLSuiteAPModel[] = []
+  usuariosRoles: PTLUsuarioRoleAPModel[] = []
+  empresasSC: PTLEmpresaSCModel[] = []
+  roles: PTLRoleAPModel[] = []
+  usuariosSC: PTLUsuarioSCModel[] = []
+  suscriptores: PTLSuscriptorModel[] = []
 
   rolesUsuario = [
     {
@@ -98,6 +119,13 @@ export class UsuariosComponent implements OnInit {
     private _navigationService: NavigationService,
     private _swalService: SwalAlertService,
     private _usuariosService: PTLUsuariosService,
+    private _aplicacionesService: PtlAplicacionesService,
+    private _rolesUsuariosService: PtlusuariosRolesApService,
+    private _rolesService: PTLRolesAPService,
+    private _suitesService: PtlSuitesAPService,
+    private _usuariosSCService: PtlusuariosScService,
+    private _suscriptoresService: PTLSuscriptoresService,
+    private _empresasSCService: PtlEmpresasScService,
     private _localStorageService: LocalStorageService,
     private _uploadService: UploadFilesService
   ) {
@@ -110,6 +138,20 @@ export class UsuariosComponent implements OnInit {
     this.hasFiltersSlot = true
     this.consultarRegistros()
     setTimeout(() => {
+      this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales()
+      this.suites = this._suitesService.getSuitesActuales()
+      this.roles = this._rolesService.getRolesActuales()
+      this.usuariosRoles = this._rolesUsuariosService.getUsuairosRolesActuales()
+      this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales()
+      this.suscriptores = this._suscriptoresService.getSuscriptoresActuales()
+      this.empresasSC = this._empresasSCService.getEmpresasSCActuales()
+      console.log('aplicaciones', this.aplicaciones)
+      console.log('suites', this.suites)
+      console.log('roles', this.roles)
+      console.log('usuariosRoles', this.usuariosRoles)
+      console.log('usuariosSC', this.usuariosSC)
+      console.log('suscriptores', this.suscriptores)
+      console.log('empresasSC', this.empresasSC)
       this.setupRegistrosStream()
     }, 100)
     this.subscriptions.add(
@@ -183,6 +225,31 @@ export class UsuariosComponent implements OnInit {
     )
   }
 
+  consultarRolesUsuario (codUsuario: string) {
+    let rolesUsuarioFinal: any[] = []
+    const usuarioSC = this.usuariosSC.filter(ru => ru.codigoUsuario == codUsuario)[0]
+    const suscriptor = this.suscriptores.filter(ru => ru.codigoSuscriptor === usuarioSC.codigoSuscriptor)[0]
+    const empresasSC = this.empresasSC.filter(ru => ru.codigoSuscriptor == suscriptor.codigoSuscriptor)
+    const rolesUsuario = this.usuariosRoles.filter(ru => ru.codigoUsuarioSC === usuarioSC.codigoUsuarioSC)
+    // console.log('rolesUsuario', rolesUsuario)
+    rolesUsuarioFinal = rolesUsuario.map(ru => {
+      //   console.log('******** roleUsuario', ru)
+      const role = this.roles.find(r => r.codigoRole === ru.codigoRole)
+      const suite = this.suites.find(s => s.codigoSuite === ru?.codigoSuite)
+      const aplicacion = this.aplicaciones.find(a => a.codigoAplicacion === ru?.codigoAplicacion)
+      const empresa = empresasSC.find(a => a.codigoEmpresaSC === ru.codigoEmpresaSC)
+      return {
+        suscriptor: suscriptor ? suscriptor.nombreSuscriptor : 'Sin Suscriptor',
+        empresa: empresa ? empresa.nombreEmpresa : 'Sin Empresa',
+        aplicacion: aplicacion ? aplicacion.nombreAplicacion : 'Sin Aplicación',
+        suite: suite ? suite.nombreSuite : 'Sin Suite',
+        role: role ? role.nombreRole : 'Rol Desconocido'
+      }
+    })
+
+    return rolesUsuarioFinal
+  }
+
   setupRegistrosStream (): void {
     this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
     let codigo = this._localStorageService.getSuscriptorPlataformaLocalStorage()
@@ -193,7 +260,7 @@ export class UsuariosComponent implements OnInit {
         const transformedUsuarios = users.map((user: any) => {
           user.nomEstado = user.estadoUsuario ? 'Activo' : 'Inactivo'
           user.fotoUsuario = this._uploadService.getFilePath(codigo, 'usuarios', user.fotoUsuario)
-          user.rolesUsuario = this.rolesUsuario || []
+          user.rolesUsuario = this.consultarRolesUsuario(user.codigoUsuario) || []
           return user as PTLUsuarioModel
         })
         console.log('usuarios datatable', transformedUsuarios)
@@ -245,11 +312,13 @@ export class UsuariosComponent implements OnInit {
   }
 
   OnNuevoRegistroClick () {
+    this._localStorageService.setObject('regId', 'nuevo')
     this.router.navigate(['usuarios/gestion-usuario'])
   }
 
   OnEditarRegistroClick (id: number) {
-    this.router.navigate(['usuarios/gestion-usuario'], { queryParams: { regId: id } })
+    this._localStorageService.setObject('regId', id)
+    this.router.navigate(['usuarios/gestion-usuario'])
   }
 
   OnEliminarRegistroClick (id: any) {

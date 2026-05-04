@@ -1010,6 +1010,7 @@
       "IDENTIFICACION": "Identificación",
       "CORREO": "Correo",
       "USERNAME": "Username",
+      "ROLES": "Roles Usuario",
       "FILTER_IDENTIFICACION": "Filtro Identificación",
       "FILTER_CORREO": "Filtro Correo",
       "FILTER_USERNAME": "Filtro UserName",
