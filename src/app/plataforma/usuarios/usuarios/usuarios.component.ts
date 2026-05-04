@@ -254,33 +254,36 @@ export class UsuariosComponent implements OnInit {
 
   OnEliminarRegistroClick (id: any) {
     const usuario = this.usuarios.filter(x => x.codigoUsuario == id.id)[0]
-    Swal.fire({
-      title: this.translate.instant('USUARIOS.USUARIOS.ELIMINARTITULO'),
-      text: this.translate.instant('USUARIOS.USUARIOS.ELIMINARTEXTO') + `"${usuario.nombreUsuario}".`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        this._usuariosService.eliminarUsuairo(id.id).subscribe({
-          next: (resp: any) => {
-            this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje)
-            this.subscriptions.add(
-              this._usuariosService.cargarRegistros().subscribe(
-                () => console.log('Usuarios cargados y guardados en el servicio'),
-                err => console.error('Error al cargar usuarios:', err)
-              )
-            )
-          },
-          error: (err: any) => {
-            this._swalService.getAlertError(this.translate.instant('USUARIOS.USUARIOS.ELIMINARERROR') + ', ' + err)
-            console.error('Error eliminando', err)
-          }
+    const titulo = this.translate.instant('USUARIOS.USUARIOS.ELIMINARTITULO');
+    const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+    const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+    const htmlBody = `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('USUARIOS.USUARIOS.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${usuario?.nombreUsuario}"</b></small>
+    `;
+    this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+        .then((confirmado) => {
+            if (confirmado) {
+                this._usuariosService.eliminarUsuairo(id.id).subscribe({
+                    next: (resp: any) => {
+                        this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje)
+                        this.subscriptions.add(
+                            this._usuariosService.cargarRegistros().subscribe(
+                                () => console.log('Usuarios cargados y guardados en el servicio'),
+                                err => console.error('Error al cargar usuarios:', err)
+                            )
+                        )
+                    },
+                    error: (err: any) => {
+                        this._swalService.getAlertError(this.translate.instant('USUARIOS.USUARIOS.ELIMINARERROR') + ', ' + err)
+                        console.error('Error eliminando', err)
+                    }
+                })
+            }
         })
-      }
-    })
-  }
+}
 
   onFiltroIdentificacionChangeClick (evento: any) {
     const value = evento.target.value
