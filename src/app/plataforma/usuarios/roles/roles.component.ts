@@ -275,44 +275,56 @@ export class RolesComponent implements OnInit {
     this.router.navigate(['usuarios/gestion-roles'], { queryParams: { regId: id } })
   }
 
-  OnEliminarRegistroClick (id: any) {
-    const nombre = this.registros.filter(x => x.codigoRole == id.id)[0]
-    Swal.fire({
-      title: this.translate.instant('USUARIOS.ROLES.ELIMINARTITULO'),
-      text: this.translate.instant('USUARIOS.ROLES.ELIMINARTEXTO') + `"${nombre.nombreRole}".!`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        this._rolesAPService.deleteEliminarRegistro(id.id).subscribe({
-          next: (resp: any) => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+  OnEliminarRegistroClick(id: any) {
+    const nombre = this.registros.filter((x) => x.codigoRole == id.id)[0];
+    // Swal.fire({
+    //   title: this.translate.instant('USUARIOS.ROLES.ELIMINARTITULO'),
+    //   text: this.translate.instant('USUARIOS.ROLES.ELIMINARTEXTO') + `"${nombre.nombreRole}".!`,
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+    //   cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+    // }).then((result: any) => {
+    //   if (result.isConfirmed) {
+    const titulo = this.translate.instant('USUARIOS.ROLES.ELIMINARTITULO');
+    const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+    const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+    const htmlBody = `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('USUARIOS.ROLES.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${nombre?.nombreRole}"</b></small>
+    `;
+    this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+        .then((confirmado) => {
+            if (confirmado) {
+                this._rolesAPService.deleteEliminarRegistro(id.id).subscribe({
+                next: (resp: any) => {
+                    const logData = {
+                    codigoTipoLog: '',
+                    codigoRespuesta: '201',
+                    descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                    };
+                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                    this._rolesAPService.cargarRegistros().subscribe(() => {
+                        this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINAREXITOSA'));
+                    });
+                },
+                error: (err: any) => {
+                    const logData = {
+                    codigoTipoLog: '',
+                    codigoRespuesta: '201',
+                    descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje
+                    };
+                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                    this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje);
+                    this.setupRolesStream();
+                    console.error('Error eliminando', err);
+                }
+                });
             }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            this._rolesAPService.cargarRegistros().subscribe(() => {
-              this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINAREXITOSA'))
-            })
-          },
-          error: (err: any) => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje
-            }
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-            this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.ROLES.ELIMINARERROR') + ' ' + err.mensaje)
-            this.setupRolesStream()
-            console.error('Error eliminando', err)
-          }
-        })
-      }
-    })
-  }
+        });
+    }
 
   toggleNav (): void {
     this.toggleSidebar.emit()

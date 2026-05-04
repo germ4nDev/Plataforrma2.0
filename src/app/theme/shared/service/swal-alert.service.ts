@@ -17,23 +17,41 @@ export class SwalAlertService {
     });
   }
 
+// getSwalCustomClass() {
+//   if (!this.isDarkTheme) {
+//       return {
+//         container: 'swal2-light-theme-container',
+//         popup: 'custom-popup-class swal2-light-mode-custom',
+//         confirmButton: 'btn btn-primary-light',
+//         denyButton: 'btn btn-secondary'
+//       };
+//     } else {
+//       return {
+//         container: this.isDarkTheme ? 'swal2-dark-theme-container' : 'swal2-light-theme-container',
+//         popup: 'custom-popup-class swal2-dark-mode-custom',
+//         confirmButton: this.isDarkTheme ? 'btn btn-primary-dark' : 'btn btn-primary-light',
+//         denyButton: 'btn btn-secondary'
+//       };
+//     }
+//   }
+
   getSwalCustomClass() {
-    if (!this.isDarkTheme) {
-      return {
-        container: 'swal2-light-theme-container',
-        popup: 'custom-popup-class swal2-light-mode-custom',
-        confirmButton: 'btn btn-primary-light',
-        denyButton: 'btn btn-secondary'
-      };
-    } else {
-      return {
-        container: this.isDarkTheme ? 'swal2-dark-theme-container' : 'swal2-light-theme-container',
-        popup: 'custom-popup-class swal2-dark-mode-custom',
-        confirmButton: this.isDarkTheme ? 'btn btn-primary-dark' : 'btn btn-primary-light',
-        denyButton: 'btn btn-secondary'
-      };
-    }
+  if (!this.isDarkTheme) {
+    return {
+      container: 'swal2-light-theme-container',
+      popup: 'custom-popup-class swal2-light-mode-custom',
+      confirmButton: `btn px-4 mx-1 confirmButton-color`,
+      denyButton: `btn px-4 mx-1 btn-secondary`,
+    };
+  } else {
+    return {
+      container: 'swal2-dark-theme-container',
+      popup: 'custom-popup-class swal2-dark-mode-custom',
+      confirmButton: `btn px-4 mx-1 confirmButton-color`,
+      denyButton: `btn px-4 mx-1 btn-secondary`,
+    };
   }
+}
 
   fireSwal(options: SweetAlertOptions) {
     Swal.fire({
@@ -167,4 +185,26 @@ export class SwalAlertService {
       return false;
     });
   }
+
+    getAlertConfirmDelete(titulo: string, html: string, confirmText: string, cancelText: string): Promise<boolean> {
+    const customClasses = this.getSwalCustomClass();
+
+    return Swal.fire({
+        title: titulo,
+        html: html,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmText,
+        cancelButtonText: cancelText,
+        customClass: {
+            container: customClasses.container,
+            popup: customClasses.popup,
+            confirmButton: 'btn btn-danger',
+            cancelButton: 'btn btn-secondary'
+        },
+        buttonsStyling: false
+        }).then((result) => {
+            return result.isConfirmed;
+        });
+    }
 }

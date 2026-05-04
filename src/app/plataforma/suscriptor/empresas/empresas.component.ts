@@ -200,42 +200,55 @@ export class EmpresasComponent implements OnInit {
   }
 
   OnEliminarRegistroClick(id: any) {
-    Swal.fire({
-      title: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTITULO'),
-      text: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTEXTO'),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        console.log('id', id.id);
-        const empresa = this.registros.filter((x) => x.codigoEmpresaSC == id.id)[0];
-        this._empresasScService.eliminarEmpresa(empresa.codigoEmpresaSC || '').subscribe({
-          next: (resp: any) => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '201',
-              descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
-            this.consultarRegistros();
-          },
-          error: (err: any) => {
-            const logData = {
-              codigoTipoLog: '',
-              codigoRespuesta: '501',
-              descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje
-            };
-            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-            this._swalService.getAlertError(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje);
-            console.error('Error eliminando', err);
-          }
+    // Swal.fire({
+    //   title: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTITULO'),
+    //   text: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTEXTO'),
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+    //   cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+    // }).then((result: any) => {
+    //   if (result.isConfirmed) {
+    const empresa = this.registros.filter((x) => x.codigoEmpresaSC == id.id)[0];
+    const titulo = this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTITULO');
+    const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+    const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+    const htmlBody = `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${empresa?.nombreEmpresa}"</b></small>
+    `;
+    this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+        .then((confirmado) => {
+            if (confirmado) {
+                console.log('id', id.id);
+                const empresa = this.registros.filter((x) => x.codigoEmpresaSC == id.id)[0];
+                this._empresasScService.eliminarEmpresa(empresa.codigoEmpresaSC || '').subscribe({
+                next: (resp: any) => {
+                    const logData = {
+                    codigoTipoLog: '',
+                    codigoRespuesta: '201',
+                    descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+                    };
+                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                    this._swalService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
+                    this.consultarRegistros();
+                },
+                error: (err: any) => {
+                        const logData = {
+                            codigoTipoLog: '',
+                            codigoRespuesta: '501',
+                            descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje
+                        };
+                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                        this._swalService.getAlertError(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje);
+                        console.error('Error eliminando', err);
+                    }
+                });
+            }
         });
-      }
-    });
-  }
+    }
 
   toggleNav(): void {
     this.toggleSidebar.emit();

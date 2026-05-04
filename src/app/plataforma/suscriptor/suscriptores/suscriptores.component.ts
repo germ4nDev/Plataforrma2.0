@@ -312,30 +312,43 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   }
 
   OnEliminarRegistroClick(id: any) {
-    Swal.fire({
-      title: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTITULO'),
-      text: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTEXTO'),
-      icon: 'warning',
-      //theme: 'datk',
-      customClass: this._swalService.getSwalCustomClass(),
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
-          next: (resp: any) => {
-            Swal.fire(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.setupRegistrosStream();
-          },
-          error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARERROR'), 'error');
-            console.error('Error eliminando', err);
-          }
+    // Swal.fire({
+    //   title: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTITULO'),
+    //   text: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTEXTO'),
+    //   icon: 'warning',
+    //   //theme: 'datk',
+    //   customClass: this._swalService.getSwalCustomClass(),
+    //   showCancelButton: true,
+    //   confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+    //   cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+    // }).then((result: any) => {
+    //   if (result.isConfirmed) {
+    const suscriptor = this.registros.filter((x) => x.codigoSuscriptor == id.id)[0];
+    const titulo = this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTITULO');
+    const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+    const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+    const htmlBody = `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${suscriptor?.nombreSuscriptor}"</b></small>
+    `;
+    this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+        .then((confirmado) => {
+            if (confirmado) {
+                this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
+                next: (resp: any) => {
+                    Swal.fire(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+                    this.setupRegistrosStream();
+                },
+                error: (err: any) => {
+                    Swal.fire('Error', this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARERROR'), 'error');
+                    console.error('Error eliminando', err);
+                }
+                });
+            }
         });
-      }
-    });
-  }
+    }
 
   toggleNav(): void {
     this.toggleSidebar.emit();
