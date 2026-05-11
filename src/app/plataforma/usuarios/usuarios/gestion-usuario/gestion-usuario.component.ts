@@ -18,6 +18,7 @@ import {
     PTLRolesAPService,
     PtlSuitesAPService,
     PTLSuscriptoresService,
+    PtlusuariosEmpresasScService,
     PtlusuariosRolesApService,
     PtlusuariosScService
 } from 'src/app/theme/shared/service'
@@ -35,6 +36,7 @@ import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSusc
 import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model'
 import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model'
 import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model'
+import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model'
 
 @Component({
     selector: 'app-gestion-usuario',
@@ -90,6 +92,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     usuariosRoles: PTLUsuarioRoleAPModel[] = []
     mostrarSeleccionRoles: boolean = false
     empresasSC: PTLEmpresaSCModel[] = []
+    usuarioEmpresaSC: PTLUsuaioEmpresasSCModel[] = []
     nombreUsuario: string = ''
 
     constructor(
@@ -109,6 +112,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         private _usuariosRolesService: PtlusuariosRolesApService,
         private _usuariosSCService: PtlusuariosScService,
         private _empresasSCService: PtlEmpresasScService,
+        private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
         private _rolesService: PTLRolesAPService,
         private _rolesUsuariosService: PtlusuariosRolesApService,
         private _uploadService: UploadFilesService
@@ -162,6 +166,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         this.menuItems = this._navigationService.menuItems$
         this.usuariosRoles = this._rolesUsuariosService.getUsuairosRolesActuales()
         this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales()
+        this.usuarioEmpresaSC = this._usuariosEmpresasSCService.getUsuariosEmpresasSCActuales()
         this.suscriptores = this._suscriptoresService.getSuscriptoresActuales()
         this.consultarRoles()
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
@@ -219,14 +224,23 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
 
     consultarRolesUsuario(codUsuario: string) {
         let rolesUsuarioFinal: any[] = []
-        const usuarioSC = this.usuariosSC.filter(ru => ru.codigoUsuario == codUsuario)[0]
-        const suscriptor = this.suscriptores.filter(ru => ru.codigoSuscriptor === usuarioSC.codigoSuscriptor)[0]
-        const empresasSC = this.empresasSC.filter(ru => ru.codigoSuscriptor == suscriptor.codigoSuscriptor)
-        const rolesUsuario = this.usuariosRoles.filter(ru => ru.codigoUsuarioSC === usuarioSC.codigoUsuarioSC)
+        const usuarioSC = this.usuariosSC.filter(ru => ru.codigoUsuario == codUsuario && ru.estadoUsuarioSC == true)[0]
+        const suscriptor = this.suscriptores.filter(ru => ru.codigoSuscriptor === usuarioSC.codigoSuscriptor && ru.estadoSuscriptor == true)[0]
+        const empresasSC = this.empresasSC.filter(ru => ru.codigoSuscriptor == suscriptor.codigoSuscriptor && ru.estadoEmpresa == true)
+        const usuariosEmpresaSC = this.usuarioEmpresaSC.filter(ru => ru.codigoUsuarioSC == usuarioSC.codigoUsuarioSC && ru.estadoUsuarioEmpresaSC == true)
         // console.log('rolesUsuario', rolesUsuario)
+        let rolesUsuario: PTLUsuarioRoleAPModel[] = []
+        usuariosEmpresaSC.forEach(usuEmp => {
+            const roles = this.usuariosRoles.filter(ue => ue.codigoUsuarioEmpresaSC === usuEmp.codigoUsuarioEmpresaSC && ue.estadoUsuarioRole == true)
+            roles.forEach(role => {
+                const emp = empresasSC.filter(x => x.codigoEmpresaSC == usuEmp.codigoEmpresaSC)[0]
+                role.codigoEmpresaSC = emp.codigoEmpresaSC
+            });
+            rolesUsuario.push(...roles)
+        });
         rolesUsuarioFinal = rolesUsuario.map(ru => {
             //   console.log('******** roleUsuario', ru)
-            const role = this.roles.find(r => r.codigoRole === ru.codigoRole)
+            const role = this.roles.find(r => r.codigoRole === ru.codigoRole && r.estadoRole == true)
             const suite = this.suites.find(s => s.codigoSuite === ru?.codigoSuite)
             const aplicacion = this.aplicaciones.find(a => a.codigoAplicacion === ru?.codigoAplicacion)
             const empresa = empresasSC.find(a => a.codigoEmpresaSC === ru.codigoEmpresaSC)

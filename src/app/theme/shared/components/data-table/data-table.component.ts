@@ -418,21 +418,4 @@ export class DatatableComponent implements OnInit, OnChanges, AfterViewInit {
         // Retorna los componentes R, G, B separados por coma
         return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '0, 0, 0'
     }
-
-    setButtonColors() {
-        // this.customButtons.forEach((elRef: ElementRef) => {
-        //   const button: HTMLElement = elRef.nativeElement;
-        //   console.log('datos del hijueputa boton', button);
-        //   const hexColor = button.getAttribute('data-hex');
-        //   const hoverTextColor = button.getAttribute('data-text-hover') || '#FFFFFF';
-        //   if (hexColor) {
-        //     const rgbColor = this.hexToRgb(hexColor);
-        //   console.log('ex hex color del boton', hexColor);
-        //   console.log('ex rgb color del boton', rgbColor);
-        //     this.renderer.setStyle(button, '--custom-color-main', hexColor);
-        //     this.renderer.setStyle(button, '--custom-color-rgb', rgbColor);
-        //     this.renderer.setStyle(button, '--custom-color-hover-text', hoverTextColor);
-        //   }
-        // });
-    }
 }

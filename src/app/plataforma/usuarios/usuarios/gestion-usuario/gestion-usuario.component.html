@@ -164,21 +164,21 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.FOTO' | translate }}</label>
                                 <img *ngIf="selectedFileUrl" [src]="selectedFileUrl" class="avatar-preview" />
                                 <div class="file-input-wrapper">
                                     <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
-                                        {{ 'Seleccionar archivo' | translate }}
+                                        {{ 'PLATAFORMA.SELECTFILE' | translate }}
                                     </label>
                                     <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
                                         id="fileUploadInput" class="form-control form-input d-none"
                                         name="fotoUsuario" />
-                                </div>
+                                </div><br>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'USUARIOS.USUARIOS.GESTION.STATUS' | translate }}</label>
                                 <div class="radio-buttons">
@@ -201,9 +201,9 @@
                             <div class="row text-center">
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8">
-                                    <h4 class="datatable-title">{{ 'USUARIOS.USUARIOS.GESTION.ROLESTITLE' | translate }}
+                                    <h5 class="datatable-title">{{ 'USUARIOS.USUARIOS.GESTION.ROLESTITLE' | translate }}
                                         ({{
-                                        usuario.nombreUsuario }})</h4>
+                                        usuario.nombreUsuario }})</h5>
                                     <h6 class="datatable-title">
                                         {{ 'USUARIOS.USUARIOS.GESTION.ROLESSUBTITLE' | translate }}
                                     </h6>
@@ -229,7 +229,7 @@
                                         <td class="text-wrap" style="width: 120px;">{{ role.suite }}</td>
                                         <td class="text-wrap" style="width: 100px;">{{ role.role }}</td>
                                         <td class="text-nowrap w100 text-center">
-                                            <button id="btnDel" class="dt-option-btn dt-option-btn--delete"
+                                            <button id="btnDel" class="dt-option-btn dt-option-btn-delete"
                                                 (click)="onDeleteRole(role)"
                                                 title="{{ 'PLATAFORMA.DATATABLE.DELETE' | translate }}">E
                                             </button>
@@ -237,13 +237,14 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="text-center flex flex-col justify-center mb-3" *ngIf="!isAsociarRoles">
+                            <!-- <div class="text-center flex flex-col justify-center mb-3" *ngIf="!isAsociarRoles">
                                 <br />
                                 <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                                     (click)="btnAsociarMasClick()">
                                     {{ 'USUARIOS.USUARIOS.GESTION.ASOCIARROLES' | translate }}
                                 </button>
-                            </div>
+                            </div> -->
+                            <br><br><br>
                         </div>
 
 
@@ -361,15 +362,15 @@
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="text-center flex flex-col justify-center">
+                                <!-- <div class="text-center flex flex-col justify-center">
                                     <br />
-                                    <!-- <h4 class="titles">{{ 'USUARIOS.USUARIOS.GESTION.ROLES' | translate }}</h4>
-                                    <h6 class="sub-titles">{{ 'USUARIOS.USUARIOS.GESTION.ROLESTEXT' | translate }}</h6> -->
-                                    <!-- <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
+                                    <h4 class="titles">{{ 'USUARIOS.USUARIOS.GESTION.ROLES' | translate }}</h4>
+                                    <h6 class="sub-titles">{{ 'USUARIOS.USUARIOS.GESTION.ROLESTEXT' | translate }}</h6>
+                                    <button type="button" class="btn btn-primary btn-NuevoRegistro transition"
                                         (click)="btnAsociarTodosRolesClick()" [disabled]="!tipoRolSeleccionado">
                                         {{ 'PLATAFORMA.ALLDATA' | translate }} <i
                                             class="feather icon-check-square mr-2"></i>
-                                    </button> -->
+                                    </button>
                                     <div class="form-check custom-check-form">
                                         <input class="form-check-input" type="checkbox"
                                             (change)="btnAsociarTodosRolesClick()" [disabled]="!tipoRolSeleccionado" />
@@ -378,8 +379,8 @@
                                             {{ 'PLATAFORMA.ALLDATA' | translate }}
                                         </label>
                                     </div><br>
-                                </div>
-                                <div class="row" *ngIf="tipoRolSeleccionado == 'suscriptor'">
+                                </div> -->
+                                <!-- <div class="row" *ngIf="tipoRolSeleccionado == 'suscriptor'">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="codigoSuscriptor">{{
@@ -468,7 +469,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-md-6 mb-2" *ngFor="let role of roles; let i = index">
                                     <div class="form-check custom-check-form">
                                         <input class="form-check-input" type="checkbox" [(ngModel)]="role.checked"
@@ -486,7 +487,7 @@
                                         (click)="btnAsociarTodosRolesClick()" [disabled]="!tipoRolSeleccionado">
                                         {{ 'USUARIOS.USUARIOS.GESTION.CANCELARASOCIOACION' | translate }}
                                     </button>
-                                    <br /><br /><br /><br />
+                                    <br><br><br>
                                 </div>
                             </div>
 
