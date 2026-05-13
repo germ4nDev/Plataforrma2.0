@@ -1,3 +1,6 @@
+/*
+    Author: German Valencia
+*/
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core'
 import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model'
@@ -14,402 +17,232 @@ import { PTLEmpresaSCModel } from '../_helpers/models/PTLEmpresaSC.model'
 import { PTLActividadModel } from '../_helpers/models/PTLActividades.model'
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class LocalStorageService {
-  DataModel: BaseSessionModel = new BaseSessionModel()
-  navsettings: NavSettings = new NavSettings()
-  public usuario: any = {}
-  public token: any
-  public currentUser: any
-  public aplicacion: any = {}
-  public suite: any = {}
-  public modulo: any = {}
-  public suscriptor: any = {}
-  public empresa: any = {}
-  public FormRegistro: any
-  public lang: string = 'en'
-  public themeSettings: any
-  public roles: PTLRoleAPModel[] = []
-  public actividades: PTLActividadModel[] = []
+    DataModel: BaseSessionModel = new BaseSessionModel()
+    navsettings: NavSettings = new NavSettings()
+    public usuario: any = {}
+    public token: any
+    public currentUser: any
+    public aplicacion: any = {}
+    public suite: any = {}
+    public modulo: any = {}
+    public suscriptor: any = {}
+    public empresa: any = {}
+    public FormRegistro: any
+    public lang: string = 'en'
+    public themeSettings: any
+    public roles: PTLRoleAPModel[] = []
+    public actividades: PTLActividadModel[] = []
 
-  constructor () {}
+    constructor() { }
 
-  // #region GETTERS
-  getObject<T>(key: string): T | null {
-    const value = sessionStorage.getItem(key);
-    if (!value) return null;
-
-    try {
-      return JSON.parse(value) as T;
-    } catch (error) {
-      console.error(`Error al recuperar la clave ${key}:`, error);
-      return null;
+    // #region MÉTODOS GENÉRICOS (BASE)
+    getObject<T>(key: string): T | null {
+        const value = sessionStorage.getItem(key);
+        if (!value) return null;
+        try {
+            return JSON.parse(value) as T;
+        } catch (error) {
+            console.error(`Error al recuperar la clave ${key}:`, error);
+            return null;
+        }
     }
-  }
 
-  getCurrentUserLocalStorage (): any {
-    const currentUserSession = sessionStorage.getItem('currentUser')
-    if (!currentUserSession) {
-      // console.log('No existe currentUser en la sesión o está vacío.');
-      return null
+    setObject(key: string, value: any): void {
+        if (value === null || value === undefined) return;
+        sessionStorage.setItem(key, JSON.stringify(value));
     }
-    try {
-      const currentUser = JSON.parse(currentUserSession)
-      return currentUser
-    } catch (e) {
-      console.error('Error al parsear JSON desde sessionStorage:', e)
-      return null
+
+    removeObject(key: string): void {
+        sessionStorage.removeItem(key);
     }
-  }
+    // #endregion
 
-  getUsuarioLocalStorage () {
-    const currentUserSession = sessionStorage.getItem('currentUser')
-    if (!currentUserSession) {
-      // console.log('No existe currentUser en la sesión o está vacío.');
-      return null
+    // #region GETTERS
+    getCurrentUserLocalStorage(): any {
+        return this.getObject<any>('currentUser');
     }
-    try {
-      const currentUser = JSON.parse(currentUserSession)
-      // console.log('Datos de la currentUser', currentUser);
-      return currentUser.usuario
-    } catch (e) {
-      console.error('Error al parsear JSON desde sessionStorage:', e)
-      return null
+
+    getUsuarioLocalStorage() {
+        const currentUser = this.getCurrentUserLocalStorage();
+        return currentUser ? currentUser.usuario : null;
     }
-  }
 
-  getTokenLocalStorage () {
-    const currentUserSession = sessionStorage.getItem('currentUser')
-    if (!currentUserSession) {
-      // console.log('No existe currentUser en la sesión o está vacío.');
-      return null
+    getTokenLocalStorage() {
+        const currentUser = this.getCurrentUserLocalStorage();
+        return currentUser ? currentUser.token : null;
     }
-    try {
-      const currentUser = JSON.parse(currentUserSession)
-      // console.log('Datos de la currentUser', currentUser);
-      return currentUser.token
-    } catch (e) {
-      console.error('Error al parsear JSON desde sessionStorage:', e)
-      return null
+
+    getNavSettingsLocalStorage(): NavSettings {
+        return this.getObject<NavSettings>('navsettings') || new NavSettings();
     }
-  }
 
-  getNavSettingsLocalStorage (): NavSettings {
-    const navsettings = sessionStorage.getItem('navsettings')
-    if (!navsettings) {
-      return new NavSettings()
+    getAplicaicionLocalStorage(): PTLAplicacionModel {
+        const navSetts = this.getNavSettingsLocalStorage();
+        return navSetts.aplicacion || new PTLAplicacionModel();
     }
-    try {
-      const navSettJson = JSON.parse(navsettings)
-      const obj = navSettJson
-      // console.log('&&&&&&&&&&& Datos de la aplicacion:', obj);
-      return obj
-    } catch (e) {
-      console.error('Error al parsear JSON desde sessionStorage:', e)
-      return new NavSettings()
+
+    getSuiteLocalStorage(): PTLSuiteAPModel {
+        const navSetts = this.getNavSettingsLocalStorage();
+        return navSetts.suite || new PTLSuiteAPModel();
     }
-  }
 
-  getAplicaicionLocalStorage (): PTLAplicacionModel {
-    const navSetts = sessionStorage.getItem('navsettings')
-    if (!navSetts) {
-      return new PTLAplicacionModel()
+    getModuloLocalStorage(): PTLModuloAP {
+        const navSetts = this.getNavSettingsLocalStorage();
+        return navSetts.modulo || new PTLModuloAP();
     }
-    try {
-      const navSettJson = JSON.parse(navSetts)
-      const obj = navSettJson.aplicacion
-      // console.log('&&&&&&&&&&& Datos de la aplicacion:', obj);
-      return obj
-    } catch (e) {
-      console.error('Error al parsear JSON desde sessionStorage:', e)
-      return new PTLAplicacionModel()
+
+    getSuscriptorPlataformaLocalStorage() {
+        return 'plataforma'
     }
-  }
 
-  getSuiteLocalStorage (): PTLSuiteAPModel {
-    const navSetts = sessionStorage.getItem('navsettings')
-    if (!navSetts) {
-      return new PTLSuiteAPModel()
+    getSuscriptorLocalStorage(): PTLSuscriptorModel | null {
+        const currentUser = this.getCurrentUserLocalStorage();
+        return currentUser && currentUser.suscriptor ? currentUser.suscriptor : new PTLSuscriptorModel();
     }
-    try {
-      const navSettJson = JSON.parse(navSetts)
-      const obj = navSettJson.suite
-      return obj
-    } catch (e) {
-      console.error('Error al parsear JSON desde sessionStorage:', e)
-      return new PTLSuiteAPModel()
+
+    getDataModelsLocalStorage() {
+        // Nota: Revisa si de verdad querías hacer .aplicacion aquí, podría ser un bug de tu versión anterior
+        this.usuario = this.getUsuarioLocalStorage() || new PTLUsuarioModel();
+        this.aplicacion = this.getAplicaicionLocalStorage();
+        this.suite = this.getSuiteLocalStorage();
+        this.modulo = this.getModuloLocalStorage();
+
+        const modelo: BaseSessionModel = {
+            codigoAplicacion: this.aplicacion.codigoAplicacion,
+            codigoSuite: this.suite.codigoSuite,
+            codigoModulo: this.modulo.codigoModulo,
+            usuarioCreacion: this.usuario.codigoUsuario,
+            usuarioModificacion: this.usuario.codigoUsuario,
+            fechaCreacion: new Date(),
+            fechaModificacion: new Date(),
+            dataLog: []
+        }
+        return modelo;
     }
-  }
 
-  getModuloLocalStorage (): PTLModuloAP {
-    const navSetts = sessionStorage.getItem('navsettings')
-    // console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
-    if (!navSetts) {
-      return new PTLModuloAP()
+    getLanguage(): string {
+        return this.lang;
     }
-    try {
-      const navSettJson = JSON.parse(navSetts)
-      const obj = navSettJson.modulo
-      return obj
-    } catch (e) {
-      console.error('Error al parsear JSON desde sessionStorage:', e)
-      return new PTLModuloAP()
+
+    getFormRegistro() {
+        this.FormRegistro = this.getObject<any>('FormRegistro') || [];
+        return this.FormRegistro;
     }
-  }
 
-  getSuscriptorPlataformaLocalStorage () {
-    return 'plataforma'
-  }
-
-  getSuscriptorLocalStorage (): PTLSuscriptorModel | null {
-    const navSetts = sessionStorage.getItem('currentUser')
-    if (!navSetts) {
-      return null
+    getThemeSettings() {
+        const localSettings = localStorage.getItem('themeSettings');
+        if (localSettings) {
+            this.themeSettings = JSON.parse(localSettings);
+        } else {
+            this.themeSettings = {
+                isDarkTheme: false,
+                navbarColor: '#346BA6',
+                iconosColor: '#f6f4f4',
+                textoColor: '#f6f4f4',
+                buttonsHoverColor: '#346BA6'
+            } as ThemeSettingsModel;
+        }
+        return this.themeSettings;
     }
-    try {
-      let obj = new PTLSuscriptorModel()
-      const navSettJson = JSON.parse(navSetts)
-      if (navSettJson.suscriptor) {
-        obj = navSettJson.suscriptor
-      } else {
-        obj = {}
-      }
-      return obj
-    } catch (e) {
-      console.error('Error al parsear JSON desde sessionStorage:', e)
-      return null
+
+    getLanguageUrl() {
+        return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${this.lang === 'es' ? 'Spanish' : 'English'}.json`;
     }
-  }
+    // #endregion GETTERS
 
-  getDataModelsLocalStorage () {
-    this.usuario = this.getUsuarioLocalStorage().aplicacion || new PTLUsuarioModel()
-    // console.log('datos del usuario', this.usuario);
-    this.aplicacion = this.getNavSettingsLocalStorage().aplicacion || new PTLAplicacionModel()
-    this.suite = this.getNavSettingsLocalStorage().suite || new PTLSuiteAPModel()
-    this.modulo = this.getNavSettingsLocalStorage().modulo || new PTLModuloAP()
-    const modelo: BaseSessionModel = {
-      codigoAplicacion: this.aplicacion.codigoAplicacion,
-      codigoSuite: this.suite.codigoSuite,
-      codigoModulo: this.modulo.codigoModulo,
-      usuarioCreacion: this.usuario.codigoUsuario,
-      usuarioModificacion: this.usuario.codigoUsuario,
-      fechaCreacion: new Date(),
-      fechaModificacion: new Date(),
-      dataLog: []
+    // #region SETTERS
+    setNavSettingsLocalStorage(navsettings: NavSettings) {
+        this.setObject('navsettings', navsettings);
+        this.navsettings = navsettings;
     }
-    // console.log('datamodel local', modelo);
-    return modelo
-  }
 
-  getLanguage (): string {
-    return this.lang
-  }
-
-  getFormRegistro () {
-    this.FormRegistro = []
-    if (sessionStorage.getItem('FormRegistro')) {
-      this.FormRegistro = JSON.parse(sessionStorage.getItem('FormRegistro') || '')
+    setThemeSettingsLocalStorage(settings: ThemeSettingsModel) {
+        localStorage.setItem('themeSettings', JSON.stringify(settings));
+        this.themeSettings = settings;
     }
-    return this.FormRegistro
-  }
 
-  getThemeSettings () {
-    if (localStorage.getItem('themeSettings')) {
-      this.themeSettings = JSON.parse(localStorage.getItem('themeSettings') || '')
-    } else {
-      const settings: ThemeSettingsModel = {
-        isDarkTheme: false,
-        navbarColor: '#346BA6',
-        iconosColor: '#f6f4f4',
-        textoColor: '#f6f4f4',
-        buttonsHoverColor: '#346BA6'
-      }
-      this.themeSettings = settings
+    setCurrentUserLocalStorage(data: CurrentUserModel) {
+        this.setObject('currentUser', data);
+        this.currentUser = data;
     }
-    return this.themeSettings
-  }
 
-  getLanguageUrl () {
-    return `//cdn.datatables.net/plug-ins/1.10.25/i18n/${this.lang === 'es' ? 'Spanish' : 'English'}.json`
-  }
-  // #endregion GETTERS
-
-  // #region SETTERS
-  setObject(key: string, value: any): void {
-    if (value === null || value === undefined) return;
-    const json = JSON.stringify(value);
-    sessionStorage.setItem(key, json);
-  }
-
-  setNavSettingsLocalStorage (navsettings: NavSettings) {
-    sessionStorage.setItem('navsettings', JSON.stringify(navsettings))
-    this.navsettings = navsettings
-  }
-
-  setThemeSettingsLocalStorage (settings: ThemeSettingsModel) {
-    localStorage.setItem('themeSettings', JSON.stringify(settings))
-    this.themeSettings = settings
-  }
-
-  setCurrentUserLocalStorage (data: CurrentUserModel) {
-    let current = this.getCurrentUserLocalStorage()
-    console.log('********* nuevo current user', data)
-    current = data
-    sessionStorage.setItem('currentUser', JSON.stringify(current))
-    this.currentUser = current
-  }
-
-  setUsuarioLocalStorage (usuario: PTLUsuarioModel) {
-    let currentUser = this.getCurrentUserLocalStorage()
-    currentUser = {
-      suscriptor: currentUser.suscriptor,
-      ok: currentUser.ok,
-      token: currentUser.token,
-      roles: currentUser.roles,
-      actividades: currentUser.actividades,
-      empresa: currentUser.empresa,
-      usuario: usuario
+    // Uso del spread operator (...) para mantener el código DRY y evitar typos como "acttividades"
+    setUsuarioLocalStorage(usuario: PTLUsuarioModel) {
+        const currentUser = { ...this.getCurrentUserLocalStorage(), usuario };
+        this.setCurrentUserLocalStorage(currentUser);
+        this.usuario = usuario;
     }
-    this.setCurrentUserLocalStorage(currentUser)
-    this.usuario = usuario
-  }
 
-  setSuscriptorLocalStorage (data: PTLSuscriptorModel) {
-    let currentUser = this.getCurrentUserLocalStorage()
-    // console.log('===CURRENTUSER HIJUEPUTAAAAAAAAAAAAAAAAAA', currentUser);
-    currentUser = {
-      suscriptor: data,
-      ok: currentUser.ok,
-      token: currentUser.token,
-      roles: currentUser.roles,
-      actividades: currentUser.actividades,
-      empresa: currentUser.empresa,
-      usuario: currentUser.usuario
+    setSuscriptorLocalStorage(data: PTLSuscriptorModel) {
+        const currentUser = { ...this.getCurrentUserLocalStorage(), suscriptor: data };
+        this.setCurrentUserLocalStorage(currentUser);
+        this.suscriptor = data;
     }
-    this.setCurrentUserLocalStorage(currentUser)
-    this.suscriptor = data
-  }
 
-  setRolesLocalStorage (roles: PTLRoleAPModel[]) {
-    let currentUser = this.getCurrentUserLocalStorage()
-    currentUser = {
-      suscriptor: currentUser.suscriptor,
-      ok: currentUser.ok,
-      token: currentUser.token,
-      roles: roles,
-      acttividades: currentUser.actividades,
-      empresa: currentUser.empresa,
-      usuario: currentUser.usuario
+    setRolesLocalStorage(roles: PTLRoleAPModel[]) {
+        const currentUser = { ...this.getCurrentUserLocalStorage(), roles };
+        this.setCurrentUserLocalStorage(currentUser);
+        this.roles = roles;
     }
-    this.setCurrentUserLocalStorage(currentUser)
-    this.roles = roles
-  }
 
-  setActividadesLocalStorage (actividades: PTLActividadModel[]) {
-    let currentUser = this.getCurrentUserLocalStorage()
-    currentUser = {
-      suscriptor: currentUser.suscriptor,
-      ok: currentUser.ok,
-      token: currentUser.token,
-      roles: currentUser.roles,
-      acttividades: actividades,
-      empresa: currentUser.empresa,
-      usuario: currentUser.usuario
+    setActividadesLocalStorage(actividades: PTLActividadModel[]) {
+        const currentUser = { ...this.getCurrentUserLocalStorage(), actividades };
+        this.setCurrentUserLocalStorage(currentUser);
+        this.actividades = actividades;
     }
-    this.setCurrentUserLocalStorage(currentUser)
-    this.actividades = actividades
-  }
 
-  setEmpresasLocalStorage (empresa: PTLEmpresaSCModel) {
-    let currentUser = this.getCurrentUserLocalStorage()
-    currentUser = {
-      suscriptor: currentUser.suscriptor,
-      ok: currentUser.ok,
-      token: currentUser.token,
-      roles: currentUser.roles,
-      actividades: currentUser.actividades,
-      empresa: empresa,
-      usuario: currentUser.usuario
+    setEmpresasLocalStorage(empresa: PTLEmpresaSCModel) {
+        const currentUser = { ...this.getCurrentUserLocalStorage(), empresa };
+        this.setCurrentUserLocalStorage(currentUser);
+        this.empresa = empresa;
     }
-    this.setCurrentUserLocalStorage(currentUser)
-    this.empresa = empresa
-  }
 
-  setTokenLocalStorage (token: any) {
-    let currentUser = this.getCurrentUserLocalStorage()
-    currentUser = {
-      suscriptor: currentUser.suscriptor,
-      ok: currentUser.ok,
-      token: token,
-      roles: currentUser.roles,
-      actividades: currentUser.actividades,
-      empresa: currentUser.empresa,
-      usuario: currentUser.usuario
+    setTokenLocalStorage(token: any) {
+        const currentUser = { ...this.getCurrentUserLocalStorage(), token };
+        this.setCurrentUserLocalStorage(currentUser);
+        this.token = token;
     }
-    this.setCurrentUserLocalStorage(currentUser)
-    this.token = token
-  }
 
-  setAplicacionLocalStorage (aplicacion: PTLAplicacionModel) {
-    let navSetts = this.getNavSettingsLocalStorage()
-    // console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
-    navSetts = {
-      aplicacion: aplicacion,
-      suite: navSetts.suite,
-      modulo: navSetts.modulo
+    setAplicacionLocalStorage(aplicacion: PTLAplicacionModel) {
+        const navSetts = { ...this.getNavSettingsLocalStorage(), aplicacion };
+        this.setNavSettingsLocalStorage(navSetts);
+        this.aplicacion = aplicacion;
     }
-    this.setNavSettingsLocalStorage(navSetts)
-    this.aplicacion = aplicacion
-  }
 
-  setSuiteLocalStorage (suite: PTLSuiteAPModel) {
-    let navSetts = this.getNavSettingsLocalStorage()
-    // console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
-    navSetts = {
-      aplicacion: navSetts.aplicacion,
-      suite: suite,
-      modulo: navSetts.modulo
+    setSuiteLocalStorage(suite: PTLSuiteAPModel) {
+        const navSetts = { ...this.getNavSettingsLocalStorage(), suite };
+        this.setNavSettingsLocalStorage(navSetts);
+        this.suite = suite;
     }
-    this.setNavSettingsLocalStorage(navSetts)
-    this.suite = suite
-  }
 
-  setModuloLocalStorage (modulo: PTLModuloAP) {
-    let navSetts = this.getNavSettingsLocalStorage()
-    // console.log('===NAVSETTINGS HIJUEPUTAAAAAAAAAAAAAAAAAA', navSetts);
-    navSetts = {
-      aplicacion: navSetts.aplicacion,
-      suite: navSetts.suite,
-      modulo: modulo
+    setModuloLocalStorage(modulo: PTLModuloAP) {
+        const navSetts = { ...this.getNavSettingsLocalStorage(), modulo };
+        this.setNavSettingsLocalStorage(navSetts);
+        this.modulo = modulo;
     }
-    this.setNavSettingsLocalStorage(navSetts)
-    this.modulo = modulo
-  }
 
-  setLanguage (lang: string) {
-    localStorage.setItem('lang', lang)
-    this.lang = lang
-  }
+    setLanguage(lang: string) {
+        localStorage.setItem('lang', lang);
+        this.lang = lang;
+    }
 
-  setFormRegistro (FormRegistro: any) {
-    sessionStorage.setItem('FormRegistro', JSON.stringify(FormRegistro))
-    this.FormRegistro = FormRegistro
-  }
-  // #endregion SETTERS
+    setFormRegistro(FormRegistro: any) {
+        this.setObject('FormRegistro', FormRegistro);
+        this.FormRegistro = FormRegistro;
+    }
+    // #endregion SETTERS
 
-  // #region REMOVERS
-  removeObject(key: string): void {
-    sessionStorage.removeItem(key);
-  }
+    // #region REMOVERS
+    removeFormRegistro() {
+        this.removeObject('FormRegistro');
+    }
 
-  removeFormRegistro () {
-    sessionStorage.removeItem('FormRegistro')
-  }
-
-  setLogOut () {
-    sessionStorage.removeItem('currentUser')
-    sessionStorage.removeItem('navsettings')
-  }
-  // #endregion  REMOVERS
+    setLogOut() {
+        this.removeObject('currentUser');
+        this.removeObject('navsettings');
+    }
+    // #endregion  REMOVERS
 }

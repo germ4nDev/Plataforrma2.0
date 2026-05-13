@@ -45,7 +45,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
-  colorOpcion1 = '#39b87d';
+  colorOpcion1 = '#0BD9D2';
   letraOpcion1 = 'E';
 
   colorOpcion2 = '#e08815';
@@ -71,8 +71,8 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     this.setupRegistrosStream();
     this.subscriptions.add(
       this._suscriptoresService.getRegistros().subscribe(
-        () => console.log('Aplicaciones cargadas y guardadas en el servicio'),
-        (err) => console.error('Error al cargar aplicaciones:', err)
+        () => console.log('Suscriptores cargados y guardadas en el servicio'),
+        (err) => console.error('Error al cargar los Suscriptores:', err)
       )
     );
   }
@@ -304,11 +304,13 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   }
 
   OnOption1Click(event: any) {
-    this.router.navigate(['/suscriptor/empresas-suscriptor'], { queryParams: { suscriptorId: event.id } });
+    console.log('ejecutando opcion 1 empresas Suscriptor', event);
+    this.router.navigate(['/suscriptor/empresas'], { queryParams: { regId: event } });
   }
 
   OnOption2Click(event: any) {
-    this.router.navigate(['/suscriptor/usuarios-suscriptor'], { queryParams: { suscriptorId: event.id } });
+    console.log('ejecutando opcion 2 UsuariosSuscriptor', event);
+    this.router.navigate(['/suscriptor/usuarios-suscriptor'], { queryParams: { regId: event } });
   }
 
   OnEliminarRegistroClick(id: any) {

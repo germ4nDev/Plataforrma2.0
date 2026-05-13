@@ -13,10 +13,14 @@ import { NavigationService } from 'src/app/theme/shared/service/navigation.servi
 import {
     AuthenticationService,
     PtlAplicacionesService,
+    PtlEmpresasScService,
     PtllogActividadesService,
     PTLRolesAPService,
     PtlSuitesAPService,
-    PtlusuariosRolesApService
+    PTLSuscriptoresService,
+    PtlusuariosEmpresasScService,
+    PtlusuariosRolesApService,
+    PtlusuariosScService
 } from 'src/app/theme/shared/service'
 import { SwalAlertService } from 'src/app/theme/shared/service/swal-alert.service'
 import { LocalStorageService } from 'src/app/theme/shared/service/local-storage.service'
@@ -28,6 +32,11 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
 import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model'
+import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model'
+import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model'
+import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model'
+import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model'
+import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model'
 
 @Component({
     selector: 'app-gestion-usuario',
@@ -44,6 +53,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     isSubmit: boolean = false
     menuItems!: Observable<NavigationItem[]>
     modoEdicion: boolean = false
+    isAsociarRoles: boolean = false
     codeRegistro = uuidv4()
     claveUsuario: string = ''
     selectedFile: File | null = null
@@ -60,9 +70,12 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     lockMessage: string = ''
     suscPlataforma: string = ''
     codAplicacion: string = ''
+    codSuscriptor: string = ''
+    codEmpresaSC: string = ''
     codSuite: string = ''
     roles: PTLRoleAPModel[] = []
     rolesFiltrado: PTLRoleAPModel[] = []
+    userRoles: any[] = []
     todosLosRoles: any[] = []
     tipoRolSeleccionado: string = ''
     rolesAsignadosAlUsuario: any[] = []
@@ -71,8 +84,16 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     aplicacionesSub?: Subscription
     suitesSub?: Subscription
     suites: PTLSuiteAPModel[] = []
+    suscriptores: PTLSuscriptorModel[] = []
     suitesApp: PTLSuiteAPModel[] = []
-    mostrarSeleccionRoles: boolean = false;
+    usuariosSC: PTLUsuarioSCModel[] = []
+    empresaSC: PTLEmpresaSCModel[] = []
+    empresaSCFiltradas: PTLEmpresaSCModel[] = []
+    usuariosRoles: PTLUsuarioRoleAPModel[] = []
+    mostrarSeleccionRoles: boolean = false
+    empresasSC: PTLEmpresaSCModel[] = []
+    usuarioEmpresaSC: PTLUsuaioEmpresasSCModel[] = []
+    nombreUsuario: string = ''
 
     constructor(
         private router: Router,
@@ -86,55 +107,68 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         private _translate: TranslateService,
         private _aplicacionesService: PtlAplicacionesService,
         private _suitesService: PtlSuitesAPService,
+        private _suscriptoresService: PTLSuscriptoresService,
         private _localStorageService: LocalStorageService,
         private _usuariosRolesService: PtlusuariosRolesApService,
+        private _usuariosSCService: PtlusuariosScService,
+        private _empresasSCService: PtlEmpresasScService,
+        private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
         private _rolesService: PTLRolesAPService,
+        private _rolesUsuariosService: PtlusuariosRolesApService,
         private _uploadService: UploadFilesService
     ) {
         this.isSubmit = false
         this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         // console.log('datos del suscriptor', this.suscPlataforma);
-        this.route.queryParams.subscribe(params => {
-            const registroId = params['regId']
-            if (registroId) {
-                // console.log('me llena el Id', registroId);
-                this.modoEdicion = true
-                this._registrosService.getUsuarioById(registroId).subscribe({
-                    next: (resp: any) => {
-                        this.usuario = resp.usuario
-                        this.FormRegistro = resp.usuario
-                        this.claveUsuario = resp.usuario.claveUsuario
-                        this.selectedFileUrl = this._uploadService.getFilePath(this.suscPlataforma, 'usuarios', resp.usuario.fotoUsuario)
-                        this.FormRegistro.claveUsuario = ''
-                        this.FormRegistro.claveNew = ''
-                        this.FormRegistro.claveConfirm = ''
-                        this._usuariosRolesService.getRegistroByCodigoUsuario(registroId).subscribe((respRel: any) => {
-                            if (this.modoEdicion) {
-                                this.cargarRolesAsociados(registroId)
-                            } else {
-                                this.tipoRolSeleccionado = 'plataforma'
-                                this.consultarRoles()
-                            }
-                        })
-                    },
-                    error: () => {
-                        Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error')
-                    }
-                })
-            } else {
-                // console.log('no llena el Id', registroId);
-                this.modoEdicion = false
-                this.consultarRoles()
-            }
-        })
+        const registroId = this._localStorageService.getObject<string>('regId') || ''
+        if (registroId != 'nuevo') {
+            // console.log('me llena el Id', registroId);
+            this.modoEdicion = true
+            this._registrosService.getUsuarioById(registroId).subscribe({
+                next: (resp: any) => {
+                    this.usuario = resp.usuario
+                    this.FormRegistro = resp.usuario
+                    this.claveUsuario = resp.usuario.claveUsuario
+                    this.selectedFileUrl = this._uploadService.getFilePath(this.suscPlataforma, 'usuarios', resp.usuario.fotoUsuario)
+                    this.FormRegistro.claveUsuario = ''
+                    this.FormRegistro.claveNew = ''
+                    this.FormRegistro.claveConfirm = ''
+                    this._usuariosRolesService.getRegistroByCodigoUsuario(registroId).subscribe((respRel: any) => {
+                        this.FormRegistro.rolesUsuario = this.consultarRolesUsuario(registroId)
+                        this.userRoles = this.FormRegistro.rolesUsuario
+                        console.log('rolesUsuario', this.FormRegistro.rolesUsuario);
+                        if (this.modoEdicion) {
+                            this.cargarRolesAsociados(registroId)
+                        } else {
+                            this.tipoRolSeleccionado = 'plataforma'
+                            this.consultarRoles()
+                        }
+                    })
+                },
+                error: () => {
+                    Swal.fire('Error', 'No se pudo obtener la Aplicación', 'error')
+                }
+            })
+        } else {
+            // console.log('no llena el Id', registroId);
+            this.modoEdicion = false
+            this.consultarRoles()
+        }
     }
 
     ngOnInit() {
-        this.consultarAplicaciones()
-        this.consultarSuites()
-        this.consultarRoles()
         this._navigationService.getNavigationItems()
+        this.suites = this._suitesService.getSuitesActuales()
+        this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales()
+        this.suscriptores = this._suscriptoresService.getSuscriptoresActuales()
+        this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales()
+        this.empresaSC = this._empresasSCService.getEmpresasSCActuales()
         this.menuItems = this._navigationService.menuItems$
+        this.usuariosRoles = this._rolesUsuariosService.getUsuairosRolesActuales()
+        this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales()
+        this.usuarioEmpresaSC = this._usuariosEmpresasSCService.getUsuariosEmpresasSCActuales()
+        this.suscriptores = this._suscriptoresService.getSuscriptoresActuales()
+        this.consultarRoles()
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
             next: (message: string) => {
                 this._localStorageService.setFormRegistro(this.FormRegistro)
@@ -159,43 +193,6 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.aplicacionesSub?.unsubscribe()
         this.suitesSub?.unsubscribe()
-    }
-
-    consultarAplicaciones() {
-        this.aplicacionesSub = this._aplicacionesService
-            .getAplicaciones()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        this.aplicaciones = resp.aplicaciones
-                        return
-                    }
-                }),
-                catchError(err => {
-                    console.log('Ha ocurrido un error', err)
-                    return of(null)
-                })
-            )
-            .subscribe()
-    }
-
-    consultarSuites() {
-        this.suitesSub = this._suitesService
-            .geSuitesAP()
-            .pipe(
-                tap((resp: any) => {
-                    if (resp.ok) {
-                        this.suites = resp.suites
-                        // console.log('Todos las suites', this.suites);
-                        return
-                    }
-                }),
-                catchError(err => {
-                    console.log('Ha ocurrido un error', err)
-                    return of(null)
-                })
-            )
-            .subscribe()
     }
 
     validarClaveActual(claveActual: any) {
@@ -225,6 +222,40 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         // }
     }
 
+    consultarRolesUsuario(codUsuario: string) {
+        let rolesUsuarioFinal: any[] = []
+        const usuarioSC = this.usuariosSC.filter(ru => ru.codigoUsuario == codUsuario && ru.estadoUsuarioSC == true)[0]
+        const suscriptor = this.suscriptores.filter(ru => ru.codigoSuscriptor === usuarioSC.codigoSuscriptor && ru.estadoSuscriptor == true)[0]
+        const empresasSC = this.empresasSC.filter(ru => ru.codigoSuscriptor == suscriptor.codigoSuscriptor && ru.estadoEmpresa == true)
+        const usuariosEmpresaSC = this.usuarioEmpresaSC.filter(ru => ru.codigoUsuarioSC == usuarioSC.codigoUsuarioSC && ru.estadoUsuarioEmpresaSC == true)
+        // console.log('rolesUsuario', rolesUsuario)
+        let rolesUsuario: PTLUsuarioRoleAPModel[] = []
+        usuariosEmpresaSC.forEach(usuEmp => {
+            const roles = this.usuariosRoles.filter(ue => ue.codigoUsuarioEmpresaSC === usuEmp.codigoUsuarioEmpresaSC && ue.estadoUsuarioRole == true)
+            roles.forEach(role => {
+                const emp = empresasSC.filter(x => x.codigoEmpresaSC == usuEmp.codigoEmpresaSC)[0]
+                role.codigoEmpresaSC = emp.codigoEmpresaSC
+            });
+            rolesUsuario.push(...roles)
+        });
+        rolesUsuarioFinal = rolesUsuario.map(ru => {
+            //   console.log('******** roleUsuario', ru)
+            const role = this.roles.find(r => r.codigoRole === ru.codigoRole && r.estadoRole == true)
+            const suite = this.suites.find(s => s.codigoSuite === ru?.codigoSuite)
+            const aplicacion = this.aplicaciones.find(a => a.codigoAplicacion === ru?.codigoAplicacion)
+            const empresa = empresasSC.find(a => a.codigoEmpresaSC === ru.codigoEmpresaSC)
+            return {
+                suscriptor: suscriptor ? suscriptor.nombreSuscriptor : 'Sin Suscriptor',
+                empresa: empresa ? empresa.nombreEmpresa : 'Sin Empresa',
+                aplicacion: aplicacion ? aplicacion.nombreAplicacion : 'Sin Aplicación',
+                suite: suite ? suite.nombreSuite : 'Sin Suite',
+                role: role ? role.nombreRole : 'Rol Desconocido'
+            }
+        })
+
+        return rolesUsuarioFinal
+    }
+
     onAplicacionchangeClick(event: any) {
         console.log('codAplicacion', event)
         this.codAplicacion = event
@@ -232,8 +263,8 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         this.suitesApp = this.suites.filter(x => x.codigoAplicacion == app.codigoAplicacion)
         // this.consultarRoles(this.codAplicacion, this.codSuite)
         // this.codAplicacion = ''
-        this.codSuite = ''; // Resetear suite al cambiar app
-        this.roles = [];
+        this.codSuite = '' // Resetear suite al cambiar app
+        this.roles = []
     }
 
     onSuiteChangeClick(event: any) {
@@ -243,47 +274,57 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         // this.consultarRoles(this.codAplicacion, this.codSuite)
         // this.codSuite = ''
         if (this.codAplicacion && this.codSuite) {
-            this.consultarRoles(this.codAplicacion, this.codSuite);
+            this.consultarRoles(this.codAplicacion, this.codSuite)
         }
+    }
+
+    onSuscriptorhangeClick(event: any) {
+        this.FormRegistro.codigoSuscriptor = event.target.value
+        console.log('codigoSuscrioptor', this.FormRegistro.codigoSuscriptor)
+        this.codSuscriptor = event.target.value
+        this.empresaSCFiltradas = this.empresaSC.filter(x => x.codigoSuscriptor == event.target.value)
+    }
+
+    onEmpresaSCChangeClick(event: any) {
+        this.FormRegistro.codigoEmpresaSC = event.target.value
+        this.codEmpresaSC = event.target.value
+        console.log('codigoEmpresaSC', this.FormRegistro.codigoEmpresaSC)
     }
 
     cambiarTipoRoleRoles(tipo: string) {
         console.log('tipo seleccionado', tipo)
-        this.tipoRolSeleccionado = tipo;
+        this.tipoRolSeleccionado = tipo
         if (tipo === 'plataforma') {
-            this.codAplicacion = '';
-            this.codSuite = '';
-            this.consultarRoles();
+            this.codAplicacion = ''
+            this.codSuite = ''
+            this.consultarRoles()
         } else {
-            this.roles = []; // Esperar a que seleccione App y Suite
+            this.roles = [] // Esperar a que seleccione App y Suite
         }
     }
 
     consultarRoles(codigoAplicacion?: string, codigoSuite?: string) {
-        this._rolesService.getRoles().subscribe((resp: any) => {
-            if (resp.ok) {
-                this.todosLosRoles = resp.roles;
+        // this._rolesService.getRoles().subscribe((resp: any) => {
+        //     if (resp.ok) {
+        this.roles = this._rolesService.getRolesActuales()
+        this.todosLosRoles = this.roles
 
-                // Filtrado Lógico
-                if (this.tipoRolSeleccionado === 'plataforma') {
-                    this.roles = this.todosLosRoles.filter((r: any) =>
-                        (!r.codigoAplicacion || r.codigoAplicacion === '') &&
-                        (!r.codigoSuite || r.codigoSuite === '')
-                    );
-                } else if (this.tipoRolSeleccionado === 'suscriptor') {
-                    this.roles = this.todosLosRoles.filter((r: any) =>
-                        r.codigoAplicacion === codigoAplicacion &&
-                        r.codigoSuite === codigoSuite
-                    );
-                }
+        // Filtrado Lógico
+        if (this.tipoRolSeleccionado === 'plataforma') {
+            this.roles = this.todosLosRoles.filter(
+                (r: any) => (!r.codigoAplicacion || r.codigoAplicacion === '') && (!r.codigoSuite || r.codigoSuite === '')
+            )
+        } else if (this.tipoRolSeleccionado === 'suscriptor') {
+            this.roles = this.todosLosRoles.filter((r: any) => r.codigoAplicacion === codigoAplicacion && r.codigoSuite === codigoSuite)
+        }
 
-                // Marcar los que ya están asignados (para edición)
-                this.roles = this.roles.map((r: any) => ({
-                    ...r,
-                    checked: this.rolesAsignadosAlUsuario.includes(r.codigoRole)
-                }));
-            }
-        });
+        // Marcar los que ya están asignados (para edición)
+        this.roles = this.roles.map((r: any) => ({
+            ...r,
+            checked: this.rolesAsignadosAlUsuario.includes(r.codigoRole)
+        }))
+        //     }
+        // });
     }
 
     onFileSelectedClick(event: any) {
@@ -324,37 +365,37 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
             next: (resp: any) => {
                 if (resp.ok && Array.isArray(resp.usuarioRole)) {
                     // 1. Guardar todos los IDs que ya tiene el usuario (mezcla)
-                    this.rolesAsignadosAlUsuario = resp.usuarioRole.map((ur: any) => ur.codigoRole);
+                    this.rolesAsignadosAlUsuario = resp.usuarioRole.map((ur: any) => ur.codigoRole)
 
                     // 2. Intentar pre-configurar la vista basada en el primer rol de suscriptor encontrado
-                    const rolSuscriptor = resp.usuarioRole.find((ur: any) => ur.codigoAplicacion && ur.codigoAplicacion !== '');
+                    const rolSuscriptor = resp.usuarioRole.find((ur: any) => ur.codigoAplicacion && ur.codigoAplicacion !== '')
 
                     if (rolSuscriptor) {
-                        this.tipoRolSeleccionado = 'suscriptor';
-                        this.codAplicacion = rolSuscriptor.codigoAplicacion;
-                        this.codSuite = rolSuscriptor.codigoSuite;
+                        this.tipoRolSeleccionado = 'suscriptor'
+                        this.codAplicacion = rolSuscriptor.codigoAplicacion
+                        this.codSuite = rolSuscriptor.codigoSuite
 
                         // Cargar suites disponibles para esa app y luego mostrar los roles
-                        const app = this.aplicaciones.find(x => x.codigoAplicacion == this.codAplicacion);
-                        this.suitesApp = app ? this.suites.filter(x => x.codigoAplicacion == app.codigoAplicacion) : [];
+                        const app = this.aplicaciones.find(x => x.codigoAplicacion == this.codAplicacion)
+                        this.suitesApp = app ? this.suites.filter(x => x.codigoAplicacion == app.codigoAplicacion) : []
 
-                        this.consultarRoles(this.codAplicacion, this.codSuite);
+                        this.consultarRoles(this.codAplicacion, this.codSuite)
                     } else {
                         // Si no hay ninguno de suscriptor, por defecto mostrar plataforma
-                        this.tipoRolSeleccionado = 'plataforma';
-                        this.consultarRoles();
+                        this.tipoRolSeleccionado = 'plataforma'
+                        this.consultarRoles()
                     }
                 }
             }
-        });
+        })
     }
 
     btnAsociarTodosRolesClick() {
         const todosSeleccionados = this.roles.every((r: any) => r.checked)
         this.roles.forEach((r: any) => {
-            (r.checked = !todosSeleccionados)
-            this.toggleRolSeleccionado(r);
-        });
+            r.checked = !todosSeleccionados
+            this.toggleRolSeleccionado(r)
+        })
     }
 
     btnGestionarUsuarioClick(form: any) {
@@ -423,13 +464,18 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                 if (this.FormRegistro.claveUsuario == '') {
                     this.FormRegistro.claveUsuario = this.claveUsuario
                 }
-                // console.log('************* fotoUsuario', this.FormRegistro.fotoUsuario);
+                console.log('************* fotoUsuario', this.FormRegistro.fotoUsuario)
                 registroData.claveUsuario = this.FormRegistro.claveUsuario
                 registroData.fotoUsuario = this.FormRegistro.fotoUsuario
                 registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
                 registroData.fechaModificacion = new Date().toISOString()
                 this._registrosService.actualizarUsuarioDatos(registroData).subscribe({
                     next: (resp: any) => {
+                        const usuarioSC = {
+                            codigoSuscriptor: this.FormRegistro.codigoSuscriptor,
+                            codigoUsuario: registroData.codigoUsuario
+                        }
+                        this.procesarUsuarioSuscriptor(usuarioSC, 1)
                         this.procesarRelaciones(registroData.codigoUsuario!)
                         if (resp.ok) {
                             const logData = {
@@ -464,6 +510,11 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
             this._registrosService.crearUsuario(registroData).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
+                        const usuarioSC = {
+                            codigoSuscriptor: this.FormRegistro.codigoSuscriptor,
+                            codigoUsuario: registroData.codigoUsuario
+                        }
+                        this.procesarUsuarioSuscriptor(usuarioSC, 2)
                         this.procesarRelaciones(registroData.codigoUsuario || '')
                         const logData = {
                             codigoTipoLog: '',
@@ -494,6 +545,38 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
                     this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.INSERTUSERERROR'))
                 }
             })
+        }
+    }
+
+    procesarUsuarioSuscriptor(usuarioSC: any, tipo: number) {
+        console.log('procesar el usuario suscriptor', usuarioSC)
+        const existe = this.usuariosSC.filter(
+            x => x.codigoSuscriptor == usuarioSC.codigoSuscriptor && x.codigoUsuario == usuarioSC.codigoUsuario && x.estadoUsuarioSC == true
+        )
+        if (tipo == 1) {
+            if (existe.length === 0) {
+                usuarioSC.codigoUsuarioSC = uuidv4()
+                usuarioSC.estadoUsuario = true
+                usuarioSC.fechaCreacion = new Date().toISOString()
+                usuarioSC.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+                this._usuariosSCService.crearUsuario(usuarioSC).subscribe(data => console.log('usuarioSC creado correctamente', usuarioSC))
+            } else {
+                usuarioSC.codigoUsuarioSC = existe[0].codigoUsuarioSC
+                usuarioSC.estadoUsuario = true
+                usuarioSC.fechaModificacion = new Date().toISOString()
+                usuarioSC.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+                this._usuariosSCService.actualizarUsuario(usuarioSC).subscribe(data => console.log('usuarioSC creado correctamente', usuarioSC))
+            }
+        } else if (tipo == 2) {
+            if (existe.length === 0) {
+                usuarioSC.codigoUsuarioSC = uuidv4()
+                usuarioSC.estadoUsuarioSC = true
+                usuarioSC.fechaCreacion = new Date().toISOString()
+                usuarioSC.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+                this._usuariosSCService.crearUsuario(usuarioSC).subscribe(data => console.log('usuarioSC creado correctamente', usuarioSC))
+            } else {
+                console.log('ya existe el usuario para el suscriptor', usuarioSC)
+            }
         }
     }
 
@@ -532,6 +615,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
             // Si lo marca y no estaba en la lista, lo agregamos
             if (!this.rolesAsignadosAlUsuario.includes(rol.codigoRole)) {
                 this.rolesAsignadosAlUsuario.push(rol.codigoRole)
+                console.log('roles asignados', this.rolesAsignadosAlUsuario)
             }
         } else {
             // Si lo desmarca, lo quitamos de la lista global
@@ -540,47 +624,51 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     }
 
     get rolesSeleccionadosDetalle() {
-    // Filtramos todos los roles para obtener solo los que el usuario ha marcado
-        return this.todosLosRoles.filter(r => this.rolesAsignadosAlUsuario.includes(r.codigoRole));
+        // Filtramos todos los roles para obtener solo los que el usuario ha marcado
+        return this.todosLosRoles.filter(r => this.rolesAsignadosAlUsuario.includes(r.codigoRole))
     }
 
     get rolesSeleccionadosPlataforma() {
-        return this.rolesSeleccionadosDetalle.filter(r =>
-            (!r.codigoAplicacion || r.codigoAplicacion === '') &&
-            (!r.codigoSuite || r.codigoSuite === '')
-        );
+        return this.rolesSeleccionadosDetalle.filter(
+            r => (!r.codigoAplicacion || r.codigoAplicacion === '') && (!r.codigoSuite || r.codigoSuite === '')
+        )
     }
 
     get rolesSeleccionadosSuscriptor() {
-        return this.rolesSeleccionadosDetalle.filter(r => r.codigoAplicacion && r.codigoAplicacion !== '' );
+        return this.rolesSeleccionadosDetalle.filter(r => r.codigoAplicacion && r.codigoAplicacion !== '')
     }
 
     obtenerNombreApp(codigoApp: string): string {
-        const app = this.aplicaciones.find(a => a.codigoAplicacion === codigoApp);
-        return app ? (app.nombreAplicacion || '') : '';
+        const app = this.aplicaciones.find(a => a.codigoAplicacion === codigoApp)
+        return app ? app.nombreAplicacion || '' : ''
     }
 
     obtenerNombreSuite(codigoSuite: string): string {
-        const suite = this.suites.find(a => a.codigoSuite === codigoSuite);
-        return suite ? (suite.nombreSuite || '') : '';
+        const suite = this.suites.find(a => a.codigoSuite === codigoSuite)
+        return suite ? suite.nombreSuite || '' : ''
     }
 
     eliminarRolDesdeResumen(rol: any) {
-        this.rolesAsignadosAlUsuario = this.rolesAsignadosAlUsuario.filter(id => id !== rol.codigoRole);
+        this.rolesAsignadosAlUsuario = this.rolesAsignadosAlUsuario.filter(id => id !== rol.codigoRole)
 
         // Si el rol que eliminamos está actualmente visible en la lista de checkboxes, lo desmarcamos
-        const rolEnLista = this.roles.find(r => r.codigoRole === rol.codigoRole);
+        const rolEnLista = this.roles.find(r => r.codigoRole === rol.codigoRole)
         if (rolEnLista) {
-            rolEnLista.checked = false;
+            rolEnLista.checked = false
         }
     }
 
     btnAsociarMasClick() {
-        this.mostrarSeleccionRoles = !this.mostrarSeleccionRoles;
+        this.isAsociarRoles = true
+        this.mostrarSeleccionRoles = !this.mostrarSeleccionRoles
     }
 
     btnRegresarClick() {
         this.router.navigate(['/usuarios/usuarios'])
+    }
+
+    onDeleteRole(role: any) {
+        console.log('eliminar role de la lista', role);
     }
 
     toggleNav(): void {

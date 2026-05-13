@@ -1,3 +1,6 @@
+/*
+    Author: German Valencia
+*/
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -8,110 +11,123 @@ import { PTLUsuarioModel } from '../_helpers/models/PTLUsuario.model';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SocketService } from './sockets.service';
 import { LocalStorageService } from './local-storage.service';
+
 const base_url = environment.apiUrl;
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class PtlactividadesRolesService {
-  user: PTLUsuarioModel = new PTLUsuarioModel();
-  private _actividadesRoles = new BehaviorSubject<PTLActividadRoleModel[]>([]);
-  private _actividadesRolesChange = new Subject<any>();
-  actividadesRolesChange$ = this._actividadesRolesChange.asObservable();
+    user: PTLUsuarioModel = new PTLUsuarioModel();
+    private _actividadesRoles = new BehaviorSubject<PTLActividadRoleModel[]>([]);
+    private _actividadesRolesChange = new Subject<any>();
 
-  constructor(
-    private http: HttpClient,
-    private _socketService: SocketService,
-    private _localStorageService: LocalStorageService
-  ) {
-    console.log('******* Servicio de actividadesRoles iniciado correctamente');
-    this._socketService.listen('actividades-roles-actualizadas').subscribe({
-      next: (payload) => {
-        console.log('Evento de Socket.IO recibido:', payload.msg);
-        this._actividadesRolesChange.next(payload);
-        this.cargarRegistros().subscribe();
-      },
-      error: (err) => console.error('Error en la escucha de sockets:', err)
-    });
-  }
+    actividadesRolesChange$ = this._actividadesRolesChange.asObservable();
 
-  get actividadesRoles$(): Observable<PTLActividadRoleModel[]> {
-    return this._actividadesRoles.asObservable();
-  }
+    constructor(
+        private http: HttpClient,
+        private _socketService: SocketService,
+        private _localStorageService: LocalStorageService
+    ) {
+        console.log('******* Servicio de actividadesRoles iniciado correctamente');
 
-  cargarRegistros() {
-    console.log('Consultando y ordenando actividadesRoles del servidor...');
-    const url = `${base_url}/actividades-roles`;
-    return this.http.get(url).pipe(
-      map((resp: any) => resp.actividadesRoles as PTLActividadRoleModel[]),
-      tap((RolesOrdenadas) => {
-        this._actividadesRoles.next(RolesOrdenadas);
-      })
-    );
-  }
+        this._socketService.listen('actividades-roles-actualizadas').subscribe({
+            next: (payload) => {
+                console.log('Evento de Socket.IO recibido:', payload.msg);
+                this._actividadesRolesChange.next(payload);
+                this.cargarRegistros().subscribe();
+            },
+            error: (err) => console.error('Error en la escucha de sockets:', err)
+        });
+    }
 
-  getRegistroByCodeActividad(id: string) {
-    const url = `${base_url}/actividades-roles/acti/${id}`;
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        console.log('data de actividadesRoles', resp);
-        return {
-          ok: true,
-          actividadesRoles: resp.actividadesRoles
-        };
-      })
-    );
-  }
+    get actividadesRoles$(): Observable<PTLActividadRoleModel[]> {
+        return this._actividadesRoles.asObservable();
+    }
 
-  getRegistroByCodeRole(id: string) {
-    const url = `${base_url}/actividadesRoles/role/${id}`;
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        console.log('data de actividadesRoles role', resp);
-        return {
-          ok: true,
-          actividadesRoles: resp.actividadesRoles
-        };
-      })
-    );
-  }
+    getActividadesRolesActuales(): PTLActividadRoleModel[] {
+        return this._actividadesRoles.getValue();
+    }
 
-  postCrearRegistro(data: PTLActividadRoleModel) {
-    const url = `${base_url}/actividades-roles`;
-    console.log('servicio actividadesRoles', data);
-    return this.http.post(url, data).pipe(
-      map((resp: any) => {
-        return {
-          ok: true,
-          actividadRole: resp.actividadRole
-        };
-      })
-    );
-  }
+    cargarRegistros() {
+        console.log('Consultando y ordenando actividadesRoles del servidor...');
+        const url = `${base_url}/actividades-roles`;
 
-  putModificarRegistro(actividad: PTLActividadRoleModel) {
-    const url = `${base_url}/actividades-roles/${actividad.codigoActividad}`;
-    return this.http.put(url, actividad).pipe(
-      map((resp: any) => {
-        console.log('data de actividad modificacda', resp);
-        return {
-          ok: true,
-          actividadRole: resp.actividadRole
-        };
-      })
-    );
-  }
+        return this.http.get(url).pipe(
+            map((resp: any) => resp.actividadesRoles as PTLActividadRoleModel[]),
+            tap((RolesOrdenadas) => {
+                this._actividadesRoles.next(RolesOrdenadas);
+            })
+        );
+    }
 
-  deleteEliminarRegistro(_id: string) {
-    const url = `${base_url}/actividadesRoles/${_id}`;
-    return this.http.delete(url).pipe(
-      map((resp: any) => {
-        console.log('data de actividad eliminado', resp);
-        return {
-          ok: true,
-          actividadRole: resp.actividadRole
-        };
-      })
-    );
-  }
+    getRegistroByCodeActividad(id: string) {
+        const url = `${base_url}/actividades-roles/acti/${id}`;
+
+        return this.http.get(url).pipe(
+            map((resp: any) => {
+                console.log('data de actividadesRoles', resp);
+                return {
+                    ok: true,
+                    actividadesRoles: resp.actividadesRoles
+                };
+            })
+        );
+    }
+
+    getRegistroByCodeRole(id: string) {
+        const url = `${base_url}/actividades-roles/role/${id}`;
+
+        return this.http.get(url).pipe(
+            map((resp: any) => {
+                console.log('data de actividadesRoles role', resp);
+                return {
+                    ok: true,
+                    actividadesRoles: resp.actividadesRoles
+                };
+            })
+        );
+    }
+
+    postCrearRegistro(data: PTLActividadRoleModel) {
+        const url = `${base_url}/actividades-roles`;
+        console.log('servicio actividadesRoles', data);
+
+        return this.http.post(url, data).pipe(
+            map((resp: any) => {
+                return {
+                    ok: true,
+                    actividadRole: resp.actividadRole
+                };
+            })
+        );
+    }
+
+    putModificarRegistro(actividad: PTLActividadRoleModel) {
+        const url = `${base_url}/actividades-roles/${actividad.codigoActividad}`;
+
+        return this.http.put(url, actividad).pipe(
+            map((resp: any) => {
+                console.log('data de actividad modificada', resp);
+                return {
+                    ok: true,
+                    actividadRole: resp.actividadRole
+                };
+            })
+        );
+    }
+
+    deleteEliminarRegistro(_id: string) {
+        const url = `${base_url}/actividades-roles/${_id}`;
+
+        return this.http.delete(url).pipe(
+            map((resp: any) => {
+                console.log('data de actividad eliminada', resp);
+                return {
+                    ok: true,
+                    actividadRole: resp.actividadRole
+                };
+            })
+        );
+    }
 }

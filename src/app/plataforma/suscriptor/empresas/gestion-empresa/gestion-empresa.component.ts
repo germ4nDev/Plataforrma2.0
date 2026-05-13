@@ -19,7 +19,6 @@ import {
   PTLSuscriptoresService,
   PtlEmpresasScService
 } from 'src/app/theme/shared/service';
-import { PTLTicketsService } from 'src/app/theme/shared/service/ptltickets.service';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component';
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
@@ -31,7 +30,6 @@ import { PtlusuariosScService } from 'src/app/theme/shared/service/ptlusuarios-s
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service';
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model';
 import { PTLEstadoModel } from 'src/app/theme/shared/_helpers/models/PTLEstado.model';
-import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclasesticket.service';
 import { PTLClaseTicketModel } from 'src/app/theme/shared/_helpers/models/PTLClaseTicket.model';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
@@ -57,7 +55,8 @@ export class GestionEmpresaComponent {
   lockMessage: string = '';
   suscriptoresSub?: Subscription;
   suscriptores: PTLSuscriptorModel[] = [];
-
+  codigoRegistro: string = '';
+  codigoSuscriptor: string = '';
   estadosTicketSub?: Subscription;
   estadosTicket: PTLEstadoModel[] = [];
   clasesTicketSub?: Subscription;
@@ -70,7 +69,6 @@ export class GestionEmpresaComponent {
   modulosSub?: Subscription;
   suites: PTLSuiteAPModel[] = [];
   modulos: PTLModuloAP[] = [];
-  codigoTicket = uuidv4();
 
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
@@ -90,7 +88,6 @@ export class GestionEmpresaComponent {
     private _navigationService: NavigationService,
     private _empresasScService: PtlEmpresasScService,
     private _suscriptoresService: PTLSuscriptoresService,
-    private _registrosService: PTLTicketsService,
     private _uploadService: UploadFilesService,
     private _localStorageService: LocalStorageService,
     private _logActividadesService: PtllogActividadesService,
@@ -98,34 +95,31 @@ export class GestionEmpresaComponent {
   ) {
     this.isSubmit = false;
     this.route.queryParams.subscribe((params) => {
-      const registroId = params['regId'];
-      if (registroId != 'nuevo') {
-        // console.log('me llena el Id', registroId);
-        this.modoEdicion = true;
-        this._empresasScService.getEmpresaById(registroId).subscribe({
-          next: (resp: any) => {
-            // console.log('resp', resp);
-            this.FormRegistro = resp.empresaSC;
-
-            this.selectedFileUrl = this._uploadService.getFilePath('0', 'empresas', resp.empresaSC.logoEmpresa);
-            // console.log('datos del FormRegistro', this.FormRegistro);
-          },
-          error: () => {
-            Swal.fire('Error', 'No se pudo obtener el ticket', 'error');
-          }
-        });
-      } else {
-        // // console.log('no llena el Id', registroId);
+      this.codigoRegistro = params['regId'] || '';
+      this.codigoSuscriptor = params['stId'] || '';
+      if (this.codigoRegistro !== 'nuevo' && this.codigoRegistro !== '') {
+            console.log('me llena el Id', this.codigoRegistro);
+            this.modoEdicion = true;
+            this._empresasScService.getEmpresaById(this.codigoRegistro).subscribe({
+            next: (resp: any) => {
+                this.FormRegistro = resp.empresaSC;
+                this.selectedFileUrl = this._uploadService.getFilePath('0', 'empresas', resp.empresaSC.logoEmpresa);
+                console.log('datos del FormRegistro', this.FormRegistro);
+            },
+            error: () => {
+                Swal.fire('Error', 'No se pudo obtener la empresa', 'error');
+            }
+            });
+        } else {
         this.modoEdicion = false;
-        // this.FormRegistro.codigoAplicacion = uuidv4();
-      }
+        }
     });
   }
 
   ngOnInit() {
     this._navigationService.getNavigationItems();
     this.menuItems = this._navigationService.menuItems$;
-    this.consultarSusucriptores();
+    this.consultarSuscriptores();
     this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
       next: (message: string) => {
         this._localStorageService.setFormRegistro(this.FormRegistro);
@@ -141,6 +135,7 @@ export class GestionEmpresaComponent {
     }
     if (!this.modoEdicion) {
       // console.log('modo edicion', this.modoEdicion);
+      this.FormRegistro.codigoSuscriptor = '';
       this.FormRegistro.logoEmpresa = 'no-imagen.png';
       this.FormRegistro.codigoEmpresaSC = uuidv4();
       this.selectedFileUrl = this._uploadService.getFilePath('0', 'empresas', 'no-foto.png');
@@ -148,7 +143,7 @@ export class GestionEmpresaComponent {
     }
   }
 
-  consultarSusucriptores() {
+  consultarSuscriptores() {
     this.suscriptoresSub = this._suscriptoresService
       .getSuscriptores()
       .pipe(
@@ -231,7 +226,12 @@ export class GestionEmpresaComponent {
             };
             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-            this.router.navigate(['/suscriptor/empresas']);
+            if(this.codigoRegistro == 'nuevo'){
+                this.router.navigate(['/suscriptor/empresas/'], { queryParams: { regId: this.codigoSuscriptor} });
+            }
+            else{
+                this.router.navigate(['/suscriptor/empresas/'], { queryParams: { regId: this.FormRegistro.codigoSuscriptor} });
+            }
           } else {
             const logData = {
               codigoTipoLog: '',
@@ -271,7 +271,12 @@ export class GestionEmpresaComponent {
             this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
             form.resetForm();
             this.isSubmit = false;
-            this.router.navigate(['/suscriptor/empresas']);
+            if(this.codigoRegistro == 'nuevo'){
+                this.router.navigate(['/suscriptor/empresas/'], { queryParams: { regId: this.codigoSuscriptor} });
+            }
+            else{
+                this.router.navigate(['/suscriptor/empresas/'], { queryParams: { regId: this.FormRegistro.codigoSuscriptor} });
+            }
           }
         },
         error: (err: any) => {
@@ -288,7 +293,12 @@ export class GestionEmpresaComponent {
   }
 
   btnRegresarClick() {
-    this.router.navigate(['/suscriptor/empresas']);
+    if(this.codigoRegistro == 'nuevo'){
+        this.router.navigate(['/suscriptor/empresas/'], { queryParams: { regId: this.codigoSuscriptor} });
+    }
+    else{
+        this.router.navigate(['/suscriptor/empresas/'], { queryParams: { regId: this.FormRegistro.codigoSuscriptor} });
+    }
   }
 
   toggleNav(): void {

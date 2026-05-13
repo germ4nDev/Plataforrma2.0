@@ -1,11 +1,16 @@
+/*
+    Author: German Valencia
+*/
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Injectable } from '@angular/core';
-import { ThemeService } from './theme.service'; // Importa tu ThemeService
-import Swal, { SweetAlertOptions } from 'sweetalert2';
-// import '@sweetalert2/theme-dark/dark.css'
+import { Injectable, OnDestroy } from '@angular/core';
+import { ThemeService } from './theme.service';
+import Swal, { SweetAlertOptions, SweetAlertIcon } from 'sweetalert2';
+import { Observable, Subscription, from } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class SwalAlertService {
   private isDarkTheme: boolean = false;

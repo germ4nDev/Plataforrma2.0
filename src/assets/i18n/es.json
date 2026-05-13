@@ -646,6 +646,7 @@
       "DESCRIPTION": "Descripción",
       "UPDATE": "Modificar Suscriptor",
       "DELETE": "Eliminar Suscriptor",
+      "EMPRESAS": "Empresas Suscriptor",
       "FILTER_NAME": "Filtro Nombre",
       "FILTER_DESCRIPTION": "Filtro descripción",
       "FILTRO_STATUS": "Filtro Estado",
@@ -655,6 +656,7 @@
       "ELIMINARERROR": "No se pudo eliminar el Suscriptor.",
       "GESTION": {
         "TITLE": "Crear/Actualizar un Suscriptor",
+        "NEW": "Nuevo Suscriptor",
         "CREATE": "Crear Suscriptor",
         "UPDATE": "Actualizar Suscriptor",
         "CODE": "Código",
@@ -694,7 +696,9 @@
         "REQUERIDONUMEROEMPRESA": "Por favor, Ingrese el Nùmero de la Empresa. Este campo es obligatorio.",
         "REQUERIDONUMEROUSERS": "Por favor, Ingrese el Nùmero del Usuario. Este campo es obligatorio.",
         "REQUERIDOADMINUSER": "Por favor, Ingrese el Usuario Administración. Este campo es obligatorio.",
-        "REQUERIDODESCRIPCION": "Por favor, ingrese una descripcion. Este campo es obligatorio."
+        "REQUERIDODESCRIPCION": "Por favor, ingrese una descripcion. Este campo es obligatorio.",
+        "ERROREXISTEID": "Ya existe un suscriptor con esa identificación",
+        "ERROREXISTENOMBRE": "Ya existe un suscriptor con ese nombre"
       },
       "FILTROS": {
         "TITULO": "Filtros Suscriptores",
@@ -712,7 +716,7 @@
       "NOMBREEMPRESA": "Nombre",
       "DESCRIPCION": "Descripción",
       "ESTADOEMPRESA": "Estado",
-      "CODIGOSUSCRIPTOR": "código Suscriptor",
+      "CODIGOSUSCRIPTOR": "Suscriptor",
       "CODIGOEMPRESA": "código Empresa",
       "ELIMINARTITULO": "¿Estás seguro de eliminar?",
       "ELIMINARTEXTO": "estas apunto de eliminar la Empresa ",
@@ -748,7 +752,35 @@
       }
     },
     "USUARIOSEMPRESA": {},
-    "USUARIOSSUSCRIPTOR": {},
+    "USUARIOSSUSCRIPTOR": {
+        "TITLE": "Administración de Usuarios Suscriptor",
+        "NEW": "Nuevo Usuario Suscriptor",
+        "NOMBREUSUARIOSUSCRIPTOR": "Nombre",
+        "ESTADOEUSUARIOSUSCRIPTOR": "Estado",
+        "CODIGOSUSCRIPTOR": "Suscriptor",
+        "ELIMINARTITULO": "¿Estás seguro de eliminar?",
+        "ELIMINARTEXTO": "estas apunto de eliminar la Empresa ",
+        "ELIMINAREXITOSA": "Eliminado",
+        "ELIMINARERROR": "No se pudo eliminar la Empresa.",
+        "GESTION": {
+            "NEW": "Nuevo Usuario Suscriptor",
+            "UPDATE": "Modificar Usuario Suscriptor",
+            "CREATE": "Crear Usuario Suscriptor",
+            "CODE": "Código",
+            "SUSCRIPTOR": "Suscriptor",
+            "NAME": "Nombre Usuario",
+            "STATUS": "Estado",
+            "PLACEHOLDERNAME":"Nombre del usuario Suscriptor",
+            "REQUERIDONAME":"Por favor, Ingrese un nombre. Este campo es obligatorio."
+        },
+        "FILTROS": {
+        "TITULO": "Filtros Usuarios Suscriptor",
+        "FILTROSUSCRIPTOR": "Suscriptor",
+        "FILTRONOMBRE": "Nombre",
+        "FILTROESTADO": "Estado",
+        "PLACEHOLDERNOMBRE": "Nombre Usuarios Suscriptor"
+      }
+    },
     "ESTADISTICAS": {}
   },
   "TICKETS": {

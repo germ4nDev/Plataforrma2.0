@@ -14,230 +14,206 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSession.model'
 import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model'
-import { BehaviorSubject, catchError, combineLatest, map, Observable, startWith, switchMap } from 'rxjs'
+import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, startWith, switchMap } from 'rxjs'
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component'
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
 import {
-  NavigationService,
-  SwalAlertService,
-  UploadFilesService,
-  PTLUsuariosService,
-  LocalStorageService
+    NavigationService,
+    SwalAlertService,
+    UploadFilesService,
+    PTLUsuariosService,
+    LocalStorageService,
+    PtlAplicacionesService,
+    PtlSuitesAPService,
+    PtlusuariosRolesApService,
+    PTLRolesAPService,
+    PtlusuariosScService,
+    PTLSuscriptoresService,
+    PtlEmpresasScService,
+    PtlusuariosEmpresasScService
 } from 'src/app/theme/shared/service'
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component'
 import { of, Subscription } from 'rxjs'
-import Swal from 'sweetalert2'
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
+import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
+import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
+import { PTLUsuarioRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioRole.model'
+import { PTLRoleAPModel } from 'src/app/theme/shared/_helpers/models/PTLRoleAP.model'
+import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioSC.model'
+import { PTLSuscriptorModel } from 'src/app/theme/shared/_helpers/models/PTLSuscriptor.model'
+import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model'
+import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model'
 //#endregion IMPORTS
 
 @Component({
-  selector: 'app-usuarios',
-  standalone: true,
-  imports: [
-    CommonModule,
-    DataTablesModule,
-    SharedModule,
-    TranslateModule,
-    NavBarComponent,
-    NavContentComponent,
-    DatatableComponent,
-    DataLoaderComponent
-  ],
-  templateUrl: './usuarios.component.html',
-  styleUrl: './usuarios.component.scss'
+    selector: 'app-usuarios',
+    standalone: true,
+    imports: [
+        CommonModule,
+        DataTablesModule,
+        SharedModule,
+        TranslateModule,
+        NavBarComponent,
+        NavContentComponent,
+        DatatableComponent,
+        DataLoaderComponent
+    ],
+    templateUrl: './usuarios.component.html',
+    styleUrl: './usuarios.component.scss'
 })
 export class UsuariosComponent implements OnInit {
-  //#region VARIABLES
-  @Output() toggleSidebar = new EventEmitter<void>()
-  DataModel: BaseSessionModel = new BaseSessionModel()
-  DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
-  moduloTituloExcel: string = ''
-  hasFiltersSlot: boolean = false
-  gradientConfig
-  lang = localStorage.getItem('lang')
-  menuItems$!: Observable<NavigationItem[]>
-  activeTab: 'menu' | 'filters' | 'main' = 'menu'
-  tituloPagina: string = ''
-  suscPlataforma: string = ''
+    //#region VARIABLES
+    @Output() toggleSidebar = new EventEmitter<void>()
+    DataModel: BaseSessionModel = new BaseSessionModel()
+    DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
+    moduloTituloExcel: string = ''
+    hasFiltersSlot: boolean = false
+    gradientConfig
+    lang = localStorage.getItem('lang')
+    menuItems$!: Observable<NavigationItem[]>
+    activeTab: 'menu' | 'filters' | 'main' = 'menu'
+    tituloPagina: string = ''
+    suscPlataforma: string = ''
 
-  subscriptions = new Subscription()
-  filtroIdentificacionSubject = new BehaviorSubject<string>('')
-  filtroNombreSubject = new BehaviorSubject<string>('')
-  filtroCorreoSubject = new BehaviorSubject<string>('')
-  filtroUsernameSubject = new BehaviorSubject<string>('')
-  filtroDescripcionSubject = new BehaviorSubject<string>('')
-  filtroEstadoSubject = new BehaviorSubject<string>('todos')
+    subscriptions = new Subscription()
+    filtroIdentificacionSubject = new BehaviorSubject<string>('')
+    filtroNombreSubject = new BehaviorSubject<string>('')
+    filtroCorreoSubject = new BehaviorSubject<string>('')
+    filtroUsernameSubject = new BehaviorSubject<string>('')
+    filtroDescripcionSubject = new BehaviorSubject<string>('')
+    filtroEstadoSubject = new BehaviorSubject<string>('todos')
 
-  registrosTransformados$: Observable<PTLUsuarioModel[]> = of([])
-  registrosFiltrado$: Observable<PTLUsuarioModel[]> = of([])
-  usuarios: PTLUsuarioModel[] = []
-  registros: PTLUsuarioModel[] = []
+    registrosTransformados$: Observable<PTLUsuarioModel[]> = of([])
+    registrosFiltrado$: Observable<PTLUsuarioModel[]> = of([])
+    usuarios: PTLUsuarioModel[] = []
+    registros: PTLUsuarioModel[] = []
+    aplicaciones: PTLAplicacionModel[] = []
+    suites: PTLSuiteAPModel[] = []
+    usuariosRoles: PTLUsuarioRoleAPModel[] = []
+    empresasSC: PTLEmpresaSCModel[] = []
+    roles: PTLRoleAPModel[] = []
+    usuariosSC: PTLUsuarioSCModel[] = []
+    suscriptores: PTLSuscriptorModel[] = []
+    usuarioEmpresaSC: PTLUsuaioEmpresasSCModel[] = []
 
-  rolesUsuario = [
-    {
-      aplicacion: 'Plataforma',
-      suite: 'Administracion',
-      role: 'ROLE_USUARIO'
-    },
-    {
-      aplicacion: 'Plataforma',
-      suite: 'Administracion',
-      role: 'ROLE_ADMINISTRADOR'
-    },
-    {
-      aplicacion: 'Qplus',
-      suite: 'Sistemas de Gestion',
-      role: 'ROLE_ADMINSOCUMENTOS'
+    rolesUsuario = [
+        {
+            aplicacion: 'Plataforma',
+            suite: 'Administracion',
+            role: 'ROLE_USUARIO'
+        },
+        {
+            aplicacion: 'Plataforma',
+            suite: 'Administracion',
+            role: 'ROLE_ADMINISTRADOR'
+        },
+        {
+            aplicacion: 'Qplus',
+            suite: 'Sistemas de Gestion',
+            role: 'ROLE_ADMINSOCUMENTOS'
+        }
+    ]
+    //#endregion VARIABLES
+
+    constructor(
+        private router: Router,
+        private translate: TranslateService,
+        private _navigationService: NavigationService,
+        private _swalService: SwalAlertService,
+        private _usuariosService: PTLUsuariosService,
+        private _aplicacionesService: PtlAplicacionesService,
+        private _rolesUsuariosService: PtlusuariosRolesApService,
+        private _rolesService: PTLRolesAPService,
+        private _suitesService: PtlSuitesAPService,
+        private _usuariosSCService: PtlusuariosScService,
+        private _suscriptoresService: PTLSuscriptoresService,
+        private _empresasSCService: PtlEmpresasScService,
+        private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
+        private _localStorageService: LocalStorageService,
+        private _uploadService: UploadFilesService
+    ) {
+        this.gradientConfig = GradientConfig
     }
-  ]
-  //#endregion VARIABLES
 
-  constructor (
-    private router: Router,
-    private translate: TranslateService,
-    private _navigationService: NavigationService,
-    private _swalService: SwalAlertService,
-    private _usuariosService: PTLUsuariosService,
-    private _localStorageService: LocalStorageService,
-    private _uploadService: UploadFilesService
-  ) {
-    this.gradientConfig = GradientConfig
-  }
-
-  ngOnInit () {
-    this._navigationService.getNavigationItems()
-    this.menuItems$ = this._navigationService.menuItems$
-    this.hasFiltersSlot = true
-    this.consultarRegistros()
-    setTimeout(() => {
-      this.setupRegistrosStream()
-    }, 100)
-    this.subscriptions.add(
-      this._usuariosService.cargarRegistros().subscribe(
-        () => console.log('Usuarios cargados y guardados en el servicio'),
-        err => console.error('Error al cargar usuarios:', err)
-      )
-    )
-  }
-
-  ngOnDestroy (): void {
-    this.subscriptions.unsubscribe()
-  }
-
-  columnasUsuarios: ColumnMetadata[] = [
-    {
-      name: 'fotoUsuario',
-      header: 'USUARIOS.USUARIOS.FOTO',
-      type: 'avatar',
-      isSortable: false
-    },
-    {
-      name: 'identificacionUsuario',
-      header: 'USUARIOS.USUARIOS.IDENTIFICACION',
-      type: 'text'
-    },
-    {
-      name: 'nombreUsuario',
-      header: 'USUARIOS.USUARIOS.NAME',
-      type: 'text'
-    },
-    {
-      name: 'userNameUsuario',
-      header: 'USUARIOS.USUARIOS.USERNAME',
-      type: 'text'
-    },
-    {
-      name: 'nomEstado',
-      header: 'USUARIOS.USUARIOS.STATUS',
-      type: 'estado'
+    ngOnInit() {
+        this._navigationService.getNavigationItems()
+        this.menuItems$ = this._navigationService.menuItems$
+        this.hasFiltersSlot = true
+        this.consultarRegistros()
+        setTimeout(() => {
+            this.aplicaciones = this._aplicacionesService.getBAplicacionesActuales()
+            this.suites = this._suitesService.getSuitesActuales()
+            this.roles = this._rolesService.getRolesActuales()
+            this.usuariosRoles = this._rolesUsuariosService.getUsuairosRolesActuales()
+            this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales()
+            this.suscriptores = this._suscriptoresService.getSuscriptoresActuales()
+            this.empresasSC = this._empresasSCService.getEmpresasSCActuales()
+            this.usuarioEmpresaSC = this._usuariosEmpresasSCService.getUsuariosEmpresasSCActuales()
+            console.log('aplicaciones', this.aplicaciones)
+            console.log('suites', this.suites)
+            console.log('roles', this.roles)
+            console.log('usuariosRoles', this.usuariosRoles)
+            console.log('usuariosSC', this.usuariosSC)
+            console.log('suscriptores', this.suscriptores)
+            console.log('empresasSC', this.empresasSC)
+            this.setupRegistrosStream()
+        }, 100)
+        this.subscriptions.add(
+            this._usuariosService.cargarRegistros().subscribe(
+                () => console.log('Usuarios cargados y guardados en el servicio'),
+                err => console.error('Error al cargar usuarios:', err)
+            )
+        )
     }
-  ]
 
-  columnasDetailRegistros: ColumnMetadata[] = [
-    {
-      name: 'correoUsuario',
-      header: 'USUARIOS.USUARIOS.CORREO',
-      type: 'text'
-    },
-    {
-      name: 'descripcionUsuario',
-      header: 'USUARIOS.USUARIOS.DESCRIPCION',
-      type: 'text'
-    },
-    {
-      name: 'rolesUsuario',
-      header: 'USUARIOS.USUARIOS.ROLES',
-      type: 'json-tabla'
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe()
     }
-  ]
 
-  consultarRegistros () {
-    this.subscriptions.add(
-      this._usuariosService.getUsuarios().subscribe((resp: any) => {
-        if (resp.ok) {
-          this.usuarios = resp.usuarios
-          //   console.log('Todos las usuarios', this.usuarios);
-          return
+    columnasUsuarios: ColumnMetadata[] = [
+        {
+            name: 'fotoUsuario',
+            header: 'USUARIOS.USUARIOS.FOTO',
+            type: 'avatar',
+            isSortable: false
+        },
+        {
+            name: 'identificacionUsuario',
+            header: 'USUARIOS.USUARIOS.IDENTIFICACION',
+            type: 'text'
+        },
+        {
+            name: 'nombreUsuario',
+            header: 'USUARIOS.USUARIOS.NAME',
+            type: 'text'
+        },
+        {
+            name: 'userNameUsuario',
+            header: 'USUARIOS.USUARIOS.USERNAME',
+            type: 'text'
+        },
+        {
+            name: 'nomEstado',
+            header: 'USUARIOS.USUARIOS.STATUS',
+            type: 'estado'
         }
-      })
-    )
-  }
+    ]
 
-  setupRegistrosStream (): void {
-    this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-    let codigo = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-    this.registrosTransformados$ = this._usuariosService.usuarios$.pipe(
-      switchMap((users: PTLUsuarioModel[]) => {
-        if (!users) return of([])
-        this.usuarios = users
-        const transformedUsuarios = users.map((user: any) => {
-          user.nomEstado = user.estadoUsuario ? 'Activo' : 'Inactivo'
-          user.fotoUsuario = this._uploadService.getFilePath(codigo, 'usuarios', user.fotoUsuario)
-          user.rolesUsuario = this.rolesUsuario || []
-          return user as PTLUsuarioModel
-        })
-        console.log('usuarios datatable', transformedUsuarios)
-        this.registros = transformedUsuarios
-        return of(transformedUsuarios)
-      }),
-      catchError(err => {
-        console.error('Error en el stream de aplicaciones:', err)
-        return of([])
-      })
-    )
-    this.registrosFiltrado$ = combineLatest([
-      this.registrosTransformados$.pipe(startWith([])),
-      this.filtroIdentificacionSubject,
-      this.filtroNombreSubject,
-      this.filtroCorreoSubject,
-      this.filtroUsernameSubject,
-      this.filtroDescripcionSubject,
-      this.filtroEstadoSubject
-    ]).pipe(
-      map(([users, identificacion, nombre, correo, username, descripcion, estado]) => {
-        // console.log('================== roles 2', users);
-        let filteredRegistros = users
-        if (identificacion) {
-          filteredRegistros = filteredRegistros.filter(app =>
-            (app.identificacionUsuario?.toString() || '').toLowerCase().includes(identificacion)
-          )
-        }
-        if (nombre) {
-          filteredRegistros = filteredRegistros.filter(reg => (reg.nombreUsuario?.toString() || '').toLowerCase().includes(nombre))
-        }
-        if (correo) {
-          filteredRegistros = filteredRegistros.filter(reg => (reg.correoUsuario?.toString() || '').toLowerCase().includes(correo))
-        }
-        if (username) {
-          filteredRegistros = filteredRegistros.filter(reg => (reg.userNameUsuario?.toString() || '').toLowerCase().includes(username))
-        }
-        if (estado !== 'todos') {
-          const estadoBoolean = estado === 'true'
-          filteredRegistros = filteredRegistros.filter(reg => reg.estadoUsuario === estadoBoolean)
-        }
-        if (descripcion) {
-          const textoFiltro = descripcion.toLowerCase()
-          filteredRegistros = filteredRegistros.filter(reg => (reg.descripcionUsuario || '').toLowerCase().includes(textoFiltro))
+    columnasDetailRegistros: ColumnMetadata[] = [
+        {
+            name: 'correoUsuario',
+            header: 'USUARIOS.USUARIOS.CORREO',
+            type: 'text'
+        },
+        {
+            name: 'descripcionUsuario',
+            header: 'USUARIOS.USUARIOS.DESCRIPCION',
+            type: 'text'
+        },
+        {
+            name: 'rolesUsuario',
+            header: 'USUARIOS.USUARIOS.ROLES',
+            type: 'json-tabla'
         }
         return filteredRegistros
       })
