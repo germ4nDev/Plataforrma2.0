@@ -1,9 +1,10 @@
+
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { SharedModule } from 'src/app/theme/shared/shared.module'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute, Router, Event } from '@angular/router';
 import { PtlAplicacionesService } from 'src/app/theme/shared/service/ptlaplicaciones.service'
 import { catchError, Observable, of, Subscription, tap } from 'rxjs'
 import { PTLAplicacionModel } from 'src/app/theme/shared/_helpers/models/PTLAplicacion.model'
@@ -20,11 +21,13 @@ import { PtlmodulosApService } from 'src/app/theme/shared/service/ptlmodulos-ap.
 import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.model'
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component'
 import {
+    AuthenticationService,
     LocalStorageService,
     PtlEmpresasScService,
     PtllogActividadesService,
     PtlusuariosEmpresasScService,
-    SwalAlertService
+    SwalAlertService,
+    UploadFilesService
 } from 'src/app/theme/shared/service'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model'
@@ -34,6 +37,7 @@ import { PTLSuscriptoresService, PtlusuariosScService } from 'src/app/theme/shar
 import { PTLUsuariosService } from 'src/app/theme/shared/service/ptlusuarios.service'
 import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model'
 import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuarioEmpresaSC.model'
+import { event } from 'jquery';
 
 @Component({
     selector: 'app-gestion-usuario-suscrptor',
@@ -45,8 +49,9 @@ import { PTLUsuaioEmpresasSCModel } from 'src/app/theme/shared/_helpers/models/P
 export class GestionUsuarioSuscrptorComponent {
     // #region VARIABLES
     @Output() toggleSidebar = new EventEmitter<void>()
-    FormRegistro: PTLUsuarioSCModel = new PTLUsuarioSCModel()
-    menuItems$!: Observable<NavigationItem[]>
+    FormRegistro: PTLUsuarioModel = new PTLUsuarioModel()
+    usuarioSC: PTLUsuarioSCModel = new PTLUsuarioSCModel()
+    menuItems!: Observable<NavigationItem[]>
     gradientConfig: any
     navCollapsed: boolean = false
     navCollapsedMob: boolean = false
@@ -63,16 +68,25 @@ export class GestionUsuarioSuscrptorComponent {
     usuariosEmpresasSC: PTLUsuaioEmpresasSCModel[] = []
     empresasSCSeleccionadas: PTLEmpresaSCModel[] = []
 
-    codigoUsuario = uuidv4()
+    codigoUsuarioSC = uuidv4()
     tipoEditorTexto = 'basica'
     lockScreenSubscription: Subscription | undefined
     isLocked: boolean = false
     lockMessage: string = ''
 
-    suscriptores: PTLSuscriptorModel[] = []
+    suscriptoresSub?: Subscription;
+    suscriptores: PTLSuscriptorModel[] = [];
     usuariosSC: PTLUsuarioSCModel[] = []
+    usuariosSub?: Subscription;
     usuarios: PTLUsuarioModel[] = []
     subscriptions = new Subscription()
+    codigoRegistro: string = '';
+    codigoSuscriptor: string = '';
+    isClaveActual: boolean = true
+    selectedFileUrl: string | null = null
+    userPhotoUrl: string = ''
+    fileName: string = ''
+    nomSuscriptor: string = '';
 
     // #endregion VARIABLES
 
@@ -80,7 +94,7 @@ export class GestionUsuarioSuscrptorComponent {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        private translate: TranslateService,
+        private _translate: TranslateService,
         private _empresasSCService: PtlEmpresasScService,
         private _usuariosEmpresasService: PtlusuariosEmpresasScService,
         private _registrosService: PTLUsuariosService,
@@ -91,90 +105,113 @@ export class GestionUsuarioSuscrptorComponent {
         private _usuariosService: PTLUsuariosService,
         private _usuariosSCService: PtlusuariosScService,
         private _suscriptoresService: PTLSuscriptoresService,
-        private _navigationService: NavigationService
+        private _navigationService: NavigationService,
+        private _authService: AuthenticationService,
+        private _uploadService: UploadFilesService,
     ) {
-        this.isSubmit = false
-        GradientConfig.header_fixed_layout = true
-        this.gradientConfig = GradientConfig
-        this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
-        this.navCollapsedMob = false
-        this.codigoUsuario = this._localStorageService.getObject<string>('regId') || ''
-        console.log('codigoUsuario', this.codigoUsuario)
-        if (this.codigoUsuario != 'nuevo') {
-            this.modoEdicion = true
-            this._usuariosSCService.getUsuarioById(this.codigoUsuario).subscribe({
-                next: (resp: any) => {
-                    this.FormRegistro = resp.usuarioSC
-                    console.log('formRegistro modulo', this.FormRegistro)
-                    this.consultarSuscriptores(this.FormRegistro.codigoSuscriptor)
-                    this.consultarEmpresasSC(this.FormRegistro.codigoSuscriptor)
-                    this.consultarUsuarios(this.FormRegistro.codigoUsuario)
-                },
-                error: () => {
-                    this._swalAlertService.getAlertError('No se pudo obtener el modulo.')
-                }
-            })
-        } else {
-            this.modoEdicion = false
-            this.FormRegistro.codigoUsuario = uuidv4()
-        }
-        this.route.queryParams.subscribe(params => { })
+        this.isSubmit = false;
+        this.route.queryParams.subscribe((params) => {
+            this.codigoRegistro = params['regId'] || '';
+            this.codigoSuscriptor = params['stId'] || '';
+            this.consultarSuscriptores(this.codigoSuscriptor);
+            console.log('CODIGO SUSCRIPTOR', this.codigoSuscriptor);
+            this.codigoSuscriptor = this.codigoSuscriptor;
+            if (this.codigoRegistro !== 'nuevo' && this.codigoRegistro !== '') {
+                console.log('me llena el Id', this.codigoRegistro);
+                console.log('me llena USAURIOS', this.usuarios);
+                this.modoEdicion = true;
+                this._usuariosSCService.getUsuariosByCode(this.codigoRegistro).subscribe({
+                    next: (resp: any) => {
+                        // const usuario = this.usuarios.find(x => x.codigoUsuario == resp.usuarioSC.codigoUsuario)
+                        this.consultarUsuarios(this.codigoRegistro);
+                        // this.FormRegistro = usuario || {};
+                    },
+                    error: () => {
+                        this._swalAlertService.getAlertError('No se pudo obtener el usuarioSC');
+                    }
+                });
+            } else {
+                this.modoEdicion = false;
+            }
+        });
     }
 
     ngOnInit() {
-        this._navigationService.getNavigationItems()
-        this.menuItems$ = this._navigationService.menuItems$
+        this._navigationService.getNavigationItems();
+        this.menuItems = this._navigationService.menuItems$;
         this.consultarUsuarios()
-        this.consultarSuscriptores()
-        this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales()
+        this.consultarSuscriptores(this.codigoSuscriptor);
         this._layoutInitializer.applyLayout()
-        // TODO Replicar en todos los modulos de gestion de datos
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
             next: (message: string) => {
-                this._localStorageService.setFormRegistro(this.FormRegistro)
-                this.isLocked = true
-                this.lockMessage = message
+                this._localStorageService.setFormRegistro(this.FormRegistro);
+                this.isLocked = true;
+                this.lockMessage = message;
             },
-            error: err => console.error('Error al suscribirse al evento de bloqueo:', err)
-        })
-        const form = this._localStorageService.getFormRegistro()
+            error: (err) => console.error('Error al suscribirse al evento de bloqueo:', err)
+        });
+        const form = this._localStorageService.getFormRegistro();
         if (form != undefined) {
-            this.FormRegistro = form
-            this._localStorageService.removeFormRegistro()
+            this.FormRegistro = form;
+            this._localStorageService.removeFormRegistro();
         }
         if (!this.modoEdicion) {
-            console.log('modo edicion', this.modoEdicion)
-            console.log('FormRegistro', this.FormRegistro)
-            //   this.FormRegistro.codigoAplicacion = ''
-            //   this.FormRegistro.codigoSuite = ''
-            //   this.FormRegistro.codigoPadre = ''
-            this.FormRegistro.codigoUsuario = uuidv4()
-            // this.FormRegistro.codigoModulo = uuidv4();
+            console.log('modo edicion', this.modoEdicion);
+            // this.FormRegistro = new PTLUsuarioModel();
+            this.FormRegistro.codigoUsuario = uuidv4();
+            this.FormRegistro.identificacionUsuario = '';
+            this.FormRegistro.nombreUsuario = '';
+            this.FormRegistro.codigoUsuario = '';
+            this.FormRegistro.claveActual = '';
+            this.FormRegistro.claveConfirm = '';
+            this.FormRegistro.claveUsuario = '';
+            this.FormRegistro.descripcionUsuario = '';
+            this.FormRegistro.estadoUsuario = false;
+            this.FormRegistro.fotoUsuario = '';
+            console.log('FormRegistro', this.FormRegistro);
         }
     }
 
     consultarUsuarios(codUsuario?: string) {
-        this.subscriptions.add(
-            this._usuariosService.getUsuarios().subscribe((resp: any) => {
-                if (resp.ok) {
-                    this.usuarios = resp.usuarios
-                    console.log('Todos las usuarios', this.usuarios)
-                    return
-                }
-            })
-        )
+        this.usuariosSub = this._usuariosService
+            .getUsuarios()
+            .pipe(
+                tap((resp: any) => {
+                    if (resp.ok) {
+                        this.usuarios = resp.usuarios;
+                        if(codUsuario){
+                            this.FormRegistro = this.usuarios.find(x => x.codigoUsuario == codUsuario) || {};
+                        }
+                        console.log('Todos los usuarios', this.usuarios)
+                        return;
+                    }
+                }),
+                catchError((err) => {
+                    console.log('Ha ocurrido un error', err);
+                    return of(null);
+                })
+            )
+            .subscribe();
     }
 
     consultarSuscriptores(codSuscriptor?: string) {
-        this.subscriptions.add(
-            this._suscriptoresService.getRegistros().subscribe((resp: any) => {
-                if (resp.ok) {
-                    this.suscriptores = resp.suscriptores
-                    console.log('Todos las suscriptores', this.suscriptores)
-                    return
-                }
-            })
-        )
+        this.suscriptoresSub = this._suscriptoresService
+            .getSuscriptores()
+            .pipe(
+                tap((resp: any) => {
+                    if (resp.ok) {
+                        const suscriptor = resp.suscriptores.find((x: { codigoSuscriptor: string | undefined }) => x.codigoSuscriptor == codSuscriptor);
+                        this.nomSuscriptor = suscriptor.nombreSuscriptor;
+                        console.log('Todos los suscriptores', this.suscriptores)
+                        return;
+                    }
+                }),
+                catchError((err) => {
+                    console.log('Ha ocurrido un error', err);
+                    return of(null);
+                })
+            )
+            .subscribe();
     }
 
     consultarEmpresasSC(codSuscriptor?: string) {
@@ -214,9 +251,9 @@ export class GestionUsuarioSuscrptorComponent {
 
     btnGestionarRegistroClick(form: any) {
         this.isSubmit = true
-        // if (!form.valid) {
-        //   return;
-        // }
+        if (!form.valid) {
+            return;
+        }
         const registroData = form.value as PTLUsuarioSCModel
         console.log('insertar formRegistro', registroData)
         this.onGestionarUsuarioEmpresa(this.FormRegistro.codigoUsuario || '')
@@ -231,19 +268,19 @@ export class GestionUsuarioSuscrptorComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                            descripcionLog: this._translate.instant('PLATAFORMA.MODIFICAR')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.MODIFICAR'))
                         this.router.navigate(['/suscriptores/usuarios-suscriptor'])
                     } else {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                            descripcionLog: this._translate.instant('PLATAFORMA.NOMODIFICO')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'))
+                        this._swalAlertService.getAlertError(resp.message || this._translate.instant('PLATAFORMA.NOMODIFICO'))
                     }
                 },
                 error: (err: any) => {
@@ -251,14 +288,14 @@ export class GestionUsuarioSuscrptorComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+                        descripcionLog: this._translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'))
+                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.NOMODIFICO'))
                 }
             })
         } else {
-            registroData.codigoUsuario = uuidv4()
+            registroData.codigoUsuarioSC = uuidv4()
             registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
             registroData.fechaCreacion = new Date().toISOString()
             registroData.codigoUsuarioModificacion = ''
@@ -271,10 +308,10 @@ export class GestionUsuarioSuscrptorComponent {
                         const logData = {
                             codigoTipoLog: '',
                             codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                            descripcionLog: this._translate.instant('PLATAFORMA.INSERTAR')
                         }
                         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+                        this._swalAlertService.getAlertSuccess(this._translate.instant('PLATAFORMA.INSERTAR'))
                         form.resetForm()
                         this.isSubmit = false
                         this.router.navigate(['/suscriptores/usuarios-suscriptor'])
@@ -285,10 +322,10 @@ export class GestionUsuarioSuscrptorComponent {
                     const logData = {
                         codigoTipoLog: '',
                         codigoRespuesta: '501',
-                        descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+                        descripcionLog: this._translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
                     }
                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err)
+                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err)
                 }
             })
         }
@@ -337,8 +374,92 @@ export class GestionUsuarioSuscrptorComponent {
         }
     }
 
+    validarClaveActual(claveActual: any) {
+        // console.log('validar la clave', claveActual);
+        const userName = this.FormRegistro.userNameUsuario || ''
+        // console.log('validar el usuario', userName, claveActual);
+        // console.log('data el usuario', this.FormRegistro);
+        this._authService.verificarClaveActual(userName, claveActual).subscribe((data: any) => {
+            //   console.log('data', data);
+            if (data.ok == true) {
+                if (this.FormRegistro.usuarioId === data.usuario.usuarioId) {
+                    this.isClaveActual = false
+                    //   console.log('respuesta perfil', data);
+                }
+            } else {
+                this.FormRegistro.claveNew = ''
+                this.FormRegistro.claveConfirm = ''
+                this.isClaveActual = true
+            }
+        })
+    }
+
+    actualizarDescripcionRegistro(nuevoContenido: string): void {
+        this.FormRegistro.descripcionUsuario = nuevoContenido
+        // console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionUsuario);
+        // if (this.validationForm && this.isSubmit) {
+        // }
+    }
+
+    onFileSelectedClick(event: any) {
+        const file: File = event.target.files[0]
+        const codigo =
+            this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor ||
+            this._localStorageService.getSuscriptorPlataformaLocalStorage()
+        const objUpload = {
+            susc: codigo,
+            tipo: 'usuarios',
+            id: '0'
+        }
+        // console.log('objUpload', objUpload);
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = (e: any) => {
+                this.selectedFileUrl = e.target.result
+            }
+            reader.readAsDataURL(file)
+            this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
+                next: (path: any) => {
+                    //   console.log('resultado++++++++++++++++', path);
+                    this.fileName = path.nombreArchivo
+                    this.FormRegistro.fotoUsuario = path.nombreArchivo
+                },
+                error: () => {
+                    this._swalAlertService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
+                }
+            })
+        } else {
+            this.selectedFileUrl = null
+            this.userPhotoUrl = ''
+        }
+    }
+
+    onIdentificacionChangeClick(event: any) {
+        const valorEvent = event.target.value;
+        const usuario = this.usuarios.find(x => x.identificacionUsuario == valorEvent);
+        this.FormRegistro.codigoUsuario = uuidv4();
+        this.FormRegistro.identificacionUsuario = event.target.value;
+        this.FormRegistro.nombreUsuario = '';
+        this.FormRegistro.claveUsuario = '';
+        this.FormRegistro.claveConfirm = '';
+        this.FormRegistro.descripcionUsuario = '';
+        this.FormRegistro.estadoUsuario = true;
+        this.FormRegistro.correoUsuario = '';
+        this.FormRegistro.nombreUsuario = '';
+        this.FormRegistro.userNameUsuario = '';
+        if (usuario) {
+            this.FormRegistro = usuario;
+            this.FormRegistro.claveUsuario = '';
+        }
+    }
+
     btnRegresarClick() {
-        this.router.navigate(['/suscriptores/usuarios-suscriptor'])
+        if (this.codigoRegistro == 'nuevo') {
+            this.router.navigate(['/suscriptor/usuarios-suscriptor/'], { queryParams: { regId: this.codigoSuscriptor } });
+        }
+        else {
+            this.router.navigate(['/suscriptor/usuarios-suscriptor/'], { queryParams: { regId: this.usuarioSC.codigoSuscriptor } });
+        }
     }
 
     toggleNav(): void {

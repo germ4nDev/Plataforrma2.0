@@ -121,14 +121,26 @@ export class PTLUsuariosService {
         return this.http.post(url, data).pipe(
             map((resp: any) => {
                 this.crearUsuarioSCPlataforma(resp.usuario)
-
                 // this._usuairosRolesService.postUsuarioRole(usuarioRole).subscribe(() => console.log('Usuairo Role creado'));
                 return {
                     ok: true,
-                    usurio: resp.usurio
+                    usuario: resp.usuario
                 }
             })
         )
+    }
+
+    postCrearUsuario(data: PTLUsuarioModel) {
+        const url = `${base_url}/usuarios`;
+        console.log('servicio usuarios', data);
+        return this.http.post(url, data).pipe(
+            map((resp: any) => {
+                return {
+                    ok: true,
+                    usuarios: resp.usuario
+                };
+            })
+        );
     }
 
     crearUsuarioSCPlataforma(data: PTLUsuarioModel) {
@@ -145,7 +157,7 @@ export class PTLUsuariosService {
         return this.http.post(url, usuarioSC).pipe(
             map((resp: any) => {
                 const usuarioRole: PTLUsuarioRoleAPModel = {
-                    codigoUsuarioEmpresaSC: resp.usurioSC.codigoUsuarioSC,
+                    codigoUsuarioSC: resp.usurioSC.codigoUsuarioSC,
                     codigoEmpresaSC: 'e1a8fa99-15db-479b-a0a4-9c2be72273e9',
                     codigoRole: 'aa5901bc-9c7d-45e8-bf68-4a0a286e9b99',
                     estadoUsuarioRole: true,
@@ -164,11 +176,12 @@ export class PTLUsuariosService {
             if (usu.fotoUsuario !== '') {
                 imagenUsuario = usu.fotoUsuario
                 if (imagenUsuario !== usuario.fotoUsuario) {
-                    const fotoUsuairo = this.usuario.fotoUsuario || ''
+                    const fotoUsuario = this.usuario.fotoUsuario || ''
+                    const tipo = 'usuarios'
                     const objUpload = {
-                        susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+                        susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '',
                         tipo: 'usuarios',
-                        file: fotoUsuairo
+                        file: fotoUsuario
                     }
                     this._uploadService.deleteFilePath(objUpload).subscribe(() => console.log('Foto eliminada'))
                 }
@@ -195,7 +208,7 @@ export class PTLUsuariosService {
                 imagenUsuario = usu.usuario.fotoUsuario
                 if (imagenUsuario !== usuario.fotoUsuario) {
                     const objUpload = {
-                        susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor,
+                        susc: this._localStorageService.getSuscriptorLocalStorage()?.codigoSuscriptor || '',
                         tipo: 'usuarios',
                         file: imagenUsuario
                     }

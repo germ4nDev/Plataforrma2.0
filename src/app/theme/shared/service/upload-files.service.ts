@@ -63,7 +63,7 @@ export class UploadFilesService {
     }
 
     deleteFilePath(objUpload: UploadParams) {
-        const pathUrl = `${base_url}/upload/delete/${objUpload.susc}/${objUpload.tipo}/${objUpload.file}`;
+        const pathUrl = `${base_url}/upload/delete/${objUpload.susc}/${objUpload.tipo || ''}/${objUpload.file}`;
 
         return this.http.delete(pathUrl).pipe(
             map((resp: any) => {

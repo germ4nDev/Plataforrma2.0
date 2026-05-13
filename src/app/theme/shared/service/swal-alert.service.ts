@@ -34,15 +34,15 @@ export class SwalAlertService implements OnDestroy {
             return {
                 container: 'swal2-light-theme-container',
                 popup: 'custom-popup-class swal2-light-mode-custom',
-                confirmButton: 'btn btn-primary-light',
-                denyButton: 'btn btn-secondary'
+                confirmButton: 'btn btn-primary-light confirmButton-color',
+                denyButton: 'btn btn-secondary btn-secondary'
             };
         } else {
             return {
                 container: 'swal2-dark-theme-container',
                 popup: 'custom-popup-class swal2-dark-mode-custom',
-                confirmButton: 'btn btn-primary-dark',
-                denyButton: 'btn btn-secondary'
+                confirmButton: 'btn btn-primary-dark confirmButton-color',
+                denyButton: 'btn btn-secondary btn-secondary'
             };
         }
     }

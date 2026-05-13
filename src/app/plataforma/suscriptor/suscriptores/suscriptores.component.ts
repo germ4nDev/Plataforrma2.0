@@ -45,7 +45,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   menuItems!: Observable<NavigationItem[]>;
   activeTab: 'menu' | 'filters' | 'main' = 'menu';
 
-  colorOpcion1 = '#39b87d';
+  colorOpcion1 = '#0BD9D2';
   letraOpcion1 = 'E';
 
   colorOpcion2 = '#e08815';
@@ -71,8 +71,8 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
     this.setupRegistrosStream();
     this.subscriptions.add(
       this._suscriptoresService.getRegistros().subscribe(
-        () => console.log('Aplicaciones cargadas y guardadas en el servicio'),
-        (err) => console.error('Error al cargar aplicaciones:', err)
+        () => console.log('Suscriptores cargados y guardadas en el servicio'),
+        (err) => console.error('Error al cargar los Suscriptores:', err)
       )
     );
   }
@@ -304,38 +304,47 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   }
 
   OnOption1Click(event: any) {
-    this.router.navigate(['/suscriptor/empresas-suscriptor'], { queryParams: { suscriptorId: event.id } });
+    console.log('ejecutando opcion 1 empresas Suscriptor', event);
+    this.router.navigate(['/suscriptor/empresas'], { queryParams: { regId: event } });
   }
 
   OnOption2Click(event: any) {
-    this.router.navigate(['/suscriptor/usuarios-suscriptor'], { queryParams: { suscriptorId: event.id } });
+    console.log('ejecutando opcion 2 UsuariosSuscriptor', event);
+    this.router.navigate(['/suscriptor/usuarios-suscriptor'], { queryParams: { regId: event } });
   }
 
   OnEliminarRegistroClick(id: any) {
-    Swal.fire({
-      title: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTITULO'),
-      text: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTEXTO'),
-      icon: 'warning',
-      //theme: 'datk',
-      customClass: this._swalService.getSwalCustomClass(),
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
-          next: (resp: any) => {
-            Swal.fire(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-            this.setupRegistrosStream();
-          },
-          error: (err: any) => {
-            Swal.fire('Error', this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARERROR'), 'error');
-            console.error('Error eliminando', err);
-          }
+    const suscriptor = this.registros.filter((x) => x.codigoSuscriptor == id.id)[0];
+    const titulo = this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTITULO');
+    const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+    const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+    const htmlBody = `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${suscriptor?.nombreSuscriptor}"</b></small>
+    `;
+    this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+        .then((confirmado) => {
+            if (confirmado) {
+                this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
+                next: (resp: any) => {
+                    Swal.fire(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
+                    this.subscriptions.add(
+                            this._suscriptoresService.getRegistros().subscribe(
+                                () => console.log('Suscriptores cargados y guardadas en el servicio'),
+                                err => console.error('Error al cargar los Suscriptores:', err)
+                            )
+                        )
+                },
+                error: (err: any) => {
+                    Swal.fire('Error', this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARERROR'), 'error');
+                    console.error('Error eliminando', err);
+                }
+                });
+            }
         });
-      }
-    });
-  }
+    }
 
   toggleNav(): void {
     this.toggleSidebar.emit();

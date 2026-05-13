@@ -24,10 +24,16 @@
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
-                        <button type="button"
+                        <button *ngIf="!modoEdicion" type="button"
                             class="btn btn-primary btn-NuevoRegistro btn-animacion"
                             (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'SUSCRIPTOR.EMPRESAS.GESTION.CREATE' | translate }}
+                            <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
+                        </button>
+                        <button *ngIf="modoEdicion" type="button"
+                            class="btn btn-primary btn-NuevoRegistro btn-animacion"
+                            (click)="btnGestionarRegistroClick(validationForm)">
+                            {{ 'SUSCRIPTOR.EMPRESAS.GESTION.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
                     </div>
@@ -39,7 +45,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="form-label">{{ 'SUSCRIPTOR.EMPRESAS.GESTION.CODE' | translate }}</label>
-                                <input type="text" class="form-control form-input" name="codigoEmpresaSC"
+                                <input class="form-control form-input" name="codigoEmpresaSC" type="text"
                                     placeholder="{{ 'SUSCRIPTOR.EMPRESAS.GESTION.PLACEHOLDERCODE' | translate }}"
                                     [ngClass]="{'is-invalid': !codigoEmpresaSC.valid && (codigoEmpresaSC.dirty || codigoEmpresaSC.touched || isSubmit) }"
                                     #codigoEmpresaSC="ngModel" required [(ngModel)]="FormRegistro.codigoEmpresaSC" readonly />
@@ -52,9 +58,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoSuscriptor">{{
-                                    'SUSCRIPTOR.EMPRESAS.GESTION.SUSCRIPTOR' |
-                                    translate }}</label>
+                                <label class="form-control-label" for="codigoSuscriptor">{{ 'SUSCRIPTOR.EMPRESAS.GESTION.SUSCRIPTOR' | translate }}</label>
                                 <select class="form-control form-input" style="cursor: pointer;" name="codigoSuscriptor"
                                     id="codigoSuscriptor"
                                     [ngClass]="{ 'is-invalid': !codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit) }"
@@ -62,8 +66,9 @@
                                     (change)="onSuscriptorChangeClick($event)">
                                     <option value="" disabled>{{ 'SUSCRIPTOR.EMPRESAS.GESTION.PLACEHOLDERSUSCRIPTOR' | translate }}
                                     </option>
-                                    <option [value]="app.codigoSuscriptor" *ngFor="let app of suscriptores">{{
-                                        app.nombreSuscriptor }}</option>
+                                    <option [value]="susc.codigoSuscriptor" *ngFor="let susc of suscriptores">
+                                        {{ susc.nombreSuscriptor }}
+                                    </option>
                                 </select>
                                 <label
                                     *ngIf="!codigoSuscriptor.valid && (codigoSuscriptor.dirty || codigoSuscriptor.touched || isSubmit)"

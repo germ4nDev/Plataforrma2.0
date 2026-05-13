@@ -10,14 +10,14 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   constructor(private authenticationService: AuthenticationService) {}
 
-  intercept(request: HttpRequest<string>, next: HttpHandler): Observable<HttpEvent<string>> {
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err) => {
         if (err.status === 401) {
           this.authenticationService.logout();
         }
-        const error = err.error.message || err.statusText;
-        return throwError(error);
+        const error = err.error?.msg || err.error?.message || err.statusText;
+        return throwError(() => err);
       })
     );
   }

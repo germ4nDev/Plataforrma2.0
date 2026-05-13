@@ -1449,3 +1449,17 @@ Estilos del loading data
         opacity: 0.6;
     }
 }
+
+.confirmButton-color {
+    background-color: var(--app-navbar-color);
+    color: white !important;
+    border: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: var(--app-navbar-color);
+        filter: brightness(0.9); // oscurece el color un poco
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+}
