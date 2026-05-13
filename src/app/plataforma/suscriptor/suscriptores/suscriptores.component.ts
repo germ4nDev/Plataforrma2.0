@@ -314,6 +314,17 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
   }
 
   OnEliminarRegistroClick(id: any) {
+    // Swal.fire({
+    //   title: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTITULO'),
+    //   text: this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTEXTO'),
+    //   icon: 'warning',
+    //   //theme: 'datk',
+    //   customClass: this._swalService.getSwalCustomClass(),
+    //   showCancelButton: true,
+    //   confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+    //   cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+    // }).then((result: any) => {
+    //   if (result.isConfirmed) {
     const suscriptor = this.registros.filter((x) => x.codigoSuscriptor == id.id)[0];
     const titulo = this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARTITULO');
     const confirmText = this.translate.instant('PLATAFORMA.DELETE');
@@ -330,12 +341,7 @@ export class SuscriptoresComponent implements OnInit, OnDestroy {
                 this._suscriptoresService.eliminarSuscripctor(id.id).subscribe({
                 next: (resp: any) => {
                     Swal.fire(this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINAREXITOSA'), resp.mensaje, 'success');
-                    this.subscriptions.add(
-                            this._suscriptoresService.getRegistros().subscribe(
-                                () => console.log('Suscriptores cargados y guardadas en el servicio'),
-                                err => console.error('Error al cargar los Suscriptores:', err)
-                            )
-                        )
+                    this.setupRegistrosStream();
                 },
                 error: (err: any) => {
                     Swal.fire('Error', this.translate.instant('SUSCRIPTOR.SUSCRIPTORES.ELIMINARERROR'), 'error');
