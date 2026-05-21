@@ -219,41 +219,44 @@ export class RequerimientosComponent implements OnInit {
         // console.log('+++++ME MANDA EL ID DE NUEVO', codigoticketSeleccionado);
     }
 
-    OnEditarRegistroClick(id: number): void {
-        this._localStorageService.setObject('regId', id)
-        this.router.navigate(['tickets/gestion-requerimiento']);
-        // console.log('+++++ME MANDA EL ID', id);
-    }
-
-    OnEliminarRegistroClick(id: any): void {
-        // console.log('+++ME TRAE EL ID???', id);
-
-        Swal.fire({
-            title: this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARTITULO'),
-            text: this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARTEXTO'),
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this._requerimientoService.deleteEliminarRegistro(id.id).subscribe({
-                    next: (resp: any) => {
-                        this._swalService.getAlertSuccess(this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINAREXITOSA') + ', ' + resp.mensaje);
-                        this.subscriptions.add(
-                            this._requerimientoService.cargarRegistros().subscribe(
-                                () => console.log('Requerimientos cargados y guardados en el servicio'),
-                                (err) => console.error('Error al cargar los Requerimientos:', err)
-                            )
-                        );
-                        this.setupRegistrosStream();
-                    },
-                    error: (err: any) => {
-                        this._swalService.getAlertError(this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARERROR') + ', ' + err);
-                        console.error('Error eliminando', err);
-                    }
-                });
-            }
+  OnEliminarRegistroClick(id: any): void {
+    // Swal.fire({
+    //   title: this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARTITULO'),
+    //   text: this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARTEXTO'),
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+    //   cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    const requerimiento = this.requerimiento.find((x) => x.codigoRequerimiento == id.id);
+    const titulo = this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARTITULO');
+    const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+    const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+    const htmlBody = `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${requerimiento?.nombreRequerimiento}"</b></small>
+    `;
+    this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+    .then((confirmado) => {
+      if (confirmado) {
+        this._requerimientoService.deleteEliminarRegistro(id.id).subscribe({
+          next: (resp: any) => {
+            this._swalService.getAlertSuccess(this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINAREXITOSA') + ', ' + resp.mensaje);
+            this.subscriptions.add(
+              this._requerimientoService.cargarRegistros().subscribe(
+                () => console.log('Requerimientos cargados y guardados en el servicio'),
+                (err) => console.error('Error al cargar los Requerimientos:', err)
+              )
+            );
+            this.setupRegistrosStream();
+          },
+          error: (err: any) => {
+            this._swalService.getAlertError(this.translate.instant('TICKETS.REQUERIMIENTOS.ELIMINARERROR') + ', ' + err);
+            console.error('Error eliminando', err);
+          }
         });
     }
     onTicketChangeClick(evento: any) {

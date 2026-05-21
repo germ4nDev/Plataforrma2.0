@@ -188,32 +188,43 @@ export class ClasesTicketComponent implements OnInit {
     }
 
     OnEliminarRegistroClick(id: any): void {
-        // console.log('+++ME TRAE EL ID???', id);
-
-        Swal.fire({
-            title: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTITULO'),
-            text: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTEXTO'),
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-        }).then((result) => {
-            if (result.isConfirmed) {
+        // Swal.fire({
+        //   title: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTITULO'),
+        //   text: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTEXTO'),
+        //   icon: 'warning',
+        //   showCancelButton: true,
+        //   confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+        //   cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+        // }).then((result) => {
+        //   if (result.isConfirmed) {
+        const clasesticket = this.clasesTicket.find((x) => x.codigoClase == id.id);
+        const titulo = this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTITULO');
+        const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+        const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+        const htmlBody = `
+            <div style="margin-bottom: 10px;">
+                ${this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTEXTO')}
+            </div>
+            <small><b>"${clasesticket?.claseTicket}"</b></small>
+        `;
+        this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+        .then((confirmado) => {
+            if (confirmado) {
                 this._clasesTicket.deleteEliminarRegistro(id.id).subscribe({
-                    next: (resp: any) => {
-                        this._swalService.getAlertSuccess(this.translate.instant('TICKETS.CLASESTICKET.ELIMINAREXITOSA') + ', ' + resp.mensaje);
-                        this.subscriptions.add(
-                            this._clasesTicket.cargarRegistros().subscribe(
-                                () => console.log('Clases cargados y guardados en el servicio'),
-                                (err) => console.error('Error al cargar las clases:', err)
-                            )
-                        );
-                        this.setupRegistrosStream();
-                    },
-                    error: (err: any) => {
-                        this._swalService.getAlertError(this.translate.instant('TICKETS.CLASESTICKET.ELIMINARERROR') + ', ' + err);
-                        console.error('Error eliminando', err);
-                    }
+                next: (resp: any) => {
+                    this._swalService.getAlertSuccess(this.translate.instant('TICKETS.CLASESTICKET.ELIMINAREXITOSA') + ', ' + resp.mensaje);
+                    this.subscriptions.add(
+                    this._clasesTicket.cargarRegistros().subscribe(
+                        () => console.log('Clases cargados y guardados en el servicio'),
+                        (err) => console.error('Error al cargar las clases:', err)
+                    )
+                    );
+                    this.setupRegistrosStream();
+                },
+                error: (err: any) => {
+                    this._swalService.getAlertError(this.translate.instant('TICKETS.CLASESTICKET.ELIMINARERROR') + ', ' + err);
+                    console.error('Error eliminando', err);
+                }
                 });
             }
         });

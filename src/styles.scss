@@ -201,6 +201,21 @@ hr.detail-separator {
     color: var(--text-color) !important;
 }
 
+/* confirmacion "OK" de botones */
+.confirmButton-color {
+    background-color: var(--app-navbar-color);
+    color: white !important;
+    border: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+    background-color: var(--app-navbar-color);
+    filter: brightness(0.9); // oscurece el color un poco
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
 /* Menús desplegables (Headers, fuentes) */
 
 .ql-picker-label {

@@ -306,35 +306,105 @@ export class TicketsComponent implements OnInit {
             header: 'TICKETS.TICKETS.CAPTURA',
             type: 'capture'
         }
-    ]
+        return filteredRegistros
+      })
+    )
+  }
 
-    consultarRegistros() {
-        this.subscriptions.add(
-            this._ticketsService.getRegistros().subscribe((resp: any) => {
-                if (resp.ok) {
-                    this.ticket = resp.tickets
-                    //   console.log('Todos los Tickets', this.ticket);
-                    return
-                }
-            })
-        )
-    }
+  onFiltroAplicacionChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroAplicacionSubject.next(value)
+  }
 
-    setupRegistrosStream(): void {
-        this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        this.registrosTransformados$ = this._ticketsService.ticket$.pipe(
-            switchMap((tickets: PTLTicketAPModel[]) => {
-                if (!tickets) return of([])
-                this.ticket = tickets
-                const transformedApps = tickets.map((ticket: any) => {
-                    ticket.color = ticket.colorPrioridad
-                    ticket.captura = `${base_url}/upload/tickets/${ticket.capturaTicket}`
-                    ticket.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == ticket.codigoAplicacion)[0].nombreAplicacion || ''
-                    ticket.nomSuite = this.suites.filter(x => x.codigoSuite == ticket.codigoSuite)[0].nombreSuite || ''
-                    ticket.nomModulo = this.modulos.filter(x => x.codigoModulo == ticket.codigoModulo)[0].nombreModulo || ''
-                    ticket.nomSender = this.usuarios.filter(x => x.codigoUsuario == ticket.codigoUsuarioSender)[0].nombreUsuario || ''
-                    ticket.nomAsignado = this.usuarios.filter(x => x.codigoUsuario == ticket.codigoUsuarioAsignado)[0].nombreUsuario || ''
-                    return ticket as PTLTicketAPModel
+  onFiltroSuiteChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroSuiteSubject.next(value)
+  }
+
+  onFiltroModuloChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroModuloSubject.next(value)
+  }
+
+  onFiltroSenderChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroSenderSubject.next(value)
+  }
+
+  onFiltroAsignadoChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroAsignadoSubject.next(value)
+  }
+
+  onFiltroNombreChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroNombreSubject.next(value)
+  }
+
+  onFiltroDescripcionChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroDescripcionSubject.next(value)
+  }
+
+  onFiltroEstadoChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroEstadoSubject.next(value)
+  }
+
+  OnNuevoRegistroClick () {
+    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: 'nuevo' } })
+  }
+
+  OnEditarRegistroClick (id: any) {
+    this.router.navigate(['tickets/gestion-ticket'], { queryParams: { regId: id } })
+  }
+
+  OnEliminarRegistroClick(id: any) {
+    // Swal.fire({
+    //   title: this.translate.instant('TICKETS.TICKETS.ELIMINARTITULO'),
+    //   text: this.translate.instant('TICKETS.TICKETS.ELIMINARTEXTO'),
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+    //   cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+    // }).then((result: any) => {
+    //   if (result.isConfirmed) {
+    const ticket = this.ticket.find((x) => x.codigoTicket == id.id);
+    const titulo = this.translate.instant('TICKETS.TICKETS.ELIMINARTITULO');
+    const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+    const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+    const htmlBody = `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('TICKETS.TICKETS.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${ticket?.nombreTicket}"</b></small>
+    `;
+    this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+    .then((confirmado) => {
+      if (confirmado) {
+        console.log('id', id.id);
+        const ticket = this.registros.filter((x) => x.codigoTicket == id.id)[0];
+        this._ticketsService.deleteEliminarRegistro(id.id).subscribe({
+          next: (resp: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('TICKETS.TICKETS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            }
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+            if (ticket.capturaTicket != 'no-imagen.png') {
+              //   console.log('esta es la captura del ticket', ticket.capturaTicket);
+              //   const captura = ticket.capturaTicket || '';
+              //   this._uploadService.deleteFilePath('0', 'tickets', captura).subscribe((data: any) => {
+              //     console.log('mensaje', data.mensaje);
+              //   });
+            }
+            this._seguimientosService.getRegistrosByTicket(id.id).subscribe(segs => {
+              if (segs.seguimientos.length > 0) {
+                segs.seguimientos.forEach((segui: any) => {
+                  this._seguimientosService
+                    .deleteEliminarRegistro(segui.codigoSeguimiento)
+                    .subscribe(() => console.log('seguimiento eliminado'))
                 })
                 this.registros = transformedApps
                 return of(transformedApps)

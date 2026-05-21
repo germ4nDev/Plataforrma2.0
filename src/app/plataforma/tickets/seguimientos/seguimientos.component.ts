@@ -263,74 +263,106 @@ export class SeguimientosComponent implements OnInit {
             .subscribe();
     }
 
-    OnBackRegistroClick() {
-        this._localStorageService.setObject('regId', this.codigoTicket)
-        this.router.navigate(['/tickets/requerimientos/']);
-    }
+//   OnEliminarRegistroClick(id: any) {
+//     const seguimiento = this.seguimiento.filter((x) => x.codigoSeguimiento == id.id)[0];
+//     Swal.fire({
+//       title: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTITULO'),
+//     //   text: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTEXTO') + `"${seguimiento.nombreSeguimiento}".`,
+//       html: `
+//         <div style="margin-bottom: 10px;">
+//             ${this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTEXTO')}
+//         </div>
+//         <small><b>"${seguimiento.nombreSeguimiento}"</b></small>
+//         `,
+//       icon: 'warning',
+//       showCancelButton: true,
+//       confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+//       cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+//     }).then((result: any) => {
+//       if (result.isConfirmed) {
+//         this._seguimientosService.deleteEliminarRegistro(id.id).subscribe({
+//           next: (resp: any) => {
+//             const logData = {
+//               codigoTipoLog: '',
+//               codigoRespuesta: '201',
+//               descripcionLog: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+//             };
+//             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+//             const segui = this.registros.filter((x) => x.codigoSeguimiento == id.id)[0];
+//             console.log('========== datos del segui', segui);
+//             if (segui.capturaSeguimiento != 'no-imagen.png') {
+//               const captura = segui.capturaSeguimiento || '';
+//               console.log('========== eliminar captura', captura);
+//               //   this._uploadService.deleteFilePath('0', 'seguimientos', captura).subscribe((data: any) => {
+//               //     console.log('mensaje', data.mensaje);
+//               //   });
+//             }
+//             this._seguimientosService.cargarRegistros().subscribe(() => {
+//                 this._swalService.getAlertSuccess(this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINAREXITOSA'));
+//             });
+//           },
+//           error: (err: any) => {
+//             const logData = {
+//               codigoTipoLog: '',
+//               codigoRespuesta: '501',
+//               descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
+//             };
+//             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+//             this._swalService.getAlertError(this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje);
+//             console.error('Error eliminando', err);
+//           }
+//         });
+//       }
+//     });
+//   }
 
-    OnNuevoRegistroClick() {
-        const codigoRequerimientoSeleccionado = this.filtroRequerimientoSubject.value;
-        this._localStorageService.setObject('regId', 'nuevo')
-        this._localStorageService.setObject('codReq', codigoRequerimientoSeleccionado)
-        this.router.navigate(['tickets/gestion-seguimiento']);
-    }
-
-    OnEditarRegistroClick(id: string) {
-        this._localStorageService.setObject('regId', id)
-        this.router.navigate(['tickets/gestion-seguimiento']);
-    }
-
-    OnEliminarRegistroClick(id: any) {
-        const seguimiento = this.seguimiento.filter((x) => x.codigoSeguimiento == id.id)[0];
-        Swal.fire({
-            title: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTITULO'),
-            //   text: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTEXTO') + `"${seguimiento.nombreSeguimiento}".`,
-            html: `
-        <div style="margin-bottom: 10px;">
-            ${this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTEXTO')}
-        </div>
-        <small><b>"${seguimiento.nombreSeguimiento}"</b></small>
-        `,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-        }).then((result: any) => {
-            if (result.isConfirmed) {
-                this._seguimientosService.deleteEliminarRegistro(id.id).subscribe({
-                    next: (resp: any) => {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
-                        };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        const segui = this.registros.filter((x) => x.codigoSeguimiento == id.id)[0];
-                        console.log('========== datos del segui', segui);
-                        if (segui.capturaSeguimiento != 'no-imagen.png') {
-                            const captura = segui.capturaSeguimiento || '';
-                            console.log('========== eliminar captura', captura);
-                            //   this._uploadService.deleteFilePath('0', 'seguimientos', captura).subscribe((data: any) => {
-                            //     console.log('mensaje', data.mensaje);
-                            //   });
-                        }
-                        this._seguimientosService.cargarRegistros().subscribe(() => {
-                            this._swalService.getAlertSuccess(this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINAREXITOSA'));
-                        });
-                    },
-                    error: (err: any) => {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '501',
-                            descripcionLog: this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje
-                        };
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                        this._swalService.getAlertError(this.translate.instant('SEGUIMIENTOS.ELIMINARERROR') + ' ' + err.mensaje);
-                        console.error('Error eliminando', err);
-                    }
-                });
+  OnEliminarRegistroClick(id: any) {
+  const seguimiento = this.seguimiento.find((x) => x.codigoSeguimiento == id.id);
+  const titulo = this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTITULO');
+  const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+  const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+  const htmlBody = `
+    <div style="margin-bottom: 10px;">
+        ${this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINARTEXTO')}
+    </div>
+    <small><b>"${seguimiento?.nombreSeguimiento}"</b></small>
+  `;
+  this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+    .then((confirmado) => {
+      if (confirmado) {
+        this._seguimientosService.deleteEliminarRegistro(id.id).subscribe({
+          next: (resp: any) => {
+            const logData = {
+              codigoTipoLog: '',
+              codigoRespuesta: '201',
+              descripcionLog: this.translate.instant('TICKETS.SEGUIMIENTOS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+            };
+            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+            const segui = this.registros.filter((x) => x.codigoSeguimiento == id.id)[0];
+            // console.log('========== datos del segui', segui);
+            if (segui.capturaSeguimiento != 'no-imagen.png') {
+              const captura = segui.capturaSeguimiento || '';
+              console.log('========== eliminar captura', captura);
+              //   this._uploadService.deleteFilePath('0', 'seguimientos', captura).subscribe((data: any) => {
+              //     console.log('mensaje', data.mensaje);
+              //   });
             }
         });
+      }
+    });
+}
+
+  actualizarEstadoTicket() {
+    const segIndice = this.obtenerUltimoEstado(this.registros);
+    if (segIndice != -1) {
+      const seguimiento = this.registros[segIndice];
+      const codigoTicket = seguimiento.codigoTicket || '';
+      const estado = seguimiento.estadoTicket || '';
+      this._ticketsService.getRegistroById(codigoTicket).subscribe((tic: any) => {
+        const ticket = tic.ticket;
+        ticket.estadoTicket = estado;
+        this._ticketsService.putModificarRegistro(ticket).subscribe(() => console.log('ticket actualizado'));
+      });
     }
 
     actualizarEstadoTicket() {

@@ -215,289 +215,83 @@ export class UsuariosComponent implements OnInit {
             header: 'USUARIOS.USUARIOS.ROLES',
             type: 'json-tabla'
         }
-    ]
+        return filteredRegistros
+      })
+    )
+  }
 
-    consultarRegistros() {
-        this.subscriptions.add(
-            this._usuariosService.getUsuarios().subscribe((resp: any) => {
-                if (resp.ok) {
-                    this.usuarios = resp.usuarios
-                    //   console.log('Todos las usuarios', this.usuarios);
-                    return
-                }
-            })
-        )
-    }
+  OnNuevoRegistroClick () {
+    this.router.navigate(['usuarios/gestion-usuario'])
+  }
 
-    // consultarRolesUsuario(codUsuario: string) {
-    //     let rolesUsuarioFinal: any[] = []
-    //     const usuarioSC = this.usuariosSC.filter(ru => ru.codigoUsuario == codUsuario)[0]
-    //     const suscriptor = this.suscriptores.filter(ru => ru.codigoSuscriptor === usuarioSC.codigoSuscriptor)[0]
-    //     const empresasSC = this.empresasSC.filter(ru => ru.codigoSuscriptor == suscriptor.codigoSuscriptor)
-    //     const rolesUsuario = this.usuariosRoles.filter(ru => ru.codigoUsuarioEmpresaSC === usuarioSC.codigoUsuarioSC)
-    //     // console.log('rolesUsuario', rolesUsuario)
-    //     rolesUsuarioFinal = rolesUsuario.map(ru => {
-    //         //   console.log('******** roleUsuario', ru)
-    //         const role = this.roles.find(r => r.codigoRole === ru.codigoRole)
-    //         const suite = this.suites.find(s => s.codigoSuite === ru?.codigoSuite)
-    //         const aplicacion = this.aplicaciones.find(a => a.codigoAplicacion === ru?.codigoAplicacion)
-    //         const empresa = empresasSC.find(a => a.codigoEmpresaSC === ru.codigoEmpresaSC)
-    //         return {
-    //             suscriptor: suscriptor ? suscriptor.nombreSuscriptor : 'Sin Suscriptor',
-    //             empresa: empresa ? empresa.nombreEmpresa : 'Sin Empresa',
-    //             aplicacion: aplicacion ? aplicacion.nombreAplicacion : 'Sin Aplicación',
-    //             suite: suite ? suite.nombreSuite : 'Sin Suite',
-    //             role: role ? role.nombreRole : 'Rol Desconocido'
-    //         }
-    //     })
+  OnEditarRegistroClick (id: number) {
+    this.router.navigate(['usuarios/gestion-usuario'], { queryParams: { regId: id } })
+  }
 
-
-
-    //     return rolesUsuarioFinal
-    // }
-
-    consultarRolesUsuario(codUsuario: string) {
-        let rolesUsuarioFinal: any[] = []
-        const usuarioSC = this.usuariosSC.filter(ru => ru.codigoUsuario == codUsuario && ru.estadoUsuarioSC == true)[0]
-        const suscriptor = this.suscriptores.filter(ru => ru.codigoSuscriptor === usuarioSC.codigoSuscriptor && ru.estadoSuscriptor == true)[0]
-        const empresasSC = this.empresasSC.filter(ru => ru.codigoSuscriptor == suscriptor.codigoSuscriptor && ru.estadoEmpresa == true)
-        const usuariosEmpresaSC = this.usuarioEmpresaSC.filter(ru => ru.codigoUsuarioSC == usuarioSC.codigoUsuarioSC && ru.estadoUsuarioEmpresaSC == true)
-        let rolesUsuario: PTLUsuarioRoleAPModel[] = []
-        let actividadesUsuario: any[] = []
-        usuariosEmpresaSC.forEach((usuEmp: any) => {
-            const roles = this.usuariosRoles.filter(ue => ue.codigoUsuarioSC === usuEmp.codigoUsuarioSC && ue.estadoUsuarioRole == true)
-            roles.forEach(role => {
-                // const activisRole = this.actividadesRoles.filter(x => x.codigoRole == role.codigoRole)
-                // const emp = empresasSC.filter(x => x.codigoEmpresaSC == usuEmp.codigoEmpresaSC)[0]
-                // const actisRoles = {
-                //     empresa: emp.codigoEmpresaSC,
-                //     role: role.codigoRole,
-                //     actividades: activisRole
-                // }
-                // actividadesUsuario.push(actisRoles)
-                role.codigoEmpresaSC = usuEmp.codigoEmpresaSC
-            });
-            rolesUsuario.push(...roles)
-        });
-        rolesUsuarioFinal = rolesUsuario.map(ru => {
-            const role = this.roles.find(r => r.codigoRole === ru.codigoRole && r.estadoRole == true)
-            const suite = this.suites.find(s => s.codigoSuite === ru?.codigoSuite)
-            const aplicacion = this.aplicaciones.find(a => a.codigoAplicacion === ru?.codigoAplicacion)
-            const empresa = empresasSC.find(a => a.codigoEmpresaSC === ru.codigoEmpresaSC)
-            return {
-                suscriptor: suscriptor ? suscriptor.nombreSuscriptor : 'Sin Suscriptor',
-                empresa: empresa ? empresa.nombreEmpresa : 'Sin Empresa',
-                aplicacion: aplicacion ? aplicacion.nombreAplicacion : 'Sin Aplicación',
-                suite: suite ? suite.nombreSuite : 'Sin Suite',
-                role: role ? role.nombreRole : 'Rol Desconocido'
+  OnEliminarRegistroClick (id: any) {
+    const usuario = this.usuarios.filter(x => x.codigoUsuario == id.id)[0]
+    const titulo = this.translate.instant('USUARIOS.USUARIOS.ELIMINARTITULO');
+    const confirmText = this.translate.instant('PLATAFORMA.DELETE');
+    const cancelText = this.translate.instant('PLATAFORMA.CANCEL');
+    const htmlBody = `
+        <div style="margin-bottom: 10px;">
+            ${this.translate.instant('USUARIOS.USUARIOS.ELIMINARTEXTO')}
+        </div>
+        <small><b>"${usuario?.nombreUsuario}"</b></small>
+    `;
+    this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+        .then((confirmado) => {
+            if (confirmado) {
+                this._usuariosService.eliminarUsuairo(id.id).subscribe({
+                    next: (resp: any) => {
+                        this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje)
+                        this.subscriptions.add(
+                            this._usuariosService.cargarRegistros().subscribe(
+                                () => console.log('Usuarios cargados y guardados en el servicio'),
+                                err => console.error('Error al cargar usuarios:', err)
+                            )
+                        )
+                    },
+                    error: (err: any) => {
+                        this._swalService.getAlertError(this.translate.instant('USUARIOS.USUARIOS.ELIMINARERROR') + ', ' + err)
+                        console.error('Error eliminando', err)
+                    }
+                })
             }
         })
-        // console.log('actividadesUsuario', actividadesUsuario);
-        console.log('rolesUsuario', rolesUsuarioFinal);
-        return rolesUsuarioFinal
-    }
+}
 
-    setupRegistrosStream(): void {
-        this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        let codigo = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        this.registrosTransformados$ = this._usuariosService.usuarios$.pipe(
-            switchMap((users: PTLUsuarioModel[]) => {
-                if (!users) return of([])
-                this.usuarios = users
-                const transformedUsuarios = users.map((user: any) => {
-                    user.nomEstado = user.estadoUsuario ? 'Activo' : 'Inactivo'
-                    user.fotoUsuario = this._uploadService.getFilePath(codigo, 'usuarios', user.fotoUsuario)
-                    user.rolesUsuario = this.consultarRolesUsuario(user.codigoUsuario) || []
-                    return user as PTLUsuarioModel
-                })
-                console.log('usuarios datatable', transformedUsuarios)
-                this.registros = transformedUsuarios
-                return of(transformedUsuarios)
-            }),
-            catchError(err => {
-                console.error('Error en el stream de aplicaciones:', err)
-                return of([])
-            })
-        )
-        this.registrosFiltrado$ = combineLatest([
-            this.registrosTransformados$.pipe(startWith([])),
-            this.filtroIdentificacionSubject,
-            this.filtroNombreSubject,
-            this.filtroCorreoSubject,
-            this.filtroUsernameSubject,
-            this.filtroDescripcionSubject,
-            this.filtroEstadoSubject
-        ]).pipe(
-            map(([users, identificacion, nombre, correo, username, descripcion, estado]) => {
-                // console.log('================== roles 2', users);
-                let filteredRegistros = users
-                if (identificacion) {
-                    filteredRegistros = filteredRegistros.filter(app =>
-                        (app.identificacionUsuario?.toString() || '').toLowerCase().includes(identificacion)
-                    )
-                }
-                if (nombre) {
-                    filteredRegistros = filteredRegistros.filter(reg => (reg.nombreUsuario?.toString() || '').toLowerCase().includes(nombre))
-                }
-                if (correo) {
-                    filteredRegistros = filteredRegistros.filter(reg => (reg.correoUsuario?.toString() || '').toLowerCase().includes(correo))
-                }
-                if (username) {
-                    filteredRegistros = filteredRegistros.filter(reg => (reg.userNameUsuario?.toString() || '').toLowerCase().includes(username))
-                }
-                if (estado !== 'todos') {
-                    const estadoBoolean = estado === 'true'
-                    filteredRegistros = filteredRegistros.filter(reg => reg.estadoUsuario === estadoBoolean)
-                }
-                if (descripcion) {
-                    const textoFiltro = descripcion.toLowerCase()
-                    filteredRegistros = filteredRegistros.filter(reg => (reg.descripcionUsuario || '').toLowerCase().includes(textoFiltro))
-                }
-                return filteredRegistros
-            })
-        )
-    }
+  onFiltroIdentificacionChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroIdentificacionSubject.next(value)
+  }
 
-    OnNuevoRegistroClick() {
-        this._localStorageService.setObject('regId', 'nuevo')
-        this.router.navigate(['usuarios/gestion-usuario'])
-    }
+  onFiltroNombreChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroNombreSubject.next(value)
+  }
 
-    OnEditarRegistroClick(id: number) {
-        this._localStorageService.setObject('regId', id)
-        this.router.navigate(['usuarios/gestion-usuario'])
-    }
+  onFiltroCorreoChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroCorreoSubject.next(value)
+  }
 
-    // OnEliminarRegistroClick(id: any) {
-    //     const usuario = this.usuarios.filter(x => x.codigoUsuario == id.id)[0]
-    //     Swal.fire({
-    //         title: this.translate.instant('USUARIOS.USUARIOS.ELIMINARTITULO'),
-    //         text: this.translate.instant('USUARIOS.USUARIOS.ELIMINARTEXTO') + `"${usuario.nombreUsuario}".`,
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-    //         cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    //     }).then((result: any) => {
-    //         if (result.isConfirmed) {
-    //             this._usuariosService.eliminarUsuairo(id.id).subscribe({
-    //                 next: (resp: any) => {
-    //                     this._swalService.getAlertSuccess(this.translate.instant('USUARIOS.USUARIOS.ELIMINAREXITOSA') + ', ' + resp.mensaje)
-    //                     this.subscriptions.add(
-    //                         this._usuariosService.cargarRegistros().subscribe(
-    //                             () => console.log('Usuarios cargados y guardados en el servicio'),
-    //                             err => console.error('Error al cargar usuarios:', err)
-    //                         )
-    //                     )
-    //                 },
-    //                 error: (err: any) => {
-    //                     this._swalService.getAlertError(this.translate.instant('USUARIOS.USUARIOS.ELIMINARERROR') + ', ' + err)
-    //                     console.error('Error eliminando', err)
-    //                 }
-    //             })
-    //         }
-    //     })
-    // }
-    OnEliminarRegistroClick(id: any) {
-        const usuario = this.usuarios.find(x => x.codigoUsuario === id.id);
-        if (!usuario) return;
+  onFiltroUsernameChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroUsernameSubject.next(value)
+  }
 
-        const texto = `${this.translate.instant('USUARIOS.USUARIOS.ELIMINARTEXTO')} "${usuario.nombreUsuario}".`;
+  onFiltroDescripcionChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroDescripcionSubject.next(value)
+  }
 
-        this._swalService.getAlertQuestionRequest(texto)
-            .pipe(
-                filter(isConfirmed => isConfirmed === true),
-                switchMap(() => {
-                    this._swalService.showLoading(this.translate.instant('PLATAFORMA.WAITPROCESS'), this.translate.instant('PLATAFORMA.PROCESANDO'));
-                    return this._usuariosService.eliminarUsuairo(id.id);
-                })
-            )
-            .subscribe({
-                next: (resp: any) => {
-                    const exitoTexto = this.translate.instant('USUARIOS.USUARIOS.ELIMINAREXITOSA');
-                    this._swalService.getAlertSuccess(`${exitoTexto}, ${resp.msg || resp.mensaje}`);
-                    this.subscriptions.add(
-                        this._usuariosService.cargarRegistros().subscribe({
-                            next: () => console.log('Usuarios cargados y guardados en el servicio'),
-                            error: (err) => console.error('Error al cargar usuarios:', err)
-                        })
-                    );
-                },
-                error: (err: any) => {
-                    const errorTexto = this.translate.instant('USUARIOS.USUARIOS.ELIMINARERROR');
-                    this._swalService.getAlertError(`${errorTexto}, ${err.error?.msg || 'Error interno'}`);
-                    console.error('Error eliminando', err);
-                }
-            });
-    }
+  onFiltroEstadoChangeClick (evento: any) {
+    const value = evento.target.value
+    this.filtroEstadoSubject.next(value)
+  }
 
-    OnEliminarUsuarioClick(id: any) {
-        const usuario = this.usuarios.find(x => x.codigoUsuario === id.id);
-
-        if (!usuario) return;
-
-        const titulo = this.translate.instant('USUARIOS.USUARIOS.ELIMINARTITULO');
-        const texto = `${this.translate.instant('USUARIOS.USUARIOS.ELIMINARTEXTO')} "${usuario.nombreUsuario}".`;
-        const btnConfirmar = this.translate.instant('PLATAFORMA.DELETE');
-        const btnCancelar = this.translate.instant('PLATAFORMA.CANCEL');
-
-        this._swalService.getAlertQuestionRequest(texto, btnConfirmar, btnCancelar)
-            .pipe(
-                filter(isConfirmed => isConfirmed === true),
-                switchMap(() => {
-                    this._swalService.showLoading('Procesando...');
-                    return this._usuariosService.eliminarUsuairo(id.id);
-                })
-            )
-            .subscribe({
-                next: (resp: any) => {
-                    const exitoTexto = this.translate.instant('USUARIOS.USUARIOS.ELIMINAREXITOSA');
-                    this._swalService.getAlertSuccess(`${exitoTexto}, ${resp.msg || resp.mensaje}`);
-                    this.subscriptions.add(
-                        this._usuariosService.cargarRegistros().subscribe({
-                            next: () => console.log('Usuarios cargados y guardados en el servicio'),
-                            error: (err) => console.error('Error al cargar usuarios:', err)
-                        })
-                    );
-                },
-                error: (err: any) => {
-                    const errorTexto = this.translate.instant('USUARIOS.USUARIOS.ELIMINARERROR');
-                    this._swalService.getAlertError(`${errorTexto}, ${err.error?.msg || 'Error interno'}`);
-                    console.error('Error eliminando', err);
-                }
-            });
-    }
-
-    onFiltroIdentificacionChangeClick(evento: any) {
-        const value = evento.target.value
-        this.filtroIdentificacionSubject.next(value)
-    }
-
-    onFiltroNombreChangeClick(evento: any) {
-        const value = evento.target.value
-        this.filtroNombreSubject.next(value)
-    }
-
-    onFiltroCorreoChangeClick(evento: any) {
-        const value = evento.target.value
-        this.filtroCorreoSubject.next(value)
-    }
-
-    onFiltroUsernameChangeClick(evento: any) {
-        const value = evento.target.value
-        this.filtroUsernameSubject.next(value)
-    }
-
-    onFiltroDescripcionChangeClick(evento: any) {
-        const value = evento.target.value
-        this.filtroDescripcionSubject.next(value)
-    }
-
-    onFiltroEstadoChangeClick(evento: any) {
-        const value = evento.target.value
-        this.filtroEstadoSubject.next(value)
-    }
-
-    toggleNav(): void {
-        this.toggleSidebar.emit()
-    }
+  toggleNav (): void {
+    this.toggleSidebar.emit()
+  }
 }
