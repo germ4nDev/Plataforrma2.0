@@ -142,7 +142,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
             this.FormRegistro.codigoAplicacion = '';
             this.FormRegistro.codigoSuite = '';
             this.FormRegistro.codigoRole = '';
-            this.FormRegistro.codigoUsuarioEmpresaSC = '';
+            this.FormRegistro.codigoUsuarioSC = '';
         }
     }
 
@@ -386,7 +386,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
                     if (!rolesAgregados.has(rol.codigoRole)) {
                         const registroData = new PTLUsuarioRoleAPModel();
                         registroData.codigoRole = rol.codigoRole;
-                        registroData.codigoUsuarioEmpresaSC = this.FormRegistro.codigoUsuarioEmpresaSC;
+                        registroData.codigoUsuarioSC = this.FormRegistro.codigoUsuarioSC;
                         registroData.codigoEmpresaSC = '';
                         registroData.tipoRol = this.tipoRolSeleccionado;
                         registroData.codigoAplicacion = this.tipoRolSeleccionado === 'plataforma' ? '' : this.FormRegistro.codigoAplicacion;
@@ -402,7 +402,7 @@ export class GestionRolesUsuarioComponent implements OnInit {
 
                 const dataCrear: PTLUsuarioRoleAPModel = {
                     tipoRol: this.tipoRolSeleccionado,
-                    codigoUsuarioEmpresaSC: this.FormRegistro.codigoUsuarioEmpresaSC,
+                    codigoUsuarioSC: this.FormRegistro.codigoUsuarioSC,
                     codigoAplicacion: this.tipoRolSeleccionado === 'suscriptor' ? this.FormRegistro.codigoAplicacion : '',
                     codigoSuite: this.tipoRolSeleccionado === 'suscriptor' ? this.FormRegistro.codigoSuite : '',
                     // roles: rolesFinal

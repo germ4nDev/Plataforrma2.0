@@ -7,10 +7,10 @@ import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-c
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import {
-  NavigationService,
-  PtllogActividadesService,
-  SwalAlertService,
-  LocalStorageService
+    NavigationService,
+    PtllogActividadesService,
+    SwalAlertService,
+    LocalStorageService
 } from 'src/app/theme/shared/service';
 import { environment } from 'src/environments/environment';
 
@@ -26,13 +26,13 @@ import { PtlclasesticketService } from 'src/app/theme/shared/service/ptlclasesti
 
 
 @Component({
-  selector: 'app-clases-ticket',
-  standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, DatatableComponent, NavContentComponent, NavBarComponent],
-  templateUrl: './clases-ticket.component.html',
-  styleUrl: './clases-ticket.component.scss'
+    selector: 'app-clases-ticket',
+    standalone: true,
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, DatatableComponent, NavContentComponent, NavBarComponent],
+    templateUrl: './clases-ticket.component.html',
+    styleUrl: './clases-ticket.component.scss'
 })
-export class ClasesTicketComponent implements OnInit{
+export class ClasesTicketComponent implements OnInit {
     @Output() toggleSidebar = new EventEmitter<void>();
     //#region VARIABLES
 
@@ -64,11 +64,11 @@ export class ClasesTicketComponent implements OnInit{
         private _logActividadesService: PtllogActividadesService,
         private _localStorageService: LocalStorageService,
         private _clasesTicket: PtlclasesticketService
-    ){
+    ) {
         this.gradientConfig = GradientConfig;
     }
 
-    ngOnInit(){
+    ngOnInit() {
         this._navigationService.getNavigationItems();
         this.menuItems$ = this._navigationService.menuItems$;
         this.hasFiltersSlot = true;
@@ -88,37 +88,37 @@ export class ClasesTicketComponent implements OnInit{
     }
 
     columnasRegistros: ColumnMetadata[] = [
-    {
-        name: 'claseTicket',
-        header: 'TICKETS.CLASESTICKET.NOMBRECLASE',
-        type: 'text'
-    },
-    {
-        name: 'descripcionClase',
-        header: 'TICKETS.CLASESTICKET.DESCRIPCIONCLASE',
-        type: 'text'
-    },
-    {
-        name: 'estadoClase',
-        header: 'TICKETS.CLASESTICKET.ESTADOCLASE',
-        type: 'estado'
-    }
+        {
+            name: 'claseTicket',
+            header: 'TICKETS.CLASESTICKET.NOMBRECLASE',
+            type: 'text'
+        },
+        {
+            name: 'descripcionClase',
+            header: 'TICKETS.CLASESTICKET.DESCRIPCIONCLASE',
+            type: 'text'
+        },
+        {
+            name: 'estadoClase',
+            header: 'TICKETS.CLASESTICKET.ESTADOCLASE',
+            type: 'estado'
+        }
     ];
     columnasDetailRegistros: ColumnMetadata[] = [
-    {
-      name: 'descripcionClase',
-      header: 'TICKETS.CLASESTICKET.DESCRIPCIONCLASE',
-      type: 'text'
-    },
-  ];
+        {
+            name: 'descripcionClase',
+            header: 'TICKETS.CLASESTICKET.DESCRIPCIONCLASE',
+            type: 'text'
+        },
+    ];
 
     consultarRegistros() {
         this.subscriptions.add(
-        this._clasesTicket.getRegistros().subscribe((resp: any) => {
+            this._clasesTicket.getRegistros().subscribe((resp: any) => {
                 if (resp.ok) {
-                this.clasesTicket = resp.clasesTicket;
-                console.log('Todos las clasesTicket', this.clasesTicket);
-                return;
+                    this.clasesTicket = resp.clasesTicket;
+                    console.log('Todos las clasesTicket', this.clasesTicket);
+                    return;
                 }
             })
         );
@@ -127,39 +127,39 @@ export class ClasesTicketComponent implements OnInit{
     setupRegistrosStream(): void {
         this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage();
         this.registrosTransformados$ = this._clasesTicket.clasesTicket$.pipe(
-        switchMap((clasesTickets: PTLClaseTicketModel[]) => {
-            if (!clasesTickets) return of([]);
-            this.clasesTicket = clasesTickets;
-            const transformedApps = clasesTickets.map((clasesTicket: any) => {
-            return clasesTicket as PTLClaseTicketModel;
-            });
-            this.registros = transformedApps;
-            return of(transformedApps);
-        }),
-        catchError((err) => {
-            console.error('Error en el stream de aplicaciones:', err);
-            return of([]);
-        })
+            switchMap((clasesTickets: PTLClaseTicketModel[]) => {
+                if (!clasesTickets) return of([]);
+                this.clasesTicket = clasesTickets;
+                const transformedApps = clasesTickets.map((clasesTicket: any) => {
+                    return clasesTicket as PTLClaseTicketModel;
+                });
+                this.registros = transformedApps;
+                return of(transformedApps);
+            }),
+            catchError((err) => {
+                console.error('Error en el stream de aplicaciones:', err);
+                return of([]);
+            })
         );
         this.registrosFiltrado$ = combineLatest([
-        this.registrosTransformados$.pipe(startWith([])), // Usa la fuente de datos transformada
-        this.filtroNombreSubject,
-        this.filtroDescripcionSubject,
-        this.filtroEstadoSubject
+            this.registrosTransformados$.pipe(startWith([])), // Usa la fuente de datos transformada
+            this.filtroNombreSubject,
+            this.filtroDescripcionSubject,
+            this.filtroEstadoSubject
         ]).pipe(
             map(([clasesTickets, nombre, descripcion, estado]) => {
                 // console.log('================== roles 2', clasesTickets);
                 let filteredRegistros = clasesTickets;
                 if (nombre) {
-                filteredRegistros = filteredRegistros.filter((reg) => (reg.claseTicket?.toString() || '').toLowerCase().includes(nombre));
+                    filteredRegistros = filteredRegistros.filter((reg) => (reg.claseTicket?.toString() || '').toLowerCase().includes(nombre));
                 }
                 if (estado !== 'todos') {
-                const estadoBoolean = estado === 'true';
-                filteredRegistros = filteredRegistros.filter((reg) => reg.estadoClase === estadoBoolean);
+                    const estadoBoolean = estado === 'true';
+                    filteredRegistros = filteredRegistros.filter((reg) => reg.estadoClase === estadoBoolean);
                 }
                 if (descripcion) {
-                const textoFiltro = descripcion.toLowerCase();
-                filteredRegistros = filteredRegistros.filter((reg) => (reg.descripcionClase || '').toLowerCase().includes(textoFiltro));
+                    const textoFiltro = descripcion.toLowerCase();
+                    filteredRegistros = filteredRegistros.filter((reg) => (reg.descripcionClase || '').toLowerCase().includes(textoFiltro));
                 }
                 return filteredRegistros;
             })
@@ -167,7 +167,8 @@ export class ClasesTicketComponent implements OnInit{
     }
 
     OnViewRegistroClick(id: any) {
-        this.router.navigate(['tickets/gestion-clases-ticket'], { queryParams: { regId: id } });
+        this._localStorageService.setObject('regId', id)
+        this.router.navigate(['tickets/gestion-clases-ticket']);
     }
 
     toggleNav(): void {
@@ -175,12 +176,13 @@ export class ClasesTicketComponent implements OnInit{
     }
 
     OnNuevoRegistroClick() {
-      this.router.navigate(['tickets/gestion-clases-ticket']);
+        this.router.navigate(['tickets/gestion-clases-ticket']);
 
     }
 
     OnEditarRegistroClick(id: number): void {
-        this.router.navigate(['tickets/gestion-clases-ticket'], { queryParams: { regId: id } });
+        this._localStorageService.setObject('regId', id)
+        this.router.navigate(['tickets/gestion-clases-ticket']);
         // console.log('+++++ME MANDA EL ID', id);
 
     }
@@ -189,31 +191,31 @@ export class ClasesTicketComponent implements OnInit{
         // console.log('+++ME TRAE EL ID???', id);
 
         Swal.fire({
-          title: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTITULO'),
-          text: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTEXTO'),
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-          cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+            title: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTITULO'),
+            text: this.translate.instant('TICKETS.CLASESTICKET.ELIMINARTEXTO'),
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
         }).then((result) => {
-          if (result.isConfirmed) {
-            this._clasesTicket.deleteEliminarRegistro(id.id).subscribe({
-              next: (resp: any) => {
-                this._swalService.getAlertSuccess(this.translate.instant('TICKETS.CLASESTICKET.ELIMINAREXITOSA') + ', ' + resp.mensaje);
-                this.subscriptions.add(
-                this._clasesTicket.cargarRegistros().subscribe(
-                    () => console.log('Clases cargados y guardados en el servicio'),
-                    (err) => console.error('Error al cargar las clases:', err)
-                )
-                );
-                this.setupRegistrosStream();
-            },
-            error: (err: any) => {
-                this._swalService.getAlertError(this.translate.instant('TICKETS.CLASESTICKET.ELIMINARERROR') + ', ' + err);
-                console.error('Error eliminando', err);
+            if (result.isConfirmed) {
+                this._clasesTicket.deleteEliminarRegistro(id.id).subscribe({
+                    next: (resp: any) => {
+                        this._swalService.getAlertSuccess(this.translate.instant('TICKETS.CLASESTICKET.ELIMINAREXITOSA') + ', ' + resp.mensaje);
+                        this.subscriptions.add(
+                            this._clasesTicket.cargarRegistros().subscribe(
+                                () => console.log('Clases cargados y guardados en el servicio'),
+                                (err) => console.error('Error al cargar las clases:', err)
+                            )
+                        );
+                        this.setupRegistrosStream();
+                    },
+                    error: (err: any) => {
+                        this._swalService.getAlertError(this.translate.instant('TICKETS.CLASESTICKET.ELIMINARERROR') + ', ' + err);
+                        console.error('Error eliminando', err);
+                    }
+                });
             }
-            });
-          }
         });
     }
 

@@ -24,6 +24,7 @@ import { BaseSessionModel } from 'src/app/theme/shared/_helpers/models/BaseSessi
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
 import { VideoPlayerComponent } from 'src/app/theme/shared/components/video-player/video-player.component'
 import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader/data-loader.component'
+import { ExcelUploaderComponent } from 'src/app/theme/shared/components/excel-loader/excel-loader.component'
 
 @Component({
     selector: 'app-aplicaciones',
@@ -36,7 +37,8 @@ import { DataLoaderComponent } from 'src/app/theme/shared/components/data-loader
         NavBarComponent,
         NavContentComponent,
         DatatableComponent,
-        DataLoaderComponent
+        DataLoaderComponent,
+        ExcelUploaderComponent
     ],
     templateUrl: './aplicaciones.component.html',
     styleUrl: './aplicaciones.component.scss'
@@ -63,6 +65,7 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     suscriptor: string = ''
     tipoMedia: string = ''
     video: string = ''
+    urlSubidaUsuarios: string = ''
 
     constructor(
         private router: Router,
@@ -283,6 +286,18 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
             }
         })
     }
+
+    mapeoColumnasExcel = {
+        'Cédula': 'identificacionUsuario',
+        'Nombres Completos': 'nombreUsuario',
+        'Correo Electrónico': 'emailUsuario',
+        'Clave Temporal': 'claveUsuario'
+    };
+
+    datosAdicionales = {
+        estadoUsuario: true,
+        usuarioCreacion: 'admin-sistema'
+    };
 
     toggleNav(): void {
         this.toggleSidebar.emit()

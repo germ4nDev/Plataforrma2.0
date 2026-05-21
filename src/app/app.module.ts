@@ -32,60 +32,62 @@ import { AuthInterceptor } from './theme/shared/_helpers/auth.interceptor';
 import { environment } from '../environments/environment';
 import { JwtInterceptor } from './theme/shared/_helpers/jwt-interceptor.interceptor';
 import { ErrorInterceptor } from './theme/shared/_helpers/error.interceptor';
+import { IaChatFlotanteComponent } from "./theme/shared/components/ia-chat-flotante/ia-chat-flotante.component";
 
 const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
-  declarations: [AppComponent, GuestComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    SharedModule,
-    FormsModule,
-    AdminComponent,
-    ConfigurationComponent,
-    NavBarComponent,
-    NavLeftComponent,
-    NavRightComponent,
-    ChatMsgComponent,
-    ChatUserListComponent,
-    FriendComponent,
-    ReactiveFormsModule,
-    LanguageSelectorComponent,
-    NavContentComponent,
-    BrowserAnimationsModule,
-    NavigationComponent,
-    HttpClientModule,
-    ToastrModule.forRoot(),
-    TranslateModule.forRoot({
-      defaultLanguage: 'es',
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    SocketIoModule.forRoot(config)
-  ],
-  exports: [
-    NavContentComponent,
-    AdminComponent,
-    NavBarComponent,
-    NavLeftComponent,
-    ChatMsgComponent,
-    ChatUserListComponent,
-    ConfigurationComponent,
-    FriendComponent
-  ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
-  ],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent, GuestComponent],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        SharedModule,
+        FormsModule,
+        AdminComponent,
+        ConfigurationComponent,
+        NavBarComponent,
+        NavLeftComponent,
+        NavRightComponent,
+        ChatMsgComponent,
+        ChatUserListComponent,
+        FriendComponent,
+        ReactiveFormsModule,
+        LanguageSelectorComponent,
+        NavContentComponent,
+        BrowserAnimationsModule,
+        NavigationComponent,
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        TranslateModule.forRoot({
+            defaultLanguage: 'es',
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        SocketIoModule.forRoot(config),
+        IaChatFlotanteComponent
+    ],
+    exports: [
+        NavContentComponent,
+        AdminComponent,
+        NavBarComponent,
+        NavLeftComponent,
+        ChatMsgComponent,
+        ChatUserListComponent,
+        ConfigurationComponent,
+        FriendComponent
+    ],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    ],
+    bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

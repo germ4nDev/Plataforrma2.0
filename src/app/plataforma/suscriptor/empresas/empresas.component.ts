@@ -205,8 +205,8 @@ export class EmpresasComponent implements OnInit {
                     filteredRegistros = filteredRegistros.filter((reg) => (reg.descripcionEmpresa || '').toLowerCase().includes(textoFiltro));
                 }
                 if (estado !== 'todos') {
-                const estadoBoolean = estado === 'true';
-                filteredRegistros = filteredRegistros.filter((reg) => reg.estadoEmpresa === estadoBoolean);
+                    const estadoBoolean = estado === 'true';
+                    filteredRegistros = filteredRegistros.filter((reg) => reg.estadoEmpresa === estadoBoolean);
                 }
                 return filteredRegistros;
             })
@@ -233,7 +233,7 @@ export class EmpresasComponent implements OnInit {
     }
 
     OnNuevoRegistroClick() {
-        this.router.navigate(['suscriptor/gestion-empresa'], { queryParams: { regId: 'nuevo', stId: this.stId }});
+        this.router.navigate(['suscriptor/gestion-empresa'], { queryParams: { regId: 'nuevo', stId: this.stId } });
         // console.log('+++++ME MANDA EL ID en NUEVO', { queryParams: { regId: 'nuevo', stId: this.stId }});
     }
 
@@ -254,39 +254,39 @@ export class EmpresasComponent implements OnInit {
         </div>
         <small><b>"${empresa?.nombreEmpresa}"</b></small>
     `;
-        this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
-            .then((confirmado) => {
-                if (confirmado) {
-                    console.log('id', id.id);
-                    this._empresasScService.eliminarEmpresa(empresa.codigoEmpresaSC || '').subscribe({
-                        next: (resp: any) => {
-                            const logData = {
-                                codigoTipoLog: '',
-                                codigoRespuesta: '201',
-                                descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje
-                            };
-                            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                            this._swalService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
-                            this.subscriptions.add(
-                            this._empresasScService.cargarRegistros().subscribe(
-                                    () => console.log('Empresas cargadas y guardadas en el servicio'),
-                                    (err) => console.error('Error al cargar las Empresas:', err)
-                                )
-                            );
-                        },
-                        error: (err: any) => {
-                            const logData = {
-                                codigoTipoLog: '',
-                                codigoRespuesta: '501',
-                                descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje
-                            };
-                            this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                            this._swalService.getAlertError(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje);
-                            console.error('Error eliminando', err);
-                        }
-                    });
-                }
-            });
+        // this._swalService.getAlertConfirmDelete(titulo, htmlBody, confirmText, cancelText)
+        //     .then((confirmado) => {
+        //         if (confirmado) {
+        //             console.log('id', id.id);
+        //             this._empresasScService.eliminarEmpresa(empresa.codigoEmpresaSC || '').subscribe({
+        //                 next: (resp: any) => {
+        //                     const logData = {
+        //                         codigoTipoLog: '',
+        //                         codigoRespuesta: '201',
+        //                         descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje
+        //                     };
+        //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+        //                     this._swalService.getAlertSuccess(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINAREXITOSA') + ' ' + resp.mensaje);
+        //                     this.subscriptions.add(
+        //                     this._empresasScService.cargarRegistros().subscribe(
+        //                             () => console.log('Empresas cargadas y guardadas en el servicio'),
+        //                             (err) => console.error('Error al cargar las Empresas:', err)
+        //                         )
+        //                     );
+        //                 },
+        //                 error: (err: any) => {
+        //                     const logData = {
+        //                         codigoTipoLog: '',
+        //                         codigoRespuesta: '501',
+        //                         descripcionLog: this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje
+        //                     };
+        //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+        //                     this._swalService.getAlertError(this.translate.instant('SUSCRIPTOR.EMPRESAS.ELIMINARERROR') + ' ' + err.mensaje);
+        //                     console.error('Error eliminando', err);
+        //                 }
+        //             });
+        //         }
+        //     });
     }
 
     toggleNav(): void {

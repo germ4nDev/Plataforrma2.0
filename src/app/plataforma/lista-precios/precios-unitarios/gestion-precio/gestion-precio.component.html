@@ -56,7 +56,7 @@
                                     (change)="onTipoValorChangeClick($event)">
                                     <option value="">{{ 'PRECIOS.GESTION.PLACEHOLDERTIPOBVALOR' | translate }}
                                     </option>
-                                    <option [value]="reg.tipoValorId" *ngFor="let reg of tiposValor">
+                                    <option [value]="reg.codigoTipo" *ngFor="let reg of tiposValor">
                                         {{ reg.nombreTipo }}</option>
                                 </select>
                                 <label
@@ -72,8 +72,7 @@
                                 <input type="text" class="form-control form-input" name="codigoValor"
                                     placeholder="{{ 'PRECIOS.GESTION.PLACEHOLDERCODE' | translate }}"
                                     [ngClass]="{'is-invalid': !codigoValor.valid && (codigoValor.dirty || codigoValor.touched || isSubmit) }"
-                                    #codigoValor="ngModel" required [(ngModel)]="FormRegistro.codigoValor"
-                                    readonly />
+                                    #codigoValor="ngModel" required [(ngModel)]="FormRegistro.codigoValor" readonly />
                                 <label
                                     *ngIf="!codigoValor.valid && (codigoValor.dirty || codigoValor.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
@@ -103,7 +102,8 @@
                                     placeholder="{{ 'PRECIOS.GESTION.PLACEHOLDERVALORUNITARIO' | translate }}"
                                     [ngClass]="{'is-invalid': !valorUnitario.valid && (valorUnitario.dirty || valorUnitario.touched || isSubmit) }"
                                     #valorUnitario="ngModel" required [(ngModel)]="FormRegistro.valorUnitario" />
-                                <label *ngIf="!valorUnitario.valid && (valorUnitario.dirty || valorUnitario.touched || isSubmit)"
+                                <label
+                                    *ngIf="!valorUnitario.valid && (valorUnitario.dirty || valorUnitario.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'PRECIOS.GESTION.REQUERIDVALORUNITARIO' | translate }}
                                 </label>
@@ -125,16 +125,12 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'PRECIOS.DESCRIPTION' | translate }}</label>
-                                <app-text-editor
-                                    [toolbarType]="tipoEditorTexto"
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
                                     [contentHtml]="FormRegistro.descripcionValor ?? ''"
-                                    (contentHtmlChange)="actualizarDescripcionVersion($event)"
-                                    name="descripcionValor"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionValor"
                                     [(ngModel)]="FormRegistro.descripcionValor"
                                     [ngClass]="{'is-invalid': !descripcionValor.valid && (descripcionValor.dirty || descripcionValor.touched || isSubmit)}"
-                                    #descripcionValor="ngModel"
-                                    required
-                                    rows="5">
+                                    #descripcionValor="ngModel" required rows="5">
                                 </app-text-editor>
                                 <label
                                     *ngIf="!descripcionValor.valid && (descripcionValor.dirty || descripcionValor.touched || isSubmit)"
@@ -168,4 +164,3 @@
         </div>
     </div>
 </div>
-

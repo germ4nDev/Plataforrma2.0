@@ -77,6 +77,11 @@
                 <ng-template #loading>
                     <app-data-loader [isLoading]="true" message="Cargando aplicaciones ..."> </app-data-loader>
                 </ng-template>
+
+                <h3>Importar Usuarios Masivos</h3>
+                <app-excel-uploader [apiUrl]="urlSubidaUsuarios" [columnsMap]="mapeoColumnasExcel"
+                    [extraData]="datosAdicionales">
+                </app-excel-uploader>
             </div>
         </div>
     </div>

@@ -1,16 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // angular import
 import { Component, OnDestroy, OnInit } from '@angular/core'
-
-// project import
 import { SharedModule } from 'src/app/theme/shared/shared.module'
 import { RouterModule } from '@angular/router'
 import { Router, ActivatedRoute } from '@angular/router'
-
-// bootstrap import
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap'
-
-// third party
 import { ColorPickerModule } from 'ngx-color-picker';
 import { PtlactividadesRolesService, PtlActividadesService, PtlAplicacionesService, PTLRolesAPService, PtlusuariosRolesApService, PtlusuariosScService, UtilidadesService } from 'src/app/theme/shared/service';
 import { Subscription } from 'rxjs';
@@ -78,6 +72,8 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
             this._aplicacionesService.getAplicaciones().subscribe((resp: any) => {
                 if (resp.ok) {
+                    console.log('***********************las aplicaciones', resp);
+
                     resp.aplicaciones.forEach((app: any) => {
                         // app.imagenInicio = this._uploadService.getFilePath('aplicaciones', app.imagenInicio);
                         app.imagenInicio = `${base_url}/upload/${this.suscriptor}/aplicaciones/${app.imagenInicio}`;
@@ -182,26 +178,26 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
 
     ingresarPlataforma(app: PTLAplicacionModel) {
         //TODO Validar las aplicaciones y los roles
-        // const current = this._localStorageService.getCurrentUserLocalStorage();
-        // const rolesAplicacion = this.roles.filter((x) => x.codigoAplicacion == app.codigoAplicacion);
-        // const rolesUsuarioSC: PTLUsuarioRoleAPModel[] = this.usuariosRoles.filter((x) => x.codigoUsuarioSC == this.usuarioSC?.codigoUsuarioSC);
-        // const rolesUsuarioAplicacion = this._utilidadesService.getRelacional(rolesAplicacion, rolesUsuarioSC, 'codigoRole');
-        // console.log('Roles en comun', rolesUsuarioAplicacion);
-        // if (rolesUsuarioAplicacion.length > 0) {
-        //   current.roles = []
-        //   rolesUsuarioAplicacion.forEach(role => {
-        //     const roleData = this.roles.filter(x => x.codigoRole === role.codigoRole)[0]
-        //     if (roleData) {
-        //       const existe = current.roles?.filter((x: { codigoRole: string | undefined }) => x.codigoRole === roleData.codigoRole)
-        //       if (existe?.length === 0) {
-        //         current.roles?.push(roleData)
-        //       }
-        //     }
-        //   })
-        // }
-        // console.log('New CurrentUser', current)
-        // this._localStorageService.setAplicacionLocalStorage(app)
-        // this._localStorageService.setCurrentUserLocalStorage(current)
+        const current = this._localStorageService.getCurrentUserLocalStorage();
+        const rolesAplicacion = this.roles.filter((x) => x.codigoAplicacion == app.codigoAplicacion);
+        const rolesUsuarioSC: PTLUsuarioRoleAPModel[] = this.usuariosRoles.filter((x) => x.codigoUsuarioSC == this.usuarioSC?.codigoUsuarioSC);
+        const rolesUsuarioAplicacion = this._utilidadesService.getRelacional(rolesAplicacion, rolesUsuarioSC, 'codigoRole');
+        console.log('Roles en comun', rolesUsuarioAplicacion);
+        if (rolesUsuarioAplicacion.length > 0) {
+            current.roles = []
+            rolesUsuarioAplicacion.forEach(role => {
+                const roleData = this.roles.filter(x => x.codigoRole === role.codigoRole)[0]
+                if (roleData) {
+                    const existe = current.roles?.filter((x: { codigoRole: string | undefined }) => x.codigoRole === roleData.codigoRole)
+                    if (existe?.length === 0) {
+                        current.roles?.push(roleData)
+                    }
+                }
+            })
+        }
+        console.log('New CurrentUser', current)
+        this._localStorageService.setAplicacionLocalStorage(app)
+        this._localStorageService.setCurrentUserLocalStorage(current)
         this.router.navigate(['/starter/inicio-suites'])
     }
 }

@@ -9,70 +9,70 @@ import { LocalStorageService } from './local-storage.service';
 
 const base_url = environment.apiUrl;
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class PTLConexionesBDSTService {
-  user: PTLUsuarioModel = new PTLUsuarioModel();
+    user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(
-    private http: HttpClient,
-    private _localStorageService: LocalStorageService
-  ) {}
+    constructor(
+        private http: HttpClient,
+        private _localStorageService: LocalStorageService
+    ) { }
 
-  getRegistros() {
-    const url = `${base_url}/conexiones-bd`;
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        console.log('servicio de conexion', resp);
-        return {
-          ok: true,
-          conexiones: resp.conexiones
-        };
-      })
-    );
-  }
+    getRegistros() {
+        const url = `${base_url}/conexiones-bd`;
+        return this.http.get(url).pipe(
+            map((resp: any) => {
+                console.log('servicio de conexion', resp);
+                return {
+                    ok: true,
+                    conexiones: resp.conexiones
+                };
+            })
+        );
+    }
 
-  getRegistroById(id: number) {
-    const url = `${base_url}/conexiones-bd/${id}`;
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        console.log('data de conexion', resp);
-        return {
-          ok: true,
-          conexion: resp.conexion
-        };
-      })
-    );
-  }
+    getRegistroById(id: string) {
+        const url = `${base_url}/conexiones-bd/${id}`;
+        return this.http.get(url).pipe(
+            map((resp: any) => {
+                console.log('data de conexion', resp);
+                return {
+                    ok: true,
+                    conexion: resp.conexion
+                };
+            })
+        );
+    }
 
-  postCrearRegistro(conexion: PTLConexionBDModel) {
-    const url = `${base_url}/conexiones-bd`;
-    return this.http.post(url, conexion);
-  }
+    postCrearRegistro(conexion: PTLConexionBDModel) {
+        const url = `${base_url}/conexiones-bd`;
+        return this.http.post(url, conexion);
+    }
 
-  putModificarRegistro(conexion: PTLConexionBDModel) {
-    const url = `${base_url}/conexiones-bd/${conexion.conexionId}`;
-    return this.http.put(url, conexion).pipe(
-      map((resp: any) => {
-        console.log('data de conexion modificacda', resp);
-        return {
-          ok: true,
-          conexion: resp.conexion
-        };
-      })
-    );
-  }
+    putModificarRegistro(conexion: PTLConexionBDModel) {
+        const url = `${base_url}/conexiones-bd/${conexion.conexionId}`;
+        return this.http.put(url, conexion).pipe(
+            map((resp: any) => {
+                console.log('data de conexion modificacda', resp);
+                return {
+                    ok: true,
+                    conexion: resp.conexion
+                };
+            })
+        );
+    }
 
-  deleteEliminarRegistro(_id: number) {
-    const url = `${base_url}/conexiones-bd/${_id}`;
-    return this.http.delete(url).pipe(
-      map((resp: any) => {
-        console.log('data de conexion eliminado', resp);
-        return {
-          ok: true,
-          conexion: resp.conexion
-        };
-      })
-    );
-  }
+    deleteEliminarRegistro(_id: number) {
+        const url = `${base_url}/conexiones-bd/${_id}`;
+        return this.http.delete(url).pipe(
+            map((resp: any) => {
+                console.log('data de conexion eliminado', resp);
+                return {
+                    ok: true,
+                    conexion: resp.conexion
+                };
+            })
+        );
+    }
 }

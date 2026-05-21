@@ -182,42 +182,42 @@ export class LoginComponent implements OnInit {
 
     consultarRolesActividadesUsuario(codUsuario: string) {
         let rolesUsuarioFinal: any[] = []
-        const usuarioSC = this.usuariosSC.filter(ru => ru.codigoUsuario == codUsuario && ru.estadoUsuarioSC == true)[0]
-        const suscriptor = this.suscriptores.filter(ru => ru.codigoSuscriptor === usuarioSC.codigoSuscriptor && ru.estadoSuscriptor == true)[0]
-        const empresasSC = this.empresasSC.filter(ru => ru.codigoSuscriptor == suscriptor.codigoSuscriptor && ru.estadoEmpresa == true)
-        const usuariosEmpresaSC = this.usuarioEmpresaSC.filter(ru => ru.codigoUsuarioSC == usuarioSC.codigoUsuarioSC && ru.estadoUsuarioEmpresaSC == true)
-        let rolesUsuario: PTLUsuarioRoleAPModel[] = []
-        let actividadesUsuario: any[] = []
-        usuariosEmpresaSC.forEach(usuEmp => {
-            const roles = this.usuariosRoles.filter(ue => ue.codigoUsuarioEmpresaSC === usuEmp.codigoUsuarioEmpresaSC && ue.estadoUsuarioRole == true)
-            roles.forEach(role => {
-                const activisRole = this.actividadesRoles.filter(x => x.codigoRole == role.codigoRole)
-                const emp = empresasSC.filter(x => x.codigoEmpresaSC == usuEmp.codigoEmpresaSC)[0]
-                const actisRoles = {
-                    empresa: emp.codigoEmpresaSC,
-                    role: role.codigoRole,
-                    actividades: activisRole
-                }
-                actividadesUsuario.push(actisRoles)
-                role.codigoEmpresaSC = emp.codigoEmpresaSC
-            });
-            rolesUsuario.push(...roles)
-        });
-        rolesUsuarioFinal = rolesUsuario.map(ru => {
-            const role = this.roles.find(r => r.codigoRole === ru.codigoRole && r.estadoRole == true)
-            const suite = this.suites.find(s => s.codigoSuite === ru?.codigoSuite)
-            const aplicacion = this.aplicaciones.find(a => a.codigoAplicacion === ru?.codigoAplicacion)
-            const empresa = empresasSC.find(a => a.codigoEmpresaSC === ru.codigoEmpresaSC)
-            return {
-                suscriptor: suscriptor ? suscriptor.nombreSuscriptor : 'Sin Suscriptor',
-                empresa: empresa ? empresa.nombreEmpresa : 'Sin Empresa',
-                aplicacion: aplicacion ? aplicacion.nombreAplicacion : 'Sin Aplicación',
-                suite: suite ? suite.nombreSuite : 'Sin Suite',
-                role: role ? role.nombreRole : 'Rol Desconocido'
-            }
-        })
-        console.log('actividadesUsuario', actividadesUsuario);
-        console.log('rolesUsuario', rolesUsuarioFinal);
+        // const usuarioSC = this.usuariosSC.filter(ru => ru.codigoUsuario == codUsuario && ru.estadoUsuarioSC == true)[0]
+        // const suscriptor = this.suscriptores.filter(ru => ru.codigoSuscriptor === usuarioSC.codigoSuscriptor && ru.estadoSuscriptor == true)[0]
+        // const empresasSC = this.empresasSC.filter(ru => ru.codigoSuscriptor == suscriptor.codigoSuscriptor && ru.estadoEmpresa == true)
+        // const usuariosEmpresaSC = this.usuarioEmpresaSC.filter(ru => ru.codigoUsuarioSC == usuarioSC.codigoUsuarioSC && ru.estadoUsuarioEmpresaSC == true)
+        // let rolesUsuario: PTLUsuarioRoleAPModel[] = []
+        // let actividadesUsuario: any[] = []
+        // usuariosEmpresaSC.forEach(usuEmp => {
+        //     const roles = this.usuariosRoles.filter(ue => ue.codigoUsuarioSC === usuEmp.codigoUsuarioEmpresaSC && ue.estadoUsuarioRole == true)
+        //     roles.forEach(role => {
+        //         const activisRole = this.actividadesRoles.filter(x => x.codigoRole == role.codigoRole)
+        //         const emp = empresasSC.filter(x => x.codigoEmpresaSC == usuEmp.codigoEmpresaSC)[0]
+        //         const actisRoles = {
+        //             empresa: emp.codigoEmpresaSC,
+        //             role: role.codigoRole,
+        //             actividades: activisRole
+        //         }
+        //         actividadesUsuario.push(actisRoles)
+        //         role.codigoEmpresaSC = emp.codigoEmpresaSC
+        //     });
+        //     rolesUsuario.push(...roles)
+        // });
+        // rolesUsuarioFinal = rolesUsuario.map(ru => {
+        //     const role = this.roles.find(r => r.codigoRole === ru.codigoRole && r.estadoRole == true)
+        //     const suite = this.suites.find(s => s.codigoSuite === ru?.codigoSuite)
+        //     const aplicacion = this.aplicaciones.find(a => a.codigoAplicacion === ru?.codigoAplicacion)
+        //     const empresa = empresasSC.find(a => a.codigoEmpresaSC === ru.codigoEmpresaSC)
+        //     return {
+        //         suscriptor: suscriptor ? suscriptor.nombreSuscriptor : 'Sin Suscriptor',
+        //         empresa: empresa ? empresa.nombreEmpresa : 'Sin Empresa',
+        //         aplicacion: aplicacion ? aplicacion.nombreAplicacion : 'Sin Aplicación',
+        //         suite: suite ? suite.nombreSuite : 'Sin Suite',
+        //         role: role ? role.nombreRole : 'Rol Desconocido'
+        //     }
+        // })
+        // console.log('actividadesUsuario', actividadesUsuario);
+        // console.log('rolesUsuario', rolesUsuarioFinal);
         return rolesUsuarioFinal
     }
 
@@ -241,7 +241,7 @@ export class LoginComponent implements OnInit {
                         this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTFOUND'))
                         return
                     }
-                    this.consultarRolesActividadesUsuario(resp.usuario.codigoUsuario)
+                    // this.consultarRolesActividadesUsuario(resp.usuario.codigoUsuario)
                     const currentUser = this._localstorageService.getCurrentUserLocalStorage()
                     console.log('++++++++ usuario activo', currentUser)
                     if (currentUser === null) {

@@ -19,7 +19,7 @@ import {
     PtllogActividadesService,
     PTLPaquetesService,
     PtlAplicacionesService,
-    PtltiposValoresService,
+    PtltiposItemsesService,
     PtlvaloresUnitariosService,
 } from 'src/app/theme/shared/service'
 import { PtlItemsPaqueteService } from 'src/app/theme/shared/service/ptlitems-paquete.service'
@@ -27,7 +27,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module'
 import Swal from 'sweetalert2'
 import { DatatablePqComponent } from 'src/app/theme/shared/components/data-table-pq/data-table-pq.component'
 import { PTLModulosPaqueteService } from '../../../../theme/shared/service/ptlmodulos-paquete.service'
-import { PTLTiposValoresModel } from 'src/app/theme/shared/_helpers/models/PTLTiposValores.model'
+import { PTLTipoItemModel } from '../../../../theme/shared/_helpers/models/PTLTipoItem.model';
 import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLValoresUnitarios.model'
 import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
 
@@ -56,10 +56,10 @@ export class ItemsPaqueteComponent {
     menuItems$!: Observable<NavigationItem[]>
     activeTab: 'menu' | 'filters' | 'main' = 'menu'
     tiposValorSub?: Subscription
-    tiposValor: PTLTiposValoresModel[] = []
+    tiposValor: PTLTipoItemModel[] = []
     listaPreciosSub?: Subscription
     listaPrecios: PTLValoresUnitarios[] = []
-  suscriptor: string = ''
+    suscriptor: string = ''
 
     subscriptions = new Subscription()
     filtroValorSubject = new BehaviorSubject<string>('todos')
@@ -79,7 +79,7 @@ export class ItemsPaqueteComponent {
         private _localStorageService: LocalStorageService,
         private _logActividadesService: PtllogActividadesService,
         private _registrosService: PtlItemsPaqueteService,
-        private _tiposValoresService: PtltiposValoresService,
+        private _tiposItemsService: PtltiposItemsesService,
         private _listaPreciosService: PtlvaloresUnitariosService
     ) {
         this.gradientConfig = GradientConfig
@@ -107,7 +107,7 @@ export class ItemsPaqueteComponent {
     }
 
     consultarTiposValor() {
-        this.tiposValorSub = this._tiposValoresService
+        this.tiposValorSub = this._tiposItemsService
             .getRegistros()
             .pipe(
                 tap((resp: any) => {
@@ -127,19 +127,19 @@ export class ItemsPaqueteComponent {
 
     onTipoValorChangeClick(evento: any) {
         console.log('evento', evento.target.value);
-        const tipo = this.tiposValor.findIndex(x => x.tipoValorId == evento.target.value);
+        const tipo = this.tiposValor.findIndex(x => x.codigoTipo == evento.target.value);
         const tipoValor = this.tiposValor[tipo];
-        this.consultarListaPrecios(tipoValor.tipoValorId || 0);
+        this.consultarListaPrecios(tipoValor.codigoTipo || '');
     }
 
-    consultarListaPrecios(tipoId: number) {
+    consultarListaPrecios(tipoId: string) {
         this.listaPreciosSub = this._listaPreciosService
             .getRegistros()
             .pipe(
                 tap((resp: any) => {
                     if (resp.ok) {
                         const activos = resp.valoresUnitarios.filter((x: { estadoValor: boolean }) => x.estadoValor == true)
-                        this.listaPrecios = activos.filter((x: { tipoValorId: number }) => x.tipoValorId == tipoId)
+                        this.listaPrecios = activos.filter((x: { codigoTipo: string }) => x.codigoTipo == tipoId)
                         console.log('las listaPrecios', this.listaPrecios)
                         return
                     }
@@ -322,7 +322,7 @@ export class ItemsPaqueteComponent {
     }
 
     OnNuevoRegistroClick(): void {
-        this._localStorageService.setObject('regId', '');
+        this._localStorageService.setObject('regId', 'nuevo');
         this._localStorageService.setObject('regPQ', this.registroId);
         this.router.navigate(['aplicaciones/gestion-itempq'])
     }

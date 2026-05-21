@@ -177,7 +177,8 @@ export class NavigationService implements OnInit, OnDestroy {
         this._localStorageService.setModuloLocalStorage(modulo);
 
         if (modulo.codigoModulo !== undefined) {
-            this.router.navigate([modulo.rutaModulo], { queryParams: { regId: modulo.codigoModulo } });
+            this._localStorageService.setObject('regId', modulo.codigoModulo)
+            this.router.navigate([modulo.rutaModulo]);
         } else {
             this.router.navigate([modulo.rutaModulo]);
         }

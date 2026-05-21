@@ -56,6 +56,7 @@ export class GestionSuscriptorComponent {
     lockScreenSubscription: Subscription | undefined;
     isLocked: boolean = false;
     lockMessage: string = '';
+    suscriptor: string = '';
 
     selectedFile: File | null = null;
     previewUrl: string | ArrayBuffer | null = null;
@@ -77,6 +78,7 @@ export class GestionSuscriptorComponent {
         private _swalAlertService: SwalAlertService
     ) {
         this.isSubmit = false;
+        this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         this.route.queryParams.subscribe((params) => {
             const id = params['regId'];
             console.log('me llena el Id', id);
@@ -131,27 +133,28 @@ export class GestionSuscriptorComponent {
         const togglePassword = document.querySelector('#togglePassword');
         const password = document.querySelector('#claveAdministrador');
         togglePassword?.addEventListener('click', () => {
-            // toggle the type attribute
             const type = password?.getAttribute('type') === 'password' ? 'text' : 'password';
             password?.setAttribute('type', type);
             this.classList.toggle('icon-eye-off');
         });
         if (!this.modoEdicion) {
             console.log('modo edicion', this.modoEdicion);
-            this.FormRegistro.codigoSuscriptor = uuidv4();
-            this.FormRegistro.nombreSuscriptor = '';
-            this.FormRegistro.identificacionSuscriptor = '';
-            this.FormRegistro.direccionSuscriptor = '';
-            this.FormRegistro.telefonoContacto = '';
-            this.FormRegistro.numeroEmpresas = 0;
-            this.FormRegistro.numeroUsuarios = 0;
-            this.FormRegistro.usuarioAdministrador = '';
-            this.FormRegistro.descripcionSuscriptor = '';
-            this.FormRegistro.envioCorreosSuscriptor = false;
-            this.FormRegistro.envioMensajesSuscriptor = false;
-            this.FormRegistro.envioPublicidadSuscriptor = false;
-            this.FormRegistro.estadoSuscriptor = false;
-            this.isClaveActual = false; // Permitir escribir claves nuevas de una vez
+            this.FormRegistro = {
+                codigoSuscriptor: uuidv4(),
+                nombreSuscriptor: '',
+                identificacionSuscriptor: '',
+                direccionSuscriptor: '',
+                telefonoContacto: '',
+                numeroEmpresas: 0,
+                numeroUsuarios: 0,
+                usuarioAdministrador: '',
+                descripcionSuscriptor: '',
+                envioCorreosSuscriptor: false,
+                envioMensajesSuscriptor: false,
+                envioPublicidadSuscriptor: false,
+                estadoSuscriptor: false
+            };
+            this.isClaveActual = false;
             console.log('FormRegistro', this.FormRegistro);
         }
     }
@@ -252,73 +255,6 @@ export class GestionSuscriptorComponent {
                 error: (err) => console.error(err)
             });
         } else {
-            // MODO CREACIÓN
-            // const dataCreate = {
-            // ...registroParaEnvio,
-            // codigoAdministrador: idUsuarioAdmin,
-            // codigoUsuarioCreacion: usuarioLogueado.codigoUsuario,
-            // fechaCreacion: new Date().toISOString()
-            // };
-
-            // this._suscriptoresService.crearSuscriptor(dataCreate).subscribe({
-            //     next: (resp: any) => {
-            //         if (resp.ok) {
-            //             const usuarioAdministrador: PTLUsuarioModel = {
-            //                 codigoUsuario: idUsuarioAdmin,
-            //                 identificacionUsuario: rawData.identificacionSuscriptor,
-            //                 nombreUsuario: 'Administrador ' + rawData.nombreSuscriptor,
-            //                 correoUsuario: rawData.correoSuscriptor,
-            //                 userNameUsuario: rawData.usuarioAdministrador,
-            //                 claveUsuario: rawData.claveNew,
-            //                 descripcionUsuario: '',
-            //                 fotoUsuario: 'no-imagen.png',
-            //                 usuarioAdministrador: true,
-            //                 estadoUsuario: true,
-            //                 codigoUsuarioCreacion: usuarioLogueado.codigoUsuario,
-            //                 fechaCreacion: new Date().toISOString()
-            //             };
-            //                 console.log('QUE ME TRAE usuarioAdministrador++++++++++++++++++', usuarioAdministrador);
-            //             this._usuariosService.postCrearUsuario(usuarioAdministrador).subscribe({
-            //                 next: () => {
-            //                     const usuarioSC: PTLUsuarioSCModel = {
-            //                         codigoUsuarioSC: uuidv4(),
-            //                         codigoUsuario: idUsuarioAdmin,
-            //                         codigoSuscriptor: idSuscriptorFinal,
-            //                         estadoUsuarioSC: true,
-            //                         codigoUsuarioCreacion: usuarioLogueado.codigoUsuario,
-            //                         fechaCreacion: new Date().toISOString(),
-            //                         codigoUsuarioModificacion: '',
-            //                         fechaModificacion: ''
-            //                     };
-            //                     console.log('QUE ME TRAE usuarioSC++++++++++++++++++', usuarioSC);
-            //                     this._usuariosSCService.postCrearUsuario(usuarioSC).subscribe({
-            //                         next: () => {
-            //                         this._suscriptoresService.crearCarpetaSuscriptor(dataCreate.codigoSuscriptor!).subscribe();
-            //                         this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
-            //                         this.router.navigate(['/suscriptor/suscriptores']);
-            //                         },
-            //                         error: (err) => {
-            //                             const error = err.error?.msg || 'Error al validar datos'
-            //                             const rutaTraduccion = `SUSCRIPTOR.USUARIOSSUSCRIPTOR.GESTION.${error}`;
-            //                             this._swalAlertService.getAlertConfirmWarning(this.translate.instant(rutaTraduccion));
-            //                         }
-            //                     });
-            //                 },
-            //                 error: (err) => {
-            //                     const error = err.error?.msg || 'Error al validar datos'
-            //                     const rutaTraduccion = `USUARIOS.USUARIOS.GESTION.${error}`;
-            //                     this._swalAlertService.getAlertConfirmWarning(this.translate.instant(rutaTraduccion));
-            //                     this.router.navigate(['/suscriptor/suscriptores']);
-            //                 }
-            //             });
-            //         }
-            //     },
-            //     error: (err) => {
-            //         const error = err.error?.msg || 'Error al validar datos'
-            //         const rutaTraduccion = `SUSCRIPTOR.SUSCRIPTORES.GESTION.${error}`;
-            //         this._swalAlertService.getAlertConfirmWarning(this.translate.instant(rutaTraduccion));
-            //     }
-            // });
             const dataCreate = {
                 ...registroParaEnvio,
                 codigoAdministrador: idUsuarioAdmin,
@@ -343,7 +279,6 @@ export class GestionSuscriptorComponent {
     }
 
     private CrearUsuarioYUsuarioSC(rawData: any, idUsuarioAdmin: string, idSuscriptor: string, usuarioLogueado: any, dataCreate: any) {
-
         const usuarioAdministrador: PTLUsuarioModel = {
             codigoUsuario: idUsuarioAdmin,
             identificacionUsuario: rawData.identificacionSuscriptor,
@@ -358,22 +293,20 @@ export class GestionSuscriptorComponent {
             codigoUsuarioCreacion: usuarioLogueado.codigoUsuario,
             fechaCreacion: new Date().toISOString()
         };
-        // CREAR USUARIO
         this._usuariosService.postCrearUsuario(usuarioAdministrador).subscribe({
             next: () => this.crearUsuarioSC(idUsuarioAdmin, idSuscriptor, usuarioLogueado, dataCreate),
             error: (err) => {
                 const error = err.error?.msg || 'Error al validar datos'
                 let idARelacionar = idUsuarioAdmin;
                 if (err.error?.usuario) {
-                    // Si la API manda el usuario que ya existía, usamos SU código
                     idARelacionar = err.error.usuario.codigoUsuario;
                     console.log('ID Usuario existente:', idARelacionar);
                 }
                 const rutaTraduccion = `USUARIOS.USUARIOS.GESTION.${error}`;
                 this._swalAlertService.getAlertConfirmWarning(this.translate.instant(rutaTraduccion))
-                    .then(() => {
-                        this.crearUsuarioSC(idARelacionar, idSuscriptor, usuarioLogueado, dataCreate);
-                    });
+                // .then(() => {
+                //     this.crearUsuarioSC(idARelacionar, idSuscriptor, usuarioLogueado, dataCreate);
+                // });
             }
         });
     }

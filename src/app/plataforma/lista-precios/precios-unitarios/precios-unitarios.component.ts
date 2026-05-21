@@ -16,212 +16,215 @@ import { DatatableComponent } from 'src/app/theme/shared/components/data-table/d
 import { PtlvaloresUnitariosService } from 'src/app/theme/shared/service/ptlvalores-unitarios.service';
 import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLValoresUnitarios.model';
 import Swal from 'sweetalert2';
-import { PtltiposValoresService } from 'src/app/theme/shared/service/ptltipos-valores.service';
-import { PTLTiposValoresModel } from '../../../theme/shared/_helpers/models/PTLTiposValores.model';
+import { PtltiposItemsesService } from 'src/app/theme/shared/service/ptltipos-items.service';
+import { PTLTipoItemModel } from '../../../theme/shared/_helpers/models/PTLTipoItem.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
-import { SwalAlertService } from 'src/app/theme/shared/service';
+import { LocalStorageService, SwalAlertService } from 'src/app/theme/shared/service';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
 
 @Component({
-  selector: 'app-precios-unitarios',
-  standalone: true,
-  imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
-  templateUrl: './precios-unitarios.component.html',
-  styleUrl: './precios-unitarios.component.scss'
+    selector: 'app-precios-unitarios',
+    standalone: true,
+    imports: [CommonModule, DataTablesModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, DatatableComponent],
+    templateUrl: './precios-unitarios.component.html',
+    styleUrl: './precios-unitarios.component.scss'
 })
 export class PreciosUnitariosComponent implements OnInit {
-  @Output() toggleSidebar = new EventEmitter<void>();
-  //#region VARIABLES
-  registrosSub?: Subscription;
-  tiposValorSub?: Subscription;
-  registros: PTLValoresUnitarios[] = [];
-  tiposValor: PTLTiposValoresModel[] = [];
-  registrosFiltrado: PTLValoresUnitarios[] = [];
-  lang: string = localStorage.getItem('lang') || '';
-  tituloPagina: string = '';
-  gradientConfig;
-  hasFiltersSlot: boolean = false;
-  menuItems!: Observable<NavigationItem[]>;
-  activeTab: 'menu' | 'filters' | 'main' = 'menu';
-  //#endregion VARIABLES
+    @Output() toggleSidebar = new EventEmitter<void>();
+    //#region VARIABLES
+    registrosSub?: Subscription;
+    tiposValorSub?: Subscription;
+    registros: PTLValoresUnitarios[] = [];
+    tiposValor: PTLTipoItemModel[] = [];
+    registrosFiltrado: PTLValoresUnitarios[] = [];
+    lang: string = localStorage.getItem('lang') || '';
+    tituloPagina: string = '';
+    gradientConfig;
+    hasFiltersSlot: boolean = false;
+    menuItems!: Observable<NavigationItem[]>;
+    activeTab: 'menu' | 'filters' | 'main' = 'menu';
+    //#endregion VARIABLES
 
-  constructor(
-    private router: Router,
-    private translate: TranslateService,
-    private _registrosService: PtlvaloresUnitariosService,
-    private _tiposValorService: PtltiposValoresService,
-    private _swalAlertService: SwalAlertService,
-    private _navigationService: NavigationService
-  ) {
-    this.gradientConfig = GradientConfig;
-  }
-
-  ngOnInit() {
-    this._navigationService.getNavigationItems();
-    this.menuItems = this._navigationService.menuItems$;
-    this.hasFiltersSlot = true;
-    this.consultarTiposValor();
-    this.consultarRegistros();
-  }
-
-  consultarTiposValor() {
-    this.tiposValorSub = this._tiposValorService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            this.tiposValor = resp.tiposValor;
-          }
-        }),
-        catchError((err) => {
-          console.error(err);
-          return of([]);
-        })
-      )
-      .subscribe();
-  }
-
-  consultarRegistros() {
-    this.registrosSub = this._registrosService
-      .getRegistros()
-      .pipe(
-        tap((resp: any) => {
-          if (resp.ok) {
-            resp.valoresUnitarios.forEach((reg: any) => {
-              reg.nomEstado = reg.estadoValor == true ? 'Activa' : 'Inactiva';
-              reg.nomTipo = this.tiposValor.filter((x) => x.tipoValorId == reg.tipoValorId)[0].nombreTipo;
-            });
-            this.registros = resp.valoresUnitarios;
-            this.registrosFiltrado = resp.valoresUnitarios;
-            console.log('Todos los precios unitarios', this.registrosFiltrado);
-            return;
-          }
-        }),
-        catchError((err) => {
-          console.log('Ha ocurrido un error', err);
-          return of(null);
-        })
-      )
-      .subscribe();
-  }
-
-  columnasRegistros: ColumnMetadata[] = [
-    {
-      name: 'nomTipo',
-      header: 'PRECIOS.TIPO',
-      type: 'text'
-    },
-    {
-      name: 'nombreValor',
-      header: 'PRECIOS.NAME',
-      type: 'text'
-    },
-    {
-      name: 'valorUnitario',
-      header: 'PRECIOS.VALOR',
-      type: 'price'
-    },
-    {
-      name: 'costoValor',
-      header: 'PRECIOS.COSTO',
-      type: 'price'
-    },
-    {
-      name: 'nomEstado',
-      header: 'PRECIOS.STATUS',
-      type: 'text'
+    constructor(
+        private router: Router,
+        private translate: TranslateService,
+        private _registrosService: PtlvaloresUnitariosService,
+        private _tiposItemService: PtltiposItemsesService,
+        private _localStorageService: LocalStorageService,
+        private _swalAlertService: SwalAlertService,
+        private _navigationService: NavigationService
+    ) {
+        this.gradientConfig = GradientConfig;
     }
-  ];
 
-  columnasDetailRegistros: ColumnMetadata[] = [
-    {
-      name: 'codigoValor',
-      header: 'PRECIOS.CODIGO',
-      type: 'text'
-    },
-    {
-      name: 'descripcionValor',
-      header: 'PRECIOS.DESCRIPTION',
-      type: 'text'
+    ngOnInit() {
+        this._navigationService.getNavigationItems();
+        this.menuItems = this._navigationService.menuItems$;
+        this.hasFiltersSlot = true;
+        this.consultarTiposValor();
+        this.consultarRegistros();
     }
-  ];
 
-  OnNuevoRegistroClick() {
-    this.router.navigate(['/lista-precios/gestion-precio']);
-  }
+    consultarTiposValor() {
+        this.tiposValorSub = this._tiposItemService
+            .getRegistros()
+            .pipe(
+                tap((resp: any) => {
+                    if (resp.ok) {
+                        this.tiposValor = resp.tiposValor;
+                    }
+                }),
+                catchError((err) => {
+                    console.error(err);
+                    return of([]);
+                })
+            )
+            .subscribe();
+    }
 
-  OnEditarRegistroClick(id: number) {
-    this.router.navigate(['/lista-precios/gestion-precio'], { queryParams: { regId: id } });
-  }
+    consultarRegistros() {
+        this.registrosSub = this._registrosService
+            .getRegistros()
+            .pipe(
+                tap((resp: any) => {
+                    if (resp.ok) {
+                        resp.valoresUnitarios.forEach((reg: any) => {
+                            reg.nomEstado = reg.estadoValor == true ? 'Activa' : 'Inactiva';
+                            reg.nomTipo = this.tiposValor.filter((x) => x.codigoTipo == reg.codigoTipo)[0].nombreTipo;
+                        });
+                        this.registros = resp.valoresUnitarios;
+                        this.registrosFiltrado = resp.valoresUnitarios;
+                        console.log('Todos los precios unitarios', this.registrosFiltrado);
+                        return;
+                    }
+                }),
+                catchError((err) => {
+                    console.log('Ha ocurrido un error', err);
+                    return of(null);
+                })
+            )
+            .subscribe();
+    }
 
-  OnEliminarRegistroClick(id: any) {
-    Swal.fire({
-      title: this.translate.instant('PRECIOS.ELIMINARTITULO'),
-      text: this.translate.instant('PRECIOS.ELIMINARTEXTO'),
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
-      cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
-    }).then((result) => {
-      console.log('Eliminado', id);
-      if (result.isConfirmed) {
-        this._registrosService.deleteEliminarRegistro(id.id).subscribe({
-          next: (resp: any) => {
-            this._swalAlertService.getAlertSuccess(resp.mensaje);
-            this.consultarRegistros();
-          },
-          error: (err: any) => {
-            this._swalAlertService.getAlertError(this.translate.instant('PRECIOS.ELIMINARERROR'));
-            console.error('Error eliminando', err);
-          }
+    columnasRegistros: ColumnMetadata[] = [
+        {
+            name: 'nomTipo',
+            header: 'PRECIOS.TIPO',
+            type: 'text'
+        },
+        {
+            name: 'nombreValor',
+            header: 'PRECIOS.NAME',
+            type: 'text'
+        },
+        {
+            name: 'valorUnitario',
+            header: 'PRECIOS.VALOR',
+            type: 'price'
+        },
+        {
+            name: 'costoValor',
+            header: 'PRECIOS.COSTO',
+            type: 'price'
+        },
+        {
+            name: 'nomEstado',
+            header: 'PRECIOS.STATUS',
+            type: 'text'
+        }
+    ];
+
+    columnasDetailRegistros: ColumnMetadata[] = [
+        {
+            name: 'codigoValor',
+            header: 'PRECIOS.CODIGO',
+            type: 'text'
+        },
+        {
+            name: 'descripcionValor',
+            header: 'PRECIOS.DESCRIPTION',
+            type: 'text'
+        }
+    ];
+
+    OnNuevoRegistroClick() {
+        this._localStorageService.setObject('regId', 'nuevo')
+        this.router.navigate(['/lista-precios/gestion-precio']);
+    }
+
+    OnEditarRegistroClick(id: number) {
+        this._localStorageService.setObject('regId', id)
+        this.router.navigate(['/lista-precios/gestion-precio']);
+    }
+
+    OnEliminarRegistroClick(id: any) {
+        Swal.fire({
+            title: this.translate.instant('PRECIOS.ELIMINARTITULO'),
+            text: this.translate.instant('PRECIOS.ELIMINARTEXTO'),
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: this.translate.instant('PLATAFORMA.DELETE'),
+            cancelButtonText: this.translate.instant('PLATAFORMA.CANCEL')
+        }).then((result) => {
+            console.log('Eliminado', id);
+            if (result.isConfirmed) {
+                this._registrosService.deleteEliminarRegistro(id.id).subscribe({
+                    next: (resp: any) => {
+                        this._swalAlertService.getAlertSuccess(resp.mensaje);
+                        this.consultarRegistros();
+                    },
+                    error: (err: any) => {
+                        this._swalAlertService.getAlertError(this.translate.instant('PRECIOS.ELIMINARERROR'));
+                        console.error('Error eliminando', err);
+                    }
+                });
+            }
         });
-      }
-    });
-  }
-
-  onFiltroTipoValorChangeClick(evento: any) {
-    console.log('filtrar el codigo ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.tipoValorId = evento.target.value));
-      this.consultarRegistros();
     }
-  }
 
-  onFiltroNombreChangeClick(evento: any) {
-    console.log('filtrar el NOMBRE ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((sitio) => (sitio.nombreValor || '').toLowerCase().includes(textoFiltro));
-      console.log('filtrados', this.registrosFiltrado);
+    onFiltroTipoValorChangeClick(evento: any) {
+        console.log('filtrar el codigo ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((x) => (x.tipoValorId = evento.target.value));
+            this.consultarRegistros();
+        }
     }
-  }
 
-  onFiltroDescripcionChangeClick(evento: any) {
-    console.log('filtrar el descripcion ', evento.target.value);
-    const textoFiltro = evento.target.value.toLowerCase();
-    if (!textoFiltro) {
-      this.registrosFiltrado = [...this.registros];
-    } else {
-      this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionValor || '').toLowerCase().includes(textoFiltro));
-      console.log('filtrados', this.registrosFiltrado);
+    onFiltroNombreChangeClick(evento: any) {
+        console.log('filtrar el NOMBRE ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((sitio) => (sitio.nombreValor || '').toLowerCase().includes(textoFiltro));
+            console.log('filtrados', this.registrosFiltrado);
+        }
     }
-  }
 
-  onFiltroEstadoChangeClick(evento: any) {
-    console.log('filtrar el estado ', evento.target.value);
-    if (evento.target.value == 'todos') {
-      this.registrosFiltrado = this.registros;
-    } else {
-      const estado = evento.target.value == 'true' ? true : false;
-      this.registrosFiltrado = this.registros.filter((x) => x.estadoValor == estado);
+    onFiltroDescripcionChangeClick(evento: any) {
+        console.log('filtrar el descripcion ', evento.target.value);
+        const textoFiltro = evento.target.value.toLowerCase();
+        if (!textoFiltro) {
+            this.registrosFiltrado = [...this.registros];
+        } else {
+            this.registrosFiltrado = this.registrosFiltrado.filter((app) => (app.descripcionValor || '').toLowerCase().includes(textoFiltro));
+            console.log('filtrados', this.registrosFiltrado);
+        }
     }
-  }
 
-  toggleNav(): void {
-    this.toggleSidebar.emit();
-  }
+    onFiltroEstadoChangeClick(evento: any) {
+        console.log('filtrar el estado ', evento.target.value);
+        if (evento.target.value == 'todos') {
+            this.registrosFiltrado = this.registros;
+        } else {
+            const estado = evento.target.value == 'true' ? true : false;
+            this.registrosFiltrado = this.registros.filter((x) => x.estadoValor == estado);
+        }
+    }
+
+    toggleNav(): void {
+        this.toggleSidebar.emit();
+    }
 }

@@ -8,15 +8,9 @@ import { environment } from 'src/environments/environment';
 import { catchError, map, throwError } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { SKIP_TOKEN_INTERCEPTOR } from '../_helpers/http-context-keys';
+import { UploadParams } from '../_helpers/models/UploadParams.model';
 
 const base_url = environment.apiUrl;
-
-export interface UploadParams {
-    susc: string;
-    tipo: string;
-    id?: string;
-    file?: string;
-}
 
 @Injectable({
     providedIn: 'root'
