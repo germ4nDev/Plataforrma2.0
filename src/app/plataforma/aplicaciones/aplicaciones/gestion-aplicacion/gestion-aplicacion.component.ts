@@ -77,7 +77,7 @@ export class GestionAplicacionComponent implements OnInit {
         this.navCollapsedMob = false
         this._navigationService.getNavigationItems()
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        const regId = this._localStorageService.getObject<string>('regId') || ''
+        const regId = this._localStorageService.getObject<string>('regId') || 'nuevo'
         if (regId !== 'nuevo') {
             this.modoEdicion = true
             this._aplicacionesService.getAplicacionById(regId).subscribe({

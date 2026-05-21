@@ -70,7 +70,7 @@ export class GestionPaqueteComponent {
     isLocked: boolean = false;
     isPromocion: boolean = true;
     lockMessage: string = '';
-  suscriptor: string = ''
+    suscriptor: string = ''
 
     // constructor
     constructor(
@@ -96,7 +96,7 @@ export class GestionPaqueteComponent {
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         this.registroId = this._localStorageService.getObject<string>('regId') || '';
         console.log('regId', this.registroId);
-        if (this.registroId !== '') {
+        if (this.registroId !== 'nuevo') {
             this.modoEdicion = true;
             this._registrosService.getRegistroById(this.registroId).subscribe({
                 next: (resp: any) => {
@@ -372,11 +372,11 @@ export class GestionPaqueteComponent {
     OnEliminarRegistroClick(evento: any) { }
 
     btnGestionarModulosClick() {
-        this._localStorageService.setObject('regId', this.registroId );
+        this._localStorageService.setObject('regId', this.registroId);
         this.router.navigate(['aplicaciones/modulos-paquete']);
     }
     btnGestionarItemsClick() {
-        this._localStorageService.setObject('regId', this.registroId );
+        this._localStorageService.setObject('regId', this.registroId);
         this.router.navigate(['aplicaciones/items-paquete']);
     }
 }

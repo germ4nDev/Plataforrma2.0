@@ -19,12 +19,6 @@ const base_url = environment.apiUrl
     providedIn: 'root'
 })
 export class PTLUsuariosService {
-    obtenerUsuariosPorSuscriptor(suscriptorId: string): Observable<PTLUsuarioModel[]> {
-        const url = `${base_url}/usuarios/suscriptor/${suscriptorId}`
-        // IMPORTANTE: Debe llevar el 'return'
-        return this.http.get<any>(url).pipe(map(resp => resp.usuarios as PTLUsuarioModel[]))
-    }
-
     usuario: PTLUsuarioModel = new PTLUsuarioModel()
     private _registros = new BehaviorSubject<PTLUsuarioModel[]>([])
     private _registrosChange = new Subject<any>()
@@ -113,6 +107,12 @@ export class PTLUsuariosService {
                 return throwError(() => errorMessage)
             })
         )
+    }
+
+    obtenerUsuariosPorSuscriptor(suscriptorId: string): Observable<PTLUsuarioModel[]> {
+        const url = `${base_url}/usuarios/suscriptor/${suscriptorId}`
+        // IMPORTANTE: Debe llevar el 'return'
+        return this.http.get<any>(url).pipe(map(resp => resp.usuarios as PTLUsuarioModel[]))
     }
 
     crearUsuario(data: PTLUsuarioModel) {

@@ -142,7 +142,7 @@
                                     id="codigoUsuarioSC"
                                     [ngClass]="{ 'is-invalid': !codigoUsuarioSC.valid && (codigoUsuarioSC.dirty || codigoUsuarioSC.touched || isSubmit) }"
                                     #codigoUsuarioSC="ngModel" required [disabled]="!tipoRolSeleccionado"
-                                    [(ngModel)]="FormRegistro.codigoUsuarioEmpresaSC">
+                                    [(ngModel)]="FormRegistro.codigoUsuarioSC">
                                     <option value="">{{ 'USUARIOS.USUARIOSROLES.GESTION.PLACEHOLDERUSUARIO' | translate
                                         }} </option>
                                     <option [value]="usuario.codigoUsuario" *ngFor="let usuario of usuarios"> {{

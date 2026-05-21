@@ -247,7 +247,7 @@ export class RolesUsuariosComponent implements OnInit {
                     filteredRegistros = filteredRegistros.filter(reg => reg.codigoRole === codigoRol)
                 }
                 if (codigoUsuario !== 'todos') {
-                    filteredRegistros = filteredRegistros.filter(reg => reg.codigoUsuarioEmpresaSC === codigoUsuario)
+                    filteredRegistros = filteredRegistros.filter(reg => reg.codigoUsuarioSC === codigoUsuario)
                 }
                 if (estado !== 'todos') {
                     const estadoBoolean = estado === 'true'

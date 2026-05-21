@@ -14,11 +14,11 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
-  selector: 'app-gestion-clases-ticket',
-  standalone: true,
-  imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
-  templateUrl: './gestion-clases-ticket.component.html',
-  styleUrl: './gestion-clases-ticket.component.scss'
+    selector: 'app-gestion-clases-ticket',
+    standalone: true,
+    imports: [CommonModule, SharedModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    templateUrl: './gestion-clases-ticket.component.html',
+    styleUrl: './gestion-clases-ticket.component.scss'
 })
 export class GestionClasesTicketComponent {
     @Output() toggleSidebar = new EventEmitter<void>();
@@ -27,7 +27,7 @@ export class GestionClasesTicketComponent {
     form: undefined;
     isSubmit: boolean = false;
     modoEdicion: boolean = false;
-    claseTicketId: number = 0;
+    claseTicketId: string = '';
     codigoClase = uuidv4();
 
     tipoEditorTexto = 'basica';
@@ -51,14 +51,13 @@ export class GestionClasesTicketComponent {
         private _uploadService: UploadFilesService,
         private _logActividadesService: PtllogActividadesService,
         private _swalAlertService: SwalAlertService,
-    ){
+    ) {
         this.isSubmit = false;
-        this.route.queryParams.subscribe((params) => {
-            this.claseTicketId = params['regId'];
-            console.log('============ clase-ticketId', this.claseTicketId);
-            if (this.claseTicketId){
-                this.modoEdicion = true;
-                this._registrosService.getRegistroById(this.claseTicketId).subscribe({
+        this.claseTicketId = this._localStorageService.getObject<string>('regId') || 'nuevo'
+        console.log('============ clase-ticketId', this.claseTicketId);
+        if (this.claseTicketId != 'nuevo') {
+            this.modoEdicion = true;
+            this._registrosService.getRegistroById(this.claseTicketId).subscribe({
                 next: (resp: any) => {
                     this.FormRegistro = resp.claseTicket;
                     console.log('formRegistro Clase', this.FormRegistro);
@@ -66,11 +65,10 @@ export class GestionClasesTicketComponent {
                 error: () => {
                     this._swalAlertService.getAlertError('No se pudo obtener la clase.');
                 }
-                });
-            }else {
-                this.modoEdicion = false;
-            }
-        });
+            });
+        } else {
+            this.modoEdicion = false;
+        }
     }
     ngOnInit() {
         this._navigationService.getNavigationItems();
@@ -89,100 +87,100 @@ export class GestionClasesTicketComponent {
             this._localStorageService.removeFormRegistro();
         }
         if (!this.modoEdicion) {
-        console.log('modo edicion', this.modoEdicion);
-        this.FormRegistro.codigoClase = uuidv4();
-        console.log('FormRegistro', this.FormRegistro);
+            console.log('modo edicion', this.modoEdicion);
+            this.FormRegistro.codigoClase = uuidv4();
+            console.log('FormRegistro', this.FormRegistro);
         }
     }
 
     btnGestionarRegistroClick(form: any) {
         this.isSubmit = true;
         if (!form.valid) {
-        return;
+            return;
         }
         const registroData = form.value as PTLClaseTicketModel;
         console.log('insertar formRegistro', registroData);
         if (this.modoEdicion) {
-          registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion;
-          registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
-          registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-          registroData.fechaModificacion = new Date().toISOString();
-          this._registrosService.putModificarRegistro(registroData, this.codigoClase).subscribe({
-            next: (resp: any) => {
-              if (resp.ok) {
-                const logData = {
-                  codigoTipoLog: '',
-                  codigoRespuesta: '201',
-                  descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
-                };
-                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
-                this.router.navigate(['/tickets/clases-ticket']);
-              } else {
-                const logData = {
-                  codigoTipoLog: '',
-                  codigoRespuesta: '501',
-                  descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
-                };
-                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
-              }
-            },
-            error: (err: any) => {
-              console.error(err);
-              const logData = {
-                codigoTipoLog: '',
-                codigoRespuesta: '501',
-                descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
-              };
-              this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-              this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
-            }
-        });
+            registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion;
+            registroData.fechaCreacion = this.FormRegistro.fechaCreacion;
+            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+            registroData.fechaModificacion = new Date().toISOString();
+            this._registrosService.putModificarRegistro(registroData, this.codigoClase).subscribe({
+                next: (resp: any) => {
+                    if (resp.ok) {
+                        const logData = {
+                            codigoTipoLog: '',
+                            codigoRespuesta: '201',
+                            descripcionLog: this.translate.instant('PLATAFORMA.MODIFICAR')
+                        };
+                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'));
+                        this.router.navigate(['/tickets/clases-ticket']);
+                    } else {
+                        const logData = {
+                            codigoTipoLog: '',
+                            codigoRespuesta: '501',
+                            descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO')
+                        };
+                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                        this._swalAlertService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'));
+                    }
+                },
+                error: (err: any) => {
+                    console.error(err);
+                    const logData = {
+                        codigoTipoLog: '',
+                        codigoRespuesta: '501',
+                        descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+                    };
+                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'));
+                }
+            });
         } else {
-        console.log('nuevo formRegistro', this.FormRegistro);
-          registroData.codigoClase = uuidv4();
-          registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
-          registroData.fechaCreacion = new Date().toISOString();
-          registroData.codigoUsuarioModificacion = '';
-          registroData.fechaModificacion = '';
-          console.log('insertar registro', registroData);
-          this._registrosService.postCrearRegistro(registroData).subscribe({
-            next: (resp: any) => {
-              console.log('reesp', resp.claseTicket);
-              if (resp.ok) {
-                const logData = {
-                  codigoTipoLog: '',
-                  codigoRespuesta: '201',
-                  descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
-                };
-                this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
-                form.resetForm();
-                this.isSubmit = false;
-                this.router.navigate(['/tickets/clases-ticket']);
-              }
-            },
-            error: (err: any) => {
-              console.error(err);
-              const logData = {
-                codigoTipoLog: '',
-                codigoRespuesta: '501',
-                descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
-              };
-              this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-              this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err);
-            }
-          });
+            console.log('nuevo formRegistro', this.FormRegistro);
+            registroData.codigoClase = uuidv4();
+            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
+            registroData.fechaCreacion = new Date().toISOString();
+            registroData.codigoUsuarioModificacion = '';
+            registroData.fechaModificacion = '';
+            console.log('insertar registro', registroData);
+            this._registrosService.postCrearRegistro(registroData).subscribe({
+                next: (resp: any) => {
+                    console.log('reesp', resp.claseTicket);
+                    if (resp.ok) {
+                        const logData = {
+                            codigoTipoLog: '',
+                            codigoRespuesta: '201',
+                            descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+                        };
+                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                        this._swalAlertService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'));
+                        form.resetForm();
+                        this.isSubmit = false;
+                        this.router.navigate(['/tickets/clases-ticket']);
+                    }
+                },
+                error: (err: any) => {
+                    console.error(err);
+                    const logData = {
+                        codigoTipoLog: '',
+                        codigoRespuesta: '501',
+                        descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+                    };
+                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
+                    this._swalAlertService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err);
+                }
+            });
         }
     }
 
     actualizarDescripcionVersion(nuevoContenido: string): void {
-    this.FormRegistro.descripcionClase = nuevoContenido;
-    console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionClase);
-    // if (this.validationForm && this.isSubmit) {
-    // }
-  }
+        this.FormRegistro.descripcionClase = nuevoContenido;
+        console.log('Descripción de versión actualizada:', this.FormRegistro.descripcionClase);
+        // if (this.validationForm && this.isSubmit) {
+        // }
+    }
 
     btnRegresarClick() {
         console.log('codigo Clase-ticket', this.claseTicketId);

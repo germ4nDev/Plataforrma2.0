@@ -30,6 +30,7 @@ import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario
     styleUrl: './usuarios-suscriptor.component.scss'
 })
 export class UsuariosSuscriptorComponent implements OnInit {
+
     @Output() toggleSidebar = new EventEmitter<void>();
     subscriptions = new Subscription();
     // Estado de la UI
@@ -159,7 +160,7 @@ export class UsuariosSuscriptorComponent implements OnInit {
             .subscribe();
     }
 
-    consultarUsuarios () {
+    consultarUsuarios() {
         this.subscriptions.add(
             this._usuariosService.getUsuarios().subscribe((resp: any) => {
                 if (resp.ok) {
@@ -219,8 +220,8 @@ export class UsuariosSuscriptorComponent implements OnInit {
                     filteredRegistros = filteredRegistros.filter((reg) => (reg.nombreUsuario?.toString() || '').toLowerCase().includes(nombre));
                 }
                 if (estado !== 'todos') {
-                const estadoBoolean = estado === 'true';
-                filteredRegistros = filteredRegistros.filter((reg) => reg.estadoUsuarioSC === estadoBoolean);
+                    const estadoBoolean = estado === 'true';
+                    filteredRegistros = filteredRegistros.filter((reg) => reg.estadoUsuarioSC === estadoBoolean);
                 }
                 return filteredRegistros;
             })
@@ -288,7 +289,7 @@ export class UsuariosSuscriptorComponent implements OnInit {
     }
 
     OnNuevoRegistroClick() {
-        this.router.navigate(['suscriptor/gestion-usuario-suscriptor'], { queryParams: { regId: 'nuevo', stId: this.stId }});
+        this.router.navigate(['suscriptor/gestion-usuario-suscriptor'], { queryParams: { regId: 'nuevo', stId: this.stId } });
     }
 
     OnEditarRegistroClick(event: any) {

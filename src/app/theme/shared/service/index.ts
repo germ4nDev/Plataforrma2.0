@@ -42,7 +42,7 @@ export * from './ptlsuscriptores.service';
 export * from './ptltextos-id.service';
 export * from './ptltickets.service';
 export * from './ptltipos-estados.service';
-export * from './ptltipos-valores.service';
+export * from './ptltipos-items.service';
 export * from './ptlusuarios-empresas-sc.service';
 export * from './ptlusuarios-roles-ap.service';
 export * from './ptlusuarios-sc.service';

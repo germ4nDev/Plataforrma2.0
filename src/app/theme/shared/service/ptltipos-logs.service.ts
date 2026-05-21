@@ -10,70 +10,70 @@ import { LocalStorageService } from './local-storage.service';
 const base_url = environment.apiUrl;
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class PTLTiposLogsService {
-  user: PTLUsuarioModel = new PTLUsuarioModel();
+    user: PTLUsuarioModel = new PTLUsuarioModel();
 
-  constructor(
-    private http: HttpClient,
-    private _localStorageService: LocalStorageService
-  ) {}
+    constructor(
+        private http: HttpClient,
+        private _localStorageService: LocalStorageService
+    ) { }
 
-  getRegistros() {
-    const url = `${base_url}/tipos-log`;
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        console.log('servicio de tiposlogs', resp);
-        return {
-          ok: true,
-          tipoLog: resp.tipoLog
-        };
-      })
-    );
-  }
+    getRegistros() {
+        const url = `${base_url}/tipos-log`;
+        return this.http.get(url).pipe(
+            map((resp: any) => {
+                console.log('servicio de tiposlogs', resp);
+                return {
+                    ok: true,
+                    tiposLog: resp.tiposLog
+                };
+            })
+        );
+    }
 
-  getRegistroById(id: number) {
-    const url = `${base_url}/tipos-logs/${id}`;
-    return this.http.get(url).pipe(
-      map((resp: any) => {
-        console.log('data de tiposlogs', resp);
-        return {
-          ok: true,
-          tipolog: resp.tipolog
-        };
-      })
-    );
-  }
+    getRegistroById(id: number) {
+        const url = `${base_url}/tipos-logs/${id}`;
+        return this.http.get(url).pipe(
+            map((resp: any) => {
+                console.log('data de tiposlogs', resp);
+                return {
+                    ok: true,
+                    tipolog: resp.tipolog
+                };
+            })
+        );
+    }
 
-  postCrearRegistro(tipolog: PTLTiposLogsModel) {
-    const url = `${base_url}/tipos-logs`;
-    return this.http.post(url, tipolog);
-  }
+    postCrearRegistro(tipolog: PTLTiposLogsModel) {
+        const url = `${base_url}/tipos-logs`;
+        return this.http.post(url, tipolog);
+    }
 
-  putModificarRegistro(tipoLog: PTLTiposLogsModel) {
-    const url = `${base_url}/tipos-logs/${tipoLog.codigoTipoLog}`;
-    return this.http.put(url, tipoLog).pipe(
-      map((resp: any) => {
-        console.log('data de tiposlogs modificacda', resp);
-        return {
-          ok: true,
-          tipolog: resp.tipolog
-        };
-      })
-    );
-  }
+    putModificarRegistro(tipoLog: PTLTiposLogsModel) {
+        const url = `${base_url}/tipos-logs/${tipoLog.codigoTipoLog}`;
+        return this.http.put(url, tipoLog).pipe(
+            map((resp: any) => {
+                console.log('data de tiposlogs modificacda', resp);
+                return {
+                    ok: true,
+                    tipolog: resp.tipolog
+                };
+            })
+        );
+    }
 
-  deleteEliminarRegistro(_id: string) {
-    const url = `${base_url}/tipos-logs/${_id}`;
-    return this.http.delete(url).pipe(
-      map((resp: any) => {
-        console.log('data de tiposlogs eliminado', resp);
-        return {
-          ok: true,
-          tipolog: resp.tipolog
-        };
-      })
-    );
-  }
+    deleteEliminarRegistro(_id: string) {
+        const url = `${base_url}/tipos-logs/${_id}`;
+        return this.http.delete(url).pipe(
+            map((resp: any) => {
+                console.log('data de tiposlogs eliminado', resp);
+                return {
+                    ok: true,
+                    tipolog: resp.tipolog
+                };
+            })
+        );
+    }
 }

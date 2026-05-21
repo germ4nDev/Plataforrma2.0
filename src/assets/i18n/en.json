@@ -29,6 +29,10 @@
         "PASSWORDNOTMATCH": "Current password does not match.",
         "SELECT_FILE": "Select File",
         "SOCIAL": "Social Network",
+        "IATITULO": "IA Assistant",
+        "DESCRIPCIONIA": "Enter your query to activate the tool console",
+        "PREGUNTAR": "Ask ...",
+        "ENVIAR": "Send",
         "COLORSETTING": {
             "TITLE": "Color Settings",
             "NEW": "New Color Settings",

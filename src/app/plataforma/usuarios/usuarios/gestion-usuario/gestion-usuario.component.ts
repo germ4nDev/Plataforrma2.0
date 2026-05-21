@@ -119,7 +119,6 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
     ) {
         this.isSubmit = false
         this.suscPlataforma = this._localStorageService.getSuscriptorPlataformaLocalStorage()
-        // console.log('datos del suscriptor', this.suscPlataforma);
         const registroId = this._localStorageService.getObject<string>('regId') || ''
         if (registroId != 'nuevo') {
             // console.log('me llena el Id', registroId);
@@ -231,7 +230,7 @@ export class GestionUsuarioComponent implements OnInit, OnDestroy {
         // console.log('rolesUsuario', rolesUsuario)
         let rolesUsuario: PTLUsuarioRoleAPModel[] = []
         usuariosEmpresaSC.forEach(usuEmp => {
-            const roles = this.usuariosRoles.filter(ue => ue.codigoUsuarioEmpresaSC === usuEmp.codigoUsuarioEmpresaSC && ue.estadoUsuarioRole == true)
+            const roles = this.usuariosRoles.filter(ue => ue.codigoUsuarioSC === usuEmp.codigoUsuarioEmpresaSC && ue.estadoUsuarioRole == true)
             roles.forEach(role => {
                 const emp = empresasSC.filter(x => x.codigoEmpresaSC == usuEmp.codigoEmpresaSC)[0]
                 role.codigoEmpresaSC = emp.codigoEmpresaSC

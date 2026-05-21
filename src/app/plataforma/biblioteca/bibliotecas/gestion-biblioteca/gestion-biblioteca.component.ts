@@ -65,6 +65,7 @@ export class GestionBibliotecaComponent implements OnInit {
     lockScreenSubscription: Subscription | undefined
     isLocked: boolean = false
     lockMessage: string = ''
+    urlSubidaUsuarios: string = ''
 
     constructor(
         private router: Router,
@@ -87,7 +88,7 @@ export class GestionBibliotecaComponent implements OnInit {
         this.navCollapsed = this.windowWidth >= 992 ? GradientConfig.isCollapse_menu : false
         this.navCollapsedMob = false
         this._navigationService.getNavigationItems()
-        const regId = this._localStorageService.getObject<string>('regId') || ''
+        const regId = this._localStorageService.getObject<string>('regId') || 'nuevo'
         if (regId !== 'nuevo') {
             this.modoEdicion = true
             this._bibliotecaService.getBibliotecaById(regId).subscribe({

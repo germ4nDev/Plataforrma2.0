@@ -21,127 +21,122 @@ import Swal from 'sweetalert2'
 import { PTLTipoGaleria } from 'src/app/theme/shared/_helpers/models/PTLTipoGaleria.model'
 
 @Component({
-  selector: 'app-gestion-formatos-galeria',
-  standalone: true,
-  imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
-  templateUrl: './gestion-formatos-galeria.component.html',
-  styleUrl: './gestion-formatos-galeria.component.scss'
+    selector: 'app-gestion-formatos-galeria',
+    standalone: true,
+    imports: [CommonModule, FormsModule, SharedModule, TranslateModule, NavBarComponent, NavContentComponent, TextEditorComponent],
+    templateUrl: './gestion-formatos-galeria.component.html',
+    styleUrl: './gestion-formatos-galeria.component.scss'
 })
 export class GestionFormatosGaleriaComponent implements OnInit, OnDestroy {
-  @Output() toggleSidebar = new EventEmitter<void>()
-  FormRegistro: PTLFormatoGaleria = new PTLFormatoGaleria()
-  menuItems$!: Observable<NavigationItem[]>
-  gradientConfig: any
-  navCollapsed: boolean = false
-  navCollapsedMob: boolean = false
-  windowWidth: number = 0
-  listaTipos: PTLTipoGaleria[] = []
+    @Output() toggleSidebar = new EventEmitter<void>()
+    FormRegistro: PTLFormatoGaleria = new PTLFormatoGaleria()
+    menuItems$!: Observable<NavigationItem[]>
+    gradientConfig: any
+    navCollapsed: boolean = false
+    navCollapsedMob: boolean = false
+    windowWidth: number = 0
+    listaTipos: PTLTipoGaleria[] = []
 
-  isSubmit: boolean = false
-  modoEdicion: boolean = false
-  codeFormato = uuidv4()
-  tipoEditorTexto = 'basica'
-  lockScreenSubscription: Subscription | undefined
-  isLocked: boolean = false
+    isSubmit: boolean = false
+    modoEdicion: boolean = false
+    codeFormato = uuidv4()
+    tipoEditorTexto = 'basica'
+    lockScreenSubscription: Subscription | undefined
+    isLocked: boolean = false
 
-  constructor (
-    private router: Router,
-    private route: ActivatedRoute,
-    private translate: TranslateService,
-    private _navigationService: NavigationService,
-    private _localStorageService: LocalStorageService,
-    private _tiposGaleriaService: PtlTiposGaleriaService,
-    private _formatosGaleriaService: PtlformatosGaleriaService,
-    private _swalService: SwalAlertService
-  ) {
-    this.gradientConfig = GradientConfig
-    this._navigationService.getNavigationItems()
-
-    this.route.queryParams.subscribe(params => {
-      if (Object.keys(params).length > 0) {
-        const regId = params['regId']
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private translate: TranslateService,
+        private _navigationService: NavigationService,
+        private _localStorageService: LocalStorageService,
+        private _tiposGaleriaService: PtlTiposGaleriaService,
+        private _formatosGaleriaService: PtlformatosGaleriaService,
+        private _swalService: SwalAlertService
+    ) {
+        this.gradientConfig = GradientConfig
+        this._navigationService.getNavigationItems()
+        const regId = this._localStorageService.getObject<string>('regId') || 'nuevo'
         if (regId !== 'nuevo') {
-          this.modoEdicion = true
-          this._formatosGaleriaService.getFormatosGaleriaById(regId).subscribe({
-            next: (resp: any) => {
-              this.FormRegistro = resp.formatoGaleria
-              this.codeFormato = resp.formatoGaleria.codigoFormato
-            },
-            error: () => Swal.fire('Error', 'No se pudo obtener el Formato', 'error')
-          })
+            this.modoEdicion = true
+            this._formatosGaleriaService.getFormatosGaleriaById(regId).subscribe({
+                next: (resp: any) => {
+                    this.FormRegistro = resp.formatoGaleria
+                    this.codeFormato = resp.formatoGaleria.codigoFormato
+                },
+                error: () => Swal.fire('Error', 'No se pudo obtener el Formato', 'error')
+            })
         }
-      }
-    })
-  }
-
-  ngOnInit () {
-    this.menuItems$ = this._navigationService.menuItems$
-    if (this.modoEdicion == false) {
-      this.FormRegistro.codigoFormato = uuidv4()
-      this.FormRegistro.estadoFormato = true
     }
-    this.cargarListasDesplegables()
-  }
 
-  ngOnDestroy () {
-    if (this.lockScreenSubscription) this.lockScreenSubscription.unsubscribe()
-  }
-
-  cargarListasDesplegables () {
-    this._tiposGaleriaService.cargarTiposGaleria().subscribe({
-      next: (resp: any) => {
-        this.listaTipos = resp.tiposGaleria || resp
-      },
-      error: (err: any) => console.error('Error cargando tipos', err)
-    })
-  }
-
-  actualizarDescripcionVersion (nuevoContenido: string): void {
-    this.FormRegistro.descripcionFormato = nuevoContenido
-  }
-
-  btnGestionarFormatoClick (form: any) {
-    if (this.modoEdicion) {
-      this.FormRegistro.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-      this.FormRegistro.fechaModificacion = new Date().toISOString()
-      this._formatosGaleriaService.actualizarFormatoGaleria(this.FormRegistro).subscribe({
-        next: (resp: any) => {
-          if (resp.ok) {
-            this._swalService.getAlertSuccess(this.translate.instant('FORMATOSGALERIA.UPDATESUCCSESSFULLY'))
-            form.resetForm()
-            this.router.navigate(['/biblioteca/formatos-galeria'])
-          }
-        },
-        error: () => this._swalService.getAlertError('No se pudo actualizar')
-      })
-    } else {
-      form.formatosGaleriaId = 0
-      const registroData = form.value as PTLFormatoGaleria
-      registroData.codigoFormato = this.FormRegistro.codigoFormato
-      registroData.descripcionFormato = this.FormRegistro.descripcionFormato
-      registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-      registroData.fechaCreacion = new Date().toISOString()
-      registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-      registroData.fechaModificacion = new Date().toISOString()
-
-      this._formatosGaleriaService.crearFormatoGaleria(registroData).subscribe({
-        next: (resp: any) => {
-          if (resp.ok) {
-            this._swalService.getAlertSuccess(this.translate.instant('FORMATOSGALERIA.CREATESUCCSESSFULLY'))
-            form.resetForm()
-            this.router.navigate(['/biblioteca/formatos-galeria'])
-          }
-        },
-        error: () => this._swalService.getAlertError('No se pudo crear')
-      })
+    ngOnInit() {
+        this.menuItems$ = this._navigationService.menuItems$
+        if (this.modoEdicion == false) {
+            this.FormRegistro.codigoFormato = uuidv4()
+            this.FormRegistro.estadoFormato = true
+        }
+        this.cargarListasDesplegables()
     }
-  }
 
-  btnRegresarClick () {
-    this.router.navigate(['/biblioteca/formatos-galeria'])
-  }
+    ngOnDestroy() {
+        if (this.lockScreenSubscription) this.lockScreenSubscription.unsubscribe()
+    }
 
-  toggleNav (): void {
-    this.toggleSidebar.emit()
-  }
+    cargarListasDesplegables() {
+        this._tiposGaleriaService.cargarTiposGaleria().subscribe({
+            next: (resp: any) => {
+                this.listaTipos = resp.tiposGaleria || resp
+            },
+            error: (err: any) => console.error('Error cargando tipos', err)
+        })
+    }
+
+    actualizarDescripcionVersion(nuevoContenido: string): void {
+        this.FormRegistro.descripcionFormato = nuevoContenido
+    }
+
+    btnGestionarFormatoClick(form: any) {
+        if (this.modoEdicion) {
+            this.FormRegistro.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            this.FormRegistro.fechaModificacion = new Date().toISOString()
+            this._formatosGaleriaService.actualizarFormatoGaleria(this.FormRegistro).subscribe({
+                next: (resp: any) => {
+                    if (resp.ok) {
+                        this._swalService.getAlertSuccess(this.translate.instant('FORMATOSGALERIA.UPDATESUCCSESSFULLY'))
+                        form.resetForm()
+                        this.router.navigate(['/biblioteca/formatos-galeria'])
+                    }
+                },
+                error: () => this._swalService.getAlertError('No se pudo actualizar')
+            })
+        } else {
+            form.formatosGaleriaId = 0
+            const registroData = form.value as PTLFormatoGaleria
+            registroData.codigoFormato = this.FormRegistro.codigoFormato
+            registroData.descripcionFormato = this.FormRegistro.descripcionFormato
+            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            registroData.fechaCreacion = new Date().toISOString()
+            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            registroData.fechaModificacion = new Date().toISOString()
+
+            this._formatosGaleriaService.crearFormatoGaleria(registroData).subscribe({
+                next: (resp: any) => {
+                    if (resp.ok) {
+                        this._swalService.getAlertSuccess(this.translate.instant('FORMATOSGALERIA.CREATESUCCSESSFULLY'))
+                        form.resetForm()
+                        this.router.navigate(['/biblioteca/formatos-galeria'])
+                    }
+                },
+                error: () => this._swalService.getAlertError('No se pudo crear')
+            })
+        }
+    }
+
+    btnRegresarClick() {
+        this.router.navigate(['/biblioteca/formatos-galeria'])
+    }
+
+    toggleNav(): void {
+        this.toggleSidebar.emit()
+    }
 }
