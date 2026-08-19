@@ -89,8 +89,8 @@ export class SuitesComponent implements OnInit, OnDestroy {
         }, 200)
         this.subscriptions.add(
             this._registrosService.cargarRegistros().subscribe(
-                () => console.log('Aplicaciones cargadas y guardadas en el servicio'),
-                err => console.error('Error al cargar aplicaciones:', err)
+                () => console.log('Suites cargadas y guardadas en el servicio'),
+                err => console.error('Error al cargar suites:', err)
             )
         )
     }
@@ -163,6 +163,9 @@ export class SuitesComponent implements OnInit, OnDestroy {
                     reg.nomEstado = reg.estadoModulo ? 'Activo' : 'Inactivo'
                     reg.nomAplicacion = this.aplicaciones.filter(x => x.codigoAplicacion == reg.codigoAplicacion)[0].nombreAplicacion
                     reg.imagenInicio = this._uploadService.getFilePath(this.suscriptor, 'suites', reg.imagenInicio)
+                    reg.capture = this._uploadService.getFilePath(this.suscriptor, 'suites', reg.imagenInicio)
+                    console.log('))))))))))) suite', reg);
+
                     return reg as PTLSuiteAPModel
                 })
                 this.suites = transformedSuites
@@ -221,12 +224,12 @@ export class SuitesComponent implements OnInit, OnDestroy {
             isSortable: false
         },
         {
-            name: 'codigoSuite',
-            header: 'SUITES.CODE',
+            name: 'nomAplicacion',
+            header: 'SUITES.NAMEAPLICACION',
             type: 'text'
         },
         {
-            name: 'nombroSuite',
+            name: 'nombreSuite',
             header: 'SUITES.NAME',
             type: 'text'
         },
@@ -238,6 +241,16 @@ export class SuitesComponent implements OnInit, OnDestroy {
     ]
 
     columnasDetailRegistros: ColumnMetadata[] = [
+        {
+            name: 'codigoAplicacion',
+            header: 'SUITES.CODE',
+            type: 'text'
+        },
+        {
+            name: 'codigoSuite',
+            header: 'SUITES.CODE',
+            type: 'text'
+        },
         {
             name: 'descripcionSuite',
             header: 'SUITES.DESCRIPTION',

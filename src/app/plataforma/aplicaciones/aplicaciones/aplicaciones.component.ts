@@ -52,10 +52,10 @@ export class AplicacionesComponent implements OnInit, OnDestroy {
     DataModel: BaseSessionModel = new BaseSessionModel()
     DataLogActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
     moduloTituloExcel: string = ''
-    hasFiltersSlot: boolean = false
     gradientConfig
     lang = localStorage.getItem('lang')
     menuItems$!: Observable<NavigationItem[]>
+    hasFiltersSlot: boolean = false
     activeTab: 'menu' | 'filters' | 'main' = 'menu'
     subscriptions = new Subscription()
     filtroCodigoSubject = new BehaviorSubject<string>('todos')

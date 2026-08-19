@@ -3,7 +3,7 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { PtlSlidersInicioService } from '../../service/ptlsliders-inicio.service';
 import { of, Subscription } from 'rxjs';
-import { PTLSlierInicioModel } from '../../_helpers/models/PTLSliderInicio.model';
+import { PTLSliderInicioModel } from '../../_helpers/models/PTLSliderInicio.model';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { LocalStorageService, UploadFilesService } from '../../service';
@@ -22,9 +22,9 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
     @Input() slides: any[] = [];
     autoSlideInterval: number = 7000;
     registrosSub?: Subscription;
-    registros: PTLSlierInicioModel[] = [];
+    registros: PTLSliderInicioModel[] = [];
     currentIndex: number = 0;
-    images: PTLSlierInicioModel[] = [];
+    images: PTLSliderInicioModel[] = [];
     private readonly defaultPlaceholder = `${base_url}/upload/sliders/imagen-inicio.png`;
     private intervalId: any;
     suscriptor: string = '';
@@ -39,13 +39,23 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         if (this.tipoSlider == 1) {
-            this.consultarRegistros();
+            this.images = this._sliderService.getSlidersActuales();
+            console.log('slides', this.images);
+            this._sliderService.slider$.subscribe(data => {
+                data.forEach((slider: any) => {
+                    slider.imageSlider = this._uploadService.getFilePath(this.suscriptor, 'sliders', slider.urlSlider);
+                    console.log('slides', slider.imageSlider);
+                });
+                this.images = data;
+                console.log('Slides actualizados reactivamente:', this.slides);
+            });
+            this._sliderService.cargarSliders().subscribe();
+            // this.consultarRegistros();
         } else if (this.tipoSlider == 2) {
             const newImage = {
                 nombreslider: 'Ner Image',
                 urlSlider: 'imagen-inicio.png',
                 imageSlider: this._uploadService.getFilePath(this.suscriptor, 'sliders', 'imagen-inicio.png')
-
             };
             console.log('que me trae el color', newImage);
             this.images.push(newImage);
@@ -64,6 +74,8 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // Limpiar el temporizador al destruir el componente
+        this.images = this._sliderService.getSlidersActuales();
+        console.log('slides', this.images);
         this.stopAutoSlide();
     }
 
@@ -73,6 +85,8 @@ export class FullScreenSliderComponent implements OnInit, OnDestroy {
             .pipe(
                 tap((resp: any) => {
                     if (resp.ok) {
+                        console.log('sliders', resp);
+
                         resp.slidersInicio.forEach((slider: any) => {
                             slider.imageSlider = this._uploadService.getFilePath(this.suscriptor, 'sliders', slider.urlSlider);
                             console.log('slides', slider.imageSlider);

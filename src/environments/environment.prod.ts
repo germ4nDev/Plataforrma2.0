@@ -1,8 +1,8 @@
 import packageInfo from '../../package.json';
 
 export const environment = {
-  appVersion: packageInfo.version,
-  production: true,
-  apiUrl: 'http://localhost:3000/api'
-//   apiUrl: 'https://mock-data-api-nextjs.vercel.app'
+    appVersion: packageInfo.version,
+    production: false,
+    apiUrl: 'https://porttosapi.dymsites.co/api',
+    sctUrl: 'http://porttosapi.dymsites.co'
 };

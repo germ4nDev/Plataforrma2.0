@@ -23,6 +23,8 @@ export class UploadFilesService {
 
     uploadUserPhoto(file: File, objUpload: UploadParams) {
         const context = new HttpContext().set(SKIP_TOKEN_INTERCEPTOR, true);
+        const userLog = this._localStorageService.getCurrentUserLocalStorage();
+        const usu = userLog.usuario.codigoUsuario;
         const formData = new FormData();
         formData.append('file', file);
 
@@ -30,10 +32,11 @@ export class UploadFilesService {
             'x-token': this._localStorageService.getTokenLocalStorage()
         });
 
-        const url = `${base_url}/upload/${objUpload.susc}/${objUpload.tipo}/${objUpload.id}`;
+        const url = `${base_url}/upload/${objUpload.susc}/${objUpload.tipo}/${usu}`;
 
-        return this.http.put(url, formData, { context, headers }).pipe(
+        return this.http.post(url, formData, { context, headers }).pipe(
             map((resp: any) => {
+                console.log('respuesta upload', resp);
                 return {
                     ok: true,
                     data: resp
@@ -52,12 +55,16 @@ export class UploadFilesService {
     }
 
     setFolderSuscriptor(susc: string) {
-        const url = `${base_url}/upload/folder/${susc}`;
+        const userLog = this._localStorageService.getCurrentUserLocalStorage();
+        const usu = userLog.usuario.codigoUsuario;
+        const url = `${base_url}/upload/folder/${susc}/${usu}`;
         return this.http.get(url);
     }
 
     deleteFilePath(objUpload: UploadParams) {
-        const pathUrl = `${base_url}/upload/delete/${objUpload.susc}/${objUpload.tipo || ''}/${objUpload.file}`;
+        const userLog = this._localStorageService.getCurrentUserLocalStorage();
+        const usu = userLog.usuario.codigoUsuario;
+        const pathUrl = `${base_url}/upload/delete/${objUpload.susc}/${objUpload.tipo || ''}//${usu}/${objUpload.file}`;
 
         return this.http.delete(pathUrl).pipe(
             map((resp: any) => {

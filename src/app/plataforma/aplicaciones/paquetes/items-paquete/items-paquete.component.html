@@ -21,7 +21,7 @@
                             }}</label>
                         <select (change)="onTipoValorChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="tipo.codigoTipo" *ngFor="let tipo of tiposValor"> {{ tipo.nombreTipo }}
+                            <option [value]="tipo.codigoTipoItem" *ngFor="let tipo of tiposValor"> {{ tipo.nombreTipo }}
                             </option>
                         </select>
                     </div>
@@ -29,7 +29,7 @@
                         <small>{{ 'ITEMSPAQUETES.FILTROS.FILTRONOMBRE' | translate }}</small>
                         <select (change)="onFiltroValorChangeClick($event)" class="form-control form-select">
                             <option value="todos">{{ 'PLATAFORMA.FILTROTODOS' | translate }}</option>
-                            <option [value]="valor.codigoValor" *ngFor="let valor of listaPrecios"> {{ valor.nombreValor
+                            <option [value]="valor.codigoItem" *ngFor="let valor of listaPrecios"> {{ valor.nombreItem
                                 }}</option>
                         </select>
                     </div>

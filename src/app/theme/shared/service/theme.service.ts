@@ -2,16 +2,16 @@
     Author: German Valencia
 */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, OnDestroy, Renderer2, RendererFactory2, RendererStyleFlags2 } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { LocalStorageService } from './local-storage.service';
+import { LocalStorageService } from './local-storage.service'; // Asegúrate de que esta ruta sea correcta
 
-interface ThemeSettings {
+export interface ThemeSettings {
     isDarkTheme: boolean;
     navbarColor: string;
     iconosColor: string;
-    textoColor: string;
     buttonsHoverColor: string;
+    // textoColor eliminado para ceder el control al SCSS global
 }
 
 @Injectable({
@@ -20,53 +20,62 @@ interface ThemeSettings {
 export class ThemeService implements OnDestroy {
     private renderer: Renderer2;
 
-    private isDarkTheme = new BehaviorSubject<boolean>(false);
-    private navbarColor = new BehaviorSubject<string>('');
-    private iconosColor = new BehaviorSubject<string>('');
-    private textoColor = new BehaviorSubject<string>('');
-    private buttonsHoverColor = new BehaviorSubject<string>('');
+    // 1. EL OBJETO INICIAL (La fuente de la verdad por defecto)
+    private readonly DEFAULT_THEME_SETTINGS: ThemeSettings = {
+        isDarkTheme: false,
+        navbarColor: '#007bff',       // Azul QPLUS
+        iconosColor: '#464e57',       // Gris estándar
+        buttonsHoverColor: '#b4b4b4'  // Gris claro
+    };
+
+    private isDarkTheme = new BehaviorSubject<boolean>(this.DEFAULT_THEME_SETTINGS.isDarkTheme);
+    private navbarColor = new BehaviorSubject<string>(this.DEFAULT_THEME_SETTINGS.navbarColor);
+    private iconosColor = new BehaviorSubject<string>(this.DEFAULT_THEME_SETTINGS.iconosColor);
+    private buttonsHoverColor = new BehaviorSubject<string>(this.DEFAULT_THEME_SETTINGS.buttonsHoverColor);
 
     isDarkTheme$ = this.isDarkTheme.asObservable();
     navbarColor$ = this.navbarColor.asObservable();
     iconosColor$ = this.iconosColor.asObservable();
-    textoColor$ = this.textoColor.asObservable();
     buttonsHoverColor$ = this.buttonsHoverColor.asObservable();
-
-    // Agrupador de suscripciones
     private subscriptions: Subscription = new Subscription();
 
     constructor(
         rendererFactory: RendererFactory2,
         private _localStorageService: LocalStorageService
     ) {
-        console.log('ThemeService: Constructor se ESTA ejecutado.');
-
+        console.log('ThemeService: Inicializando con arquitectura de Tokens de Diseño.');
         this.renderer = rendererFactory.createRenderer(null, null);
+
+        // Bandera para variables dinámicas de marca (Sin !important)
+        const flags = RendererStyleFlags2.DashCase;
 
         this.subscriptions.add(
             this.navbarColor$.subscribe((color) => {
-                if (color) this.renderer.setStyle(document.body, '--app-navbar-color', color);
+                if (color) {
+                    this.renderer.setStyle(document.body, '--app-navbar-color', color, flags);
+                    this.renderer.setStyle(document.body, '--primary-color', color, flags);
+                    this.renderer.setStyle(document.body, '--aside-tab-active', color, flags);
+                }
             })
         );
 
         this.subscriptions.add(
             this.iconosColor$.subscribe((color) => {
-                if (color) this.renderer.setStyle(document.body, '--app-iconos-color', color);
-            })
-        );
-
-        this.subscriptions.add(
-            this.textoColor$.subscribe((color) => {
-                if (color) this.renderer.setStyle(document.body, '--app-texto-color', color);
+                if (color) {
+                    this.renderer.setStyle(document.body, '--app-iconos-color', color, flags);
+                }
             })
         );
 
         this.subscriptions.add(
             this.buttonsHoverColor$.subscribe((color) => {
-                if (color) this.renderer.setStyle(document.body, '--app-boton-hover-color', color);
+                if (color) {
+                    this.renderer.setStyle(document.body, '--app-btn-secondary', color, flags);
+                }
             })
         );
 
+        // Control maestro de Tema Estructural
         this.subscriptions.add(
             this.isDarkTheme$.subscribe((isDark) => {
                 if (isDark) {
@@ -85,14 +94,29 @@ export class ThemeService implements OnDestroy {
     }
 
     loadThemeSettings(): void {
+        // Obtenemos lo que haya en caché (puede ser null o un objeto incompleto)
         const savedSettings = this._localStorageService.getThemeSettings();
 
-        if (savedSettings) {
-            this.isDarkTheme.next(savedSettings.isDarkTheme);
-            this.navbarColor.next(savedSettings.navbarColor);
-            this.iconosColor.next(savedSettings.iconosColor);
-            this.textoColor.next(savedSettings.textoColor);
-            this.buttonsHoverColor.next(savedSettings.buttonsHoverColor);
+        // Detectamos la preferencia del sistema operativo del usuario
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        // 2. LA FUSIÓN MÁGICA (Merge)
+        const finalSettings: ThemeSettings = {
+            ...this.DEFAULT_THEME_SETTINGS,
+            isDarkTheme: savedSettings ? savedSettings.isDarkTheme : prefersDark,
+            ...(savedSettings || {})
+        };
+
+        // 3. Emitimos los valores a toda la plataforma
+        this.isDarkTheme.next(finalSettings.isDarkTheme);
+        this.navbarColor.next(finalSettings.navbarColor);
+        this.iconosColor.next(finalSettings.iconosColor);
+        this.buttonsHoverColor.next(finalSettings.buttonsHoverColor);
+
+        // 4. Si era la primera vez (no había savedSettings), guardamos el objeto inicial en el caché
+        if (!savedSettings) {
+            console.log('ThemeService: Inicializando localStorage con objeto ThemeSettings base.');
+            this.saveThemeSettings();
         }
     }
 
@@ -100,7 +124,6 @@ export class ThemeService implements OnDestroy {
         const settings: ThemeSettings = {
             isDarkTheme: this.isDarkTheme.value,
             navbarColor: this.navbarColor.value,
-            textoColor: this.textoColor.value,
             iconosColor: this.iconosColor.value,
             buttonsHoverColor: this.buttonsHoverColor.value
         };
@@ -117,11 +140,6 @@ export class ThemeService implements OnDestroy {
         this.saveThemeSettings();
     }
 
-    setTextoColor(color: string): void {
-        this.textoColor.next(color);
-        this.saveThemeSettings();
-    }
-
     setBotonHoverColor(color: string): void {
         this.buttonsHoverColor.next(color);
         this.saveThemeSettings();
@@ -132,13 +150,20 @@ export class ThemeService implements OnDestroy {
     }
 
     toggleDarkTheme(): void {
-        const newTheme = !this.isDarkTheme.value;
-        this.isDarkTheme.next(newTheme);
+        this.isDarkTheme.next(!this.isDarkTheme.value);
         this.saveThemeSettings();
     }
 
     setDarkTheme(isDark: boolean): void {
         this.isDarkTheme.next(isDark);
         this.saveThemeSettings();
+    }
+
+    hexToRgb(hex: string): string {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+
+        return `${r}, ${g}, ${b}`;
     }
 }

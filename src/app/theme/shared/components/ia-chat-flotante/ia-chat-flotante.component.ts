@@ -2,10 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IaAssistantService } from '../../service/ia-assistant.service';
-import { IaAssistantResponseModel } from '../../_helpers/models/IAAssistantData.model'; // Dejamos solo el modelo de respuesta general aquí
+import { IaAssistantResponseModel } from '../../_helpers/models/IAAssistantData.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MarkdownPipe } from '../../pipes/markdown.pipe';
-
+import { DynamicTableComponent } from '../dynamic-table/dynamic-table.component';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartData } from 'chart.js';
 // =======================================================================
 // INTERFACES DE SOPORTE PARA LA CONSOLA Y RENDERIZADO DE GRÁFICAS (MÓDULOS)
 // =======================================================================
@@ -14,25 +16,23 @@ interface SerieGrafica {
     data: number[];
 }
 
-interface DataRetrievedIA {
-    curso?: string;
-    instructora?: string;
-    modulos?: number;
-    estado?: string;
-    precio?: string;
-
-    // 📊 Propiedades específicas para la gráfica de barras inyectada
-    tipo_grafica?: string;
+// 🎯 CORRECCIÓN: Renombramos y ajustamos para que coincida con el backend
+interface ToolDataIA {
+    data?: any[]; // Aquí viajan los registros reales (usuarios, tickets, etc.)
     eje_x_categorias?: string[];
     series?: SerieGrafica[];
-
-    db_source: string; // Origen de datos expuesto para la junta directiva
+    db_source?: string; // Origen de datos expuesto para la junta directiva
+    error?: string; // Para el motor de métricas
+    valor?: number; // Para el motor de métricas
+    descripcion?: string; // Para el motor de métricas
+    [key: string]: any; // Comodín para propiedades extra
 }
 
 interface ToolExecutedIA {
     name: string;
     inputs: any;
-    dataRetrieved: DataRetrievedIA | null;
+    data: ToolDataIA | null;
+    chartConfig?: any; // ✨ ESTA ES LA LÍNEA QUE TE FALTA
 }
 
 interface InteraccionChatIA {
@@ -46,7 +46,7 @@ interface InteraccionChatIA {
 @Component({
     selector: 'app-ia-chat-flotante',
     standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule, MarkdownPipe],
+    imports: [CommonModule, FormsModule, TranslateModule, MarkdownPipe, DynamicTableComponent, NgChartsModule],
     templateUrl: './ia-chat-flotante.component.html',
     styleUrl: './ia-chat-flotante.component.scss'
 })
@@ -57,8 +57,7 @@ export class IaChatFlotanteComponent {
     public modalAbierto: boolean = false;
     public sidebarAbierto: boolean = false;
 
-    // 🎯 CORRECCIÓN CLAVE: Cambiamos el tipado del arreglo al modelo extendido 'InteraccionChatIA'
-    // para que el compilador HTML reconozca 'chat.toolExecuted.dataRetrieved.tipo_grafica'
+    // Historial tipado que alimenta directamente a la directiva *ngFor del HTML
     public historialInteracciones: InteraccionChatIA[] = [];
 
     constructor(
@@ -90,13 +89,36 @@ export class IaChatFlotanteComponent {
         this.modalAbierto = true;
 
         this.iaService.preguntarIA(textoEnviado).subscribe({
-            next: (resultado: IaAssistantResponseModel) => {
-                if (resultado.success && resultado.data) {
-                    // Al castearlo como 'any' o asegurar que cumple la estructura,
-                    // Angular permite insertarlo en el nuevo historial tipado
-                    this.historialInteracciones.push(resultado.data as any);
+            next: (resultado: any) => {
+                try {
+                    const coreData = resultado?.data?.respuesta;
+
+                    if (coreData) {
+                        const toolExec = coreData.meta?.toolExecuted;
+                        const chartProcesado = toolExec?.data?.chartConfig || null;
+
+                        const nuevaInteraccion: InteraccionChatIA = {
+                            query: textoEnviado,
+                            response: coreData.msg || '',
+                            executionMode: coreData.meta?.executionMode || 'Standard Text',
+                            timestamp: coreData.meta?.timestamp || new Date().toISOString(),
+
+                            toolExecuted: toolExec ? {
+                                name: toolExec.name,
+                                inputs: toolExec.inputs,
+                                data: toolExec.data,
+                                chartConfig: chartProcesado
+                            } : null
+                        };
+
+                        this.historialInteracciones.push(nuevaInteraccion);
+                    }
+                } catch (error) {
+                    console.error("Error procesando la respuesta de la IA:", error);
+                } finally {
+                    // 🔥 ESTO ASEGURA QUE NUNCA SE QUEDE CARGANDO
+                    this.cargando = false;
                 }
-                this.cargando = false;
             },
             error: (err: any) => {
                 console.error('Error en el asistente de IA:', err);

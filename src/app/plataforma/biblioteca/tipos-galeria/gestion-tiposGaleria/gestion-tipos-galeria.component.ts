@@ -59,7 +59,7 @@ export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
             this._tiposGaleriaService.getTipoGaleriaById(regId).subscribe({
                 next: (resp: any) => {
                     this.FormRegistro = resp.tipoGaleria;
-                    this.codeTipo = resp.tipoGaleria.codigoTipo;
+                    this.codeTipo = resp.tipoGaleria.codigoTipoGaleria;
                 },
                 error: () => Swal.fire('Error', 'No se pudo obtener el Tipo de Galería', 'error')
             });
@@ -70,7 +70,7 @@ export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.menuItems$ = this._navigationService.menuItems$;
         if (this.modoEdicion == false) {
-            this.FormRegistro.codigoTipo = uuidv4();
+            this.FormRegistro.codigoTipoGaleria = uuidv4();
             this.FormRegistro.estadoTipo = true;
         }
     }
@@ -100,7 +100,7 @@ export class GestionTiposGaleriaComponent implements OnInit, OnDestroy {
         } else {
             form.tipoId = 0;
             const registroData = form.value as PTLTipoGaleria;
-            registroData.codigoTipo = this.FormRegistro.codigoTipo;
+            registroData.codigoTipoGaleria = this.FormRegistro.codigoTipoGaleria;
             registroData.descripcionTipo = this.FormRegistro.descripcionTipo;
             registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario;
             registroData.fechaCreacion = new Date().toISOString();

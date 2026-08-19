@@ -21,6 +21,7 @@ import { PtllogActividadesService, SwalAlertService, UploadFilesService } from '
 import Swal from 'sweetalert2'
 import { v4 as uuidv4 } from 'uuid'
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model'
+import { PTLLogActividadAPModel } from 'src/app/theme/shared/_helpers/models/PTLlogActividadAP.model'
 
 @Component({
     selector: 'app-gestion-suite',
@@ -34,6 +35,7 @@ export class GestionSuiteComponent implements OnInit {
     @Output() toggleSidebar = new EventEmitter<void>()
     FormRegistro: PTLSuiteAPModel = new PTLSuiteAPModel()
     menuItems$!: Observable<NavigationItem[]>
+    logActividad: PTLLogActividadAPModel = new PTLLogActividadAPModel()
     gradientConfig: any
     navCollapsed: boolean = false
     navCollapsedMob: boolean = false
@@ -84,7 +86,7 @@ export class GestionSuiteComponent implements OnInit {
             this._registrosService.getSuiteAPById(this.registroId).subscribe({
                 next: (resp: any) => {
                     this.FormRegistro = resp.suite
-                    this.codigosuite = resp.suite.codigoAplicacion
+                    this.codigosuite = resp.suite.codigoSuite
                     this.selectedFileUrl = this._uploadService.getFilePath(this.suscriptor, 'suites', resp.suite.imagenInicio)
                 },
                 error: () => {
@@ -92,16 +94,15 @@ export class GestionSuiteComponent implements OnInit {
                 }
             })
         } else {
-            this.FormRegistro.codigoSuite = uuidv4()
             this.modoEdicion = false
         }
     }
 
     ngOnInit() {
+        this._layoutInitializer.applyLayout()
         this._navigationService.getNavigationItems()
         this.menuItems$ = this._navigationService.menuItems$
         this.consultarAplicaciones()
-        this._layoutInitializer.applyLayout()
         this.lockScreenSubscription = this._navigationService.lockScreenEvent$.subscribe({
             next: (message: string) => {
                 this._localStorageService.setFormRegistro(this.FormRegistro)
@@ -115,6 +116,14 @@ export class GestionSuiteComponent implements OnInit {
             this.FormRegistro = form
             this._localStorageService.removeFormRegistro()
         }
+        if (!this.modoEdicion) {
+            this.FormRegistro.codigoSuite = uuidv4()
+            this.FormRegistro.imagenInicio = 'no-image.png'
+            console.log('FormRegistro loading', this.FormRegistro)
+        }
+        console.log('Inicial formregistro', this.FormRegistro)
+        // const navSettings = this._localStorageService.getNavSettingsLocalStorage();
+        console.log('data del log', this.logActividad)
     }
 
     consultarAplicaciones() {
@@ -152,9 +161,8 @@ export class GestionSuiteComponent implements OnInit {
     onFileSelectedClick(event: any) {
         const file: File = event.target.files[0]
         const objUpload = {
-            suc: this.suscriptor,
-            tipo: 'suites',
-            id: '0'
+            susc: this.suscriptor,
+            tipo: 'suites'
         }
         if (file) {
             const reader = new FileReader()
@@ -164,8 +172,9 @@ export class GestionSuiteComponent implements OnInit {
             reader.readAsDataURL(file)
             this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
                 next: (path: any) => {
-                    console.log('resultado', path)
-                    this.FormRegistro.imagenInicio = path.nombreArchivo
+                    const resp = path.data.respuesta
+                    this.FormRegistro.imagenInicio = resp.fileName
+                    this.userPhotoUrl = resp.fileName
                 },
                 error: () => {
                     this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
@@ -182,12 +191,16 @@ export class GestionSuiteComponent implements OnInit {
         if (!form.valid) {
             return
         }
-        const registroData = form.value as PTLSuiteAPModel
+
+        // 1. Combinamos lo que haya en el formulario HTML con nuestra variable global
+        this.FormRegistro = { ...this.FormRegistro, ...form.value }
+
         if (this.modoEdicion) {
-            registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion
-            registroData.fechaCreacion = this.FormRegistro.fechaCreacion
-            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-            registroData.fechaModificacion = new Date().toISOString()
+            // Actualizamos directamente this.FormRegistro
+            this.FormRegistro.imagenInicio = this.userPhotoUrl || this.FormRegistro.imagenInicio
+            this.FormRegistro.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            this.FormRegistro.fechaModificacion = new Date().toISOString()
+
             this._registrosService.actualizarSuiteAP(this.FormRegistro).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
@@ -221,12 +234,17 @@ export class GestionSuiteComponent implements OnInit {
                 }
             })
         } else {
-            registroData.codigoSuite = uuidv4()
-            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
-            registroData.fechaCreacion = new Date().toISOString()
-            registroData.codigoUsuarioModificacion = ''
-            registroData.fechaModificacion = ''
-            console.log('insertar registro', registroData)
+            // Actualizamos directamente this.FormRegistro
+            this.FormRegistro.codigoSuite = uuidv4()
+            this.FormRegistro.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            this.FormRegistro.fechaCreacion = new Date().toISOString()
+            this.FormRegistro.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            this.FormRegistro.imagenInicio = this.userPhotoUrl || this.FormRegistro.imagenInicio || 'no-image.png'
+            this.FormRegistro.fechaModificacion = new Date().toISOString()
+
+            console.log('insertar registro', this.FormRegistro)
+
+            // ✅ AHORA SÍ ENVIAMOS LA VARIABLE CON TODOS LOS DATOS
             this._registrosService.crearSuiteAP(this.FormRegistro).subscribe({
                 next: (resp: any) => {
                     if (resp.ok) {
@@ -255,6 +273,87 @@ export class GestionSuiteComponent implements OnInit {
             })
         }
     }
+
+    // btnGestionarRegistroClick(form: any) {
+    //     this.isSubmit = true
+    //     if (!form.valid) {
+    //         return
+    //     }
+    //     const registroData = form.value as PTLSuiteAPModel
+    //     if (this.modoEdicion) {
+    //         registroData.imagenInicio = this.userPhotoUrl || this.FormRegistro.imagenInicio
+    //         registroData.codigoUsuarioCreacion = this.FormRegistro.codigoUsuarioCreacion
+    //         registroData.fechaCreacion = this.FormRegistro.fechaCreacion
+    //         registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+    //         registroData.fechaModificacion = new Date().toISOString()
+    //         this._registrosService.actualizarSuiteAP(this.FormRegistro).subscribe({
+    //             next: (resp: any) => {
+    //                 if (resp.ok) {
+    //                     const logData = {
+    //                         codigoTipoLog: '',
+    //                         codigoRespuesta: '201',
+    //                         descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR')
+    //                     }
+    //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+    //                     this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.MODIFICAR'))
+    //                     this.router.navigate(['/aplicaciones/suites'])
+    //                 } else {
+    //                     const logData = {
+    //                         codigoTipoLog: '',
+    //                         codigoRespuesta: '501',
+    //                         descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + resp.message
+    //                     }
+    //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+    //                     this._swalService.getAlertError(resp.message || this.translate.instant('PLATAFORMA.NOMODIFICO'))
+    //                 }
+    //             },
+    //             error: (err: any) => {
+    //                 console.error(err)
+    //                 const logData = {
+    //                     codigoTipoLog: '',
+    //                     codigoRespuesta: '501',
+    //                     descripcionLog: this.translate.instant('PLATAFORMA.NOMODIFICO') + ', ' + err.message
+    //                 }
+    //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+    //                 this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOMODIFICO'))
+    //             }
+    //         })
+    //     } else {
+    //         registroData.codigoSuite = uuidv4()
+    //         registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+    //         registroData.fechaCreacion = new Date().toISOString()
+    //         registroData.codigoUsuarioModificacion = ''
+    //         registroData.imagenInicio = this.userPhotoUrl || this.FormRegistro.imagenInicio
+    //         registroData.fechaModificacion = ''
+    //         console.log('insertar registro', registroData)
+    //         this._registrosService.crearSuiteAP(this.FormRegistro).subscribe({
+    //             next: (resp: any) => {
+    //                 if (resp.ok) {
+    //                     const logData = {
+    //                         codigoTipoLog: '',
+    //                         codigoRespuesta: '201',
+    //                         descripcionLog: this.translate.instant('PLATAFORMA.INSERTAR') + ' ' + resp.mensaje
+    //                     }
+    //                     this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+    //                     this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.INSERTAR'))
+    //                     form.resetForm()
+    //                     this.isSubmit = false
+    //                     this.router.navigate(['/aplicaciones/suites'])
+    //                 }
+    //             },
+    //             error: (err: any) => {
+    //                 console.error(err)
+    //                 const logData = {
+    //                     codigoTipoLog: '',
+    //                     codigoRespuesta: '501',
+    //                     descripcionLog: this.translate.instant('PLATAFORMA.NOINSERTO') + ', ' + err.message
+    //                 }
+    //                 this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+    //                 this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOINSERTO'))
+    //             }
+    //         })
+    //     }
+    // }
 
     btnRegresarClick() {
         this.router.navigate(['/aplicaciones/suites'])

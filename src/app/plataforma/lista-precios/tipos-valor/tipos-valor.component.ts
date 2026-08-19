@@ -14,7 +14,7 @@ import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.comp
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component';
 import { DatatableComponent } from 'src/app/theme/shared/components/data-table/data-table.component';
 import Swal from 'sweetalert2';
-import { PtltiposItemsesService } from 'src/app/theme/shared/service/ptltipos-items.service';
+import { PtltiposItemsService } from 'src/app/theme/shared/service/ptltipos-items.service';
 import { PTLTipoItemModel } from '../../../theme/shared/_helpers/models/PTLTipoItem.model';
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model';
 import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.model';
@@ -44,7 +44,7 @@ export class TiposValorComponent implements OnInit {
     constructor(
         private router: Router,
         private translate: TranslateService,
-        private _registrosService: PtltiposItemsesService,
+        private _registrosService: PtltiposItemsService,
         private _localStorageService: LocalStorageService,
         private _navigationService: NavigationService
     ) {

@@ -110,7 +110,7 @@ export class TiposGaleriaComponent implements OnInit, OnDestroy {
             map(([tipos, codigo, nombre, descripcion, estado]) => {
                 let filtered = tipos;
 
-                if (codigo !== 'todos') filtered = filtered.filter((t) => t.codigoTipo === codigo);
+                if (codigo !== 'todos') filtered = filtered.filter((t) => t.codigoTipoGaleria === codigo);
                 if (nombre !== 'todos') filtered = filtered.filter((t) => t.nombreTipo === nombre);
                 if (estado !== 'todos') {
                     const estadoBoolean = estado === 'true';

@@ -16,8 +16,10 @@
         "UPDATEUSERSUCCESS": "User updated successfully",
         "UPDATEUSERERROR": "Could not update user",
         "UPLOADPHOTOERROR": "Error uploading image",
-        "TITULO_GRID_APLICACIONES": "Explore Our Applications",
-        "TITULO_GRID_SUITES": "Application Suites",
+        "TITULO_GRID_APLICACIONES": "Applications Dashboard",
+        "TITULO_GRID_SUITES": "Suites of ",
+        "SUBTITULO_GRID_APLICACIONES": "Select the digital ecosystem you wish to access",
+        "SUBTITULO_GRID_SUITES": "Select the Suite you wish to access in ",
         "ENTRAR": "Access",
         "ALLDATA": "Select All",
         "FILTROTODOS": "Show All",
@@ -49,7 +51,8 @@
             "PLATAFORMA": "Platform"
         },
         "SUITES": {
-            "PLATAFORMA": "Platform"
+            "PLATAFORMA": "Platform",
+            "CONTROLPANEL": "DASHBOARD"
         },
         "MODULOS": {
             "APLICACIONES": "Applications",
@@ -106,7 +109,17 @@
             "GALERIA": "Gallery",
             "TIPOSGALERIA": "Gallery Types",
             "FORMATOSGALERIA": "Gallery Formats",
-            "TIPOSCRIPTS": "Script Types"
+            "TIPOSCRIPTS": "Script Types",
+            "TLCUPLOADFILES": "Upload Files",
+            "TLCCONFIGURACION": "Settings",
+            "TLCINFRAESTRUCTURA": "Infraestructure",
+            "WIDGETS": "Widgets",
+            "PUERTOS": "Ports",
+            "TERMINALES": "Terminals",
+            "MUELLES": "Docks",
+            "INFRAESTRUCTURAS": "Infraestructure Elements",
+            "TIPOSINFRAESTRUCTURA": "Infraestructure Types",
+            "TLCDASHBOARD": "Dashboard"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notifications",

@@ -40,18 +40,16 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
     usuarioSC: PTLUsuarioSCModel = {} as PTLUsuarioSCModel;
     actividades: PTLActividadModel[] = []
     actividadesRoles: PTLActividadRoleModel[] = []
+    retorno: number = 0
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private _aplicacionesService: PtlAplicacionesService,
         private _localStorageService: LocalStorageService,
-        private _usuariosSCService: PtlusuariosScService,
-        private _rolesService: PTLRolesAPService,
         private _utilidadesService: UtilidadesService,
-        private _usuarioRolesService: PtlusuariosRolesApService,
-        private _actividadesService: PtlActividadesService,
-        private _actividadesRolesService: PtlactividadesRolesService,
+        private _rolesService: PTLRolesAPService,
+        private _usuarioRolesService: PtlusuariosRolesApService
     ) {
         this.suscriptor = this._localStorageService.getSuscriptorPlataformaLocalStorage()
         console.log('no hay suscriptor suscriptor')
@@ -79,98 +77,8 @@ export class InicioAplicacionesComponent implements OnInit, OnDestroy {
                         app.imagenInicio = `${base_url}/upload/${this.suscriptor}/aplicaciones/${app.imagenInicio}`;
                     });
                     this.aplicaciones = resp.aplicaciones;
-                    this.consultarUsuariosSC();
                     console.log('Todos las aplicaciones', this.aplicaciones);
                     return;
-                }
-            })
-        )
-    }
-
-    consultarUsuariosSC() {
-        const user = this._localStorageService.getUsuarioLocalStorage();
-        console.log('&&&&&&&& usuariosSC');
-        this.subscriptions.add(
-            this._usuariosSCService.usuariosSC$.subscribe({
-                next: (usuariosSC: PTLUsuarioSCModel[]) => {
-                    this.usuarioSC = usuariosSC.filter(x => x.codigoUsuario == user?.codigoUsuario)[0]
-                    console.log('usuarioSC:', this.usuarioSC)
-                    this.consultarRoles()
-                },
-                error: (err: any) => {
-                    console.error('Error al cargar los roles de usuariosSC:', err)
-                    this.usuarioSC = {} as PTLUsuarioSCModel
-                }
-            })
-        )
-    }
-
-    consultarRoles() {
-        console.log('acaaaaaaaaa')
-        this.subscriptions.add(
-            this._rolesService.roles$.subscribe({
-                next: (roles: PTLRoleAPModel[]) => {
-                    console.log('Roles de usuario cargados con éxito:', roles.length)
-                    this.roles = roles
-                    this.consultarUsuariosRoles()
-                    console.log('Roles de usuario:', roles)
-                },
-                error: err => {
-                    console.error('Error al cargar los roles de usuario:', err)
-                    this.roles = []
-                }
-            })
-        )
-    }
-
-    consultarUsuariosRoles() {
-        console.log('acaaaaaaaaa')
-        this.subscriptions.add(
-            this._usuarioRolesService._usuariosRoles$.subscribe({
-                next: (userRoles: PTLUsuarioRoleAPModel[]) => {
-                    console.log('usuarios roles cargados con éxito:', userRoles.length);
-                    this.usuariosRoles = userRoles;
-                    console.log('usuarios roles:', userRoles);
-                },
-                error: err => {
-                    console.error('Error al cargar los roles de usuario:', err)
-                    this.usuariosRoles = []
-                }
-            })
-        )
-    }
-
-    consultarActividades(codApp: string) {
-        console.log('actividades')
-        this.subscriptions.add(
-            this._actividadesService.actividades$.subscribe({
-                next: (actividades: PTLActividadModel[]) => {
-                    console.log('actividades cargados con éxito:', actividades.length)
-                    const actsApp = actividades.filter(x => x.codigoAplicacion === codApp)
-                    this.actividades = actsApp.filter(x => x.estadoActividad === true)
-                    console.log('actividades:', actividades)
-                },
-                error: err => {
-                    console.error('Error al cargar las actividades:', err)
-                    this.actividades = []
-                }
-            })
-        )
-    }
-
-    consultarActividadesRole(codRole: string) {
-        console.log('actividades role')
-        this.subscriptions.add(
-            this._actividadesRolesService.actividadesRoles$.subscribe({
-                next: (actividades: PTLActividadRoleModel[]) => {
-                    console.log('actividades role cargados con éxito:', actividades.length)
-                    const actsRole = actividades.filter(x => x.codigoRole === codRole)
-                    this.actividadesRoles = actsRole.filter(x => x.permiso === true)
-                    console.log('actividades:', actividades)
-                },
-                error: err => {
-                    console.error('Error al cargar las actividades:', err)
-                    this.actividadesRoles = []
                 }
             })
         )

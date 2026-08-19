@@ -1,6 +1,7 @@
 export class PTLColorSettingModel {
     constructor(
         public colorNavId?: number,
+        public codigoColorSetting?: string,
         public codigoColor?: string,
         public navbarColor?: string,
         public textoColor?: string,

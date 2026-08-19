@@ -12,7 +12,7 @@ const base_url = environment.apiUrl;
 @Injectable({
     providedIn: 'root'
 })
-export class PtltiposItemsesService {
+export class PtltiposItemsService {
     user: PTLUsuarioModel = new PTLUsuarioModel();
 
     constructor(

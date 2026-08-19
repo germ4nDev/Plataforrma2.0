@@ -77,19 +77,18 @@
                         </div> -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoValor"> {{ 'MODULOS.GESTION.LISTAPRECIOS' |
+                                <label class="form-control-label" for="codigoItem"> {{ 'MODULOS.GESTION.LISTAPRECIOS' |
                                     translate }}</label>
-                                <select class="form-control form-input" style="cursor: pointer" name="codigoValor"
-                                    id="codigoValor" (change)="onValorChangeClick($event)"
-                                    [ngClass]="{ 'is-invalid': !codigoValor.valid && (codigoValor.dirty || codigoValor.touched || isSubmit) }"
-                                    #codigoValor="ngModel" required [(ngModel)]="FormRegistro.codigoValor">
+                                <select class="form-control form-input" style="cursor: pointer" name="codigoItem"
+                                    id="codigoItem" (change)="onValorChangeClick($event)"
+                                    [ngClass]="{ 'is-invalid': !codigoItem.valid && (codigoItem.dirty || codigoItem.touched || isSubmit) }"
+                                    #codigoItem="ngModel" required [(ngModel)]="FormRegistro.codigoItem">
                                     <option value="">{{ 'MODULOS.GESTION.PLACEHOLDERLISTAPRECIOS' | translate }}
                                     </option>
-                                    <option [value]="valor.codigoValor" *ngFor="let valor of listaPrecios"> {{
-                                        valor.nombreValor }}</option>
+                                    <option [value]="valor.codigoItem" *ngFor="let valor of listaPrecios"> {{
+                                        valor.nombreItem }}</option>
                                 </select>
-                                <label
-                                    *ngIf="!codigoValor.valid && (codigoValor.dirty || codigoValor.touched || isSubmit)"
+                                <label *ngIf="!codigoItem.valid && (codigoItem.dirty || codigoItem.touched || isSubmit)"
                                     class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'MODULOS.GESTION.REQUERIDOLISTAPRECIOS' | translate }}
                                 </label>

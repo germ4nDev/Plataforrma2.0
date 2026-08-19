@@ -13,7 +13,7 @@ import { NavigationItem } from 'src/app/theme/shared/_helpers/models/Navigation.
 import { NavigationService } from 'src/app/theme/shared/service/navigation.service'
 import { NavBarComponent } from 'src/app/theme/layout/admin/nav-bar/nav-bar.component'
 import { NavContentComponent } from 'src/app/theme/layout/admin/navigation/nav-content/nav-content.component'
-import { PTLSlierInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model'
+import { PTLSliderInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model'
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service'
 import { Observable, Subscription } from 'rxjs'
 
@@ -27,7 +27,7 @@ import { Observable, Subscription } from 'rxjs'
 export class GestionSliderComponent implements OnInit {
     // private props
     @Output() toggleSidebar = new EventEmitter<void>()
-    FormRegistro: PTLSlierInicioModel = new PTLSlierInicioModel()
+    FormRegistro: PTLSliderInicioModel = new PTLSliderInicioModel()
     menuItems!: Observable<NavigationItem[]>
     gradientConfig: any
     navCollapsed: boolean = false
@@ -38,7 +38,7 @@ export class GestionSliderComponent implements OnInit {
     sliderId: string = ''
     modoEdicion: boolean = false
     slidersInicioSub?: Subscription
-    slidersInicio: PTLSlierInicioModel[] = []
+    slidersInicio: PTLSliderInicioModel[] = []
     tipoEditorTexto = 'basica'
     suscPlataforma: string = ''
 

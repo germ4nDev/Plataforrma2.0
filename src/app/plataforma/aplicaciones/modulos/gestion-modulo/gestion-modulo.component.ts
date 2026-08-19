@@ -285,6 +285,8 @@ export class GestionModuloComponent implements OnInit, OnDestroy {
         } else {
             //   const registroData = form.value as PTLModuloAP;
             registroData.codigoModulo = uuidv4()
+            registroData.codigoBiblioteca = uuidv4()
+            registroData.codigoPadre = this.FormRegistro.codigoPadre || '0'
             registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
             registroData.fechaCreacion = new Date().toISOString()
             registroData.codigoUsuarioModificacion = ''

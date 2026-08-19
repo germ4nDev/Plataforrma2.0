@@ -33,8 +33,14 @@ import { environment } from '../environments/environment';
 import { JwtInterceptor } from './theme/shared/_helpers/jwt-interceptor.interceptor';
 import { ErrorInterceptor } from './theme/shared/_helpers/error.interceptor';
 import { IaChatFlotanteComponent } from "./theme/shared/components/ia-chat-flotante/ia-chat-flotante.component";
+import { NgChartsModule } from 'ng2-charts';
 
-const config: SocketIoConfig = { url: environment.apiUrl, options: {} };
+const config: SocketIoConfig = {
+    url: environment.sctUrl,
+    options: {
+        transports: ['websocket', 'polling']
+    }
+};
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -61,6 +67,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         BrowserAnimationsModule,
         NavigationComponent,
         HttpClientModule,
+        NgChartsModule,
         ToastrModule.forRoot(),
         TranslateModule.forRoot({
             defaultLanguage: 'es',
@@ -69,6 +76,13 @@ export function HttpLoaderFactory(http: HttpClient) {
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
             }
+        }),
+        ToastrModule.forRoot({
+            timeOut: 5000,
+            positionClass: 'toast-bottom-right',
+            preventDuplicates: true,
+            progressBar: true,
+            closeButton: true
         }),
         SocketIoModule.forRoot(config),
         IaChatFlotanteComponent

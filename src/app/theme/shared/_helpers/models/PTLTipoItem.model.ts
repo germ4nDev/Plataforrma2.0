@@ -1,7 +1,7 @@
 export class PTLTipoItemModel {
     constructor(
         public tipoItemId?: number,
-        public codigoTipo?: string,
+        public codigoTipoItem?: string,
         public nombreTipo?: string,
         public descripcionTipo?: string,
         public estadoTipo?: boolean,

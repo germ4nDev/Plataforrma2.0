@@ -19,7 +19,7 @@ import {
     PtllogActividadesService,
     PTLPaquetesService,
     PtlAplicacionesService,
-    PtltiposItemsesService,
+    PtltiposItemsService,
     PtlvaloresUnitariosService,
 } from 'src/app/theme/shared/service'
 import { PtlItemsPaqueteService } from 'src/app/theme/shared/service/ptlitems-paquete.service'
@@ -28,7 +28,7 @@ import Swal from 'sweetalert2'
 import { DatatablePqComponent } from 'src/app/theme/shared/components/data-table-pq/data-table-pq.component'
 import { PTLModulosPaqueteService } from '../../../../theme/shared/service/ptlmodulos-paquete.service'
 import { PTLTipoItemModel } from '../../../../theme/shared/_helpers/models/PTLTipoItem.model';
-import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLValoresUnitarios.model'
+import { PTLItems } from 'src/app/theme/shared/_helpers/models/PTLItem.model'
 import { DatatableComponent } from "src/app/theme/shared/components/data-table/data-table.component";
 
 @Component({
@@ -58,7 +58,7 @@ export class ItemsPaqueteComponent {
     tiposValorSub?: Subscription
     tiposValor: PTLTipoItemModel[] = []
     listaPreciosSub?: Subscription
-    listaPrecios: PTLValoresUnitarios[] = []
+    listaPrecios: PTLItems[] = []
     suscriptor: string = ''
 
     subscriptions = new Subscription()
@@ -79,7 +79,7 @@ export class ItemsPaqueteComponent {
         private _localStorageService: LocalStorageService,
         private _logActividadesService: PtllogActividadesService,
         private _registrosService: PtlItemsPaqueteService,
-        private _tiposItemsService: PtltiposItemsesService,
+        private _tiposItemsService: PtltiposItemsService,
         private _listaPreciosService: PtlvaloresUnitariosService
     ) {
         this.gradientConfig = GradientConfig
@@ -127,9 +127,9 @@ export class ItemsPaqueteComponent {
 
     onTipoValorChangeClick(evento: any) {
         console.log('evento', evento.target.value);
-        const tipo = this.tiposValor.findIndex(x => x.codigoTipo == evento.target.value);
+        const tipo = this.tiposValor.findIndex(x => x.codigoTipoItem == evento.target.value);
         const tipoValor = this.tiposValor[tipo];
-        this.consultarListaPrecios(tipoValor.codigoTipo || '');
+        this.consultarListaPrecios(tipoValor.codigoTipoItem || '');
     }
 
     consultarListaPrecios(tipoId: string) {

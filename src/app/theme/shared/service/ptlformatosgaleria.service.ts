@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { map, tap } from 'rxjs/operators';
-import { PTLFormatosGaleria } from '../_helpers/models/PTLFormatosGaleria.model'; // Asegúrate de que la ruta sea correcta
+import { PTLFormatosGaleria } from '../_helpers/models/PTLFormatoGaleria.model'; // Asegúrate de que la ruta sea correcta
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { SocketService } from './sockets.service';

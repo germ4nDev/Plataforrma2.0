@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+/* 1. Cargar tus Tokens */
+@import '~maplibre-gl/dist/maplibre-gl.css';
+@import 'scss/core/primitives';
+@import 'scss/core/theme';
+
+@import 'node_modules/bootstrap/scss/bootstrap';
 
 // Theme Font
 @import 'scss/themes/font/theme-font';
@@ -42,13 +48,13 @@
 @import 'scss/navbar';
 @import 'scss/tabs-aside';
 @import 'scss/swal_dark.scss';
-// @import 'scss/aplus10';
 // third party Module
 @import '../node_modules/datatables.net-dt/css/jquery.dataTables.css';
 @import '../node_modules/angular-calendar/css/angular-calendar.css';
 @import './datatables_buttons.scss';
 @import 'video.js/dist/video-js.css';
-
+@import 'maplibre-gl/dist/maplibre-gl.css';
+@import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 /* El resto de tu código SCSS... */
 
 // =================================
@@ -58,12 +64,16 @@
     --background-color: #f8f9fa;
     --text-color: #212529;
     --text-subtitle-color: #464e57;
-    --border-color: #dee2e6;
+    --text-selected-color: #dadada;
+    --border-color: #cecdcd;
     --header-color: #f5f5f5;
     --color-fin-gradiente: #ffffff;
     --card-background: #ffffff;
+    --skeleton-background: rgba(255, 255, 255, 0.05);
+    --skeleton-shine: rgba(255, 255, 255, 0.08);
+    --app-dashboard-bg: #e4e3e3;
     --app-table-header: #d6d6d6;
-    --app-btn-secondary: #dadada;
+    --app-btn-secondary: #b4b4b4;
     --app-btn-secondary-texto: #333;
     --app-btn-inactive: #f8f9fa;
     --app-btn-border: #dee2e6;
@@ -81,6 +91,30 @@
     --scrollbar-thumb-color: #c1c1c1;
     --scrollbar-thumb-hover: #5f5f5f;
     --data-table-detail-row: #dfdfdf;
+    --card-trend-color: #94a3b8;
+
+    --app-navbar-color: #007bff;
+    --app-texto-color: #ffffff;
+    --texto-color: #333333;
+    --primary-color: #0d6efd;
+    --aside-tab-active: #007bff;
+    --aside-tab-bg: #f8f9fa;
+    --app-iconos-color: #464e57;
+    --custom-navbar-background: #ffffff;
+    --custom-navbar-text-color: #333333;
+    --app-dashboard-gap: 12px;
+
+    /* VARIABLES CENTRALES DE WIDGETS */
+    --grid-widget-min-width: 220px;
+    --tablero-background: #e6e6e6;
+    --widget-background: #ffffff;
+    --widget-bg: #fcfcfc;
+    --widget-bg-lg: #dfdfdf;
+    --widget-text: #212529;
+    --widget-border: #cecdcd;
+    --widget-subtitle: #464e57;
+    --navbar-height: 100px;
+    --map-icon-filter: invert(0) brightness(1);
 }
 
 // =================================
@@ -90,9 +124,13 @@ body.dark-theme {
     --background-color: #202325;
     --text-color: #b4b4b4;
     --text-subtitle-color: #9c9c9c;
+    --text-selected-color: #444444;
     --border-color: #474747;
     --header-color: #292828;
     --card-background: #222222;
+    --skeleton-background: rgba(255, 255, 255, 0.05);
+    --skeleton-shine: rgba(255, 255, 255, 0.08);
+    --app-dashboard-bg: #0e0e0e;
     --color-fin-gradiente: #000000;
     --app-table-header: #313131;
     --app-btn-secondary: #313131;
@@ -113,6 +151,30 @@ body.dark-theme {
     --scrollbar-thumb-color: #555;
     --scrollbar-thumb-hover: #777;
     --data-table-detail-row: #3d3d3d;
+    --card-trend-color: #616b79;
+
+    --app-navbar-color: #375a7f;
+    --app-texto-color: #ffffff;
+    --texto-color: #ffffff;
+    --primary-color: #375a7f;
+    --aside-tab-active: #375a7f;
+    --aside-tab-bg: #1e1e2d;
+    --app-iconos-color: #b4b4b4;
+    --custom-navbar-background: #1e1e2d;
+    --custom-navbar-text-color: #ffffff;
+    --app-dashboard-gap: 12px;
+
+    /* VARIABLES CENTRALES DE WIDGETS */
+    --grid-widget-min-width: 220px;
+    --tablero-background: #242424;
+    --widget-background: #1b1b1b;
+    --widget-bg: #2b2b2b;
+    --widget-bg-lg: #383838;
+    --widget-text: #b4b4b4;
+    --widget-border: #474747;
+    --widget-subtitle: #9c9c9c;
+    --navbar-height: 100px;
+    --map-icon-filter: invert(0.8) brightness(1);
 }
 
 hr.detail-separator {
@@ -125,57 +187,27 @@ hr.detail-separator {
 }
 
 .card {
-    background-color: var(--card-background);
+    // background-color: var(--card-background);
+    // border-color: var(--border-color);
+    background-color: #007bff;
     border-color: var(--border-color);
 }
 
-.titles {
-    color: var(--text-color) !important;
-}
-
-.sub-titles {
-    color: var(--text-subtitle-color) !important;
-}
-
-.custom-check-form {
-    padding: 10px 15px;
+body,
+html {
+    margin: 0;
+    padding: 0;
+    bottom: 0;
     background-color: var(--card-background);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    transition: background 0.2s;
-}
+    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+    scrollbar-width: thin;
 
-.custom-check-form .form-check-input {
-    width: 1.5em;
-    height: 1.5em;
-    margin-top: 0;
-    margin-right: 12px;
-    /* Centrado vertical con el texto */
-    cursor: pointer;
-    background-color: var(--card-background) !important;
-    border: 1px solid var(--border-color) !important;
-}
-
-.custom-check-form .form-check-label {
-    color: var(--text-color) !important;
-    cursor: pointer;
-    font-size: 0.95rem;
-    user-select: none;
-}
-
-.custom-check-form .form-check-input:checked {
-    background-color: var(--app-navbar-color) !important;
-    border-color: var(--app-navbar-color) !important;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+    /* O el color exacto del fondo de tu tema oscuro */
 }
 
 /* *************************************************************** */
-
 /* * ESTILOS GLOBALES DE QUILL EDITOR (TEMA CLARO DEFAULT) */
-
 /* *************************************************************** */
-
 .ql-container,
 .ql-toolbar {
     background-color: var(--card-background) !important;
@@ -187,13 +219,11 @@ hr.detail-separator {
 }
 
 /* NUEVO: Forzar fondo transparente para los botones para eliminar el color heredado en tema claro */
-
 .ql-toolbar button {
     background-color: transparent !important;
 }
 
 /* Color de los iconos y botones (oscuro) */
-
 .ql-toolbar svg {
     /* Forzar color para el SVG en tema claro */
     fill: var(--text-color) !important;
@@ -202,13 +232,11 @@ hr.detail-separator {
 }
 
 /* Menús desplegables (Headers, fuentes) */
-
 .ql-picker-label {
     color: var(--text-color) !important;
 }
 
 /* Opciones del menú desplegable */
-
 .ql-picker-options {
     background-color: var(--card-background) !important;
     border-color: var(--border-color) !important;
@@ -219,7 +247,6 @@ hr.detail-separator {
 }
 
 /* Placeholder (color más claro en tema claro) */
-
 .ql-editor::before {
     color: #999999 !important;
 }
@@ -246,6 +273,7 @@ hr.detail-separator {
 ::-webkit-scrollbar-thumb {
     background-color: var(--scrollbar-thumb-color);
     border-radius: 10px;
+
     border: 2px solid var(--panel-bg);
 }
 
@@ -253,11 +281,11 @@ hr.detail-separator {
     background-color: var(--scrollbar-thumb-hover);
 }
 
-body {
-    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
-    scrollbar-width: thin;
-}
+/* *************************************************************** */
+/* * ESTILOS GLOBALES DE QUILL EDITOR (TEMA OSCURO) */
+/* *************************************************************** */
 
+/* Forzar fondo oscuro para el toolbar y el container */
 .ql-container,
 .ql-toolbar {
     background-color: var(--card-background) !important;
@@ -265,21 +293,17 @@ body {
 }
 
 /* Color del texto (blanco) */
-
 .ql-editor {
     color: var(--text-color) !important;
 }
 
 /* Forzar fondo transparente para los botones para eliminar el color heredado en tema oscuro */
-
 .ql-toolbar.ql-snow button {
     background-color: transparent !important;
 }
 
 /* Iconos y botones: Usamos el gris suave de --text-color para integrar con los labels */
-
 /* Aumentamos la especificidad apuntando a los elementos dentro del botón */
-
 .ql-toolbar.ql-snow button svg {
     /* Fuerza el color del trazo y relleno para todos los elementos SVG inactivos */
     fill: var(--text-color) !important;
@@ -288,7 +312,6 @@ body {
 }
 
 /* Reglas específicas de Quill para asegurar la consistencia del color gris suave */
-
 .ql-toolbar.ql-snow .ql-stroke {
     stroke: var(--text-color) !important;
 }
@@ -298,20 +321,17 @@ body {
 }
 
 /* El selector .ql-picker-label también es un botón/contenedor, lo ajustamos */
-
 .ql-toolbar.ql-snow .ql-picker-label {
     background-color: transparent !important;
     color: var(--text-color) !important;
 }
 
 /* Menús desplegables */
-
 .ql-picker-label {
     color: var(--text-color) !important;
 }
 
 /* Opciones del menú desplegable */
-
 .ql-picker-options {
     background-color: var(--card-background) !important;
     border-color: var(--border-color) !important;
@@ -322,18 +342,14 @@ body {
 }
 
 /* Placeholder: Gris muy claro para mejor visibilidad */
-
 .ql-editor::before {
     color: var(--text-color) !important;
     /* Gris claro */
 }
 
 /* ******************************** */
-
 /* * ESTILOS GLOBALES DEL DATATABLE */
-
 /* ******************************** */
-
 .dataTables_wrapper,
 .card,
 .dropdown-menu {
@@ -349,20 +365,19 @@ body {
 .table {
     background-color: var(--card-background) !important;
     color: var(--text-color) !important;
-    border: none;
+    border-color: var(var(--border-color)) !important;
     border-radius: 16px !important;
 
     thead th {
-        background-color: color-mix(in srgb, var(--app-navbar-color) 70%, transparent);
-        height: 0px !important;
-        color: var(--app-texto-color) !important;
-        border: none;
+        background-color: var(--header-color) !important;
+        color: var(--text-color) !important;
+        border-color: var(--border-color) !important;
     }
 
     tbody td {
         background-color: var(--card-background) !important;
         color: var(--text-color) !important;
-        border: none;
+        border-color: var(var(--border-color)) !important;
     }
 }
 
@@ -388,11 +403,6 @@ body {
     border-color: var(var(--border-color)) !important;
 }
 
-.data-table-detail-row {
-    padding: 4px !important;
-    border-bottom: 1px solid var(--data-table-detail-row);
-}
-
 .dataTables_paginate .paginate_button.active {
     border-color: var(--) !important;
 }
@@ -415,19 +425,6 @@ body {
 
 .datatable-title {
     color: var(--text-color) !important;
-}
-
-.table-scroll-wrapper {
-    max-height: 300px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-}
-
-.table-scroll-wrapper thead th {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    backdrop-filter: blur(8px);
 }
 
 hr.detail-separator {
@@ -493,11 +490,11 @@ hr.detail-separator {
 }
 
 .pcoded-mtext {
-    color: var(--text-color) !important;
+    color: #8a8f94 !important;
 }
 
 .pcoded-micon {
-    color: var(--text-color) !important;
+    color: #8a8f94 !important;
 }
 
 .drop-menu {
@@ -514,14 +511,10 @@ hr.detail-separator {
 }
 
 .page-link-b {
-    background-color: var(--app-btn-inactive) !important;
-    color: var(--text-color) !important;
-    border-color: var(--app-btn-border) !important;
+    background-color: #2c3138 !important;
+    color: #8a8f94 !important;
+    border-color: #495057 !important;
     border-radius: 5px !important;
-}
-
-.page-link-b:hover {
-    background-color: var(--app-btn-secondary) !important;
 }
 
 .sr-only {
@@ -569,7 +562,7 @@ hr.detail-separator {
     transform: translate(-50%, -50%);
 
     &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         right: 0;
@@ -583,33 +576,28 @@ hr.detail-separator {
     }
 }
 
-html,
-body {
-    overflow: hidden;
-    overflow-y: hidden;
-    overflow-x: hidden;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
 .main-wrapper {
     /* 1. Limitar ancho para legibilidad en monitores grandes (e.g., 1280px) */
     max-width: 1280px;
+
     /* 2. Centrar el contenedor en el centro de la pantalla */
     margin-left: auto;
     margin-right: auto;
+
     /* 3. Padding para evitar que el contenido toque los bordes de la ventana/pantalla */
     padding: 32px;
     /* o 2rem */
+
     /* 4. Usar Flexbox para gestionar el espacio entre secciones */
     display: flex;
     flex-direction: column;
     /* Ajusta el espacio vertical entre las secciones */
     gap: 48px;
     /* o 3rem, para separar bien el Carrusel del Formulario, etc. */
+
     /* 5. Asegurar que ocupe todo el ancho disponible si no alcanza el max-width */
     width: 100%;
+
     /* 6. Mejorar la fuente base del sitio */
     font-family: 'Inter', sans-serif;
 }
@@ -625,12 +613,6 @@ body {
     overflow-y: hidden;
     padding: 1rem 0.5rem 0.5rem 0.5rem;
     height: calc(100vh - 77px);
-}
-
-.content-area-pq {
-    min-height: 0;
-    overflow-y: hidden;
-    padding: 1rem 0.5rem 0.5rem 0.5rem;
 }
 
 .form-area {
@@ -659,19 +641,10 @@ body {
     overflow-x: hidden;
 }
 
-.sidebar-flex-container {
-    height: calc(100vh - 135px);
-
-}
-
 .nav-scroll-wrapper {
-    height: 91% !important;
+    height: calc(100vh - 135px);
     overflow-y: auto;
     overflow-x: hidden;
-}
-
-.ia-assistant-wrapper {
-    height: 9% !important;
 }
 
 .btn.btn-unlock {
@@ -781,6 +754,7 @@ body {
     border-collapse: collapse;
 
     thead tr th {
+        border-bottom: 1px solid #5f5f5f;
         border-top: none;
     }
 
@@ -831,6 +805,8 @@ table tr {
     position: sticky;
     top: 0;
     z-index: 1;
+    background-color: #fff;
+    color: #464545;
     text-align: center;
 }
 
@@ -843,11 +819,6 @@ table {
 th,
 td {
     padding: 8px 8px 8px 8px;
-}
-
-.content-g {
-    position: relative;
-    overflow: auto;
 }
 
 .content-g67 {
@@ -876,7 +847,9 @@ td {
 .navbar-custom {
     background-color: var(--custom-navbar-background);
     color: var(--custom-navbar-text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 .gradient-rtl {
@@ -951,7 +924,7 @@ body.gradient-dark {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .radio-button input[type='radio'] {
@@ -962,18 +935,6 @@ body.gradient-dark {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    border: 2px solid var(--text-color);
-    transition: all 0.2s ease-in-out;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.radio-box {
-    width: 20px;
-    height: 20px;
     border: 2px solid var(--text-color);
     transition: all 0.2s ease-in-out;
     position: relative;
@@ -1013,24 +974,21 @@ body.gradient-dark {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+    border: 1px solid #ddd;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .image-table {
     width: 60px;
     object-fit: cover;
+    border: 1px solid #363636;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .capture-table {
-    width: 600px;
+    width: 500px;
     object-fit: cover;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.video-table {
-    width: 600px;
-    object-fit: cover;
+    border: 1px solid #363636;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -1209,7 +1167,6 @@ body.gradient-dark {
 }
 
 /* -- Contenedor para el tema OSCURO -- */
-
 .swal2-dark-theme-container .swal2-popup {
     background: var(--panel-bg, #1e1e2d);
     color: var(--panel-text, #fff);
@@ -1225,7 +1182,6 @@ body.gradient-dark {
 1. Estilos Generales y Contenedor Grid (Responsivo)
 ===================================================
 */
-
 .card-grid-apps {
     display: grid;
     grid-template-columns: 1fr;
@@ -1240,7 +1196,6 @@ body.gradient-dark {
 2. Estilos de la Card (Contenedor principal)
 ==============================
 */
-
 .card-grd {
     background-size: cover;
     background-position: center;
@@ -1251,7 +1206,9 @@ body.gradient-dark {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1010;
 }
@@ -1267,7 +1224,6 @@ body.gradient-dark {
 3. Estilos del Contenido (Panel Inferior)
 ==============================
 */
-
 .card-grd-content {
     width: 100%;
     box-sizing: border-box;
@@ -1279,11 +1235,8 @@ body.gradient-dark {
     margin: 0;
 }
 
-.text-color {
-    color: var(--app-navbar-color);
-}
-
 /* 4. Estilos de Tipografía y Botón */
+
 
 .card-grd-content h1 {
     margin-top: 0;
@@ -1330,7 +1283,6 @@ body.gradient-dark {
 */
 
 /* Tabletas (768px y más): 2 columnas */
-
 @media (min-width: 768px) {
     .card-grid-apps {
         grid-template-columns: repeat(2, 1fr);
@@ -1338,7 +1290,6 @@ body.gradient-dark {
 }
 
 /* Escritorio (1024px y más): 3 columnas */
-
 @media (min-width: 1024px) {
     .card-grid-apps {
         grid-template-columns: repeat(3, 1fr);
@@ -1350,7 +1301,6 @@ body.gradient-dark {
 Estilos del Título Principal
 ==============================
 */
-
 .page-title {
     text-align: center;
     width: 100%;
@@ -1365,309 +1315,8 @@ Estilos del Título Principal
     background-color: var(--card-background);
     color: var(--text-color);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/*
-==============================
-Estilos del loading data
-==============================
-*/
-
-.loader-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: inherit;
-}
-
-.loader-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    padding: 24px 40px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-}
-
-.modern-spinner {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: inline-block;
-    border-top: 4px solid var(--app-navbar-color);
-    border-right: 4px solid transparent;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-
-    &::after {
-        content: '';
-        box-sizing: border-box;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        border-left: 4px solid #00ce84;
-        /* Color secundario o de acento */
-        border-bottom: 4px solid transparent;
-        animation: rotation 0.5s linear infinite reverse;
-    }
-}
-
-.loader-text {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--app-texto-color);
-    letter-spacing: 0.5px;
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes rotation {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 0.6;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0.6;
-    }
-}
-
-.confirmButton-color {
-    background-color: var(--app-navbar-color);
-    color: white !important;
-    border: none;
-    transition: all 0.3s ease;
-
-    &:hover {
-        background-color: var(--app-navbar-color);
-        filter: brightness(0.9); // oscurece el color un poco
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-}
-
-/*
-    IA ASSISTENT STYLES
-*/
-.panel-ia-sidebar-desplazable {
-    width: 100%;
-    background-color: var(--card-background);
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
-.panel-ia-header-sidebar {
-    padding: 12px 15px;
-    background-color: var(--card-background);
-    user-select: none;
-    z-index: 2;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-        background-color: var(--card-background);
-    }
-
-    .icono-ia {
-        font-size: 16px;
-    }
-
-    .text-muted-sidebar {
-        font-size: 10px;
-        color: #718096;
-    }
-
-    .flecha-indicadora {
-        font-size: 10px;
-        color: var(--app-navbar-color);
-        transition: transform 0.3s ease;
-    }
-}
-
-.panel-ia-sliding-content {
-    position: absolute;
-    bottom: 80px;
-    left: 0;
-    width: 100%;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    background-color: var(--card-background);
-    border-radius: 8px 8px 0 0;
-    // box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.4);
-    z-index: 1;
-    transition: max-height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-        opacity 0.2s ease;
-}
-
-.panel-ia-sidebar-desplazable.is-open {
-
-    .panel-ia-header-sidebar {
-        background-color: var(--card-background);
-        border: 1px solid var(--border-color);
-
-        .flecha-indicadora {
-            transform: rotate(180deg);
-        }
-    }
-
-    .panel-ia-sliding-content {
-        max-height: 220px;
-        opacity: 1;
-        border-top: 1px solid var(--border-color);
-    }
-}
-
-.panel-ia-footer-sidebar {
-    background-color: var(--card-background);
-}
-
-.bg-dark-sutil {
-    background-color: var(--card-background);
-    color: var(--text-color);
-}
-
-.texto-ia {
-    font-size: 14px;
-    color: var(--app-texto-color);
-}
-
-/* ======================================================================= */
-/* MODAL PANEL INTEGRADO: CORRECCIÓN DE MARCOS, CONTENEDORES Y BOTÓN X     */
-/* ======================================================================= */
-.ia-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: color-mix(in srgb, var(--card-background) 30%, transparent);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-}
-
-.ia-modal-container {
-    width: 850px;
-    max-width: 90vw;
-    height: 600px;
-    background-color: var(--card-background);
-    border-radius: 8px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-}
-
-.ia-modal-header {
-    padding: 15px 20px;
-    background-color: var(--card-background);
-    border-bottom: 1px solid #3a3a4f !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100%;
-
-    h4 {
-        font-size: 16px;
-        margin: 0;
-        color: var(--text-color);
-    }
-
-    small {
-        font-size: 11px;
-        color: var(var(--text-color));
-    }
-}
-
-.btn-cerrar-modal {
-    background: var(--app-navbar-color);
-    border-top: var(--border-color);
-    color: var(--app-texto-color);
-    font-size: 14px !important;
-    font-weight: bold;
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    padding: 0 !important;
-    transition: all 0.2s ease;
-
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-
-    &:hover {
-        background-color: #e53e3e !important;
-        color: white !important;
-        border-color: #e53e3e !important;
-    }
-}
-
-.ia-modal-body {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    background-color: var(--card-background);
-
-    .texto-respuesta-modal {
-        color: var(--app-texto-color);
-
-        ul,
-        ol {
-            padding-left: 20px;
-            margin-top: 8px;
-            margin-bottom: 8px;
-        }
-
-        li {
-            margin-bottom: 4px;
-        }
-    }
-}
-
-.ia-modal-footer {
-    padding: 15px 20px;
-    background-color: var(--app-texto-color);
-    border-top: 1px solid #3a3a4f !important;
-}
-
-.wrapper-boton-sidebar {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease;
 }

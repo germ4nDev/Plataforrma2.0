@@ -23,7 +23,8 @@
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }} <i class="feather icon-arrow-left ms-2"></i>
                         </button>
-                        <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarFormatoClick(validationForm)">
+                        <button type="button" class="btn btn-primary btn-NuevoRegistro"
+                            (click)="btnGestionarFormatoClick(validationForm)">
                             {{ modoEdicion ? ('FORMATOSGALERIA.UPDATE' | translate) : ('FORMATOSGALERIA.CREATE' |
                             translate) }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
@@ -45,17 +46,24 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoTipo">{{ 'FORMATOSGALERIA.CODIGOTIPO' | translate
+                                <label class="form-control-label" for="codigoTipoGaleria">{{
+                                    'FORMATOSGALERIA.CODIGOTIPO' | translate
                                     }}</label>
-                                <select class="form-control form-select form-input" id="codigoTipo" name="codigoTipo" [ngClass]="{ 'is-invalid': !codigoTipo.valid && (codigoTipo.dirty || codigoTipo.touched || isSubmit) }" #codigoTipo="ngModel" required [(ngModel)]="FormRegistro.codigoTipo">
-                                    <option value="" disabled selected>{{ 'FORMATOSGALERIA.CODIGOTIPO_HOLDER' | translate }}
+                                <select class="form-control form-select form-input" id="codigoTipoGaleria"
+                                    name="codigoTipoGaleria"
+                                    [ngClass]="{ 'is-invalid': !codigoTipoGaleria.valid && (codigoTipoGaleria.dirty || codigoTipoGaleria.touched || isSubmit) }"
+                                    #codigoTipoGaleria="ngModel" required [(ngModel)]="FormRegistro.codigoTipoGaleria">
+                                    <option value="" disabled selected>{{ 'FORMATOSGALERIA.CODIGOTIPO_HOLDER' |
+                                        translate }}
                                     </option>
 
-                                    <option *ngFor="let tipo of listaTipos" [value]="tipo.codigoTipo">
+                                    <option *ngFor="let tipo of listaTipos" [value]="tipo.codigoTipoGaleria">
                                         {{ tipo.nombreTipo }}
                                     </option>
                                 </select>
-                                <label *ngIf="!codigoTipo.valid && (codigoTipo.dirty || codigoTipo.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!codigoTipoGaleria.valid && (codigoTipoGaleria.dirty || codigoTipoGaleria.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     El Tipo de Galería es obligatorio
                                 </label>
                             </div>
@@ -65,7 +73,8 @@
                             <div class="form-group">
                                 <label class="form-control-label" for="nombreFormato">{{ 'FORMATOSGALERIA.NAME' |
                                     translate }}</label>
-                                <input class="form-control form-input" id="nombreFormato" name="nombreFormato" type="text" placeholder="{{ 'FORMATOSGALERIA.NAMEHOLDER' | translate }}" [ngClass]="{
+                                <input class="form-control form-input" id="nombreFormato" name="nombreFormato"
+                                    type="text" placeholder="{{ 'FORMATOSGALERIA.NAMEHOLDER' | translate }}" [ngClass]="{
                     'is-invalid': !nombreFormato.valid && (nombreFormato.dirty || nombreFormato.touched || isSubmit)
                   }" #nombreFormato="ngModel" required [(ngModel)]="FormRegistro.nombreFormato" />
                             </div>
@@ -74,7 +83,10 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="form-label">{{ 'FORMATOSGALERIA.DESCRIPTION' | translate }}</label>
-                                <app-text-editor [toolbarType]="tipoEditorTexto" [contentHtml]="FormRegistro.descripcionFormato ?? ''" (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionFormato" [(ngModel)]="FormRegistro.descripcionFormato" [ngClass]="{
+                                <app-text-editor [toolbarType]="tipoEditorTexto"
+                                    [contentHtml]="FormRegistro.descripcionFormato ?? ''"
+                                    (contentHtmlChange)="actualizarDescripcionVersion($event)" name="descripcionFormato"
+                                    [(ngModel)]="FormRegistro.descripcionFormato" [ngClass]="{
                     'is-invalid':
                       !descripcionFormato.valid &&
                       (descripcionFormato.dirty || descripcionFormato.touched || isSubmit)

@@ -105,7 +105,7 @@ export class PtlTiposGaleriaService {
     }
 
     actualizarTipoGaleria(tipo: PTLTipoGaleria) {
-        const url = `${base_url}/tipos-galeria/${tipo.codigoTipo}`
+        const url = `${base_url}/tipos-galeria/${tipo.codigoTipoGaleria}`
         return this.http.put(url, tipo).pipe(
             map((resp: any) => {
                 console.log('data de tipo galería modificado', resp)

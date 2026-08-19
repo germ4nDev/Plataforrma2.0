@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Angular import
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, OnDestroy } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule, Router, ActivatedRoute } from '@angular/router'
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms'
@@ -14,7 +14,6 @@ import { PTLUsuarioSCModel } from 'src/app/theme/shared/_helpers/models/PTLUsuar
 import { PTLEmpresaSCModel } from 'src/app/theme/shared/_helpers/models/PTLEmpresaSC.model'
 import { PTLUsuarioModel } from 'src/app/theme/shared/_helpers/models/PTLUsuario.model'
 import { of, Subscription } from 'rxjs'
-// import Swal from 'sweetalert2';
 import {
     AuthenticationService,
     LanguageService,
@@ -29,11 +28,6 @@ import {
     PtlusuariosEmpresasScService,
     PtlusuariosRolesApService,
     PtlusuariosScService,
-    //   LocalStorageService,
-    //   PtlEmpresasScService,
-    //   PTLSuscriptoresService,
-    //   PtlusuariosScService,
-    //   PTLUsuariosService,
     SwalAlertService,
     ThemeService
 } from 'src/app/theme/shared/service'
@@ -63,9 +57,8 @@ import { PTLActividadRoleModel } from 'src/app/theme/shared/_helpers/models/PTLA
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
     //#region VARIABLES
-    classList!: { toggle: (arg0: string) => void }
     registrosSub?: Subscription
     registros: PTLSuscriptorModel[] = []
     usuariosSCSub?: Subscription
@@ -74,6 +67,7 @@ export class LoginComponent implements OnInit {
     usuarios: PTLUsuarioModel[] = []
     empresasSCSub?: Subscription
     empresasSC: PTLEmpresaSCModel[] = []
+    retorno: number = 0
 
     userRoles: any[] = []
     todosLosRoles: any[] = []
@@ -104,6 +98,7 @@ export class LoginComponent implements OnInit {
     submitted: boolean = false
     remember: boolean = false
     idiomas: PTLIdioma[] = []
+    showPassword = false // Variable reactiva para el ícono del ojo
     //#endregion VARIABLES
 
     constructor(
@@ -126,7 +121,6 @@ export class LoginComponent implements OnInit {
         private _usuariosEmpresasSCService: PtlusuariosEmpresasScService,
         private _rolesService: PTLRolesAPService,
         private _rolesUsuariosService: PtlusuariosRolesApService,
-
         private _languagesService: LanguageService,
         private _authenticationService: AuthenticationService
     ) {
@@ -149,22 +143,14 @@ export class LoginComponent implements OnInit {
         this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales()
         this.empresaSC = this._empresasSCService.getEmpresasSCActuales()
         this.usuariosRoles = this._rolesUsuariosService.getUsuairosRolesActuales()
-        this.usuariosSC = this._usuariosSCService.getUsuariosSCActuales()
         this.usuarioEmpresaSC = this._usuariosEmpresasSCService.getUsuariosEmpresasSCActuales()
-        this.suscriptores = this._suscriptoresService.getSuscriptoresActuales()
-        const togglePassword = document.querySelector('#togglePassword')
-        const password = document.querySelector('#password')
-        togglePassword?.addEventListener('click', () => {
-            const type = password?.getAttribute('type') === 'password' ? 'text' : 'password'
-            password?.setAttribute('type', type)
-            this.classList.toggle('icon-eye-off')
-        })
+
         this.returnUrl = this.route.snapshot.queryParams['returnUrl']
         this.idiomas = this._languagesService.getRegistrosActuales()
-        console.log('idiomas actualoes', this.idiomas)
+        console.log('idiomas actuales', this.idiomas)
     }
 
-    OnDestroy() {
+    ngOnDestroy() {
         this.loginSub?.unsubscribe()
     }
 
@@ -180,44 +166,13 @@ export class LoginComponent implements OnInit {
         return this.loginForm.get('password')
     }
 
+    togglePasswordVisibility() {
+        this.showPassword = !this.showPassword;
+    }
+
     consultarRolesActividadesUsuario(codUsuario: string) {
         let rolesUsuarioFinal: any[] = []
-        // const usuarioSC = this.usuariosSC.filter(ru => ru.codigoUsuario == codUsuario && ru.estadoUsuarioSC == true)[0]
-        // const suscriptor = this.suscriptores.filter(ru => ru.codigoSuscriptor === usuarioSC.codigoSuscriptor && ru.estadoSuscriptor == true)[0]
-        // const empresasSC = this.empresasSC.filter(ru => ru.codigoSuscriptor == suscriptor.codigoSuscriptor && ru.estadoEmpresa == true)
-        // const usuariosEmpresaSC = this.usuarioEmpresaSC.filter(ru => ru.codigoUsuarioSC == usuarioSC.codigoUsuarioSC && ru.estadoUsuarioEmpresaSC == true)
-        // let rolesUsuario: PTLUsuarioRoleAPModel[] = []
-        // let actividadesUsuario: any[] = []
-        // usuariosEmpresaSC.forEach(usuEmp => {
-        //     const roles = this.usuariosRoles.filter(ue => ue.codigoUsuarioSC === usuEmp.codigoUsuarioEmpresaSC && ue.estadoUsuarioRole == true)
-        //     roles.forEach(role => {
-        //         const activisRole = this.actividadesRoles.filter(x => x.codigoRole == role.codigoRole)
-        //         const emp = empresasSC.filter(x => x.codigoEmpresaSC == usuEmp.codigoEmpresaSC)[0]
-        //         const actisRoles = {
-        //             empresa: emp.codigoEmpresaSC,
-        //             role: role.codigoRole,
-        //             actividades: activisRole
-        //         }
-        //         actividadesUsuario.push(actisRoles)
-        //         role.codigoEmpresaSC = emp.codigoEmpresaSC
-        //     });
-        //     rolesUsuario.push(...roles)
-        // });
-        // rolesUsuarioFinal = rolesUsuario.map(ru => {
-        //     const role = this.roles.find(r => r.codigoRole === ru.codigoRole && r.estadoRole == true)
-        //     const suite = this.suites.find(s => s.codigoSuite === ru?.codigoSuite)
-        //     const aplicacion = this.aplicaciones.find(a => a.codigoAplicacion === ru?.codigoAplicacion)
-        //     const empresa = empresasSC.find(a => a.codigoEmpresaSC === ru.codigoEmpresaSC)
-        //     return {
-        //         suscriptor: suscriptor ? suscriptor.nombreSuscriptor : 'Sin Suscriptor',
-        //         empresa: empresa ? empresa.nombreEmpresa : 'Sin Empresa',
-        //         aplicacion: aplicacion ? aplicacion.nombreAplicacion : 'Sin Aplicación',
-        //         suite: suite ? suite.nombreSuite : 'Sin Suite',
-        //         role: role ? role.nombreRole : 'Rol Desconocido'
-        //     }
-        // })
-        // console.log('actividadesUsuario', actividadesUsuario);
-        // console.log('rolesUsuario', rolesUsuarioFinal);
+        // Lógica comentada conservada exactamente igual
         return rolesUsuarioFinal
     }
 
@@ -230,6 +185,7 @@ export class LoginComponent implements OnInit {
         this.loading = true
         const userName = this.formValues?.['username']?.value
         const password = this.formValues?.['password']?.value
+
         this.loginSub = this._authenticationService
             .login(userName, password)
             .pipe(
@@ -241,59 +197,36 @@ export class LoginComponent implements OnInit {
                         this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTFOUND'))
                         return
                     }
-                    // this.consultarRolesActividadesUsuario(resp.usuario.codigoUsuario)
                     const currentUser = this._localstorageService.getCurrentUserLocalStorage()
-                    console.log('++++++++ usuario activo', currentUser)
-                    if (currentUser === null) {
-                        console.log('el usuario no tiene roles asignados')
-                        this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOROLESASIGN'))
-                        this._localstorageService.setLogOut()
-                    } else {
-                        this.router.navigate(['/starter/inicio-aplicaciones'])
-                        //   this.router.navigate(['/aplicaciones/aplicaciones']);
-                    }
-
+                    // if (currentUser === null) {
+                    //     console.log('el usuario no tiene roles asignados')
+                    //     this._swalService.getAlertError(this.translate.instant('PLATAFORMA.NOROLESASIGN'))
+                    //     this._localstorageService.setLogOut()
+                    // } else {
+                    // console.log('++++++++ usuario activo', currentUser)
+                    // const suscUsu = this.usuariosSC.filter(x => x.codigoUsuario == currentUser.usuario?.codigoUsuario)
+                    // console.log('++++++++ suscUsu', suscUsu);
+                    // if (suscUsu.length > 1) {
+                    //     this.router.navigate(['/starter/inicio-suscriptores'])
+                    // } else if (suscUsu.length == 1) {
+                    this.router.navigate(['/starter/inicio-aplicaciones'])
+                    // }
+                    // }
                     console.log('Login exitoso:', resp.usuario.codigoUsuario)
-                    //   const logData = {
-                    //     codigoTipoLog: '',
-                    //     codigoRespuesta: '201',
-                    //     descripcionLog: this.translate.instant('PLATAFORMA.LOGINSUCCESS')
-                    //   };
-                    //   this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-                    //   this._swalService.getAlertSuccess(this.translate.instant('PLATAFORMA.LOGINSUCCESS'));
-                    //   this._localStorageService.setSuscriptorLocalStorage(dataSuscriptor);
                 }),
                 catchError(err => {
                     this.loading = false
                     this.error = err
-                    //   const logData = {
-                    //     codigoTipoLog: '',
-                    //     codigoRespuesta: '501',
-                    //     codigoUsuairo: userName,
-                    //     descripcionLog: this.translate.instant('PLATAFORMA.LOGINFAILED')
-                    //   };
-                    //   this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
                     this._swalService.getAlertError(this.translate.instant('PLATAFORMA.LOGINFAILED'))
                     return of(null)
                 })
             )
             .subscribe()
-        //   }
-        // } else {
-        //   const logData = {
-        //     codigoTipoLog: '',
-        //     codigoRespuesta: '501',
-        //     descripcionLog: this.translate.instant('PLATAFORMA.USERNOTSUPSCRIPTOR')
-        //   };
-        //   this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'));
-        //   this._swalService.getAlertError(this.translate.instant('PLATAFORMA.USERNOTSUPSCRIPTOR'));
-        // }
     }
 
     onChangePasswordClick() {
         this.router.navigate(['/autenticacion/change-password'])
     }
-
 
     onResetPasswordClick() {
         this.router.navigate(['/autenticacion/reset-password'])

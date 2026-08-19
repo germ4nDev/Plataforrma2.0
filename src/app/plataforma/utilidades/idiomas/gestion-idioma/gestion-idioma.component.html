@@ -20,18 +20,21 @@
                 <div class="dt-toolbar d-flex justify-content-between align-items-center mb-2">
                     <div class="d-flex align-items-center">
                         <h4 class="datatable-title" *ngIf="!modoEdicion">{{ 'PLATAFORMA.IDIOMAS.NEW' | translate }}</h4>
-                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PLATAFORMA.IDIOMAS.UPDATE' | translate }}</h4>
+                        <h4 class="datatable-title" *ngIf="modoEdicion">{{ 'PLATAFORMA.IDIOMAS.UPDATE' | translate }}
+                        </h4>
                     </div>
                     <div class="d-flex">
                         <button type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnRegresarClick()">
                             {{ 'PLATAFORMA.REGRESAR' | translate }}
                             <i class="feather icon-arrow-left ms-2"></i>
                         </button>
-                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarRegistroClick(validationForm)">
+                        <button *ngIf="!modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'PLATAFORMA.IDIOMAS.CREATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro" (click)="btnGestionarRegistroClick(validationForm)">
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-primary btn-NuevoRegistro"
+                            (click)="btnGestionarRegistroClick(validationForm)">
                             {{ 'PLATAFORMA.IDIOMAS.UPDATE' | translate }}
                             <i class="feather ms-2" [ngClass]="modoEdicion ? 'icon-edit' : 'icon-plus'"></i>
                         </button>
@@ -43,40 +46,60 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="codigoIdioma">{{ 'PLATAFORMA.IDIOMAS.CODE' | translate }}</label>
-                                <input class="form-control form-input" id="codigoIdioma" name="codigoIdioma" type="text" placeholder="{{ 'PLATAFORMA.IDIOMAS.CODE' | translate }}" [ngClass]="{'is-invalid': !codigoIdioma.valid && (codigoIdioma.dirty || codigoIdioma.touched || isSubmit)}"
+                                <label class="form-control-label" for="codigoIdioma">{{ 'PLATAFORMA.IDIOMAS.CODE' |
+                                    translate }}</label>
+                                <input class="form-control form-input" id="codigoIdioma" name="codigoIdioma" type="text"
+                                    placeholder="{{ 'PLATAFORMA.IDIOMAS.CODE' | translate }}"
+                                    [ngClass]="{'is-invalid': !codigoIdioma.valid && (codigoIdioma.dirty || codigoIdioma.touched || isSubmit)}"
                                     #codigoIdioma="ngModel" required [(ngModel)]="FormRegistro.codigoIdioma" />
-                                <label *ngIf="!codigoIdioma.valid && (codigoIdioma.dirty || codigoIdioma.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!codigoIdioma.valid && (codigoIdioma.dirty || codigoIdioma.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'PLATAFORMA.IDIOMAS.CODEHOLDER' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="nombreIdioma">{{ 'PLATAFORMA.IDIOMAS.NAME' | translate }}</label>
-                                <input class="form-control form-input" id="nombreIdioma" name="nombreIdioma" type="text" placeholder="{{ 'PLATAFORMA.IDIOMAS.NAME' | translate }}" [ngClass]="{'is-invalid': !nombreIdioma.valid && (nombreIdioma.dirty || nombreIdioma.touched || isSubmit)}"
+                                <label class="form-control-label" for="nombreIdioma">{{ 'PLATAFORMA.IDIOMAS.NAME' |
+                                    translate }}</label>
+                                <input class="form-control form-input" id="nombreIdioma" name="nombreIdioma" type="text"
+                                    placeholder="{{ 'PLATAFORMA.IDIOMAS.NAME' | translate }}"
+                                    [ngClass]="{'is-invalid': !nombreIdioma.valid && (nombreIdioma.dirty || nombreIdioma.touched || isSubmit)}"
                                     #nombreIdioma="ngModel" required [(ngModel)]="FormRegistro.nombreIdioma" />
-                                <label *ngIf="!nombreIdioma.valid && (nombreIdioma.dirty || nombreIdioma.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!nombreIdioma.valid && (nombreIdioma.dirty || nombreIdioma.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'PLATAFORMA.IDIOMAS.NAMEHOLDER' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="siglaIdioma">{{ 'PLATAFORMA.IDIOMAS.NAME' | translate }}</label>
-                                <input class="form-control form-input" id="siglaIdioma" name="siglaIdioma" type="text" placeholder="{{ 'PLATAFORMA.IDIOMAS.NAME' | translate }}" [ngClass]="{'is-invalid': !siglaIdioma.valid && (siglaIdioma.dirty || siglaIdioma.touched || isSubmit)}" #siglaIdioma="ngModel"
-                                    required [(ngModel)]="FormRegistro.siglaIdioma" />
-                                <label *ngIf="!siglaIdioma.valid && (siglaIdioma.dirty || siglaIdioma.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
-                                    {{ 'PLATAFORMA.IDIOMAS.NAMEHOLDER' | translate }}
+                                <label class="form-control-label" for="siglaIdioma">{{ 'PLATAFORMA.IDIOMAS.NAME' |
+                                    translate }}</label>
+                                <input class="form-control form-input" id="siglaIdioma" name="siglaIdioma" type="text"
+                                    placeholder="{{ 'PLATAFORMA.IDIOMAS.NAME' | translate }}"
+                                    [ngClass]="{'is-invalid': !siglaIdioma.valid && (siglaIdioma.dirty || siglaIdioma.touched || isSubmit)}"
+                                    #siglaIdioma="ngModel" required [(ngModel)]="FormRegistro.siglaIdioma" />
+                                <label
+                                    *ngIf="!siglaIdioma.valid && (siglaIdioma.dirty || siglaIdioma.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
+                                    {{ 'PLATAFORMA.IDIOMAS.SIGLAHOLDER' | translate }}
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="form-control-label" for="translateKey">{{ 'PLATAFORMA.IDIOMAS.TRNSLATEKEY' | translate }}</label>
-                                <input class="form-control form-input" id="translateKey" name="translateKey" type="text" placeholder="{{ 'PLATAFORMA.IDIOMAS.TRNSLATEKEY' | translate }}" [ngClass]="{'is-invalid': !translateKey.valid && (translateKey.dirty || translateKey.touched || isSubmit)}"
+                                <label class="form-control-label" for="translateKey">{{ 'PLATAFORMA.IDIOMAS.TRNSLATEKEY'
+                                    | translate }}</label>
+                                <input class="form-control form-input" id="translateKey" name="translateKey" type="text"
+                                    placeholder="{{ 'PLATAFORMA.IDIOMAS.TRNSLATEKEY' | translate }}"
+                                    [ngClass]="{'is-invalid': !translateKey.valid && (translateKey.dirty || translateKey.touched || isSubmit)}"
                                     #translateKey="ngModel" required [(ngModel)]="FormRegistro.translateKey" />
-                                <label *ngIf="!translateKey.valid && (translateKey.dirty || translateKey.touched || isSubmit)" class="error jquery-validation-error small form-text invalid-feedback">
+                                <label
+                                    *ngIf="!translateKey.valid && (translateKey.dirty || translateKey.touched || isSubmit)"
+                                    class="error jquery-validation-error small form-text invalid-feedback">
                                     {{ 'PLATAFORMA.IDIOMAS.TRNSLATEKEYHOLDER' | translate }}
                                 </label>
                             </div>
@@ -89,7 +112,8 @@
                                     <label for="fileUploadInput" class="btn btn-primary btn-NuevoRegistro">
                                         {{ 'Seleccionar archivo' | translate }}
                                     </label>
-                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*" id="fileUploadInput" class="form-control form-input d-none" name="urlSlider">
+                                    <input type="file" (change)="onFileSelectedClick($event)" accept="image/*"
+                                        id="fileUploadInput" class="form-control form-input d-none" name="urlSlider">
                                 </div>
                             </div>
                         </div>

@@ -14,7 +14,7 @@ import { PTLModuloAP } from 'src/app/theme/shared/_helpers/models/PTLModuloAP.mo
 import { PTLModuloPQModel } from 'src/app/theme/shared/_helpers/models/PTLModuloPQ.model'
 import { PTLSuiteAPModel } from 'src/app/theme/shared/_helpers/models/PTLSuiteAP.model'
 import { PTLTipoItemModel } from 'src/app/theme/shared/_helpers/models/PTLTipoItem.model'
-import { PTLValoresUnitarios } from 'src/app/theme/shared/_helpers/models/PTLValoresUnitarios.model'
+import { PTLItems } from 'src/app/theme/shared/_helpers/models/PTLItem.model'
 import { TextEditorComponent } from 'src/app/theme/shared/components/text-editor/text-editor.component'
 import {
     PtlAplicacionesService,
@@ -25,7 +25,7 @@ import {
     LocalStorageService,
     NavigationService,
     PtlvaloresUnitariosService,
-    PtltiposItemsesService
+    PtltiposItemsService
 } from 'src/app/theme/shared/service'
 import { LayoutInitializerService } from 'src/app/theme/shared/service/layout-initializer.service'
 import { LoadingService } from 'src/app/theme/shared/service/loading.service'
@@ -56,8 +56,8 @@ export class GestionItempqComponent {
     tiposItemsSub?: Subscription
     tiposItems: PTLTipoItemModel[] = []
     listaPreciosSub?: Subscription
-    listaPrecios: PTLValoresUnitarios[] = []
-    itemsSeleccionados: PTLValoresUnitarios[] = []
+    listaPrecios: PTLItems[] = []
+    itemsSeleccionados: PTLItems[] = []
     registroId: string = ''
     codigoPaquete: string = ''
     tipoEditorTexto = 'basica'
@@ -73,7 +73,7 @@ export class GestionItempqComponent {
         private route: ActivatedRoute,
         private translate: TranslateService,
         private _registrosService: PtlItemsPaqueteService,
-        private _tiposItemsesService: PtltiposItemsesService,
+        private _tiposItemsService: PtltiposItemsService,
         private _listaPreciosService: PtlvaloresUnitariosService,
         private _layoutInitializer: LayoutInitializerService,
         private _logActividadesService: PtllogActividadesService,
@@ -132,14 +132,14 @@ export class GestionItempqComponent {
         if (!this.modoEdicion) {
             console.log('modo edicion', this.modoEdicion)
             this.FormRegistro.tipoValorId = 0
-            this.FormRegistro.codigoValor = ''
+            this.FormRegistro.codigoItem = ''
             this.FormRegistro.codigoItem = uuidv4()
             console.log('FormRegistro', this.FormRegistro)
         }
     }
 
     consultarTiposValor() {
-        this.tiposItemsSub = this._tiposItemsesService
+        this.tiposItemsSub = this._tiposItemsService
             .getRegistros()
             .pipe(
                 tap((resp: any) => {
@@ -186,16 +186,16 @@ export class GestionItempqComponent {
 
     onTipoValorChangeClick(evento: any) {
         console.log('evento', evento.target.value)
-        const tipo = this.tiposItems.findIndex(x => x.codigoTipo == evento.target.value)
+        const tipo = this.tiposItems.findIndex(x => x.codigoTipoItem == evento.target.value)
         const tipoValor = this.tiposItems[tipo]
-        this.consultarListaPrecios(tipoValor.codigoTipo || '')
+        this.consultarListaPrecios(tipoValor.codigoTipoItem || '')
     }
 
     onValorChangeClick(evento: any) {
         console.log('asociar el valorlo', evento.target.value)
-        const tipo = this.listaPrecios.findIndex(x => x.codigoValor == evento.target.value)
+        const tipo = this.listaPrecios.findIndex(x => x.codigoItem == evento.target.value)
         const valor = this.listaPrecios[tipo]
-        this.FormRegistro.nombreItem = valor.nombreValor || ''
+        this.FormRegistro.nombreItem = valor.nombreItem || ''
         this.FormRegistro.valorUnitario = valor.valorUnitario || 0
         this.FormRegistro.cantidad = 0
         this.FormRegistro.valoresAdicionales = 0

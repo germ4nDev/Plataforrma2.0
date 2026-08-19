@@ -86,7 +86,7 @@ export class TiposScriptsComponent implements OnInit {
 
     columnasTiposScripts: ColumnMetadata[] = [
         {
-            name: 'codigoTipo',
+            name: 'codigoTipoScript',
             header: 'TIPOS_SCRIPTS.CODIGO',
             type: 'text'
         },
@@ -121,7 +121,7 @@ export class TiposScriptsComponent implements OnInit {
     }
 
     OnEliminarRegistroClick(evento: any) {
-        const id = typeof evento === 'string' ? evento : evento?.codigoTipo || evento?.id;
+        const id = typeof evento === 'string' ? evento : evento?.codigoTipoScript || evento?.id;
 
         Swal.fire({
             title: this.translate.instant('TIPOS_SCRIPTS.ELIMINARTITULO'),
@@ -135,19 +135,19 @@ export class TiposScriptsComponent implements OnInit {
                 this._tiposScriptsService.deleteEliminarRegistro(id).subscribe({
                     next: (resp: any) => {
                         const logData = {
-                            codigoTipoLog: '',
+                            codigoTipoScriptLog: '',
                             codigoRespuesta: '201',
                             descripcionLog: this.translate.instant('TIPOS_SCRIPTS.ELIMINAREXITOSA') + ' ' + resp.mensaje
                         };
                         this._logActividadesService.postCrearRegistro(logData).subscribe();
                         Swal.fire(this.translate.instant('TIPOS_SCRIPTS.ELIMINAREXITOSA'), resp.mensaje, 'success');
 
-                        this.registros = this.registros.filter((t) => t.codigoTipo !== id);
-                        this.registrosFiltrado = this.registrosFiltrado.filter((t) => t.codigoTipo !== id);
+                        this.registros = this.registros.filter((t) => t.codigoTipoScript !== id);
+                        this.registrosFiltrado = this.registrosFiltrado.filter((t) => t.codigoTipoScript !== id);
                     },
                     error: (err: any) => {
                         const logData = {
-                            codigoTipoLog: '',
+                            codigoTipoScriptLog: '',
                             codigoRespuesta: '501',
                             descripcionLog: this.translate.instant('TIPOS_SCRIPTS.ELIMINARERROR') + ' ' + err.message
                         };

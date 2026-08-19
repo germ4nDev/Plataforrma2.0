@@ -129,8 +129,7 @@ export class GestionAplicacionComponent implements OnInit {
         const file: File = event.target.files[0]
         const objUpload = {
             susc: this.suscriptor,
-            tipo: 'aplicaciones',
-            id: '0'
+            tipo: 'aplicaciones'
         }
         if (file) {
             const reader = new FileReader()
@@ -140,8 +139,9 @@ export class GestionAplicacionComponent implements OnInit {
             reader.readAsDataURL(file)
             this._uploadService.uploadUserPhoto(file, objUpload).subscribe({
                 next: (path: any) => {
-                    console.log('resultado', path)
-                    this.FormRegistro.imagenInicio = path.nombreArchivo
+                    const resp = path.data.respuesta
+                    this.FormRegistro.imagenInicio = resp.fileName
+                    this.userPhotoUrl = resp.fileName
                 },
                 error: () => {
                     this._swalService.getAlertError(this._translate.instant('PLATAFORMA.UPLOADPHOTOERROR'))
@@ -189,37 +189,39 @@ export class GestionAplicacionComponent implements OnInit {
             const registroData = form.value as PTLAplicacionModel
             registroData.codigoAplicacion = uuidv4()
             registroData.imagenInicio = this.FormRegistro.imagenInicio
-            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            registroData.codigoUsuarioCreacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''
             registroData.fechaCreacion = new Date().toISOString()
-            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario
+            registroData.codigoUsuarioModificacion = this._localStorageService.getUsuarioLocalStorage().codigoUsuario || ''
             registroData.fechaModificacion = new Date().toISOString()
-            this._aplicacionesService.crearAplicacion(registroData).subscribe({
-                next: (resp: any) => {
-                    console.log('resp', resp)
-                    if (resp.ok) {
-                        const logData = {
-                            codigoTipoLog: '',
-                            codigoRespuesta: '201',
-                            descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
-                        }
-                        this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                        this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.UPDATESUCCSESSFULLY'))
-                        form.resetForm()
-                        // this.isSubmit = false;
-                        this.router.navigate(['/aplicaciones/aplicaciones'])
-                    }
-                },
-                error: (err: any) => {
-                    console.error(err)
-                    const logData = {
-                        codigoTipoLog: '',
-                        codigoRespuesta: '500',
-                        descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
-                    }
-                    this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
-                    this._swalService.getAlertError('No se pudo crear la Aplicación')
-                }
-            })
+            console.log('nueva aplicacion', registroData);
+
+            // this._aplicacionesService.crearAplicacion(registroData).subscribe({
+            //     next: (resp: any) => {
+            //         console.log('resp', resp)
+            //         if (resp.ok) {
+            //             const logData = {
+            //                 codigoTipoLog: '',
+            //                 codigoRespuesta: '201',
+            //                 descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+            //             }
+            //             this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+            //             this._swalService.getAlertSuccess(this.translate.instant('APLICACIONES.UPDATESUCCSESSFULLY'))
+            //             form.resetForm()
+            //             // this.isSubmit = false;
+            //             this.router.navigate(['/aplicaciones/aplicaciones'])
+            //         }
+            //     },
+            //     error: (err: any) => {
+            //         console.error(err)
+            //         const logData = {
+            //             codigoTipoLog: '',
+            //             codigoRespuesta: '500',
+            //             descripcionLog: this.translate.instant('APLICACIONES.ELIMINAREXITOSA')
+            //         }
+            //         this._logActividadesService.postCrearRegistro(logData).subscribe(() => console.log('log creado exitosamente'))
+            //         this._swalService.getAlertError('No se pudo crear la Aplicación')
+            //     }
+            // })
         }
     }
 

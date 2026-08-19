@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from './lenguage.service';
 import { Router } from '@angular/router';
 import { NavigationItem } from '../_helpers/models/Navigation.model';
+import { PtlAplicacionesService } from './ptlaplicaciones.service';
 
 @Injectable({
     providedIn: 'root'
@@ -35,6 +36,7 @@ export class NavigationService implements OnInit, OnDestroy {
         private _modulosService: PtlmodulosApService,
         private _localStorageService: LocalStorageService,
         private _languageService: LanguageService,
+        private _aplicacionesService: PtlAplicacionesService,
         private translate: TranslateService
     ) {
         this.subscriptions.add(
@@ -138,8 +140,11 @@ export class NavigationService implements OnInit, OnDestroy {
     getNavigationItems(): void {
         this.aplicacion = this._localStorageService.getAplicaicionLocalStorage();
         this.suite = this._localStorageService.getSuiteLocalStorage();
-        const codigoApp = this.aplicacion.codigoAplicacion;
+        console.log('aplicacion para el menu');
 
+        // const apps = this._aplicacionesService.getBAplicacionesActuales()
+        // apps.forEach((app: PTLAplicacionModel) => {
+        const codigoApp = this.aplicacion.codigoAplicacion;
         switch (codigoApp) {
             case 'e1a8fa99-15db-479b-a0a4-9c2be72273b5':
                 this.subscriptions.add(
@@ -159,20 +164,46 @@ export class NavigationService implements OnInit, OnDestroy {
                     })
                 );
                 break;
+            case '3eb98a9f-cc5d-417d-95ea-a2b8abc3b5fa':
+                this.subscriptions.add(
+                    this._modulosService.getRegistros().subscribe(data => {
+                        const nuevosModulos = data.modulos;
+                        if (nuevosModulos.length > 0) {
+                            const ordenado = nuevosModulos.sort((a: any, b: any) => {
+                                const nombreA = a.nombreModulo || '';
+                                const nombreB = b.nombreModulo || '';
+                                return nombreA.localeCompare(nombreB);
+                            });
+                            const menu = this.getAplicacionSuiteItems(ordenado);
+                            console.log('********* todo el menu', menu);
+
+                            this.menuSubject.next(menu);
+                        } else {
+                            this.menuSubject.next([]);
+                        }
+                    })
+                );
+                break;
             default:
                 this.menuSubject.next([]);
                 break;
         }
+        // })
+
     }
 
     navigateNodoMenu(url: any) {
+        console.log('===============datos del modulo', url);
+
         const modulos = this._modulosService.getModulosActuales();
+        console.log('===============modulos', modulos);
         const modulo = modulos.find(x => x.codigoModulo == url.id);
 
         if (!modulo) {
             console.warn('No se encontró el módulo en la lista actual', url.id);
             return;
         }
+        console.log('===============datos del modulo', modulo);
 
         this._localStorageService.setModuloLocalStorage(modulo);
 

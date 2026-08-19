@@ -5,11 +5,14 @@
 import packageInfo from '../../package.json';
 
 export const environment = {
-  appVersion: packageInfo.version,
-  production: false,
-  apiUrl: 'http://localhost:3000/api'
-//   apiUrl: 'https://mock-data-api-nextjs.vercel.app'
+    appVersion: packageInfo.version,
+    production: false,
+    apiUrl: 'http://localhost:3000/api',
+    sctUrl: 'http://localhost:3000'
+    //     apiUrl: 'https://porttosapi.dymsites.co/api',
+    //     sctUrl: 'http://porttosapi.dymsites.co'
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

@@ -17,7 +17,9 @@
         "UPDATEUSERERROR": "No se pudo actualizar el Usuairo",
         "UPLOADPHOTOERROR": "Error al subir la imagen",
         "TITULO_GRID_APLICACIONES": "Explora Nuestras Aplicaciones",
-        "TITULO_GRID_SUITES": "Suites de la Aplicación",
+        "TITULO_GRID_SUITES": "Suites de la Aplicación ",
+        "SUBTITULO_GRID_APLICACIONES": "Selecciona el ecosistema digital al que deseas ingresar",
+        "SUBTITULO_GRID_SUITES": "Selecciona la Suite a la que deseas ingresar de ",
         "ENTRAR": "Acceder",
         "ALLDATA": "Seleccionar Todos",
         "FILTROTODOS": "Mostrar Todos",
@@ -49,7 +51,8 @@
             "PLATAFORMA": "Plataforma"
         },
         "SUITES": {
-            "PLATAFORMA": "Plataforma"
+            "PLATAFORMA": "Plataforma",
+            "CONTROLPANEL": "TABLERO DE CONTROL"
         },
         "MODULOS": {
             "APLICACIONES": "Aplicaciones",
@@ -106,7 +109,17 @@
             "GALERIA": "Galería",
             "TIPOSGALERIA": "Tipos Galería",
             "FORMATOSGALERIA": "Formatos Galería",
-            "TIPOSCRIPTS": "Tipo Scripts"
+            "TIPOSCRIPTS": "Tipo Scripts",
+            "TLCUPLOADFILES": "Cargar Achivos",
+            "TLCCONFIGURACION": "Configuraciones",
+            "TLCINFRAESTRUCTURA": "Infraestructura",
+            "WIDGETS": "Widgets",
+            "PUERTOS": "Puertos",
+            "TERMINALES": "Terminales",
+            "MUELLES": "Muelles",
+            "INFRAESTRUCTURAS": "Elementos Infraestructura",
+            "TIPOSINFRAESTRUCTURA": "Tipos Infraestructura",
+            "TLCDASHBOARD": "Panel Control"
         },
         "NAVBAR": {
             "NOTIFICACIONES": "Notificaciones",

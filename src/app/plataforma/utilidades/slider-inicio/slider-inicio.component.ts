@@ -18,7 +18,7 @@ import { DatatableComponent } from 'src/app/theme/shared/components/data-table/d
 import { of, Subscription } from 'rxjs'
 import Swal from 'sweetalert2'
 import { SwalAlertService } from '../../../theme/shared/service/swal-alert.service'
-import { PTLSlierInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model'
+import { PTLSliderInicioModel } from 'src/app/theme/shared/_helpers/models/PTLSliderInicio.model'
 import { PtlSlidersInicioService } from 'src/app/theme/shared/service/ptlsliders-inicio.service'
 import { ColumnMetadata } from 'src/app/theme/shared/_helpers/models/ColumnMetadata.model'
 import { environment } from 'src/environments/environment'
@@ -41,7 +41,7 @@ export class SliderInicioComponent implements OnInit {
     activeTab: 'menu' | 'filters' | 'main' = 'menu'
     menuItems!: Observable<NavigationItem[]>
     registrosSub?: Subscription
-    registros: PTLSlierInicioModel[] = []
+    registros: PTLSliderInicioModel[] = []
     registrosFiltrado: PTLUsuarioModel[] = []
     lang: string = localStorage.getItem('lang') || ''
     tituloPagina: string = ''

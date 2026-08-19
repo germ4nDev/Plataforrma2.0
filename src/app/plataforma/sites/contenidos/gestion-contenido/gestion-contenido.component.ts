@@ -124,7 +124,7 @@ export class GestonContenidoComponent implements OnInit {
     const enlace = this.enlaces.filter((x) => x.enlaceId == value)[0];
     console.log('Id del enlace seleccionado:', value);
     console.log('datal enlace seleccionado:', enlace);
-    this.FormRegistro.enlaceId = enlace.enlaceId;
+    this.FormRegistro.codigoEnlace = enlace.codigoEnlace;
   }
 
   btnGestionarRegistroClick(form: any) {
